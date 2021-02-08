@@ -247,9 +247,9 @@
                                     <!--begin::Item-->
                                     <div class="d-flex align-items-center mb-6">
                                         <!--begin::Symbol-->
-                                        <div class="symbol symbol-40 symbol-light-info mr-5">
+                                        <div class="symbol symbol-40 symbol-light-primary mr-5">
                                             <span class="symbol-label">
-                                                <span class="svg-icon svg-icon-lg  svg-icon-info">
+                                                <span class="svg-icon svg-icon-lg  svg-icon-primary">
                                                     <!--begin::Svg Icon | path:assets/media/svg/icons/Communication/Shield-user.svg--><svg
                                                         xmlns="http://www.w3.org/2000/svg"
                                                         xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -486,7 +486,7 @@
                                     <a href="#" class="navi-item">
                                         <div class="navi-link">
                                             <div class="navi-icon mr-2">
-                                                <i class="flaticon-pie-chart-1 text-info"></i>
+                                                <i class="flaticon-pie-chart-1 text-primary"></i>
                                             </div>
                                             <div class="navi-text">
                                                 <div class="font-weight-bold">

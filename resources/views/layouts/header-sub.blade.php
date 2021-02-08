@@ -7,7 +7,7 @@
 
             <!--begin::Page Title-->
             <h5 class="text-dark font-weight-bold mt-2 mb-2 mr-5">
-                Dashboard
+                {{$title}}
             </h5>
             <!--end::Page Title-->
 
@@ -15,9 +15,12 @@
 
             <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-4 bg-gray-200"></div>
 
-            <span class="text-muted mx-2">Dashboard</span>
+            @foreach ($navigation as $index => $nav)
+            <span class="text-muted mx-2">{{$nav['title']}}</span>
+            @if (($index + 1) < count($navigation))
             <i class="la la-angle-right icon-sm"></i>
-            <span class="text-muted mx-2">Dashboard</span>
+            @endif
+            @endforeach
 
             <!--end::Actions-->
         </div>

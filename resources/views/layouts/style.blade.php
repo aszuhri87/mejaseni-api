@@ -1,5 +1,6 @@
 <!--begin::Page Vendors Styles(used by this page)-->
 <link href="assets/plugins/custom/fullcalendar/fullcalendar.bundle.css" rel="stylesheet" type="text/css"/>
+<link href="assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css"/>
 <!--end::Page Vendors Styles-->
 
 <!--begin::Global Theme Styles(used by all pages)-->
@@ -13,4 +14,8 @@
 <link href="assets/css/themes/layout/header/menu/light.css" rel="stylesheet" type="text/css"/>
 <link href="assets/css/themes/layout/brand/dark.css" rel="stylesheet" type="text/css"/>
 <link href="assets/css/themes/layout/aside/dark.css" rel="stylesheet" type="text/css"/>
+<!--end::Layout Themes--> 
+
+<!--begin::Layout Themes(used by all pages)-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.26.0/slimselect.css"/>
 <!--end::Layout Themes-->

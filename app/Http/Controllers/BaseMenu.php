@@ -20,7 +20,7 @@ class BaseMenu extends Controller
                     </svg>
                 </span>',
 
-            "master_data" => '<span class="svg-icon menu-icon">
+            "master" => '<span class="svg-icon menu-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
                         viewBox="0 0 24 24" version="1.1">
                         <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -39,23 +39,79 @@ class BaseMenu extends Controller
     {
         return [
             [
-                'key' => 'master_data',
+                'key' => 'master',
                 'title' => 'Master Data',
                 'url' => '#',
                 'permission' => 'division',
-                'icon' => $this->icon('master_data'),
+                'icon' => $this->icon('master'),
                 'children' => [
                     [
-                        'key' => 'package',
-                        'title' => 'Package',
-                        'url' => 'admin/master/package',
-                        'permission' => 'package'
+                        'key' => 'course',
+                        'title' => 'Course',
+                        'url' => '#',
+                        'permission' => 'course',
+                        'children' => [
+                            [
+                                'key' => 'package',
+                                'title' => 'Package',
+                                'url' => 'admin/master/course/package',
+                                'permission' => 'package'
+                            ],
+                            [
+                                'key' => 'class_category',
+                                'title' => 'Class Category',
+                                'url' => 'admin/master/course/class-category',
+                                'permission' => 'class_category'
+                            ],
+                            [
+                                'key' => 'sub_class_category',
+                                'title' => 'Sub Class Category',
+                                'url' => 'admin/master/course/sub-class-category',
+                                'permission' => 'sub_class_category'
+                            ],
+                            [
+                                'key' => 'class',
+                                'title' => 'Class',
+                                'url' => 'admin/master/course/class',
+                                'permission' => 'class'
+                            ],
+                            [
+                                'key' => 'video',
+                                'title' => 'Video',
+                                'url' => 'admin/master/course/video',
+                                'permission' => 'video'
+                            ],
+                        ],
                     ],
                     [
-                        'key' => 'category_class',
-                        'title' => 'Category Class',
-                        'url' => 'admin/master/category-class',
-                        'permission' => 'category_class'
+                        'key' => 'media_conference',
+                        'title' => 'Media Conference',
+                        'url' => 'admin/master/media-conference',
+                        'permission' => 'media_conference'
+                    ],
+                    [
+                        'key' => 'theory',
+                        'title' => 'Materi',
+                        'url' => 'admin/master/theory',
+                        'permission' => 'theory'
+                    ],
+                    [
+                        'key' => 'admin',
+                        'title' => 'Admin',
+                        'url' => 'admin/master/admin',
+                        'permission' => 'admin'
+                    ],
+                    [
+                        'key' => 'coach',
+                        'title' => 'Coach',
+                        'url' => 'admin/master/coach',
+                        'permission' => 'coach'
+                    ],
+                    [
+                        'key' => 'student',
+                        'title' => 'Student',
+                        'url' => 'admin/master/student',
+                        'permission' => 'student'
                     ],
                 ],
             ],
