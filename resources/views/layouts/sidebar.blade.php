@@ -1,0 +1,47 @@
+<!--begin::Aside Menu-->
+<div class="aside-menu-wrapper flex-column-fluid" id="kt_aside_menu_wrapper">
+
+    <!--begin::Menu Container-->
+    <div id="kt_aside_menu" class="aside-menu my-4 " data-menu-vertical="1" data-menu-scroll="1" data-menu-dropdown-timeout="500">
+
+        <!--begin::Menu Nav-->
+        <ul class="menu-nav ">
+            @foreach ($list_menu as $menu)
+                @if (isset($menu['children']))
+                <li class="menu-item  menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+                    <a href="javascript:;" class="menu-link menu-toggle">
+                        {!!$menu['icon']!!}
+                        <span class="menu-text">{{$menu['title']}}</span>
+                        <i class="menu-arrow"></i>
+                    </a>
+                    <div class="menu-submenu">
+                        <i class="menu-arrow"></i>
+                        <ul class="menu-subnav">
+                            @foreach ($menu['children'] as $children)
+                            <li class="menu-item" aria-haspopup="true">
+                                <a href="{{$children['url']}}" class="menu-link ">
+                                    <i class="menu-bullet menu-bullet-line">
+                                        <span></span>
+                                    </i>
+                                    <span class="menu-text">{{$children['title']}}</span>
+                                </a>
+                            </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </li>
+                @else
+                <li class="menu-item  menu-item-active" aria-haspopup="true">
+                    <a href="{{$menu['url']}}" class="menu-link ">
+                        {!!$menu['icon']!!}
+                        <span class="menu-text">{{$menu['title']}}</span>
+                    </a>
+                </li>
+                @endif
+            @endforeach
+        </ul>
+        <!--end::Menu Nav-->
+    </div>
+    <!--end::Menu Container-->
+</div>
+<!--end::Aside Menu-->
