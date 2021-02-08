@@ -4,10 +4,29 @@ use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
+| Global Controller
+|--------------------------------------------------------------------------
+*/
+use App\Http\Controllers\Auth\LoginController;
+
+/*
+|--------------------------------------------------------------------------
 | Admins Controller
 |--------------------------------------------------------------------------
 */
 use App\Http\Controllers\Admin\Master\PackageController;
+
+/*
+|--------------------------------------------------------------------------
+| Coach Controller
+|--------------------------------------------------------------------------
+*/
+
+/*
+|--------------------------------------------------------------------------
+| Student Controller
+|--------------------------------------------------------------------------
+*/
 
 /*
 |--------------------------------------------------------------------------
@@ -20,9 +39,23 @@ use App\Http\Controllers\Admin\Master\PackageController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::group(['middleware' => ['guest-handling']], function () {
+    Route::get('login', [LoginController::class, 'index_login']);
+    Route::post('login', [LoginController::class, 'login']);
 });
 
+Route::group(['middleware' => ['auth-handling']], function () {
+    Route::get('logout', [LoginController::class, 'logout']);
 
-Route::resource('admin/master/package', PackageController::class);
+    Route::group(['prefix' => 'admin', 'middleware' => 'admin-handling'], function () {
+
+    });
+
+    Route::group(['prefix' => 'coach', 'middleware' => 'coach-handling'], function () {
+
+    });
+
+    Route::group(['prefix' => 'student', 'middleware' => 'student-handling'], function () {
+
+    });
+});
