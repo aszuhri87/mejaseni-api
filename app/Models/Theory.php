@@ -16,7 +16,13 @@ class Theory extends Model
     public $keyType = 'string';
 
     protected $fillable = [
-
+        'session_id',
+        'name',
+        'is_premium',
+        'is_video',
+        'url',
+        'description',
+        'upload_date'
     ];
 
     protected $dates = ['deleted_at'];

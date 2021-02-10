@@ -16,7 +16,9 @@ class SessionVideo extends Model
     public $keyType = 'string';
 
     protected $fillable = [
-
+        'sub_classroom_category_id',
+        'name',
+        'datetime'
     ];
 
     protected $dates = ['deleted_at'];

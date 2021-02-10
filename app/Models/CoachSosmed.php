@@ -16,7 +16,9 @@ class CoachSosmed extends Model
     public $keyType = 'string';
 
     protected $fillable = [
-
+        'coach_id',
+        'type',
+        'url'
     ];
 
     protected $dates = ['deleted_at'];

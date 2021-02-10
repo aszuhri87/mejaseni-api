@@ -16,7 +16,9 @@ class ProfileCoachVideo extends Model
     public $keyType = 'string';
 
     protected $fillable = [
-
+        'coach_id',
+        'is_youtube',
+        'url'
     ];
 
     protected $dates = ['deleted_at'];

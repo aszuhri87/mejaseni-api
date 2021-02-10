@@ -16,7 +16,9 @@ class Session extends Model
     public $keyType = 'string';
 
     protected $fillable = [
-
+        'classroom_id',
+        'name',
+        'datetime'
     ];
 
     protected $dates = ['deleted_at'];

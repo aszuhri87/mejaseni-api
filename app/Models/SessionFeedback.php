@@ -16,7 +16,10 @@ class SessionFeedback extends Model
     public $keyType = 'string';
 
     protected $fillable = [
-
+        'session_id',
+        'student_id',
+        'star',
+        'description'
     ];
 
     protected $dates = ['deleted_at'];

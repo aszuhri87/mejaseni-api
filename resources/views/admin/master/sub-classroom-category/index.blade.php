@@ -5,7 +5,7 @@
     <div class="card-body">
         <div class="d-flex justify-content-between align-items-center">
             <div class="my-title">
-                <h4 class="m-0 p-0">Package</h4>
+                <h4 class="m-0 p-0">Category Class</h4>
             </div>
             <div class="my-toolbar d-flex">
                 <div class="form-group">
@@ -63,7 +63,8 @@
             <thead>
                 <tr>
                     <th>No</th>
-                    <th width="90%">Name</th>
+                    <th width="45%">Name</th>
+                    <th width="45%">Category</th>
                     <th width="10%">Actions</th>
                 </tr>
             </thead>
@@ -73,9 +74,9 @@
     </div>
 </div>
 
-@include('admin.master.package.modal')
+@include('admin.master.sub-classroom-category.modal')
 @endsection
 
 @push('script')
-    @include('admin.master.package.script')
+    @include('admin.master.sub-classroom-category.script')
 @endpush

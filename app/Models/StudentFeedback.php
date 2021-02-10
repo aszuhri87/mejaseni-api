@@ -16,7 +16,10 @@ class StudentFeedback extends Model
     public $keyType = 'string';
 
     protected $fillable = [
-
+        'coach_id',
+        'student_id',
+        'star',
+        'description'
     ];
 
     protected $dates = ['deleted_at'];

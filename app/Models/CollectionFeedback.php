@@ -16,7 +16,10 @@ class CollectionFeedback extends Model
     public $keyType = 'string';
 
     protected $fillable = [
-
+        'coach_id',
+        'collection_id',
+        'star',
+        'description'
     ];
 
     protected $dates = ['deleted_at'];

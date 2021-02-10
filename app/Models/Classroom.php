@@ -16,7 +16,17 @@ class Classroom extends Model
     public $keyType = 'string';
 
     protected $fillable = [
-
+        'classroom_category_id',
+        'sub_classroom_category_id',
+        'package_id',
+        'platform_id',
+        'type',
+        'name',
+        'description',
+        'image',
+        'price',
+        'session_total',
+        'session_duration'
     ];
 
     protected $dates = ['deleted_at'];

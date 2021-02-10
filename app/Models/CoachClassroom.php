@@ -16,7 +16,8 @@ class CoachClassroom extends Model
     public $keyType = 'string';
 
     protected $fillable = [
-
+        'classroom_id',
+        'coach_id'
     ];
 
     protected $dates = ['deleted_at'];

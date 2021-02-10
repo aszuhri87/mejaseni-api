@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\Uuid;
 
-class ProfileVideoCoach extends Model
+class ClassroomTools extends Model
 {
     use HasFactory, Uuid, SoftDeletes;
 
@@ -16,7 +16,8 @@ class ProfileVideoCoach extends Model
     public $keyType = 'string';
 
     protected $fillable = [
-
+        'classroom_id',
+        'tool_id',
     ];
 
     protected $dates = ['deleted_at'];

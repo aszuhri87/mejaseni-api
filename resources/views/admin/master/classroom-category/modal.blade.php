@@ -1,10 +1,10 @@
 <!-- Modal-->
-<div class="modal" id="modal-package" tabindex="-1" role="dialog">
+<div class="modal" id="modal-classroom-category" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <form id="form-package" autocomplete="off">
+            <form id="form-classroom-category" autocomplete="off">
                 <div class="modal-header">
-                    <h5 class="modal-title">Package</h5>
+                    <h5 class="modal-title">Classroom Category</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <i aria-hidden="true" class="ki ki-close"></i>
                     </button>

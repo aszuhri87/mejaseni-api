@@ -16,7 +16,7 @@ class Platform extends Model
     public $keyType = 'string';
 
     protected $fillable = [
-
+        'name'
     ];
 
     protected $dates = ['deleted_at'];

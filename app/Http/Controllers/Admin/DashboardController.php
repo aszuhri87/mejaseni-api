@@ -15,8 +15,8 @@ class DashboardController extends BaseMenu
             ],
         ];
 
-        return view('admin.master.package.index', [
-            'title' => 'Package',
+        return view('admin.dashboard.index', [
+            'title' => 'Dashboard',
             'navigation' => $navigation,
             'list_menu' => $this->menu_admin(),
         ]);

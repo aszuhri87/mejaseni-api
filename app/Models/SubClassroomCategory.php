@@ -16,7 +16,10 @@ class SubClassroomCategory extends Model
     public $keyType = 'string';
 
     protected $fillable = [
-
+        'classroom_category_id',
+        'profile_coach_video_id',
+        'name',
+        'image'
     ];
 
     protected $dates = ['deleted_at'];

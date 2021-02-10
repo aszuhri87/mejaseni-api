@@ -7,6 +7,7 @@
 <link href="assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css"/>
 <link href="assets/plugins/custom/prismjs/prismjs.bundle.css" rel="stylesheet" type="text/css"/>
 <link href="assets/css/style.bundle.css" rel="stylesheet" type="text/css"/>
+<link href="assets/css/style.css" rel="stylesheet" type="text/css" />
 <!--end::Global Theme Styles-->
 
 <!--begin::Layout Themes(used by all pages)-->
@@ -14,8 +15,17 @@
 <link href="assets/css/themes/layout/header/menu/light.css" rel="stylesheet" type="text/css"/>
 <link href="assets/css/themes/layout/brand/dark.css" rel="stylesheet" type="text/css"/>
 <link href="assets/css/themes/layout/aside/dark.css" rel="stylesheet" type="text/css"/>
-<!--end::Layout Themes--> 
+<!--end::Layout Themes-->
 
 <!--begin::Layout Themes(used by all pages)-->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.26.0/slimselect.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/css/dropify.min.css"/>
 <!--end::Layout Themes-->
+
+<style>
+    .ss-main .ss-single-selected{
+        width: 100%;
+        height: 40px;
+        padding: 0 12px 0 12px;
+    }
+</style>

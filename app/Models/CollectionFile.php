@@ -16,7 +16,9 @@ class CollectionFile extends Model
     public $keyType = 'string';
 
     protected $fillable = [
-
+        'collection_id',
+        'name',
+        'url'
     ];
 
     protected $dates = ['deleted_at'];

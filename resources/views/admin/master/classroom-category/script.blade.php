@@ -17,7 +17,7 @@
                     sScrollY: ($(window).height() < 700) ? $(window).height() - 200 : $(window).height() - 450,
                     ajax: {
                         type: 'POST',
-                        url: "{{ url('admin/master/courses/package/dt') }}",
+                        url: "{{ url('admin/master/courses/classroom-category/dt') }}",
                     },
                     columns: [
                         { data: 'DT_RowIndex' },
@@ -39,7 +39,7 @@
                             data: "id",
                             render : function(data, type, full, meta) {
                                 return `
-                                    <a href="{{url('/admin/master/courses/package')}}/${data}" title="Edit" class="btn btn-edit btn-sm btn-clean btn-icon mr-2" title="Edit details">
+                                    <a href="{{url('/admin/master/courses/classroom-category')}}/${data}" title="Edit" class="btn btn-edit btn-sm btn-clean btn-icon mr-2" title="Edit details">
                                         <span class="svg-icon svg-icon-md">
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -50,7 +50,7 @@
                                             </svg>
                                         </span>
                                     </a>
-                                    <a href="{{url('/admin/master/courses/package')}}/${data}" title="Delete" class="btn btn-delete btn-sm btn-clean btn-icon" title="Delete">
+                                    <a href="{{url('/admin/master/courses/classroom-category')}}/${data}" title="Delete" class="btn btn-delete btn-sm btn-clean btn-icon" title="Delete">
                                         <span class="svg-icon svg-icon-md">
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -91,11 +91,11 @@
                 $(document).on('click', '#add-btn', function(event){
                     event.preventDefault();
 
-                    $('#form-package').trigger("reset");
-                    $('#form-package').attr('action','{{url('admin/master/courses/package')}}');
-                    $('#form-package').attr('method','POST');
+                    $('#form-classroom-category').trigger("reset");
+                    $('#form-classroom-category').attr('action','{{url('admin/master/courses/classroom-category')}}');
+                    $('#form-classroom-category').attr('method','POST');
 
-                    showModal('modal-package');
+                    showModal('modal-classroom-category');
                 });
 
                 $(document).on('click', '.btn-edit', function(event){
@@ -103,13 +103,13 @@
 
                     var data = init_table.row($(this).parents('tr')).data();
 
-                    $('#form-package').trigger("reset");
-                    $('#form-package').attr('action', $(this).attr('href'));
-                    $('#form-package').attr('method','PUT');
+                    $('#form-classroom-category').trigger("reset");
+                    $('#form-classroom-category').attr('action', $(this).attr('href'));
+                    $('#form-classroom-category').attr('method','PUT');
 
-                    $('#form-package').find('input[name="name"]').val(data.name);
+                    $('#form-classroom-category').find('input[name="name"]').val(data.name);
 
-                    showModal('modal-package');
+                    showModal('modal-classroom-category');
                 });
 
                 $(document).on('click', '.btn-delete', function(event){
@@ -117,8 +117,8 @@
                     var url = $(this).attr('href');
 
                     Swal.fire({
-                        title: 'Delete Package?',
-                        text: "Deleted Package will be permanently lost!",
+                        title: 'Delete Classroom Category?',
+                        text: "Deleted Classroom Category will be permanently lost!",
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#7F16A7',
@@ -144,7 +144,7 @@
                 });
             },
             formSubmit = () => {
-                $('#form-package').submit(function(event){
+                $('#form-classroom-category').submit(function(event){
                     event.preventDefault();
 
                     btn_loading('start')
@@ -156,7 +156,7 @@
                     .done(function(res, xhr, meta) {
                         toastr.success(res.message, 'Success')
                         init_table.draw(false);
-                        hideModal('modal-package');
+                        hideModal('modal-classroom-category');
                     })
                     .fail(function(res, error) {
                         toastr.error(res.responseJSON.message, 'Failed')

@@ -15,12 +15,9 @@ class CreateToolsTable extends Migration
     {
         Schema::create('tools', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('classroom_id');
             $table->string('text');
             $table->timestamps();
             $table->softDeletes();
-
-            $table->foreign('classroom_id')->references('id')->on('classrooms');
         });
     }
 

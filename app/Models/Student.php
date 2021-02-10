@@ -17,7 +17,13 @@ class Student extends Authenticatable
     public $keyType = 'string';
 
     protected $fillable = [
-
+        'name',
+        'username',
+        'email',
+        'password',
+        'phone',
+        'image',
+        'expertise'
     ];
 
     protected $dates = ['deleted_at'];

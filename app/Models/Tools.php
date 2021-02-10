@@ -16,7 +16,7 @@ class Tools extends Model
     public $keyType = 'string';
 
     protected $fillable = [
-
+        'text'
     ];
 
     protected $dates = ['deleted_at'];

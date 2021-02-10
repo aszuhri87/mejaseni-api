@@ -16,7 +16,10 @@ class Collection extends Model
     public $keyType = 'string';
 
     protected $fillable = [
-
+        'student_id',
+        'assignment_id',
+        'description',
+        'upload_date'
     ];
 
     protected $dates = ['deleted_at'];

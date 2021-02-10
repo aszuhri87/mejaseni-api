@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateStudentClassroomsTable extends Migration
+class CreateClassroomToolsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,15 @@ class CreateStudentClassroomsTable extends Migration
      */
     public function up()
     {
-        Schema::create('student_classrooms', function (Blueprint $table) {
+        Schema::create('classroom_tools', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('classroom_id');
-            $table->uuid('student_id');
+            $table->uuid('tool_id');
             $table->timestamps();
             $table->softDeletes();
 
             $table->foreign('classroom_id')->references('id')->on('classrooms');
-            $table->foreign('student_id')->references('id')->on('students');
+            $table->foreign('tool_id')->references('id')->on('tools');
         });
     }
 
@@ -32,6 +32,6 @@ class CreateStudentClassroomsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('student_classrooms');
+        Schema::dropIfExists('classroom_tools');
     }
 }

@@ -6,11 +6,11 @@ use App\Http\Controllers\BaseMenu;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
-use App\Models\Package;
+use App\Models\ClassroomCategory;
 
 use DataTables;
 
-class PackageController extends BaseMenu
+class ClassroomCategoryController extends BaseMenu
 {
     public function index()
     {
@@ -22,12 +22,12 @@ class PackageController extends BaseMenu
                 'title' => 'Courses'
             ],
             [
-                'title' => 'Package'
+                'title' => 'Class Category'
             ],
         ];
 
-        return view('admin.master.package.index', [
-            'title' => 'Package',
+        return view('admin.master.classroom-category.index', [
+            'title' => 'Class Category',
             'navigation' => $navigation,
             'list_menu' => $this->menu_admin(),
         ]);
@@ -35,7 +35,7 @@ class PackageController extends BaseMenu
 
     public function dt()
     {
-        $data = DB::table('packages')
+        $data = DB::table('classroom_categories')
             ->select([
                 'id',
                 'name',
@@ -52,7 +52,7 @@ class PackageController extends BaseMenu
     {
         try {
             $result = DB::transaction(function () use($request){
-                $result = Package::create([
+                $result = ClassroomCategory::create([
                     'name' => $request->name,
                 ]);
 
@@ -75,7 +75,7 @@ class PackageController extends BaseMenu
     {
         try {
             $result = DB::transaction(function () use($request, $id){
-                $result = Package::find($id)->update([
+                $result = ClassroomCategory::find($id)->update([
                     'name' => $request->name,
                 ]);
 
@@ -97,7 +97,7 @@ class PackageController extends BaseMenu
     public function destroy($id)
     {
         try {
-            $result = Package::find($id);
+            $result = ClassroomCategory::find($id);
 
             DB::transaction(function () use($result){
                 $result->delete();

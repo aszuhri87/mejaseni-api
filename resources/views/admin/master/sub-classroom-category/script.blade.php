@@ -1,7 +1,7 @@
 <script type="text/javascript">
     var Page = function() {
         var _componentPage = function(){
-            var init_table;
+            var init_table, init_classroom_category, init_profile_coach_video;
 
             $(document).ready(function() {
                 initTable();
@@ -17,11 +17,12 @@
                     sScrollY: ($(window).height() < 700) ? $(window).height() - 200 : $(window).height() - 450,
                     ajax: {
                         type: 'POST',
-                        url: "{{ url('admin/master/courses/package/dt') }}",
+                        url: "{{ url('admin/master/courses/sub-classroom-category/dt') }}",
                     },
                     columns: [
                         { data: 'DT_RowIndex' },
                         { data: 'name' },
+                        { data: 'category' },
                         { defaultContent: '' }
                         ],
                     columnDefs: [
@@ -39,7 +40,7 @@
                             data: "id",
                             render : function(data, type, full, meta) {
                                 return `
-                                    <a href="{{url('/admin/master/courses/package')}}/${data}" title="Edit" class="btn btn-edit btn-sm btn-clean btn-icon mr-2" title="Edit details">
+                                    <a href="{{url('/admin/master/courses/sub-classroom-category/update')}}/${data}" title="Edit" class="btn btn-edit btn-sm btn-clean btn-icon mr-2" title="Edit details">
                                         <span class="svg-icon svg-icon-md">
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -50,7 +51,7 @@
                                             </svg>
                                         </span>
                                     </a>
-                                    <a href="{{url('/admin/master/courses/package')}}/${data}" title="Delete" class="btn btn-delete btn-sm btn-clean btn-icon" title="Delete">
+                                    <a href="{{url('/admin/master/courses/sub-classroom-category')}}/${data}" title="Delete" class="btn btn-delete btn-sm btn-clean btn-icon" title="Delete">
                                         <span class="svg-icon svg-icon-md">
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -91,11 +92,18 @@
                 $(document).on('click', '#add-btn', function(event){
                     event.preventDefault();
 
-                    $('#form-package').trigger("reset");
-                    $('#form-package').attr('action','{{url('admin/master/courses/package')}}');
-                    $('#form-package').attr('method','POST');
+                    $('#form-sub-classroom-category').trigger("reset");
+                    $('#form-sub-classroom-category').attr('action','{{url('admin/master/courses/sub-classroom-category')}}');
+                    $('#form-sub-classroom-category').attr('method','POST');
 
-                    showModal('modal-package');
+                    get_classroom_category();
+                    get_profile_coach_video();
+
+                    $('#image').html('<input type="file" name="image" class="dropify image"/>');
+
+                    $('.dropify').dropify();
+
+                    showModal('modal-sub-classroom-category');
                 });
 
                 $(document).on('click', '.btn-edit', function(event){
@@ -103,13 +111,28 @@
 
                     var data = init_table.row($(this).parents('tr')).data();
 
-                    $('#form-package').trigger("reset");
-                    $('#form-package').attr('action', $(this).attr('href'));
-                    $('#form-package').attr('method','PUT');
+                    $('#form-sub-classroom-category').trigger("reset");
+                    $('#form-sub-classroom-category').attr('action', $(this).attr('href'));
+                    $('#form-sub-classroom-category').attr('method','PUT');
 
-                    $('#form-package').find('input[name="name"]').val(data.name);
+                    $('#form-sub-classroom-category').find('input[name="name"]').val(data.name);
 
-                    showModal('modal-package');
+                    get_classroom_category(data.classroom_category_id)
+                    get_profile_coach_video(data.profile_coach_video_id)
+
+                    $('#image').empty();
+
+                    if(data.image_url){
+                        element = `<input type="file" name="image" class="dropify image"  data-default-file="${data.image_url}"/>`;
+                    }else{
+                        element = `<input type="file" name="image" class="dropify image"/>`;
+                    }
+
+                    $('#image').html(element);
+
+                    $('.dropify').dropify();
+
+                    showModal('modal-sub-classroom-category');
                 });
 
                 $(document).on('click', '.btn-delete', function(event){
@@ -117,8 +140,8 @@
                     var url = $(this).attr('href');
 
                     Swal.fire({
-                        title: 'Delete Package?',
-                        text: "Deleted Package will be permanently lost!",
+                        title: 'Delete Classroom Category?',
+                        text: "Deleted Classroom Category will be permanently lost!",
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#7F16A7',
@@ -142,21 +165,37 @@
                     })
                     $('.swal2-title').addClass('justify-content-center')
                 });
+
+                $(document).on('change', '#classroom-category', function(){
+                    if($('#classroom-category').val() == ""){
+                        $('.required-classroom-category').show();
+                    }else{
+                        $('.required-classroom-category').hide();
+                    }
+                })
             },
             formSubmit = () => {
-                $('#form-package').submit(function(event){
+                $('#form-sub-classroom-category').submit(function(event){
                     event.preventDefault();
+
+                    if($('#classroom-category').val() == ""){
+                        $('.required-classroom-category').show();
+                        return false;
+                    }
 
                     btn_loading('start')
                     $.ajax({
                         url: $(this).attr('action'),
                         type: $(this).attr('method'),
-                        data: $(this).serialize(),
+                        data: new FormData(this),
+                        contentType: false,
+                        cache: false,
+                        processData: false,
                     })
                     .done(function(res, xhr, meta) {
-                        toastr.success(res.message, 'Success')
+                        toastr.success(res.message, 'Success');
                         init_table.draw(false);
-                        hideModal('modal-package');
+                        hideModal('modal-sub-classroom-category');
                     })
                     .fail(function(res, error) {
                         toastr.error(res.responseJSON.message, 'Failed')
@@ -165,6 +204,61 @@
                         btn_loading('stop')
                     });
                 });
+            }
+
+            const get_classroom_category = (id) => {
+                if(init_classroom_category){
+                    init_classroom_category.destroy();
+                }
+
+                init_classroom_category = new SlimSelect({
+                    select: '#classroom-category'
+                })
+
+                $.ajax({
+                    url: '{{url('public/get-classroom-category')}}',
+                    type: 'GET',
+                    dataType: 'json',
+                })
+                .done(function(res, xhr, meta) {
+                    let element = `<option value="">Select Class Category</option>`
+                    $.each(res.data, function(index, data) {
+                        if(id == data.id){
+                            element += `<option value="${data.id}" selected>${data.name}</option>`;
+                        }else{
+                            element += `<option value="${data.id}">${data.name}</option>`;
+                        }
+                    });
+
+                    $('#classroom-category').html(element);
+                })
+            },
+            get_profile_coach_video = (id) => {
+                if(init_profile_coach_video){
+                    init_profile_coach_video.destroy();
+                }
+
+                init_profile_coach_video = new SlimSelect({
+                    select: '#profile-coach-video'
+                })
+
+                $.ajax({
+                    url: '{{url('public/get-profile-coach-video')}}',
+                    type: 'GET',
+                    dataType: 'json',
+                })
+                .done(function(res, xhr, meta) {
+                    let element = `<option value="">Select Profile Video</option>`
+                    $.each(res.data, function(index, data) {
+                        if(id == data.id){
+                            element += `<option value="${data.id}" selected>${data.name}</option>`;
+                        }else{
+                            element += `<option value="${data.id}">${data.name}</option>`;
+                        }
+                    });
+
+                    $('#profile-coach-video').html(element);
+                })
             }
         };
 

@@ -53,6 +53,7 @@ div.dataTables_wrapper div.dataTables_paginate {
 div.dataTables_wrapper div.dataTables_paginate ul.pagination {
   margin: 2px 0;
   white-space: nowrap;
+  margin-top: -25px;
   -webkit-box-pack: end;
   -ms-flex-pack: end;
   justify-content: flex-end; }

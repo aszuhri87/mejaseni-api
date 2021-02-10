@@ -16,7 +16,12 @@ class Assignment extends Model
     public $keyType = 'string';
 
     protected $fillable = [
-
+        'session_id',
+        'name',
+        'file_url',
+        'description',
+        'upload_date',
+        'due_date'
     ];
 
     protected $dates = ['deleted_at'];

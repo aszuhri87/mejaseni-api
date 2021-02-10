@@ -16,7 +16,8 @@ class StudentClassroom extends Model
     public $keyType = 'string';
 
     protected $fillable = [
-
+        'classroom_id',
+        'student_id'
     ];
 
     protected $dates = ['deleted_at'];

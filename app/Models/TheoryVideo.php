@@ -16,7 +16,10 @@ class TheoryVideo extends Model
     public $keyType = 'string';
 
     protected $fillable = [
-
+        'session_video_id',
+        'name',
+        'is_youtube',
+        'url'
     ];
 
     protected $dates = ['deleted_at'];

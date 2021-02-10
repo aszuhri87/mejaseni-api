@@ -6,11 +6,13 @@ use App\Http\Controllers\BaseMenu;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
-use App\Models\Package;
+use App\Models\Classroom;
+use App\Models\Tools;
 
 use DataTables;
+use Storage;
 
-class PackageController extends BaseMenu
+class ClassroomController extends BaseMenu
 {
     public function index()
     {
@@ -22,12 +24,12 @@ class PackageController extends BaseMenu
                 'title' => 'Courses'
             ],
             [
-                'title' => 'Package'
+                'title' => 'Class'
             ],
         ];
 
-        return view('admin.master.package.index', [
-            'title' => 'Package',
+        return view('admin.master.classroom.index', [
+            'title' => 'Class',
             'navigation' => $navigation,
             'list_menu' => $this->menu_admin(),
         ]);
@@ -114,5 +116,20 @@ class PackageController extends BaseMenu
                 "message"=> $e->getMessage(),
             ]);
         }
+    }
+
+    public function ac(Request $request)
+    {
+        $data = Tools::select([
+                'id',
+                'text'
+            ])
+            ->where('text', 'ilike', '%' . strtoupper($request->param) . '%')
+            ->orderBy('text', 'asc')
+            ->get();
+
+        return response([
+            'data' => $data,
+        ]);
     }
 }

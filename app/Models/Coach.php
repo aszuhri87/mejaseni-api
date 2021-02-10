@@ -17,7 +17,14 @@ class Coach extends Authenticatable
     public $keyType = 'string';
 
     protected $fillable = [
-
+        'name',
+        'username',
+        'email',
+        'password',
+        'phone',
+        'description',
+        'image',
+        'expertise'
     ];
 
     protected $dates = ['deleted_at'];
