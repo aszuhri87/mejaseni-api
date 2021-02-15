@@ -20,6 +20,7 @@ use App\Http\Controllers\Admin\Master\PackageController;
 use App\Http\Controllers\Admin\Master\ClassroomController;
 use App\Http\Controllers\Admin\Master\ClassroomCategoryController;
 use App\Http\Controllers\Admin\Master\SubClassroomCategoryController;
+use App\Http\Controllers\Admin\Master\CoachController;
 
 /*
 |--------------------------------------------------------------------------
@@ -77,6 +78,11 @@ Route::group(['middleware' => ['auth-handling']], function () {
                 Route::resource('classroom', ClassroomController::class);
             });
 
+            Route::post('coach/dt', [CoachController::class, 'dt']);
+            Route::post('coach/update/{id}', [CoachController::class, 'update']);
+            Route::delete('coach/delete-medsos/{id}', [CoachController::class, 'delete_medsos']);
+            Route::get('coach/coach-sosmed/{id}', [CoachController::class, 'coach_sosmed']);
+            Route::resource('coach', CoachController::class);
 
         });
     });
@@ -94,5 +100,6 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::get('get-sub-classroom-category', [PublicController::class, 'get_sub_classroom_category']);
         Route::get('get-sub-classroom-category-by-category/{id}', [PublicController::class, 'get_sub_classroom_category_by_category']);
         Route::get('get-profile-coach-video', [PublicController::class, 'get_profile_coach_videos']);
+        Route::get('get-sosmed',[PublicController::class, 'get_sosmed']);
     });
 });

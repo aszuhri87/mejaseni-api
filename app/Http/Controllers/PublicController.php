@@ -100,4 +100,29 @@ class PublicController extends Controller
             ]);
         }
     }
+
+    public function get_sosmed()
+    {
+        try {
+            $result = DB::table('sosmeds')
+                ->select([
+                    'sosmeds.id',
+                    'sosmeds.name',
+                    'sosmeds.url',
+                    'sosmeds.slug',
+                ])
+                ->whereNull('sosmeds.deleted_at')
+                ->get();
+
+            return response([
+                "data"      => $result,
+                "message"   => 'OK'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
 }
