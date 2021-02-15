@@ -299,7 +299,7 @@
 
                 $(document).on('click','.btn-add-medsos',function(event){
                     event.preventDefault();
-                    $('.medsos').append(element_sosmed);
+                    $('#medsos').append(element_sosmed);
                 })
 
                 $(document).on('click','.delete-medsos',function(event){
@@ -396,7 +396,7 @@
                                 element +=`<option value="${value[0]}">${value[1]}</option>`;
                             }
                         });
-                        element += `
+                        element += `</select>
                                     </div>
                                 </div>
                                 <div class="col-1">
@@ -497,15 +497,6 @@
                     <div class="list-sosmed mb-3">
                         <div class="row">
                             <div class="col-11 text-right">
-                                <a href="javascript:void(0)" class="delete-medsos" data-url="">
-                                    <span class="svg-icon svg-icon-danger svg-icon-2x"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-02-01-052524/theme/html/demo1/dist/../src/media/svg/icons/Home/Trash.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                            <rect x="0" y="0" width="24" height="24"/>
-                                            <path d="M6,8 L18,8 L17.106535,19.6150447 C17.04642,20.3965405 16.3947578,21 15.6109533,21 L8.38904671,21 C7.60524225,21 6.95358004,20.3965405 6.89346498,19.6150447 L6,8 Z M8,10 L8.45438229,14.0894406 L15.5517885,14.0339036 L16,10 L8,10 Z" fill="#000000" fill-rule="nonzero"/>
-                                            <path d="M14,4.5 L14,3.5 C14,3.22385763 13.7761424,3 13.5,3 L10.5,3 C10.2238576,3 10,3.22385763 10,3.5 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z" fill="#000000" opacity="0.3"/>
-                                        </g>
-                                    </svg><!--end::Svg Icon--></span>
-                                </a>
                                 <input type="hidden" name="init_sosmed_coach[]" class="init_sosmed_coach">
                                 <div class="input-group">
                                     <input type="text" name="url_sosmed[]" class="form-control" required>
@@ -520,8 +511,19 @@
                         ];
                     });
 
-                    element_sosmed += `
+                    element_sosmed += `</select>
                                 </div>
+                            </div>
+                            <div class="col-1">
+                                <a href="javascript:void(0)" class="delete-medsos" data-url="">
+                                    <span class="svg-icon svg-icon-danger svg-icon-2x"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-02-01-052524/theme/html/demo1/dist/../src/media/svg/icons/Home/Trash.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                            <rect x="0" y="0" width="24" height="24"/>
+                                            <path d="M6,8 L18,8 L17.106535,19.6150447 C17.04642,20.3965405 16.3947578,21 15.6109533,21 L8.38904671,21 C7.60524225,21 6.95358004,20.3965405 6.89346498,19.6150447 L6,8 Z M8,10 L8.45438229,14.0894406 L15.5517885,14.0339036 L16,10 L8,10 Z" fill="#000000" fill-rule="nonzero"/>
+                                            <path d="M14,4.5 L14,3.5 C14,3.22385763 13.7761424,3 13.5,3 L10.5,3 C10.2238576,3 10,3.22385763 10,3.5 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z" fill="#000000" opacity="0.3"/>
+                                        </g>
+                                    </svg><!--end::Svg Icon--></span>
+                                </a>
                             </div>
                         </div>
                     </div>`;
@@ -532,95 +534,6 @@
                 .always(function() {
 
                 });
-            }
-
-            const get_classroom_category = (id) => {
-                if(init_classroom_category){
-                    init_classroom_category.destroy();
-                }
-
-                init_classroom_category = new SlimSelect({
-                    select: '#classroom-category'
-                })
-
-                $.ajax({
-                    url: '{{url('public/get-classroom-category')}}',
-                    type: 'GET',
-                    dataType: 'json',
-                })
-                .done(function(res, xhr, meta) {
-                    let element = `<option value="">Select Class Category</option>`
-                    $.each(res.data, function(index, data) {
-                        if(id == data.id){
-                            element += `<option value="${data.id}" selected>${data.name}</option>`;
-                        }else{
-                            element += `<option value="${data.id}">${data.name}</option>`;
-                        }
-                    });
-
-                    $('#classroom-category').html(element);
-                })
-            },
-            get_sub_classroom_category = (id) => {
-                if(init_sub_classroom_category){
-                    init_sub_classroom_category.destroy();
-                }
-
-                init_sub_classroom_category = new SlimSelect({
-                    select: '#sub-classroom-category'
-                })
-
-                $.ajax({
-                    url: '{{url('public/get-sub-classroom-category')}}/'+category_id,
-                    type: 'GET',
-                    dataType: 'json',
-                })
-                .done(function(res, xhr, meta) {
-                    let element = `<option value="">Select Sub Class Category</option>`
-                    $.each(res.data, function(index, data) {
-                        if(id == data.id){
-                            element += `<option value="${data.id}" selected>${data.name}</option>`;
-                        }else{
-                            element += `<option value="${data.id}">${data.name}</option>`;
-                        }
-                    });
-
-                    $('#sub-classroom-category').html(element);
-                })
-            },
-            get_sub_classroom_category_by_category = (id, select_id) => {
-                if(init_sub_classroom_category){
-                    init_sub_classroom_category.destroy();
-                }
-
-                init_sub_classroom_category = new SlimSelect({
-                    select: '#sub-classroom-category'
-                })
-
-                $.ajax({
-                    url: '{{url('public/get-sub-classroom-category-by-category')}}/'+id,
-                    type: 'GET',
-                    dataType: 'json',
-                })
-                .done(function(res, xhr, meta) {
-                    if(res.data.length > 0){
-                        $('.select-sub-category').show();
-
-                        let element = `<option value="">Select Sub Class Category</option>`
-
-                        $.each(res.data, function(index, data) {
-                            if(select_id == data.id){
-                                element += `<option value="${data.id}" selected>${data.name}</option>`;
-                            }else{
-                                element += `<option value="${data.id}">${data.name}</option>`;
-                            }
-                        });
-
-                        $('#sub-classroom-category').html(element);
-                    }else{
-                        $('.select-sub-category').hide();
-                    }
-                })
             }
         };
 
