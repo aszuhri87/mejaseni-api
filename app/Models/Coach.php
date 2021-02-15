@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 use App\Traits\Uuid;
 
 class Coach extends Authenticatable
 {
-    use HasFactory, Notifiable, Uuid, SoftDeletes;
+    use HasFactory, Notifiable, Uuid, SoftDeletes, HasRoles;
 
     public $incrementing = false;
 

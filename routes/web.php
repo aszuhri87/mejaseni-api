@@ -82,8 +82,9 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::post('coach/update/{id}', [CoachController::class, 'update']);
             Route::delete('coach/delete-medsos/{id}', [CoachController::class, 'delete_medsos']);
             Route::get('coach/coach-sosmed/{id}', [CoachController::class, 'coach_sosmed']);
+            Route::get('coach/permission/{id}', [CoachController::class, 'get_permission']);
+            Route::post('coach/permission/{id}', [CoachController::class, 'set_permission']);
             Route::resource('coach', CoachController::class);
-
         });
     });
 

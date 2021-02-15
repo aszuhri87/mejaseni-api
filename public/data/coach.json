@@ -1,0 +1,10 @@
+[
+	{
+		"key": "coach_dashboard",
+		"title": "Dashboard",
+		"expanded": true,
+		"folder": false,
+        "crud": false,
+        "children" : false
+    }
+]

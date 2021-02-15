@@ -1,5 +1,7 @@
 @extends('layouts.app')
-
+@push('style')
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.fancytree/2.35.0/skin-win8/ui.fancytree.min.css">
+@endpush
 @section('content')
 <div class="card">
     <div class="card-body">
@@ -80,5 +82,7 @@
 @endsection
 
 @push('script')
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.fancytree/2.35.0/jquery.fancytree-all.min.js"></script>
     @include('admin.master.coach.script')
 @endpush
