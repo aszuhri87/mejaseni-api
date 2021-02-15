@@ -63,9 +63,9 @@
             <thead>
                 <tr>
                     <th>No</th>
-                    <th width="30%">Name</th>
+                    <th width="40%">Name</th>
                     <th width="30%">Category</th>
-                    <th width="30%">Video Profile Coach</th>
+                    <th width="20%">Harga</th>
                     <th width="10%">Actions</th>
                 </tr>
             </thead>

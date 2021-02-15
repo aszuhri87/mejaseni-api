@@ -17,8 +17,8 @@ class CreateClassroomsTable extends Migration
             $table->uuid('id')->primary();
             $table->uuid('classroom_category_id')->nullable();
             $table->uuid('sub_classroom_category_id')->nullable();
-            $table->uuid('package_id')->nullable();
-            $table->uuid('platform_id');
+            $table->integer('package_type')->nullable();
+            $table->integer('sub_package_type')->nullable();
             $table->integer('type');
             $table->string('name');
             $table->text('description');
@@ -31,8 +31,6 @@ class CreateClassroomsTable extends Migration
 
             $table->foreign('classroom_category_id')->references('id')->on('classroom_categories');
             $table->foreign('sub_classroom_category_id')->references('id')->on('sub_classroom_categories');
-            $table->foreign('package_id')->references('id')->on('packages');
-            $table->foreign('platform_id')->references('id')->on('platforms');
         });
     }
 

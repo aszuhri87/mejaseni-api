@@ -92,6 +92,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
     Route::group(['prefix' => 'public'], function () {
         Route::get('get-classroom-category', [PublicController::class, 'get_classroom_category']);
         Route::get('get-sub-classroom-category', [PublicController::class, 'get_sub_classroom_category']);
+        Route::get('get-sub-classroom-category-by-category/{id}', [PublicController::class, 'get_sub_classroom_category_by_category']);
         Route::get('get-profile-coach-video', [PublicController::class, 'get_profile_coach_videos']);
     });
 });

@@ -25,8 +25,8 @@
                     columns: [
                         { data: 'DT_RowIndex' },
                         { data: 'name' },
-                        { data: 'name' },
-                        { data: 'name' },
+                        { data: 'category' },
+                        { data: 'price' },
                         { defaultContent: '' }
                         ],
                     columnDefs: [
@@ -35,6 +35,55 @@
                             searchable: false,
                             orderable: false,
                             className: "text-center"
+                        },
+                        {
+                            targets: 1,
+                            data: "name",
+                            render : function(data, type, full, meta) {
+                                let package_type;
+
+                                if(full.package_type == 2){
+                                    package_type = 'Reguler';
+                                }else{
+                                    package_type = 'Special';
+                                }
+
+                                return `
+                                        <div class="d-flex align-items-center">
+                                            <div class="mr-5">
+                                                <img src="${full.image_url}" class="rounded" width="50" height="50"/>
+                                            </div>
+                                            <div class="d-flex flex-column font-weight-bold">
+                                                <a href="javascript::void(0);" class="text-dark text-hover-primary mb-1 font-size-lg">${data}</a>
+                                                <span class="text-muted">${package_type} Package</span>
+                                            </div>
+                                        </div>
+                                `;
+                            }
+                        },
+                        {
+                            targets: 2,
+                            data: "category",
+                            render: function(data, type, full, meta) {
+                                return `
+                                    <div class="d-flex flex-column font-weight-bold">
+                                        <a href="javascript::void(0);" class="text-dark text-hover-primary mb-1 font-size-lg">${data}</a>
+                                        <span class="text-muted">${full.sub_category ? full.sub_category : '-'}</span>
+                                    </div>
+                                `;
+                            }
+                        },
+                        {
+                            targets: 3,
+                            data: "price",
+                            render: function(data, type, full, meta) {
+                                return `
+                                    <div class="d-flex flex-column font-weight-bold">
+                                        <a href="javascript::void(0);" class="text-dark text-hover-primary mb-1 font-size-lg">Rp ${numeral(data).format('0,0')}</a>
+                                        <span class="text-muted">Per Package</span>
+                                    </div>
+                                `;
+                            }
                         },
                         {
                             targets: -1,
@@ -101,7 +150,17 @@
                     $('#form-classroom').attr('method','POST');
 
                     get_classroom_category();
-                    get_sub_classroom_category();
+                    $('.switch-sub-package').hide();
+                    $('.select-sub-category').hide();
+
+                    $("input[name=package_type]").attr('checked', false);
+                    $("input[name=sub_package_type]").attr('checked', false);
+                    $('#switch-sub-package').attr('checked', false);
+                    $('#sub-classroom-category').val('');
+                    $('#classroom-category').val('');
+
+                    arr_tools = [];
+                    initTools(arr_tools);
 
                     $('#image').html('<input type="file" name="image" class="dropify image"/>');
 
@@ -117,12 +176,43 @@
 
                     $('#form-classroom').trigger("reset");
                     $('#form-classroom').attr('action', $(this).attr('href'));
-                    $('#form-classroom').attr('method','PUT');
+                    $('#form-classroom').attr('method','POST');
+
+                    $("input[name=package_type]").attr('checked', false);
+                    $("input[name=sub_package_type]").attr('checked', false);
+                    $('#switch-sub-package').attr('checked', false);
+                    $('#sub-classroom-category').val('');
+                    $('#classroom-category').val('');
 
                     $('#form-classroom').find('input[name="name"]').val(data.name);
+                    $('#form-classroom').find('input[name="session"]').val(data.session_total);
+                    $('#form-classroom').find('input[name="duration"]').val(data.session_duration);
+                    $('#form-classroom').find('input[name="price"]').val(data.price);
+                    $('#form-classroom').find('textarea[name="description"]').val(data.description);
 
                     get_classroom_category(data.classroom_category_id)
-                    get_sub_classroom_category(data.profile_coach_video_id)
+
+                    if(data.sub_classroom_category_id){
+                        get_sub_classroom_category_by_category(data.classroom_category_id, data.sub_classroom_category_id)
+                    }else{
+                        $('.select-sub-category').hide();
+                    }
+
+                    if(data.package_type == 2){
+                        $("input[name=package_type][value=" + data.package_type + "]").attr('checked', 'checked');
+                        $('.switch-sub-package').show();
+
+                        if(data.sub_package_type){
+                            $('.select-sub-package').show();
+                            $('#switch-sub-package').attr('checked', 'checked');
+                            $("input[name=sub_package_type][value=" + data.package_type + "]").attr('checked', 'checked');
+                        }else{
+                            $('.select-sub-package').hide();
+                        }
+                    }else{
+                        $("input[name=package_type][value=" + data.package_type + "]").attr('checked', 'checked');
+                        $('.switch-sub-package').hide();
+                    }
 
                     $('#image').empty();
 
@@ -167,14 +257,33 @@
                             .always(function() { });
                         }
                     })
+
                     $('.swal2-title').addClass('justify-content-center')
                 });
+
+                $(document).on('change', '.radio-package', function(){
+                    if($(this).val() == 2){
+                        $('.switch-sub-package').show();
+                    }else{
+                        $('.switch-sub-package').hide();
+                    }
+                })
+
+                $(document).on('change', '#switch-sub-package', function(){
+                    if($('input[name="switch_sub"]:checked').length == 1){
+                        $('.select-sub-package').show();
+                    }else{
+                        $('.select-sub-package').hide();
+                    }
+                })
 
                 $(document).on('change', '#classroom-category', function(){
                     if($('#classroom-category').val() == ""){
                         $('.required-classroom-category').show();
+                        $('.select-sub-category').hide();
                     }else{
                         $('.required-classroom-category').hide();
+                        get_sub_classroom_category_by_category($('#classroom-category').val())
                     }
                 })
 
@@ -277,7 +386,7 @@
             initTools = (collections, ajax = false) => {
                 let element = '';
                 $.each(collections, function(index, data){
-                   element += `<tr>
+                    element += `<tr>
                             <td class="text-center">
                                 <i id="${ajax ? data.id : '-'}" data="${ajax ? '-' : data}" class="far fa-trash-alt icn text-danger btn-delete-tools"></i>
                             </td>
@@ -296,11 +405,17 @@
                         return false;
                     }
 
+                    let form_data = new FormData(this)
+
+                    for (var i = 0; i < arr_tools.length; i++) {
+                        form_data.append('tools[]', arr_tools[i]);
+                    }
+
                     btn_loading('start')
                     $.ajax({
                         url: $(this).attr('action'),
                         type: $(this).attr('method'),
-                        data: new FormData(this),
+                        data: form_data,
                         contentType: false,
                         cache: false,
                         processData: false,
@@ -356,7 +471,7 @@
                 })
 
                 $.ajax({
-                    url: '{{url('public/get-sub-classroom-category')}}',
+                    url: '{{url('public/get-sub-classroom-category')}}/'+category_id,
                     type: 'GET',
                     dataType: 'json',
                 })
@@ -371,6 +486,40 @@
                     });
 
                     $('#sub-classroom-category').html(element);
+                })
+            },
+            get_sub_classroom_category_by_category = (id, select_id) => {
+                if(init_sub_classroom_category){
+                    init_sub_classroom_category.destroy();
+                }
+
+                init_sub_classroom_category = new SlimSelect({
+                    select: '#sub-classroom-category'
+                })
+
+                $.ajax({
+                    url: '{{url('public/get-sub-classroom-category-by-category')}}/'+id,
+                    type: 'GET',
+                    dataType: 'json',
+                })
+                .done(function(res, xhr, meta) {
+                    if(res.data.length > 0){
+                        $('.select-sub-category').show();
+
+                        let element = `<option value="">Select Sub Class Category</option>`
+
+                        $.each(res.data, function(index, data) {
+                            if(select_id == data.id){
+                                element += `<option value="${data.id}" selected>${data.name}</option>`;
+                            }else{
+                                element += `<option value="${data.id}">${data.name}</option>`;
+                            }
+                        });
+
+                        $('#sub-classroom-category').html(element);
+                    }else{
+                        $('.select-sub-category').hide();
+                    }
                 })
             }
         };

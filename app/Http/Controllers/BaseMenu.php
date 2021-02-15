@@ -64,19 +64,19 @@ class BaseMenu extends Controller
                             // ],
                             [
                                 'key' => 'classroom-category',
-                                'title' => 'Class Category',
+                                'title' => 'Kategori Kelas',
                                 'url' => 'admin/master/courses/classroom-category',
                                 'permission' => 'class_category'
                             ],
                             [
                                 'key' => 'sub-classroom-category',
-                                'title' => 'Sub Class Category',
+                                'title' => 'Sub Kategori Kelas',
                                 'url' => 'admin/master/courses/sub-classroom-category',
                                 'permission' => 'sub_class_category'
                             ],
                             [
                                 'key' => 'classroom',
-                                'title' => 'Class',
+                                'title' => 'Kelas',
                                 'url' => 'admin/master/courses/classroom',
                                 'permission' => 'classroom'
                             ],
@@ -122,7 +122,7 @@ class BaseMenu extends Controller
             ],
             [
                 'key' => 'transaction',
-                'title' => 'Transaction Data',
+                'title' => 'Data Transaksi',
                 'url' => '#',
                 'permission' => 'transaction',
                 'icon' => $this->icon('master'),
@@ -175,7 +175,7 @@ class BaseMenu extends Controller
                             ],
                             [
                                 'key' => 'class',
-                                'title' => 'Class',
+                                'title' => 'Kelas',
                                 'url' => 'admin/master/class',
                                 'permission' => 'class'
                             ],
@@ -189,7 +189,7 @@ class BaseMenu extends Controller
                     ],
                     [
                         'key' => 'transaction',
-                        'title' => 'Transaction',
+                        'title' => 'Transaksi',
                         'url' => 'student/master/transaction',
                         'permission' => 'transaction',
                         'children' => [
@@ -218,7 +218,7 @@ class BaseMenu extends Controller
                 'children' => [
                     [
                         'key' => 'general',
-                        'title' => 'General',
+                        'title' => 'Umum',
                         'url' => 'student/master/general',
                         'permission' => 'general'
                     ],

@@ -36,7 +36,7 @@ class SubClassroomCategoryController extends BaseMenu
 
     public function dt()
     {
-        $path = asset('storage').'/';
+        $path = Storage::disk('s3')->url('/');
 
         $data = DB::table('sub_classroom_categories')
             ->select([
@@ -68,7 +68,7 @@ class SubClassroomCategoryController extends BaseMenu
             $result = DB::transaction(function () use($request){
                 if(isset($request->image)){
                     $file = $request->file('image');
-                    $path = Storage::disk('public')->put('images', $file);
+                    $path = Storage::disk('s3')->put('media', $file);
                 }
 
                 $result = SubClassroomCategory::create([
@@ -101,7 +101,7 @@ class SubClassroomCategoryController extends BaseMenu
 
                 if(isset($request->image)){
                     $file = $request->file('image');
-                    $path = Storage::disk('public')->put('images', $file);
+                    $path = Storage::disk('public')->put('media', $file);
 
                     $result->image = $path;
                     $result->update();

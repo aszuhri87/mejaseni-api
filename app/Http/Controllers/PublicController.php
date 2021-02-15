@@ -53,6 +53,30 @@ class PublicController extends Controller
         }
     }
 
+    public function get_sub_classroom_category_by_category($id)
+    {
+        try {
+            $result = DB::table('sub_classroom_categories')
+                ->select([
+                    'id',
+                    'name'
+                ])
+                ->where('classroom_category_id', $id)
+                ->whereNull('deleted_at')
+                ->get();
+
+            return response([
+                "data"      => $result,
+                "message"   => 'OK'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
     public function get_profile_coach_videos()
     {
         try {
@@ -62,7 +86,7 @@ class PublicController extends Controller
                     'coaches.name'
                 ])
                 ->leftJoin('coaches', 'coaches.id','=','profile_coach_videos.coach_id')
-                ->whereNull('deleted_at')
+                ->whereNull('profile_coach_videos.deleted_at')
                 ->get();
 
             return response([

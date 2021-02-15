@@ -18,8 +18,8 @@ class Classroom extends Model
     protected $fillable = [
         'classroom_category_id',
         'sub_classroom_category_id',
-        'package_id',
-        'platform_id',
+        'package_type',
+        'sub_package_type',
         'type',
         'name',
         'description',

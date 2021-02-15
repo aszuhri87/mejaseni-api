@@ -21,7 +21,7 @@
                                     <select name="classroom_category_id" id="classroom-category"></select>
                                     <span class="text-small ml-1 text-danger required-classroom-category" style="display: none">&#8226; Harus diisi</span>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group select-sub-category" style="display: none;">
                                     <label>
                                         Sub Category Class
                                         <span class="text-danger">*</span>
@@ -35,40 +35,40 @@
                                     <label>Package</label>
                                     <div class="radio-inline mt-2">
                                         <label class="radio radio-lg">
-                                            <input type="radio" checked="checked" name="package_type"/>
-                                            <span></span>
-                                            Reguler
-                                        </label>
-                                        <label class="radio radio-lg">
-                                            <input type="radio" name="package_type"/>
+                                            <input type="radio" value="1" name="package_type" class="radio-package"/>
                                             <span></span>
                                             Special
                                         </label>
+                                        <label class="radio radio-lg">
+                                            <input type="radio" value="2" name="package_type" class="radio-package"/>
+                                            <span></span>
+                                            Reguler
+                                        </label>
                                     </div>
                                 </div>
-                                <div class="form-group mt-10">
+                                <div class="form-group mt-10 switch-sub-package" style="display: none;">
                                     <span class="switch switch-sm">
                                         <label>
-                                            <input type="checkbox" checked="checked" name="select"/>
+                                            <input type="checkbox" id="switch-sub-package" name="switch_sub"/>
                                             <span></span>
                                         </label>
                                         Select Sub Package
                                     </span>
-                                    <div class="radio-inline mt-2">
+                                    <div class="radio-inline select-sub-package mt-2" style="display: none;">
                                         <label class="radio radio-lg">
-                                            <input type="radio" name="sub_package_type"/>
+                                            <input type="radio" value="1" name="sub_package_type"/>
                                             <span></span>
-                                            Reguler
+                                            Basic
                                         </label>
                                         <label class="radio radio-lg">
-                                            <input type="radio" name="sub_package_type"/>
+                                            <input type="radio" value="2" name="sub_package_type"/>
                                             <span></span>
-                                            Special
+                                            Intermediate
                                         </label>
                                         <label class="radio radio-lg">
-                                            <input type="radio" name="sub_package_type"/>
+                                            <input type="radio" value="3" name="sub_package_type"/>
                                             <span></span>
-                                            Special
+                                            Advanced
                                         </label>
                                     </div>
                                 </div>
@@ -79,7 +79,7 @@
                         <hr>
                         <div class="form-group">
                             <label>
-                                Name
+                                Name Class
                                 <span class="text-danger">*</span>
                             </label>
                             <input required type="text" name="name" class="form-control" placeholder="Name"/>
@@ -103,28 +103,28 @@
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label>
-                                                Name
+                                                Session
                                                 <span class="text-danger">*</span>
                                             </label>
-                                            <input required type="text" name="name" class="form-control" placeholder="Name"/>
+                                            <input required type="text" name="session" class="form-control" placeholder="Session"/>
                                         </div>
                                     </div>
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label>
-                                                Name
+                                                Duration / Session
                                                 <span class="text-danger">*</span>
                                             </label>
-                                            <input required type="text" name="name" class="form-control" placeholder="Name"/>
+                                            <input required type="text" name="duration" class="form-control" placeholder="Duration"/>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-group">
                                             <label>
-                                                Name
+                                                Price
                                                 <span class="text-danger">*</span>
                                             </label>
-                                            <input required type="text" name="name" class="form-control" placeholder="Name"/>
+                                            <input required type="text" name="price" class="form-control" placeholder="Price"/>
                                         </div>
                                     </div>
                                 </div>
@@ -134,10 +134,10 @@
                     <div class="col-12">
                         <div class="form-group">
                             <label>
-                                Name
+                                Description
                                 <span class="text-danger">*</span>
                             </label>
-                            <textarea class="form-control" name="" id="" rows="4"></textarea>
+                            <textarea class="form-control" placeholder="Description" name="description" id="" rows="4"></textarea>
                         </div>
                     </div>
                     <div class="col-12">

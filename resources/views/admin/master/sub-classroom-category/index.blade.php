@@ -5,7 +5,7 @@
     <div class="card-body">
         <div class="d-flex justify-content-between align-items-center">
             <div class="my-title">
-                <h4 class="m-0 p-0">Category Class</h4>
+                <h4 class="m-0 p-0">Sub Category Class</h4>
             </div>
             <div class="my-toolbar d-flex">
                 <div class="form-group">
