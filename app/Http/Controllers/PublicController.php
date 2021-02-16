@@ -56,6 +56,13 @@ class PublicController extends Controller
     public function get_sub_classroom_category_by_category($id)
     {
         try {
+            if($id == 'undefined'){
+                return response([
+                    "data"      => [],
+                    "message"   => 'OK'
+                ], 200);
+            }
+
             $result = DB::table('sub_classroom_categories')
                 ->select([
                     'id',
@@ -148,6 +155,7 @@ class PublicController extends Controller
             ]);
         }
     }
+
     public function get_class($package_id)
     {
         try {
@@ -165,6 +173,76 @@ class PublicController extends Controller
             throw new Exception($e);
             return response([
                 "status" => 400,
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function get_classroom($category_id, $sub_category_id)
+    {
+        try {
+            $result = DB::table('classrooms')
+                ->select([
+                    'id',
+                    'name',
+                    'classroom_category_id',
+                    'sub_classroom_category_id',
+                ])
+                ->where(function($query) use($category_id, $sub_category_id){
+                    if($category_id != 'undefined'){
+                        $query->where('classroom_category_id', $category_id);
+
+                        if($sub_category_id != 'undefined'){
+                            if($sub_category_id != 'null'){
+                                $query->where('sub_classroom_category_id', $sub_category_id);
+                            }else{
+                                $query->whereNull('sub_classroom_category_id');
+                            }
+                        }
+                    }else{
+                        $query->whereNull('created_at');
+                    }
+                })
+                ->whereNull('classrooms.deleted_at')
+                ->get();
+
+            return response([
+                "data"      => $result,
+                "message"   => 'OK'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function get_session($classroom_id)
+    {
+        try {
+            if($classroom_id == 'undefined'){
+                return response([
+                    "data"      => null,
+                    "message"   => 'OK'
+                ], 200);
+            }
+
+            $result = DB::table('classrooms')
+                ->select([
+                    'id',
+                    'session_total',
+                ])
+                ->where('id', $classroom_id)
+                ->first();
+
+            return response([
+                "data"      => $result,
+                "message"   => 'OK'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
                 "message"=> $e->getMessage(),
             ]);
         }

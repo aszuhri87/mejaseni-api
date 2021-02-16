@@ -22,7 +22,8 @@ class Theory extends Model
         'is_video',
         'url',
         'description',
-        'upload_date'
+        'upload_date',
+        'price'
     ];
 
     protected $dates = ['deleted_at'];

@@ -106,7 +106,7 @@
                                                 Session
                                                 <span class="text-danger">*</span>
                                             </label>
-                                            <input required type="text" name="session" class="form-control" placeholder="Session"/>
+                                            <input required type="number" name="session" class="form-control" placeholder="Session"/>
                                         </div>
                                     </div>
                                     <div class="col-6">
@@ -115,7 +115,7 @@
                                                 Duration / Session
                                                 <span class="text-danger">*</span>
                                             </label>
-                                            <input required type="text" name="duration" class="form-control" placeholder="Duration"/>
+                                            <input required type="number" name="duration" class="form-control" placeholder="Duration"/>
                                         </div>
                                     </div>
                                     <div class="col-12">
@@ -124,7 +124,7 @@
                                                 Price
                                                 <span class="text-danger">*</span>
                                             </label>
-                                            <input required type="text" name="price" class="form-control" placeholder="Price"/>
+                                            <input required type="number" name="price" class="form-control" placeholder="Price"/>
                                         </div>
                                     </div>
                                 </div>

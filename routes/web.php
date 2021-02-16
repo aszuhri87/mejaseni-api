@@ -16,13 +16,16 @@ use App\Http\Controllers\PublicController;
 |--------------------------------------------------------------------------
 */
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
+use App\Http\Controllers\Admin\Master\TheoryController;
 use App\Http\Controllers\Admin\Master\PackageController;
+use App\Http\Controllers\Admin\Master\PlatformController;
 use App\Http\Controllers\Admin\Master\ClassroomController;
 use App\Http\Controllers\Admin\Master\ClassroomCategoryController;
 use App\Http\Controllers\Admin\Master\SubClassroomCategoryController;
 use App\Http\Controllers\Admin\Master\CoachController;
 use App\Http\Controllers\Admin\Master\AdminController;
 use App\Http\Controllers\Admin\Master\StudentController;
+use App\Http\Controllers\Admin\Schedule\ScheduleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -75,6 +78,8 @@ Route::group(['middleware' => ['auth-handling']], function () {
                 Route::resource('sub-classroom-category', SubClassroomCategoryController::class);
 
                 Route::get('classroom/tools/ac', [ClassroomController::class, 'ac']);
+                Route::get('classroom/tools/{id}', [ClassroomController::class, 'get_tools']);
+                Route::delete('classroom/tools/{id}', [ClassroomController::class, 'delete_tools']);
                 Route::post('classroom/dt', [ClassroomController::class, 'dt']);
                 Route::post('classroom/update/{id}', [ClassroomController::class, 'update']);
                 Route::resource('classroom', ClassroomController::class);
@@ -96,8 +101,18 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::post('student/dt', [StudentController::class, 'dt']);
             Route::post('student/update/{id}', [StudentController::class, 'update']);
             Route::resource('student', StudentController::class);
+            Route::post('media-conference/dt', [PlatformController::class, 'dt']);
+            Route::post('media-conference/update/{id}', [PlatformController::class, 'update']);
+            Route::resource('media-conference', PlatformController::class);
 
+            Route::post('theory/file', [TheoryController::class, 'theory_file']);
+            Route::delete('theory/file/{id}', [TheoryController::class, 'theory_file_delete']);
+            Route::post('theory/dt', [TheoryController::class, 'dt']);
+            Route::post('theory/update/{id}', [TheoryController::class, 'update']);
+            Route::resource('theory', TheoryController::class);
         });
+
+        Route::get('schedule', [ScheduleController::class, 'index']);
     });
 
     Route::group(['prefix' => 'coach', 'middleware' => 'coach-handling'], function () {
@@ -116,5 +131,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::get('get-sosmed',[PublicController::class, 'get_sosmed']);
         Route::get('get-package',[PublicController::class, 'get_package']);
         Route::get('get-class/{package_id}',[PublicController::class, 'get_class']);
+        Route::get('get-classroom/{category_id}&{sub_category_id}', [PublicController::class, 'get_classroom']);
+        Route::get('get-session/{classroom_id}', [PublicController::class, 'get_session']);
     });
 });
