@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\Master\ClassroomController;
 use App\Http\Controllers\Admin\Master\ClassroomCategoryController;
 use App\Http\Controllers\Admin\Master\SubClassroomCategoryController;
 use App\Http\Controllers\Admin\Master\CoachController;
+use App\Http\Controllers\Admin\Master\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -85,6 +86,10 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::get('coach/permission/{id}', [CoachController::class, 'get_permission']);
             Route::post('coach/permission/{id}', [CoachController::class, 'set_permission']);
             Route::resource('coach', CoachController::class);
+
+            Route::post('admin/dt', [AdminController::class, 'dt']);
+            Route::resource('admin', AdminController::class);
+
         });
     });
 
