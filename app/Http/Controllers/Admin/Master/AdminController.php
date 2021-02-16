@@ -53,7 +53,6 @@ class AdminController extends BaseMenu
             ->addIndexColumn()
             ->addColumn('role', function ($data) {
                 $user = Admin::find($data->id);
-
                 return !empty($user->getRoleNames()) ? $user->getRoleNames()->first() : '-';
             })
             ->make(true);
