@@ -86,6 +86,8 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::get('coach/coach-sosmed/{id}', [CoachController::class, 'coach_sosmed']);
             Route::get('coach/permission/{id}', [CoachController::class, 'get_permission']);
             Route::post('coach/permission/{id}', [CoachController::class, 'set_permission']);
+            Route::get('coach/class/{id}', [CoachController::class, 'get_class']);
+            Route::post('coach/config/{id}', [CoachController::class, 'config']);
             Route::resource('coach', CoachController::class);
 
             Route::post('admin/dt', [AdminController::class, 'dt']);
@@ -112,5 +114,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::get('get-sub-classroom-category-by-category/{id}', [PublicController::class, 'get_sub_classroom_category_by_category']);
         Route::get('get-profile-coach-video', [PublicController::class, 'get_profile_coach_videos']);
         Route::get('get-sosmed',[PublicController::class, 'get_sosmed']);
+        Route::get('get-package',[PublicController::class, 'get_package']);
+        Route::get('get-class/{package_id}',[PublicController::class, 'get_class']);
     });
 });

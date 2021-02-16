@@ -125,4 +125,48 @@ class PublicController extends Controller
             ]);
         }
     }
+
+    public function get_package()
+    {
+        try {
+            $result = DB::table('packages')
+                ->select([
+                    'packages.id',
+                    'packages.name',
+                ])
+                ->whereNull('packages.deleted_at')
+                ->get();
+
+            return response([
+                "data"      => $result,
+                "message"   => 'OK'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+    public function get_class($package_id)
+    {
+        try {
+            $result = DB::table('classrooms')
+                ->where('package_type', $package_id)
+                ->whereNull('deleted_at')
+                ->get();
+
+            return response([
+                "status"=>200,
+                "data"  => $result,
+                "message"=> 'OK'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "status" => 400,
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
 }
