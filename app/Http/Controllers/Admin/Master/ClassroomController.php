@@ -7,8 +7,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 use App\Models\Classroom;
-use App\Models\Tools;
 use App\Models\ClassroomTools;
+use App\Models\Tools;
+use App\Models\Session;
 
 use DataTables;
 use Storage;
@@ -60,6 +61,12 @@ class ClassroomController extends BaseMenu
     public function store(Request $request)
     {
         try {
+            if(!isset($request->image)){
+                return response([
+                    "message"   => 'Gambar harus diisi!'
+                ], 400);
+            }
+
             $result = DB::transaction(function () use($request){
                 if(isset($request->image)){
                     $file = $request->file('image');
@@ -111,25 +118,44 @@ class ClassroomController extends BaseMenu
     public function update(Request $request, $id)
     {
         try {
-            $result = DB::transaction(function () use($request){
-                if(isset($request->image)){
-                    $file = $request->file('image');
-                    $path = Storage::disk('s3')->put('media', $file);
-                }
+            $sub_category_check = DB::table('sub_classroom_categories')
+                ->select([
+                    'id',
+                    'name'
+                ])
+                ->where('classroom_category_id', $request->classroom_category_id)
+                ->whereNull('deleted_at')
+                ->count();
 
-                $classroom = Classroom::create([
+            if($sub_category_check > 0 && !isset($request->sub_classroom_category_id)){
+                return response([
+                    "message"   => 'Sub Kategori harus diisi!'
+                ], 400);
+            }
+
+            $result = DB::transaction(function () use($request, $id, $sub_category_check){
+                $classroom = Classroom::find($id);
+
+                $classroom->update([
                     'classroom_category_id' => $request->classroom_category_id,
-                    'sub_classroom_category_id' => $request->sub_classroom_category_id,
+                    'sub_classroom_category_id' => $sub_category_check > 0 ? $request->sub_classroom_category_id : null,
                     'package_type' => $request->package_type,
-                    'sub_package_type' => $request->sub_package_type,
+                    'sub_package_type' => $request->package_type == 2 && isset($request->switch_sub) ? $request->sub_package_type : null,
                     'name' => $request->name,
                     'type' => 1,
                     'session_total' => $request->session,
                     'session_duration' => $request->duration,
                     'price' => $request->price,
                     'description' => $request->description,
-                    'image' => $path,
                 ]);
+
+                if(isset($request->image)){
+                    $file = $request->file('image');
+                    $path = Storage::disk('s3')->put('media', $file);
+
+                    $classroom->image = $path;
+                    $classroom->update();
+                }
 
                 if(isset($request->tools)){
                     foreach ($request->tools as $key => $tools) {
@@ -190,6 +216,33 @@ class ClassroomController extends BaseMenu
             ->where('text', 'ilike', '%' . strtoupper($request->param) . '%')
             ->orderBy('text', 'asc')
             ->get();
+
+        return response([
+            'data' => $data,
+        ]);
+    }
+
+    public function get_tools($id)
+    {
+        $data = DB::table('classroom_tools')
+            ->select([
+                'classroom_tools.id',
+                'classroom_tools.classroom_id',
+                'tools.text'
+            ])
+            ->leftJoin('tools','classroom_tools.tool_id','=','tools.id')
+            ->where('classroom_tools.classroom_id', $id)
+            ->whereNull('classroom_tools.deleted_at')
+            ->get();
+
+        return response([
+            'data' => $data,
+        ]);
+    }
+
+    public function delete_tools($id)
+    {
+        $data = ClassroomTools::find($id)->delete();
 
         return response([
             'data' => $data,

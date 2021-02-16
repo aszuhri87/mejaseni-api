@@ -18,7 +18,6 @@ class Session extends Model
     protected $fillable = [
         'classroom_id',
         'name',
-        'datetime'
     ];
 
     protected $dates = ['deleted_at'];
