@@ -66,9 +66,9 @@
                 <tr>
                     <th>No</th>
                     <th width="30%">Nama</th>
-                    <th width="10%">Email</th>
+                    <th width="15%">Email</th>
                     <th width="10%">Phone</th>
-                    <th width="20%">Jumlah Class</th>
+                    <th width="15%">Jumlah Class</th>
                     <th width="10%">Expertise</th>
                     <th width="20%">Actions</th>
                 </tr>
