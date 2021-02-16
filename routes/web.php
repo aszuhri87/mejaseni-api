@@ -22,6 +22,7 @@ use App\Http\Controllers\Admin\Master\ClassroomCategoryController;
 use App\Http\Controllers\Admin\Master\SubClassroomCategoryController;
 use App\Http\Controllers\Admin\Master\CoachController;
 use App\Http\Controllers\Admin\Master\AdminController;
+use App\Http\Controllers\Admin\Master\StudentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -89,6 +90,10 @@ Route::group(['middleware' => ['auth-handling']], function () {
 
             Route::post('admin/dt', [AdminController::class, 'dt']);
             Route::resource('admin', AdminController::class);
+
+            Route::post('student/dt', [StudentController::class, 'dt']);
+            Route::post('student/update/{id}', [StudentController::class, 'update']);
+            Route::resource('student', StudentController::class);
 
         });
     });
