@@ -43,9 +43,11 @@ class CoachController extends BaseMenu
             ->select([
                 'coaches.*',
                 DB::raw("CONCAT('{$path}',coaches.image) as image_url"),
+                'expertises.name as expertise_name',
             ])
+            ->leftJoin('expertises','coaches.expertise_id','=','expertises.id')
             ->whereNull([
-                'deleted_at'
+                'coaches.deleted_at'
             ])
             ->get();
 
@@ -70,7 +72,7 @@ class CoachController extends BaseMenu
                     'password' => Hash::make($request->password),
                     'phone' => $request->phone,
                     'description' => $request->profil_description,
-                    'expertise' => $request->expertise,
+                    'expertise_id' => $request->expertise,
                     'image' => $path,
                 ]);
 
@@ -115,7 +117,7 @@ class CoachController extends BaseMenu
                         'email' => $request->email,
                         'phone' => $request->phone,
                         'description' => $request->profil_description,
-                        'expertise' => $request->expertise,
+                        'expertise_id' => $request->expertise,
                         'image' => $path,
                     ];
                 }else{
@@ -125,7 +127,7 @@ class CoachController extends BaseMenu
                         'email' => $request->email,
                         'phone' => $request->phone,
                         'description' => $request->profil_description,
-                        'expertise' => $request->expertise,
+                        'expertise_id' => $request->expertise,
                     ];
                 }
                 $coach->update($update);

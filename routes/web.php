@@ -145,5 +145,6 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::get('get-class/{package_id}',[PublicController::class, 'get_class']);
         Route::get('get-classroom/{category_id}&{sub_category_id}', [PublicController::class, 'get_classroom']);
         Route::get('get-session/{classroom_id}', [PublicController::class, 'get_session']);
+        Route::get('get-expertise', [PublicController::class, 'get_expertise']);
     });
 });
