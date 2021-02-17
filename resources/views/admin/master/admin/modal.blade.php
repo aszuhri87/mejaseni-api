@@ -31,7 +31,16 @@
                         </label>
                         <input required type="email" name="email" class="form-control" placeholder="Email" />
                     </div>
-                    <div class="form-group col-12">
+                    <div class="form-group col-12 change_password">
+                        <span class="switch switch-sm switch-outline switch-icon switch-primary">
+                            <label>
+                            <input type="checkbox" class="btn-change-password" name="change_password" id="change_password"/>
+                            <span></span>
+                                Switch this button if you need change password!
+                            </label>
+                        </span>
+                    </div>
+                    <div id="password" class="form-group col-12">
                         <label>
                             Password
                             <span class="text-danger d-none">*</span>

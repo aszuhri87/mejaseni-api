@@ -57,7 +57,7 @@ class AdminController extends BaseMenu
             })
             ->addColumn('role_id', function ($data) {
                 $user = Admin::find($data->id);
-                $role = Role::where('name',$user->getRoleNames()->first())->first();
+                $role = Role::where('name', $user->getRoleNames()->first())->first();
                 return !empty($role->id) ? $role->id : '-';
             })
             ->make(true);
@@ -120,13 +120,18 @@ class AdminController extends BaseMenu
                     'name' => $request->name,
                     'username' => $request->username,
                     'email' => $request->email,
-                    'password' => Hash::make($request->password),
                 ]);
 
+                if ($request->password != null) {
+                    $result = Admin::find($id)->update([
+                        'password' => Hash::make($request->password),
+                    ]);
+                }
+
                 $result = Admin::find($id);
-                
+
                 $role = Role::whereIn('id', $request->role)->get();
-                
+
                 $result->syncRoles($role);
 
                 return $result;
@@ -174,15 +179,15 @@ class AdminController extends BaseMenu
             $permissions = $admin->getAllPermissions();
 
             return response([
-                "status"=>200,
-                "data"=> $permissions,
-                "message"=> 'Izin Ditemukan'
+                "status" => 200,
+                "data" => $permissions,
+                "message" => 'Izin Ditemukan'
             ], 200);
         } catch (Exception $e) {
             throw new Exception($e);
             return response([
                 "status" => 400,
-                "message"=> $e->getMessage(),
+                "message" => $e->getMessage(),
             ]);
         }
     }
@@ -195,15 +200,15 @@ class AdminController extends BaseMenu
             $admin->syncPermissions($request->permissions);
 
             return response([
-                "status"=>200,
+                "status" => 200,
                 "data"  => "OK",
-                "message"=> 'Izin Behasil Disesuaikan'
+                "message" => 'Izin Behasil Disesuaikan'
             ], 200);
         } catch (Exception $e) {
             throw new Exception($e);
             return response([
                 "status" => 400,
-                "message"=> $e->getMessage(),
+                "message" => $e->getMessage(),
             ]);
         }
     }
