@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Master;
 
 use App\Http\Controllers\BaseMenu;
+use App\Models\Expertise;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -25,10 +26,13 @@ class StudentController extends BaseMenu
             ],
         ];
 
+        $expertise = DB::table('expertises')->pluck('name','id');
+
         return view('admin.master.student.index', [
             'title' => 'Student',
             'navigation' => $navigation,
             'list_menu' => $this->menu_admin(),
+            'expertise' => $expertise,
         ]);
     }
 
@@ -48,7 +52,13 @@ class StudentController extends BaseMenu
 
         return DataTables::of($data)
             ->addIndexColumn()
-            ->addColumn('jumlah_class', function ($data) {
+            ->addColumn('class', function ($data) {
+                $student_classroom = DB::table('student_classrooms')
+                    ->where('student_id', $data->id)
+                    ->count();
+                return $student_classroom;
+            })
+            ->addColumn('status', function ($data) {
                 $student_classroom = DB::table('student_classrooms')
                     ->where('student_id', $data->id)
                     ->count();
@@ -68,6 +78,7 @@ class StudentController extends BaseMenu
                     $file = $request->file('profile_avatar');
                     $path = Storage::disk('s3')->put('media', $file);
                 }
+                $expertise = Expertise::find($request->expertise);
                 $result = Student::create([
                     'name' => $request->name,
                     'username' => $request->username,
@@ -75,7 +86,7 @@ class StudentController extends BaseMenu
                     'password' => Hash::make($request->password),
                     'phone' => $request->phone,
                     'description' => $request->profil_description,
-                    'expertise' => $request->expertise,
+                    'expertise' => $expertise->name,
                     'image' => $path,
                 ]);
 
