@@ -9,16 +9,17 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
+        "dyrynda/laravel-cascade-soft-deletes": "^4.1",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.12",
         "laravel/tinker": "^2.5",
+        "league/flysystem-aws-s3-v3": "^1.0",
         "sentry/sentry-laravel": "^2.3",
         "spatie/laravel-activitylog": "^3.16",
         "spatie/laravel-permission": "^4.0",
-        "yajra/laravel-datatables-oracle": "^9.15",
-        "league/flysystem-aws-s3-v3": "^1.0"
+        "yajra/laravel-datatables-oracle": "^9.15"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

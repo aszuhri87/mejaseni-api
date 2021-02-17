@@ -2,7 +2,7 @@
 <script type="text/javascript">
     var Page = function() {
         var _componentPage = function(){
-            var init_table, init_classroom_category, init_sub_classroom_category;
+            var init_table, init_classroom_category, init_sub_classroom_category, global_id;
             var arr_tools = [];
 
             $(document).ready(function() {
@@ -93,7 +93,7 @@
                             data: "id",
                             render : function(data, type, full, meta) {
                                 return `
-                                    <a href="{{url('/admin/master/courses/classroom')}}/${data}" title="Edit" class="btn btn-edit btn-sm btn-clean btn-icon mr-2" title="Edit details">
+                                    <a href="{{url('/admin/master/courses/classroom/update')}}/${data}" title="Edit" class="btn btn-edit btn-sm btn-clean btn-icon mr-2" title="Edit details">
                                         <span class="svg-icon svg-icon-md">
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -145,6 +145,8 @@
                 $(document).on('click', '#add-btn', function(event){
                     event.preventDefault();
 
+                    global_id = '';
+
                     $('#form-classroom').trigger("reset");
                     $('#form-classroom').attr('action','{{url('admin/master/courses/classroom')}}');
                     $('#form-classroom').attr('method','POST');
@@ -173,6 +175,7 @@
                     event.preventDefault();
 
                     var data = init_table.row($(this).parents('tr')).data();
+                    global_id = data.id;
 
                     $('#form-classroom').trigger("reset");
                     $('#form-classroom').attr('action', $(this).attr('href'));
@@ -205,7 +208,7 @@
                         if(data.sub_package_type){
                             $('.select-sub-package').show();
                             $('#switch-sub-package').attr('checked', 'checked');
-                            $("input[name=sub_package_type][value=" + data.package_type + "]").attr('checked', 'checked');
+                            $("input[name=sub_package_type][value=" + data.sub_package_type + "]").attr('checked', 'checked');
                         }else{
                             $('.select-sub-package').hide();
                         }
@@ -225,6 +228,9 @@
                     $('#image').html(element);
 
                     $('.dropify').dropify();
+
+                    arr_tools = [];
+                    initDataTools(global_id);
 
                     showModal('modal-classroom');
                 });
@@ -326,7 +332,7 @@
 
                         if (index == -1) {
                             arr_tools.push($('.tools').val())
-                            initTools(arr_tools);
+                            initTools(arr_tools, global_id);
                         }
 
                         $('.tools').val('')
@@ -337,6 +343,7 @@
                 $(document).on('click','.btn-delete-tools',function(){
                     if($(this).attr('id') == '-'){
                         let attr_data = $(this).attr('data');
+
                         Swal.fire({
                             title: 'Delete Tools?',
                             text: "Deleted Tools will be permanently lost!",
@@ -349,12 +356,15 @@
                                 const index = arr_tools.indexOf(attr_data);
                                 if (index > -1) {
                                     arr_tools.splice(index, 1);
-                                    initTools(arr_tools);
+                                    initTools(arr_tools, global_id);
                                 }
                             }
                         })
                         $('.swal2-title').addClass('justify-content-center')
                     }else{
+                        let attr_id = $(this).attr('id');
+                        let attr_data = $(this).attr('data');
+
                         Swal.fire({
                             title: 'Delete Tools?',
                             text: "Deleted Tools will be permanently lost!",
@@ -365,13 +375,12 @@
                         }).then(function (result) {
                             if (result.value) {
                                 $.ajax({
-                                    url: url,
+                                    url: '{{url('admin/master/courses/classroom/tools')}}/'+attr_id,
                                     type: 'DELETE',
                                     dataType: 'json',
                                 })
                                 .done(function(res, xhr, meta) {
-                                    toastr.success(res.message, 'Success')
-                                    init_table.draw(false);
+                                    initDataTools(attr_data)
                                 })
                                 .fail(function(res, error) {
                                     toastr.error(res.responseJSON.message, 'Failed')
@@ -383,18 +392,51 @@
                     }
                 })
             },
-            initTools = (collections, ajax = false) => {
-                let element = '';
-                $.each(collections, function(index, data){
-                    element += `<tr>
-                            <td class="text-center">
-                                <i id="${ajax ? data.id : '-'}" data="${ajax ? '-' : data}" class="far fa-trash-alt icn text-danger btn-delete-tools"></i>
-                            </td>
-                            <td>${ajax ? data.text : data}</td>
-                        </tr>`;
-                })
+            initTools = (collections, id) => {
+                if(id){
+                    initDataTools(id)
+                }else{
+                    let element = '';
+                    $.each(collections, function(index, data){
+                        element += `<tr>
+                                <td class="text-center">
+                                    <i id="-" data="${data}" class="far fa-trash-alt icn text-danger btn-delete-tools"></i>
+                                </td>
+                                <td>${data}</td>
+                            </tr>`;
+                    })
 
-                $('#tools-tbody').html(element);
+                    $('#tools-tbody').html(element);
+                }
+            },
+            initDataTools = (id) => {
+                $.ajax({
+                    url: '{{url('admin/master/courses/classroom/tools')}}/'+id,
+                    type: 'GET',
+                    dataType: 'json',
+                })
+                .done(function(res, xhr, meta) {
+                    let element = '';
+                    $.each(res.data, function(index, data){
+                        element += `<tr>
+                                <td class="text-center">
+                                    <i id="${data.id}" data="${data.classroom_id}" class="far fa-trash-alt icn text-danger btn-delete-tools"></i>
+                                </td>
+                                <td>${data.text}</td>
+                            </tr>`;
+                    })
+
+                    $.each(arr_tools, function(index, data){
+                        element += `<tr>
+                                <td class="text-center">
+                                    <i id="-" data="${data}" class="far fa-trash-alt icn text-danger btn-delete-tools"></i>
+                                </td>
+                                <td>${data}</td>
+                            </tr>`;
+                    })
+
+                    $('#tools-tbody').html(element);
+                })
             },
             formSubmit = () => {
                 $('#form-classroom').submit(function(event){

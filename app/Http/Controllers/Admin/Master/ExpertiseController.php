@@ -6,12 +6,11 @@ use App\Http\Controllers\BaseMenu;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
-use App\Models\SubClassroomCategory;
+use App\Models\Expertise;
 
 use DataTables;
-use Storage;
 
-class SubClassroomCategoryController extends BaseMenu
+class ExpertiseController extends BaseMenu
 {
     public function index()
     {
@@ -20,15 +19,12 @@ class SubClassroomCategoryController extends BaseMenu
                 'title' => 'Master'
             ],
             [
-                'title' => 'Courses'
-            ],
-            [
-                'title' => 'Sub Class Category'
+                'title' => 'Expertise'
             ],
         ];
 
-        return view('admin.master.sub-classroom-category.index', [
-            'title' => 'Sub Class Category',
+        return view('admin.master.expertise.index', [
+            'title' => 'Expertise',
             'navigation' => $navigation,
             'list_menu' => $this->menu_admin(),
         ]);
@@ -36,20 +32,13 @@ class SubClassroomCategoryController extends BaseMenu
 
     public function dt()
     {
-        $path = Storage::disk('s3')->url('/');
-
-        $data = DB::table('sub_classroom_categories')
+        $data = DB::table('expertises')
             ->select([
-                'sub_classroom_categories.id',
-                'sub_classroom_categories.name',
-                'classroom_categories.name as category',
-                'sub_classroom_categories.classroom_category_id',
-                'sub_classroom_categories.profile_coach_video_id',
-                DB::raw("CONCAT('{$path}',sub_classroom_categories.image) as image_url"),
+                'id',
+                'name',
             ])
-            ->leftJoin('classroom_categories', 'classroom_categories.id', '=', 'sub_classroom_categories.classroom_category_id')
             ->whereNull([
-                'sub_classroom_categories.deleted_at'
+                'deleted_at'
             ])
             ->get();
 
@@ -59,23 +48,9 @@ class SubClassroomCategoryController extends BaseMenu
     public function store(Request $request)
     {
         try {
-            if(!isset($request->image)){
-                return response([
-                    "message"   => 'Gambar harus diisi!'
-                ], 400);
-            }
-
             $result = DB::transaction(function () use($request){
-                if(isset($request->image)){
-                    $file = $request->file('image');
-                    $path = Storage::disk('s3')->put('media', $file);
-                }
-
-                $result = SubClassroomCategory::create([
-                    'classroom_category_id' => $request->classroom_category_id,
-                    'profile_coach_video_id' => $request->profile_coach_video_id,
+                $result = Expertise::create([
                     'name' => $request->name,
-                    'image' => $path
                 ]);
 
                 return $result;
@@ -97,19 +72,7 @@ class SubClassroomCategoryController extends BaseMenu
     {
         try {
             $result = DB::transaction(function () use($request, $id){
-                $result = SubClassroomCategory::find($id);
-
-                if(isset($request->image)){
-                    $file = $request->file('image');
-                    $path = Storage::disk('public')->put('media', $file);
-
-                    $result->image = $path;
-                    $result->update();
-                }
-
-                $result->update([
-                    'classroom_category_id' => $request->classroom_category_id,
-                    'profile_coach_video_id' => $request->profile_coach_video_id,
+                $result = Expertise::find($id)->update([
                     'name' => $request->name,
                 ]);
 
@@ -131,7 +94,7 @@ class SubClassroomCategoryController extends BaseMenu
     public function destroy($id)
     {
         try {
-            $result = SubClassroomCategory::find($id);
+            $result = Expertise::find($id);
 
             DB::transaction(function () use($result){
                 $result->delete();

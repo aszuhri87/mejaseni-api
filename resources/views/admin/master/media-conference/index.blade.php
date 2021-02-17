@@ -1,13 +1,11 @@
 @extends('layouts.app')
-@push('style')
-<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.fancytree/2.35.0/skin-win8/ui.fancytree.min.css">
-@endpush
+
 @section('content')
 <div class="card">
     <div class="card-body">
         <div class="d-flex justify-content-between align-items-center">
             <div class="my-title">
-                <h4 class="m-0 p-0">Coach</h4>
+                <h4 class="m-0 p-0">Media Conference</h4>
             </div>
             <div class="my-toolbar d-flex">
                 <div class="form-group">
@@ -65,11 +63,9 @@
             <thead>
                 <tr>
                     <th>No</th>
-                    <th width="30%">Nama</th>
-                    <th width="20%">Jumlah Class</th>
-                    <th width="20%">Expertise</th>
-                    <th width="10%">Status</th>
-                    <th width="20%">Actions</th>
+                    <th width="30%">Image</th>
+                    <th width="60%">Name</th>
+                    <th width="10%">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -78,11 +74,9 @@
     </div>
 </div>
 
-@include('admin.master.coach.modal')
+@include('admin.master.media-conference.modal')
 @endsection
 
 @push('script')
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.fancytree/2.35.0/jquery.fancytree-all.min.js"></script>
-    @include('admin.master.coach.script')
+    @include('admin.master.media-conference.script')
 @endpush

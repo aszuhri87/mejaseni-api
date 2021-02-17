@@ -6,5 +6,62 @@
 		"folder": false,
         "crud": false,
         "children" : false
+    },
+    {
+		"key": "coach_schedule",
+		"title": "Schedule",
+		"expanded": true,
+		"folder": false,
+        "crud": true,
+        "children" : false
+    },
+    {
+		"key": "coach_materi",
+		"title": "Materi",
+		"expanded": true,
+		"folder": false,
+        "crud": true,
+        "children" : false
+    },
+    {
+		"key": "coach_exercise",
+		"title": "Excercise",
+		"expanded": true,
+		"folder": false,
+        "crud": false,
+        "children" : [
+            {
+                "key": "coach_assignment",
+                "title": "Assignment",
+                "expanded": true,
+                "folder": false,
+                "crud": true
+            },
+            {
+                "key": "coach_review",
+                "title": "Review",
+                "expanded": true,
+                "folder": false,
+                "crud": true
+            }
+        ]
+
+    },
+    {
+		"key": "coach_profile",
+		"title": "Profile",
+		"expanded": true,
+		"folder": false,
+        "crud": true,
+        "children" : false
+    },
+    {
+		"key": "coach_rekening",
+		"title": "Rekening",
+		"expanded": true,
+		"folder": false,
+        "crud": true,
+        "children" : false
     }
+
 ]

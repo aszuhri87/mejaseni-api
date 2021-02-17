@@ -101,6 +101,12 @@ class BaseMenu extends Controller
                         'permission' => 'theory'
                     ],
                     [
+                        'key' => 'expertise',
+                        'title' => 'Expertise',
+                        'url' => 'admin/master/expertise',
+                        'permission' => 'expertise'
+                    ],
+                    [
                         'key' => 'admin',
                         'title' => 'Admin',
                         'url' => 'admin/master/admin',
@@ -144,7 +150,7 @@ class BaseMenu extends Controller
             [
                 'key' => 'schedule',
                 'title' => 'Schedule',
-                'url' => 'schedule',
+                'url' => 'admin/schedule',
                 'permission' => 'schedule',
                 'icon' => $this->icon('master'),
             ],
