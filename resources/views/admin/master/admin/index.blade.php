@@ -63,9 +63,10 @@
             <thead>
                 <tr>
                     <th>No</th>
-                    <th width="50%">Name</th>
+                    <th width="30%">Name</th>
+                    <th width="20%">Tipe</th>
+                    <th width="20%">Username</th>
                     <th width="20%">Email</th>
-                    <th width="10%">Role</th>
                     <th width="10%">Actions</th>
                 </tr>
             </thead>

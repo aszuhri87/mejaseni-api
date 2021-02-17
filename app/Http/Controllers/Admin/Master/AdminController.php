@@ -51,9 +51,14 @@ class AdminController extends BaseMenu
 
         return DataTables::of($data)
             ->addIndexColumn()
-            ->addColumn('role', function ($data) {
+            ->addColumn('tipe_admin', function ($data) {
                 $user = Admin::find($data->id);
                 return !empty($user->getRoleNames()) ? $user->getRoleNames()->first() : '-';
+            })
+            ->addColumn('role_id', function ($data) {
+                $user = Admin::find($data->id);
+                $role = Role::where('name',$user->getRoleNames()->first())->first();
+                return !empty($role->id) ? $role->id : '-';
             })
             ->make(true);
     }
@@ -75,7 +80,8 @@ class AdminController extends BaseMenu
                     'email' => $request->email,
                     'password' => Hash::make($request->password),
                 ]);
-                $role = Role::find($request->role);
+
+                $role = Role::whereIn('id', $request->role)->get();
 
                 $admin->assignRole($role);
 
@@ -116,6 +122,12 @@ class AdminController extends BaseMenu
                     'email' => $request->email,
                     'password' => Hash::make($request->password),
                 ]);
+
+                $result = Admin::find($id);
+                
+                $role = Role::whereIn('id', $request->role)->get();
+                
+                $result->syncRoles($role);
 
                 return $result;
             });

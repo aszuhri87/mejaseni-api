@@ -1,6 +1,6 @@
 <!-- Modal-->
 <div class="modal" id="modal-admin" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <form id="form-admin" autocomplete="off">
                 <div class="modal-header">
@@ -10,44 +10,45 @@
                     </button>
                 </div>
                 <div class="modal-body row">
-                    <div class="form-group col-6">
+                    <div class="form-group col-12">
                         <label>
                             Name
                             <span class="text-danger d-none">*</span>
                         </label>
                         <input required type="text" name="name" class="form-control" placeholder="Name" />
                     </div>
-                    <div class="form-group col-6">
+                    <div class="form-group col-12">
                         <label>
                             Username
                             <span class="text-danger d-none">*</span>
                         </label>
-                        <input required type="text" name="username" class="form-control" placeholder="Name" />
+                        <input required type="text" name="username" class="form-control" placeholder="Username" />
                     </div>
-                    <div class="form-group col-6">
+                    <div class="form-group col-12">
                         <label>
                             Email
                             <span class="text-danger d-none">*</span>
                         </label>
-                        <input required type="email" name="email" class="form-control" placeholder="Name" />
+                        <input required type="email" name="email" class="form-control" placeholder="Email" />
                     </div>
-                    <div class="form-group col-6">
+                    <div class="form-group col-12">
                         <label>
                             Password
                             <span class="text-danger d-none">*</span>
                         </label>
-                        <input required type="password" name="password" class="form-control" placeholder="Name" />
+                        <input required type="password" name="password" class="form-control" placeholder="Password" />
                     </div>
-                    <div class="form-group col-6">
-                        <label>
-                            Role
-                            <span class="text-danger d-none">*</span>
-                        </label>
-                        <select class="form-control" id="role" name="role">
+                    <div class="form-group  col-12">
+                        <label>Tipe Admin</label>
+
+                        <div class="radio-inline">
                             @foreach ($role as $key => $item)
-                                <option value="{{ $key }}">{{ $item }}</option>
+                                <label class="radio">
+                                    <input type="radio" selected name="role[]" value="{{ $key }}">
+                                    <span></span>{{ $item }}
+                                </label>
                             @endforeach
-                        </select>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
