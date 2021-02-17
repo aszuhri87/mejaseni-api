@@ -374,12 +374,20 @@ class CoachController extends BaseMenu
                 'title' => 'Calendar'
             ],
         ];
-        // $data = DB::table('coaches')
+        $path = Storage::disk('s3')->url('/');
+        $data = DB::table('coaches')
+            ->select([
+                'coaches.*',
+                DB::raw("CONCAT('{$path}',coaches.image) as image_url")
+            ])
+            ->where('id',$id)
+            ->first();
 
         return view('admin.master.coach-calendar.index', [
             'title' => 'Calendar',
             'navigation' => $navigation,
             'list_menu' => $this->menu_admin(),
+            'data' => $data
         ]);
     }
 

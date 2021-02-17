@@ -115,7 +115,7 @@ class PublicController extends Controller
                 ->select([
                     'sosmeds.id',
                     'sosmeds.name',
-                    'sosmeds.url',
+                    'sosmeds.url_icon',
                     'sosmeds.slug',
                 ])
                 ->whereNull('sosmeds.deleted_at')
