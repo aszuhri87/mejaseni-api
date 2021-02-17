@@ -1,0 +1,203 @@
+[
+	{
+		"key": "admin_dashboard",
+		"title": "Admin Dashboard",
+		"expanded": true,
+		"folder": false,
+        "crud": false,
+        "children" : false
+    },
+    {
+		"key": "admin_master_date",
+		"title": "Admin Master Data",
+		"expanded": true,
+		"folder": false,
+        "crud": false,
+        "children" : [
+            {
+                "key": "admin_courses",
+                "title": "Admin Courses",
+                "expanded": true,
+                "folder": false,
+                "crud": true
+            },
+            {
+                "key": "admin_media_conference",
+                "title": "Admin Media Conference",
+                "expanded": true,
+                "folder": false,
+                "crud": true
+            },
+            {
+                "key": "admin_materi",
+                "title": "Admin Materi",
+                "expanded": true,
+                "folder": false,
+                "crud": true
+            },
+            {
+                "key": "admin_exspertise",
+                "title": "Admin Exspertise",
+                "expanded": true,
+                "folder": false,
+                "crud": true
+            },
+            {
+                "key": "admin_admin",
+                "title": "Admin Admin",
+                "expanded": true,
+                "folder": false,
+                "crud": true
+            },
+            {
+                "key": "admin_coach",
+                "title": "Admin Coach",
+                "expanded": true,
+                "folder": false,
+                "crud": true
+            },
+            {
+                "key": "admin_student",
+                "title": "Admin Student",
+                "expanded": true,
+                "folder": false,
+                "crud": true
+            }
+        ]
+
+    },
+    {
+		"key": "admin_data_transaction",
+		"title": "Admin Data Transaction",
+		"expanded": true,
+		"folder": false,
+        "crud": false,
+        "children" : [
+            {
+                "key": "admin_data_transaction_coach",
+                "title": "Admin Data Transaction Coach",
+                "expanded": true,
+                "folder": false,
+                "crud": true
+            },
+            {
+                "key": "admin_data_transaction_student",
+                "title": "Admin Data Transaction Student",
+                "expanded": true,
+                "folder": false,
+                "crud": true
+            }
+        ]
+
+    },
+    {
+		"key": "admin_schedule",
+		"title": "Admin Schedule",
+		"expanded": true,
+		"folder": false,
+        "crud": false,
+        "children" : false
+    },
+    {
+		"key": "admin_reporting",
+		"title": "Admin Reporting",
+		"expanded": true,
+		"folder": false,
+        "crud": false,
+        "children" : [
+            {
+                "key": "admin_reporting_review",
+                "title": "Admin Reporting Review",
+                "expanded": true,
+                "folder": false,
+                "crud": true,
+                "children" : [
+                    {
+                        "key": "admin_reporting_review_coach",
+                        "title": "Admin Reporting Review coach",
+                        "expanded": true,
+                        "folder": false,
+                        "crud": false
+                    },
+                    {
+                        "key": "admin_reporting_review_student",
+                        "title": "Admin Reporting Review Student",
+                        "expanded": true,
+                        "folder": false,
+                        "crud": false
+                    },
+                    {
+                        "key": "admin_reporting_review_class",
+                        "title": "Admin Reporting Review Class",
+                        "expanded": true,
+                        "folder": false,
+                        "crud": false
+                    },
+                    {
+                        "key": "admin_reporting_review_video",
+                        "title": "Admin Reporting Review Video",
+                        "expanded": true,
+                        "folder": false,
+                        "crud": false
+                    }
+                ]
+            },
+            {
+                "key": "admin_reporting_transaction",
+                "title": "Admin Data Transaction",
+                "expanded": true,
+                "folder": false,
+                "crud": true,
+                "children" : [
+                    {
+                        "key": "admin_reporting_transaction_coach",
+                        "title": "Admin Data Transaction coach",
+                        "expanded": true,
+                        "folder": false,
+                        "crud": false
+                    },
+                    {
+                        "key": "admin_reporting_transaction_student",
+                        "title": "Admin Data Transaction Student",
+                        "expanded": true,
+                        "folder": false,
+                        "crud": false
+                    }
+                ]
+            }
+        ]
+
+    },
+    {
+		"key": "admin_notification_setting",
+		"title": "Admin Reporting",
+		"expanded": true,
+		"folder": false,
+        "crud": false,
+        "children" : [
+            {
+                "key": "admin_notification_setting_general",
+                "title": "Admin Reporting General",
+                "expanded": true,
+                "folder": false,
+                "crud": true
+            },
+            {
+                "key": "admin_notification_setting_coach",
+                "title": "Admin Reporting Coach",
+                "expanded": true,
+                "folder": false,
+                "crud": true
+            },
+            {
+                "key": "admin_notification_setting_student",
+                "title": "Admin Reporting Student",
+                "expanded": true,
+                "folder": false,
+                "crud": true
+            }
+        ]
+
+    }
+
+]
