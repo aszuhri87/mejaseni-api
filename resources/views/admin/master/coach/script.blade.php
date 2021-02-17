@@ -36,7 +36,7 @@
                         { data: 'name' },
                         { defaultContent: '' },
                         { data: 'expertise' },
-                        { defaultContent: '' },
+                        { data: 'suspend' },
                         { defaultContent: '' }
                         ],
                     columnDefs: [
@@ -60,17 +60,32 @@
                             searchable: false,
                             orderable: false,
                             className: "text-center",
+                            data: "suspend",
                             render : function(data, type, full, meta) {
-                                return `
-                                <div class="d-flex justify-content-center">
-                                    <span class="switch switch-sm switch-outline switch-icon switch-success">
-                                        <label>
-                                        <input type="checkbox" checked="checked" name="select"/>
-                                        <span></span>
-                                        </label>
-                                    </span>
-                                </div>
-                                `
+                                if(data){
+                                    return `
+                                    <div class="d-flex justify-content-center">
+                                        <span class="switch switch-sm switch-outline switch-icon switch-success">
+                                            <label>
+                                            <input type="checkbox" class="btn-switch" checked="checked" name="suspend" id="btn-switch-${full.id}"/>
+                                            <span></span>
+                                            </label>
+                                        </span>
+                                    </div>
+                                `;
+                                }
+                                else{
+                                    return `
+                                        <div class="d-flex justify-content-center">
+                                            <span class="switch switch-sm switch-outline switch-icon switch-success">
+                                                <label>
+                                                <input type="checkbox" class="btn-switch" name="suspend" id="btn-switch-${full.id}"/>
+                                                <span></span>
+                                                </label>
+                                            </span>
+                                        </div>
+                                    `;
+                                }
                             }
                         },
                         {
@@ -83,7 +98,7 @@
                                                 <img src="${full.image_url}" class="rounded" width="50" height="50"/>
                                             </div>
                                             <div class="d-flex flex-column font-weight-bold">
-                                                <span>${data}</span>
+                                                <a href="{{url('admin/master/coach/view-calendar')}}/${full.id}">${data}</a>
                                             </div>
                                         </div>
                                 `;
@@ -268,7 +283,53 @@
                 $(document).on('click','.btn-add-medsos',function(event){
                     event.preventDefault();
                     $('#medsos').append(element_sosmed);
-                })
+                });
+
+                $(document).on('click','.btn-switch',function(event){
+                    event.preventDefault();
+                    let check = $(this).is(":checked");
+                    let element = $(this);
+                    var data = init_table.row($(this).parents('tr')).data();
+                    let url = '';
+                    let status = '';
+                    if(check){
+                        status = "Activate";
+                        url = `{{ url('admin/master/coach/activate-suspend') }}/${data.id}`;
+                    }else{
+                        status = "Suspend";
+                        url = `{{ url('admin/master/coach/suspend') }}/${data.id}`;
+                    }
+                    Swal.fire({
+                        title: `${status} Coach?`,
+                        text: "Coach will be active!.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#7F16A7',
+                        confirmButtonText: `Yes, ${status}`,
+                    }).then(function (result) {
+                        if (result.value) {
+                            $.ajax({
+                                url: url,
+                                type: 'post',
+                            })
+                            .done(function(res, xhr, meta) {
+                                if (res.status == 200) {
+                                    toastr.success(res.message, 'Success');
+                                    if($(`#btn-switch-${data.id}`).is(":checked")){
+                                        $(`#btn-switch-${data.id}`).prop('checked', false);
+                                    }else{
+                                        $(`#btn-switch-${data.id}`).prop('checked', true);
+                                    }
+                                }
+                            })
+                            .fail(function(res) {
+                                toastr.error(res.responseJSON.message, 'Failed')
+                            })
+                            .always(function() { });
+                        }
+                    })
+                    $('.swal2-title').addClass('justify-content-center')
+                });
 
                 $(document).on('click','.delete-medsos',function(event){
                     event.preventDefault();
