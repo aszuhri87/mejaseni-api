@@ -166,4 +166,45 @@ class AdminController extends BaseMenu
             ]);
         }
     }
+
+    public function get_permission($id)
+    {
+        try {
+            $admin = Admin::find($id);
+            $permissions = $admin->getAllPermissions();
+
+            return response([
+                "status"=>200,
+                "data"=> $permissions,
+                "message"=> 'Izin Ditemukan'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "status" => 400,
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function set_permission(Request $request, $id)
+    {
+        try {
+
+            $admin = Admin::find($id);
+            $admin->syncPermissions($request->permissions);
+
+            return response([
+                "status"=>200,
+                "data"  => "OK",
+                "message"=> 'Izin Behasil Disesuaikan'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "status" => 400,
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
 }

@@ -7,6 +7,7 @@
                 initTable();
                 formSubmit();
                 initAction();
+                initTreeTable();
             });
 
             const initTable = () => {
@@ -53,6 +54,17 @@
                                 data: "id",
                                 render: function(data, type, full, meta) {
                                     return `
+                                    <a class="btn btn-sm btn-permission mr-1 btn-clean btn-icon" title="Permission" href="{{url('/admin/master/admin/permission')}}/${data}">
+                                        <span class="svg-icon svg-icon-md">
+                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                <rect x="0" y="0" width="24" height="24"/>
+                                                <polygon fill="#000000" opacity="0.3" transform="translate(8.885842, 16.114158) rotate(-315.000000) translate(-8.885842, -16.114158) " points="6.89784488 10.6187476 6.76452164 19.4882481 8.88584198 21.6095684 11.0071623 19.4882481 9.59294876 18.0740345 10.9659914 16.7009919 9.55177787 15.2867783 11.0071623 13.8313939 10.8837471 10.6187476"/>
+                                                <path d="M15.9852814,14.9852814 C12.6715729,14.9852814 9.98528137,12.2989899 9.98528137,8.98528137 C9.98528137,5.67157288 12.6715729,2.98528137 15.9852814,2.98528137 C19.2989899,2.98528137 21.9852814,5.67157288 21.9852814,8.98528137 C21.9852814,12.2989899 19.2989899,14.9852814 15.9852814,14.9852814 Z M16.1776695,9.07106781 C17.0060967,9.07106781 17.6776695,8.39949494 17.6776695,7.57106781 C17.6776695,6.74264069 17.0060967,6.07106781 16.1776695,6.07106781 C15.3492424,6.07106781 14.6776695,6.74264069 14.6776695,7.57106781 C14.6776695,8.39949494 15.3492424,9.07106781 16.1776695,9.07106781 Z" fill="#000000" transform="translate(15.985281, 8.985281) rotate(-315.000000) translate(-15.985281, -8.985281) "/>
+                                                <rect fill="#000000" opacity="0.3" x="5" y="20" width="15" height="2" rx="1"/>
+                                            </g>
+                                        </svg><!--end::Svg Icon--></span>
+                                    </a>
                                     <a href="{{ url('/admin/master/admin') }}/${data}" title="Edit" class="btn btn-edit btn-sm btn-clean btn-icon mr-2" title="Edit details">
                                         <span class="svg-icon svg-icon-md">
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -127,7 +139,8 @@
                         $('#form-admin').find('input[name="name"]').val(data.name);
                         $('#form-admin').find('input[name="username"]').val(data.username);
                         $('#form-admin').find('input[name="email"]').val(data.email);
-
+                        $(`#${data.role_id}`).attr('checked',true);
+                        
                         showModal('modal-admin');
                     });
 
@@ -161,6 +174,96 @@
                         })
                         $('.swal2-title').addClass('justify-content-center')
                     });
+                
+                $(document).on('click', '.btn-permission', function(event){
+                    event.preventDefault();
+
+                    $('#form_permission').attr('action', $(this).attr('href'));
+                    showModal('modal_permission');
+
+                    $.ui.fancytree.getTree("#tree-table").visit(function(node){
+                        if(node.expanded == true && node.children != null){
+                            node.toggleExpanded();
+                        }
+                    });
+
+                    $('input[type=checkbox]').prop('checked', false);
+
+                    setChecked($(this).attr('href'));
+                });
+
+                $(document).on('click','.btn-config',function(event){
+                    event.preventDefault();
+                    init_number_input = 1;
+
+                    var data = init_table.row($(this).parents('tr')).data();
+
+                    $('#form-config').trigger("reset");
+                    $('#form-config').attr('action', $(this).attr('href'));
+                    $('#form-config').attr('method','POST');
+                    $('.other-package').hide();
+                    $('.add-package').show();
+                    $('#selectdisplay2').attr('required',false);
+                    selectdisplay1.set([]);
+                    selectdisplay2.set([]);
+                    let init_package_type = 0;
+                    let package_type_1,package_type_2;
+                    let increment = 0;
+                    $.ajax({
+                        url: `{{ url('admin/master/admin/class') }}/${data.id}`,
+                        type: `GET`,
+                    })
+                    .done(function(res, xhr, meta) {
+
+                        $.each(res.data, function(index, data) {
+                            if(init_package_type == 0){
+                                init_package_type = data.package_type
+                                data1[index] = data.classroom_id;
+                                package_type_1 = data.package_type;
+                            }
+                            else if(init_package_type == data.package_type){
+                                data1[index] = data.classroom_id;
+                            }
+                            else{
+                                if(increment==0){
+                                    $('.other-package').show();
+                                    package_type_2 = data.package_type;
+
+                                }
+                                data2[increment] = data.classroom_id;
+                                increment++;
+                            }
+                        });
+                        if(package_type_1){
+                            $('#package1').val(package_type_1).change();
+                        }
+                        if(package_type_2){
+                            $('#package2').val(package_type_2).change();
+                        }
+                    })
+                    .fail(function(res, error) {
+                        if (res.status == 400 || res.status == 422) {
+                            $.each(res.responseJSON.errors, function(index, err) {
+                                if (Array.isArray(err)) {
+                                    $.each(err, function(index, val) {
+                                        toastr.error(val, 'Failed')
+                                    });
+                                }
+                                else {
+                                    toastr.error(err, 'Failed')
+                                }
+                            });
+                        }
+                        else {
+                            toastr.error(res.responseJSON.message, 'Failed')
+                        }
+                    })
+                    .always(function() {
+
+                    });
+
+                    showModal('modal-config');
+                });
                 },
                 formSubmit = () => {
                     $('#form-admin').submit(function(event) {
@@ -184,8 +287,214 @@
                                 btn_loading('stop')
                             });
                     });
+
+                    $('#form_permission').submit(function(event){
+                    event.preventDefault();
+
+                    btn_loading('start')
+                    $.ajax({
+                        url: $(this).attr('action'),
+                        type: $(this).attr('method'),
+                        data: $(this).serialize(),
+                    })
+                    .done(function(res, xhr, meta) {
+                        if (res.status == 200) {
+                            toastr.success(res.message, 'Success')
+                            init_table.draw(false);
+                            hideModal('modal_permission');
+                        }
+                    })
+                    .fail(function(res, error) {
+                        toastr.error(res.responseJSON.message, 'Gagal')
+                    })
+                    .always(function() {
+                        btn_loading('stop')
+                    });
+                });
+
+                $('#form-config').submit(function(event){
+                    event.preventDefault();
+                    btn_loading('start')
+                    $.ajax({
+                        url: $(this).attr('action'),
+                        type: $(this).attr('method'),
+                        data: new FormData(this),
+                        contentType: false,
+                        cache: false,
+                        processData: false,
+                    })
+                    .done(function(res, xhr, meta) {
+                        if(res.status == 200){
+                            toastr.success(res.message, 'Success');
+                            init_table.draw(false);
+                            hideModal('modal-config');
+                        }
+                    })
+                    .fail(function(res, error) {
+                        if (res.status == 400 || res.status == 422) {
+                            $.each(res.responseJSON.errors, function(index, err) {
+                                if (Array.isArray(err)) {
+                                    $.each(err, function(index, val) {
+                                        toastr.error(val, 'Failed')
+                                    });
+                                }
+                                else {
+                                    toastr.error(err, 'Failed')
+                                }
+                            });
+                        }
+                        else {
+                            toastr.error(res.responseJSON.message, 'Failed')
+                        }
+                    })
+                    .always(function() {
+                        btn_loading('stop')
+                    });
+                });
                 }
         };
+
+        const initTreeTable = () => {
+            $('#tree-table').fancytree({
+                extensions: ['table'],
+                checkbox: false,
+                icon: false,
+                table: {
+                    nodeColumnIdx: 0,
+                },
+                source: {
+                    url: '{{ asset('data/admin.json') }}'
+                },
+                lazyLoad: function(event, data) {
+                    data.result = {url: '{{ asset('data/admin.json') }}'}
+                },
+                renderColumns: function(event, data) {
+                    var node = data.node;
+
+                    $tdList = $(node.tr).find('>td');
+
+                    $tdList.eq(0).addClass('text-left');
+                    $tdList.eq(1).addClass('text-center').html(`<input type="checkbox" class="form-input-styled permissions ${node.key}" data-parent="${node.parent.key}" name="permissions[]" value="${node.key}" id="${node.key}">`);
+                    if (node.data.crud) {
+                        $tdList.eq(2).addClass(`text-center`).html(`<input type="checkbox" class="form-input-styled permissions ${node.key}_crud" name="permissions[]" value="${node.key}_list" data-parent="${node.key}">`);
+                        $tdList.eq(3).addClass(`text-center`).html(`<input type="checkbox" class="form-input-styled permissions ${node.key}_crud" name="permissions[]" value="${node.key}_insert" data-parent="${node.key}">`);
+                        $tdList.eq(4).addClass(`text-center`).html(`<input type="checkbox" class="form-input-styled permissions ${node.key}_crud" name="permissions[]" value="${node.key}_update" data-parent="${node.key}">`);
+                        $tdList.eq(5).addClass(`text-center`).html(`<input type="checkbox" class="form-input-styled permissions ${node.key}_crud" name="permissions[]" value="${node.key}_delete" data-parent="${node.key}">`);
+                        $tdList.eq(6).addClass(`text-center`).html(`<input type="checkbox" class="form-input-styled permissions ${node.key}_crud" name="permissions[]" value="${node.key}_print" data-parent="${node.key}">`);
+                    }
+
+                    if (node.data.other) {
+
+                        var element = ``;
+
+                        $.each(node.data.other, function(key, val) {
+                            element += `
+                                <div class="form-check form-check-inline">
+                                    <label class="form-check-label">
+                                        <input type="checkbox" class="form-check-input-styled permissions ${node.key}_crud" name="permissions[]" value="${key}" data-parent="${node.key}" data-fouc>&nbsp;&nbsp;
+                                        ${val}
+                                    </label>
+                                </div>
+                            `;
+                        });
+                        $tdList.eq(7).addClass('text-left').html(`
+                            <div class="d-flex align-items-center justify-content-start">
+                                ${element}
+                            </div>
+                        `);
+                    }
+
+                    $tdList.addClass('pt-1 pb-1');
+
+                }
+            });
+
+            $('#tree-table').on('change', 'input[name="permissions[]"]', function(e) {
+                $input = $(e.target);
+
+                var value = $input.val();
+
+                var parent = $input.data('parent');
+
+                if ($('#tree-table').find(`[data-parent="${value}"]`).length > 0) {
+                    if($input.is(':checked')){
+                        var val = $input.val();
+                        $('#tree-table').find(`[data-parent="${val}"]`).prop('checked', true).trigger('change');
+                    }
+                    else{
+                        var val = $input.val();
+                        $('#tree-table').find(`[data-parent="${val}"]`).prop('checked', false).trigger('change');
+                    }
+                }
+                else {
+                    if($input.is(':checked')){
+                        var val = $input.val();
+                        $('#tree-table').find(`[data-parent="${val}"]`).prop('checked', true);
+                    }
+                    else{
+                        var val = $input.val();
+                        $('#tree-table').find(`[data-parent="${val}"]`).prop('checked', false);
+                    }
+                }
+            });
+
+            $('#tree-table').on('click', 'input[name="permissions[]"]', function(e) {
+                $input = $(e.target);
+
+                var value = $input.val();
+
+                var parent = $input.data('parent');
+
+                if (typeof parent != 'undefined') {
+                    if (parent != 'root_1') {
+
+                        parent_parent = $(`#${parent}`).data('parent');
+
+                        if($input.is(':checked')){
+                            $('#tree-table').find(`.${parent}`).prop('checked', true);
+                        }
+                        else{
+                            if ($('#tree-table').find(`[data-parent="${parent}"]:checked`).length <= 0) {
+                                $('#tree-table').find(`.${parent}`).prop('checked', false);
+                            }
+                        }
+
+                        if (typeof parent_parent != 'undefined') {
+                            if (parent_parent != 'root_1') {
+                                if($('#tree-table').find(`[data-parent="${parent_parent}"]:checked`).length > 0){
+                                    $('#tree-table').find(`.${parent_parent}`).prop('checked', true);
+                                }
+                                else{
+                                    if ($('#tree-table').find(`[data-parent="${parent_parent}"]:checked`).length <= 0) {
+                                        $('#tree-table').find(`.${parent_parent}`).prop('checked', false);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        },
+        setChecked = (url) => {
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+            })
+            .done(function(res, xhr, meta) {
+                if (res.status == 200) {
+                    let val;
+                    $.each(res.data, function(index, data) {
+                        val = `:checkbox[value=${data.name}]`;
+                        $(val).prop("checked","true");
+                    });
+                }
+            })
+            .fail(function(res, error) {
+                toastr.error(res.responseJSON.message, 'Gagal')
+            })
+            .always(function() { });
+        }
 
         return {
             init: function() {

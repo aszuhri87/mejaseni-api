@@ -102,8 +102,10 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::post('coach/dt', [CoachController::class, 'dt']);
             Route::resource('coach', CoachController::class);
 
-            Route::post('admin/dt', [AdminController::class, 'dt']);
             Route::resource('admin', AdminController::class);
+            Route::post('admin/dt', [AdminController::class, 'dt']);
+            Route::get('admin/permission/{id}', [AdminController::class, 'get_permission']);
+            Route::post('admin/permission/{id}', [AdminController::class, 'set_permission']);
 
             Route::post('student/dt', [StudentController::class, 'dt']);
             Route::post('student/update/{id}', [StudentController::class, 'update']);

@@ -1,35 +1,35 @@
 [
-	{
-		"key": "coach_dashboard",
-		"title": "Dashboard",
-		"expanded": true,
-		"folder": false,
+    {
+        "key": "coach_dashboard",
+        "title": "Dashboard",
+        "expanded": true,
+        "folder": false,
         "crud": false,
-        "children" : false
+        "children": false
     },
     {
-		"key": "coach_schedule",
-		"title": "Schedule",
-		"expanded": true,
-		"folder": false,
+        "key": "coach_schedule",
+        "title": "Schedule",
+        "expanded": true,
+        "folder": false,
         "crud": true,
-        "children" : false
+        "children": false
     },
     {
-		"key": "coach_materi",
-		"title": "Materi",
-		"expanded": true,
-		"folder": false,
+        "key": "coach_materi",
+        "title": "Materi",
+        "expanded": true,
+        "folder": false,
         "crud": true,
-        "children" : false
+        "children": false
     },
     {
-		"key": "coach_exercise",
-		"title": "Excercise",
-		"expanded": true,
-		"folder": false,
+        "key": "coach_exercise",
+        "title": "Excercise",
+        "expanded": true,
+        "folder": false,
         "crud": false,
-        "children" : [
+        "children": [
             {
                 "key": "coach_assignment",
                 "title": "Assignment",
@@ -45,23 +45,209 @@
                 "crud": true
             }
         ]
-
     },
     {
-		"key": "coach_profile",
-		"title": "Profile",
-		"expanded": true,
-		"folder": false,
+        "key": "coach_profile",
+        "title": "Profile",
+        "expanded": true,
+        "folder": false,
         "crud": true,
-        "children" : false
+        "children": false
     },
     {
-		"key": "coach_rekening",
-		"title": "Rekening",
-		"expanded": true,
-		"folder": false,
+        "key": "coach_rekening",
+        "title": "Rekening",
+        "expanded": true,
+        "folder": false,
         "crud": true,
-        "children" : false
+        "children": false
+    },
+    {
+        "key": "master_data",
+        "title": "Master Data",
+        "expanded": true,
+        "folder": false,
+        "crud": false,
+        "children": [
+            {
+                "key": "courses",
+                "title": "Courses",
+                "expanded": false,
+                "folder": false,
+                "crud": false
+            },
+            {
+                "key": "media_conference",
+                "title": "Media Conference",
+                "expanded": true,
+                "folder": false,
+                "crud": true
+            },
+            {
+                "key": "materi",
+                "title": "Materi",
+                "expanded": true,
+                "folder": false,
+                "crud": true
+            },
+            {
+                "key": "expertise",
+                "title": "Expertise",
+                "expanded": true,
+                "folder": false,
+                "crud": true
+            },
+            {
+                "key": "admin",
+                "title": "Admin",
+                "expanded": true,
+                "folder": false,
+                "crud": true
+            },
+            {
+                "key": "coach",
+                "title": "Coach",
+                "expanded": true,
+                "folder": false,
+                "crud": true
+            },
+            {
+                "key": "student",
+                "title": "Student",
+                "expanded": true,
+                "folder": false,
+                "crud": true
+            }
+        ]
+    },
+    {
+        "key": "data_transaction",
+        "title": "Data Transaction",
+        "expanded": true,
+        "folder": false,
+        "crud": false,
+        "children": [
+            {
+                "key": "data_transaction_coach",
+                "title": "Data Transaction Coach",
+                "expanded": true,
+                "folder": false,
+                "crud": true
+            },
+            {
+                "key": "data_transaction_student",
+                "title": "Data Transaction Student",
+                "expanded": true,
+                "folder": false,
+                "crud": true
+            }
+        ]
+    },
+    {
+        "key": "schedule",
+        "title": "Schedule",
+        "expanded": true,
+        "folder": false,
+        "crud": false,
+        "children": false
+    },
+    {
+        "key": "reporting",
+        "title": "Reporting",
+        "expanded": true,
+        "folder": false,
+        "crud": false,
+        "children": [
+            {
+                "key": "reporting_review",
+                "title": "Reporting Review",
+                "expanded": true,
+                "folder": false,
+                "crud": false,
+                "children": [
+                    {
+                        "key": "reporting_review_coach",
+                        "title": "Reporting Review coach",
+                        "expanded": true,
+                        "folder": false,
+                        "crud": true
+                    },
+                    {
+                        "key": "reporting_review_student",
+                        "title": "Reporting Review Student",
+                        "expanded": true,
+                        "folder": false,
+                        "crud": true
+                    },
+                    {
+                        "key": "reporting_review_class",
+                        "title": "Reporting Review Class",
+                        "expanded": true,
+                        "folder": false,
+                        "crud": true
+                    },
+                    {
+                        "key": "reporting_review_video",
+                        "title": "Reporting Review Video",
+                        "expanded": true,
+                        "folder": false,
+                        "crud": true
+                    }
+                ]
+            },
+            {
+                "key": "reporting_transaction",
+                "title": "Data Transaction",
+                "expanded": true,
+                "folder": false,
+                "crud": false,
+                "children": [
+                    {
+                        "key": "reporting_transaction_coach",
+                        "title": "Data Transaction coach",
+                        "expanded": true,
+                        "folder": false,
+                        "crud": true
+                    },
+                    {
+                        "key": "reporting_transaction_student",
+                        "title": "Data Transaction Student",
+                        "expanded": true,
+                        "folder": false,
+                        "crud": true
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "key": "notification_setting",
+        "title": "Notification Setting",
+        "expanded": true,
+        "folder": false,
+        "crud": false,
+        "children": [
+            {
+                "key": "notification_setting_general",
+                "title": "Notification Setting General",
+                "expanded": true,
+                "folder": false,
+                "crud": true
+            },
+            {
+                "key": "notification_setting_coach",
+                "title": "Notification Setting Coach",
+                "expanded": true,
+                "folder": false,
+                "crud": true
+            },
+            {
+                "key": "notification_setting_student",
+                "title": "Notification Setting Student",
+                "expanded": true,
+                "folder": false,
+                "crud": true
+            }
+        ]
     }
-
 ]
