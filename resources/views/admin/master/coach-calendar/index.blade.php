@@ -8,7 +8,7 @@
             </div>
             <div class="col-lg-6">
                 <p class="font-weight-bold font-size-h3" style="margin-bottom: 0 !important">{{$data->name}}</p>
-                <p class="text-muted" style="margin-bottom: 0 !important">{{$data->expertise}}</p>
+                <p class="text-muted" style="margin-bottom: 0 !important">{{$data->expertise_name}}</p>
                 <div class="row mt-2">
                     <div class="col-2" style="padding-right: 0 !important">
                         <span class="svg-icon svg-icon-primary svg-icon-4x"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-02-01-052524/theme/html/demo1/dist/../src/media/svg/icons/Clothes/Crown.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">

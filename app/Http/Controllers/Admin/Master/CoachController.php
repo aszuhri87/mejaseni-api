@@ -380,9 +380,11 @@ class CoachController extends BaseMenu
         $data = DB::table('coaches')
             ->select([
                 'coaches.*',
-                DB::raw("CONCAT('{$path}',coaches.image) as image_url")
+                DB::raw("CONCAT('{$path}',coaches.image) as image_url"),
+                'expertises.name as expertise_name',
             ])
-            ->where('id',$id)
+            ->leftJoin('expertises','coaches.expertise_id','=','expertises.id')
+            ->where('coaches.id',$id)
             ->first();
 
         return view('admin.master.coach-calendar.index', [
