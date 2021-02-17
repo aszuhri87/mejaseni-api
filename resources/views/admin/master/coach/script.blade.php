@@ -187,7 +187,8 @@
                     $('#form-coach').attr('action','{{url('admin/master/coach')}}');
                     $('#form-coach').attr('method','POST');
                     $('#form-coach').attr('data-form','insert');
-                    $('#form-coach').find('input[name="profile_avatar"]').attr('required',true);
+                    $('.img-profile-edit').attr('src',`{{asset('assets/images/profile.png')}}`)
+                    $('#medsos').empty();
 
                     $('.password-setting').html(`
                         <div class="row mb-5">
@@ -697,7 +698,7 @@
                     let avatar = $('.upload').val();
                     let form = $(this).data('form');
                     if(form == 'insert'){
-                        if(avatar == null || avatar == ''){
+                        if(!avatar){
                             return toastr.error('Avatar harus diisi', 'Failed')
                         }
                     }
