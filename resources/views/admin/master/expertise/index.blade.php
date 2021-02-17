@@ -1,23 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
-<style>
-    .dz-style-custom{
-        font-size: 10px;
-        height: 15px;
-        background-color: gainsboro;
-        color: black;
-    }
-
-    .dz-image img{
-        width: 100%;
-    }
-</style>
 <div class="card">
     <div class="card-body">
         <div class="d-flex justify-content-between align-items-center">
             <div class="my-title">
-                <h4 class="m-0 p-0">Materi</h4>
+                <h4 class="m-0 p-0">Expertise</h4>
             </div>
             <div class="my-toolbar d-flex">
                 <div class="form-group">
@@ -75,11 +63,7 @@
             <thead>
                 <tr>
                     <th>No</th>
-                    <th width="20%">Nama</th>
-                    <th width="20%">Kelas</th>
-                    <th width="20%">Kategori</th>
-                    <th width="15%">Jenis</th>
-                    <th width="15%">Status</th>
+                    <th width="90%">Name</th>
                     <th width="10%">Actions</th>
                 </tr>
             </thead>
@@ -89,9 +73,9 @@
     </div>
 </div>
 
-@include('admin.master.theory.modal')
+@include('admin.master.expertise.modal')
 @endsection
 
 @push('script')
-    @include('admin.master.theory.script')
+    @include('admin.master.expertise.script')
 @endpush

@@ -101,6 +101,12 @@ class BaseMenu extends Controller
                         'permission' => 'theory'
                     ],
                     [
+                        'key' => 'expertise',
+                        'title' => 'Expertise',
+                        'url' => 'admin/master/expertise',
+                        'permission' => 'expertise'
+                    ],
+                    [
                         'key' => 'admin',
                         'title' => 'Admin',
                         'url' => 'admin/master/admin',

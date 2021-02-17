@@ -15,6 +15,7 @@ class UpdateTheoriesTableRev1 extends Migration
     {
         Schema::table('theories', function (Blueprint $table) {
             $table->double('price', 20, 2)->nullable();
+            $table->boolean('confirmed')->default(false);
         });
     }
 
@@ -27,6 +28,7 @@ class UpdateTheoriesTableRev1 extends Migration
     {
         Schema::table('theories', function (Blueprint $table) {
             $table->dropColumn('price');
+            $table->dropColumn('confirmed');
         });
     }
 }

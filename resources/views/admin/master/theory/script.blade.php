@@ -29,6 +29,10 @@
                     columns: [
                         { data: 'DT_RowIndex' },
                         { data: 'name' },
+                        { data: 'classroom' },
+                        { defaultContent: '' },
+                        { data: 'is_premium' },
+                        { data: 'confirmed' },
                         { defaultContent: '' }
                         ],
                     columnDefs: [
@@ -37,6 +41,77 @@
                             searchable: false,
                             orderable: false,
                             className: "text-center"
+                        },
+                        {
+                            targets: 1,
+                            data: "name",
+                            render: function(data, type, full, meta) {
+                                return `
+                                    <div class="d-flex flex-column font-weight-bold">
+                                        <a href="javascript::void(0);" class="text-dark text-hover-primary mb-1 font-size-lg">${data}</a>
+                                        <span class="text-muted">Sesi ${full.session}</span>
+                                    </div>
+                                `;
+                            }
+                        },
+                        {
+                            targets: 2,
+                            data: "classroom",
+                            render: function(data, type, full, meta) {
+                                let package_type;
+                                if(full.package_type == 2){
+                                    package_type = 'Reguler';
+                                }else{
+                                    package_type = 'Special';
+                                }
+
+                                return `
+                                    <div class="d-flex flex-column font-weight-bold">
+                                        <a href="javascript::void(0);" class="text-dark text-hover-primary mb-1 font-size-lg">${data}</a>
+                                        <span class="text-muted">${package_type}</span>
+                                    </div>
+                                `;
+                            }
+                        },
+                        {
+                            targets: 3,
+                            data: "category",
+                            render: function(data, type, full, meta) {
+                                return `
+                                    <div class="d-flex flex-column font-weight-bold">
+                                        <a href="javascript::void(0);" class="text-dark text-hover-primary mb-1 font-size-lg">${data}</a>
+                                        <span class="text-muted">${full.sub_category ? full.sub_category : '-'}</span>
+                                    </div>
+                                `;
+                            }
+                        },
+                        {
+                            targets: 4,
+                            data: "is_premium",
+                            render: function(data, type, full, meta) {
+                                return `
+                                    <div class="d-flex flex-column font-weight-bold">
+                                        <a href="javascript::void(0);" class="text-dark text-hover-primary mb-1 font-size-lg">${data ? 'Premium' : 'Free'}</a>
+                                        <span class="text-muted">${data ? 'Rp.' + full.price : '-'}</span>
+                                    </div>
+                                `;
+                            }
+                        },
+                        {
+                            targets: 5,
+                            className: "text-center",
+                            data: "confirmed",
+                            render: function(data, type, full, meta) {
+                                if(data){
+                                    return `
+                                        <span class="label label-light-success label-pill label-inline mr-2">Aktif</span>
+                                    `
+                                }else{
+                                    return `
+                                        <span class="label label-light-warning label-pill label-inline mr-2">Non Active</span>
+                                    `
+                                }
+                            }
                         },
                         {
                             targets: -1,

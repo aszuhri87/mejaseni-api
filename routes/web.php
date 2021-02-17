@@ -25,6 +25,7 @@ use App\Http\Controllers\Admin\Master\SubClassroomCategoryController;
 use App\Http\Controllers\Admin\Master\CoachController;
 use App\Http\Controllers\Admin\Master\AdminController;
 use App\Http\Controllers\Admin\Master\StudentController;
+use App\Http\Controllers\Admin\Master\ExpertiseController;
 use App\Http\Controllers\Admin\Schedule\ScheduleController;
 
 /*
@@ -116,6 +117,9 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::post('theory/dt', [TheoryController::class, 'dt']);
             Route::post('theory/update/{id}', [TheoryController::class, 'update']);
             Route::resource('theory', TheoryController::class);
+
+            Route::post('expertise/dt', [ExpertiseController::class, 'dt']);
+            Route::resource('expertise', ExpertiseController::class);
         });
 
         Route::get('schedule', [ScheduleController::class, 'index']);
