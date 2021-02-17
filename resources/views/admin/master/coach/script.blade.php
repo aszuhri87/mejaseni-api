@@ -2,15 +2,23 @@
 <script type="text/javascript">
     var Page = function() {
         var _componentPage = function(){
-            var init_table, element_sosmed, option = new Array;
-
+            let init_table, element_sosmed, option = new Array, element_package, selectdisplay1, selectdisplay2, init_number_input = 1;
+            let data1 = new Array;
+            let data2 = new Array;
             $(document).ready(function() {
                 initTable();
                 formSubmit();
                 initAction();
                 getSosmed();
                 initTreeTable();
-                // $('.dropify').dropify();
+                selectdisplay1 = new SlimSelect({
+                    select: '#selectdisplay1',
+                    closeOnSelect: false
+                });
+                selectdisplay2 = new SlimSelect({
+                    select: '#selectdisplay2',
+                    closeOnSelect: false
+                });
             });
 
             const initTable = () => {
@@ -69,14 +77,6 @@
                             targets: 1,
                             data: "name",
                             render : function(data, type, full, meta) {
-                                // let package_type;
-
-                                // if(full.package_type == 2){
-                                //     package_type = 'Reguler';
-                                // }else{
-                                //     package_type = 'Special';
-                                // }
-
                                 return `
                                         <div class="d-flex align-items-center">
                                             <div class="mr-5">
@@ -97,8 +97,9 @@
                             data: "id",
                             render : function(data, type, full, meta) {
                                 return `
-                                    <a class="btn-permission mr-50" title="Hak Akses" href="{{url('/admin/master/coach/permission')}}/${data}">
-                                        <span class="svg-icon svg-icon-md"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2020-12-28-020759/theme/html/demo10/dist/../src/media/svg/icons/Home/Key.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                    <a class="btn btn-sm btn-permission mr-1 btn-clean btn-icon" title="Permission" href="{{url('/admin/master/coach/permission')}}/${data}">
+                                        <span class="svg-icon svg-icon-md">
+                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                             <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                                 <rect x="0" y="0" width="24" height="24"/>
                                                 <polygon fill="#000000" opacity="0.3" transform="translate(8.885842, 16.114158) rotate(-315.000000) translate(-8.885842, -16.114158) " points="6.89784488 10.6187476 6.76452164 19.4882481 8.88584198 21.6095684 11.0071623 19.4882481 9.59294876 18.0740345 10.9659914 16.7009919 9.55177787 15.2867783 11.0071623 13.8313939 10.8837471 10.6187476"/>
@@ -107,7 +108,7 @@
                                             </g>
                                         </svg><!--end::Svg Icon--></span>
                                     </a>
-                                    <a href="{{url('/admin/master/coach/update')}}/${data}" title="Edit" class="btn btn-edit btn-sm btn-clean btn-icon mr-2" title="Edit details">
+                                    <a href="{{url('/admin/master/coach/update')}}/${data}" title="Edit" class="btn btn-edit btn-sm btn-clean btn-icon mr-1">
                                         <span class="svg-icon svg-icon-md">
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -117,6 +118,15 @@
                                                 </g>
                                             </svg>
                                         </span>
+                                    </a>
+                                    <a href="{{url('/admin/master/coach/config')}}/${data}" title="Configuration" class="btn btn-config btn-sm btn-clean btn-icon mr-1">
+                                        <span class="svg-icon svg-icon-md"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-02-01-052524/theme/html/demo1/dist/../src/media/svg/icons/General/Settings-1.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                <rect x="0" y="0" width="24" height="24"/>
+                                                <path d="M7,3 L17,3 C19.209139,3 21,4.790861 21,7 C21,9.209139 19.209139,11 17,11 L7,11 C4.790861,11 3,9.209139 3,7 C3,4.790861 4.790861,3 7,3 Z M7,9 C8.1045695,9 9,8.1045695 9,7 C9,5.8954305 8.1045695,5 7,5 C5.8954305,5 5,5.8954305 5,7 C5,8.1045695 5.8954305,9 7,9 Z" fill="#000000"/>
+                                                <path d="M7,13 L17,13 C19.209139,13 21,14.790861 21,17 C21,19.209139 19.209139,21 17,21 L7,21 C4.790861,21 3,19.209139 3,17 C3,14.790861 4.790861,13 7,13 Z M17,19 C18.1045695,19 19,18.1045695 19,17 C19,15.8954305 18.1045695,15 17,15 C15.8954305,15 15,15.8954305 15,17 C15,18.1045695 15.8954305,19 17,19 Z" fill="#000000" opacity="0.3"/>
+                                            </g>
+                                        </svg><!--end::Svg Icon--></span>
                                     </a>
                                     <a href="{{url('/admin/master/coach')}}/${data}" title="Delete" class="btn btn-delete btn-sm btn-clean btn-icon" title="Delete">
                                         <span class="svg-icon svg-icon-md">
@@ -158,7 +168,6 @@
             initAction = () => {
                 $(document).on('click', '#add-btn', function(event){
                     event.preventDefault();
-
                     $('#form-coach').trigger("reset");
                     $('#form-coach').attr('action','{{url('admin/master/coach')}}');
                     $('#form-coach').attr('method','POST');
@@ -190,7 +199,6 @@
 
                 $(document).on('click', '.btn-edit', function(event){
                     event.preventDefault();
-
                     var data = init_table.row($(this).parents('tr')).data();
 
                     $('#form-coach').trigger("reset");
@@ -207,24 +215,6 @@
                     $('#form-coach').find('input[name="profile_avatar"]').attr('required',false);
 
                     $('.img-profile-edit').attr('src',`${data.image_url}`);
-                    // $('.password-setting').html(`
-                    //     <div class="row mb-5">
-                    //         <div class="col-12">
-                    //             <label>Password<span class="text-danger">*</span></label>
-                    //             <div class="password">
-                    //                 <input type="password" name="password" class="form-control" id="password" placeholder="Password">
-                    //             </div>
-                    //         </div>
-                    //     </div>
-                    //     <div class="row">
-                    //         <div class="col-12">
-                    //             <label>Konfirmasi Password<span class="text-danger">*</span></label>
-                    //             <div class="password-confirm">
-                    //                 <input type="password" name="password_confirmation" class="form-control" id="password-confirm" placeholder="Konfirmasi Password">
-                    //             </div>
-                    //         </div>
-                    //     </div>
-                    // `);
 
                     getCoachSosmed(data.id);
                     $('.password-setting').removeClass('col-6');
@@ -238,8 +228,8 @@
                     var url = $(this).attr('href');
 
                     Swal.fire({
-                        title: 'Delete Classroom Category?',
-                        text: "Deleted Classroom Category will be permanently lost!",
+                        title: 'Delete Coach?',
+                        text: "Deleted Coach will be permanently lost!",
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#7F16A7',
@@ -274,39 +264,6 @@
                     }
                     readURL(this);
                 });
-
-                // $('.tools').autocomplete({
-                //     minLength: 1,
-                //     source: function(request, response) {
-                //         $.ajax({
-                //             url: "{{ url('admin/master/courses/classroom/tools/ac') }}",
-                //             type: 'GET',
-                //             dataType: 'json',
-                //             data: {
-                //                 param : request.term,
-                //             },
-                //         })
-                //         .done(function(res) {
-                //             response(res.data);
-                //         })
-                //     },
-                //     focus: function( event, ui ) {
-                //         return false;
-                //     },
-                //     select: function( event, ui ) {
-                //         $('.tools').val(ui.item.text);
-
-                //         return false;
-                //     }
-                // })
-                // .autocomplete('instance')._renderItem = function(ul, item) {
-                //     var template = `
-                //         <div class="pb-0">
-                //             <span class="pb-0">${item.text}</span></span>
-                //         </div>
-                //     `
-                //     return $('<li>').append(template).appendTo(ul);
-                // };
 
                 $(document).on('click','.btn-add-medsos',function(event){
                     event.preventDefault();
@@ -394,6 +351,212 @@
 
                     setChecked($(this).attr('href'));
                 });
+
+                $(document).on('click','.btn-config',function(event){
+                    event.preventDefault();
+                    init_number_input = 1;
+
+                    var data = init_table.row($(this).parents('tr')).data();
+
+                    $('#form-config').trigger("reset");
+                    $('#form-config').attr('action', $(this).attr('href'));
+                    $('#form-config').attr('method','POST');
+                    $('.other-package').hide();
+                    $('.add-package').show();
+                    $('#selectdisplay2').attr('required',false);
+                    selectdisplay1.set([]);
+                    selectdisplay2.set([]);
+                    let init_package_type = 0;
+                    let package_type_1,package_type_2;
+                    let increment = 0;
+                    $.ajax({
+                        url: `{{ url('admin/master/coach/class') }}/${data.id}`,
+                        type: `GET`,
+                    })
+                    .done(function(res, xhr, meta) {
+
+                        $.each(res.data, function(index, data) {
+                            if(init_package_type == 0){
+                                init_package_type = data.package_type
+                                data1[index] = data.classroom_id;
+                                package_type_1 = data.package_type;
+                            }
+                            else if(init_package_type == data.package_type){
+                                data1[index] = data.classroom_id;
+                            }
+                            else{
+                                if(increment==0){
+                                    $('.other-package').show();
+                                    package_type_2 = data.package_type;
+
+                                }
+                                data2[increment] = data.classroom_id;
+                                increment++;
+                            }
+                        });
+                        if(package_type_1){
+                            $('#package1').val(package_type_1).change();
+                        }
+                        if(package_type_2){
+                            $('#package2').val(package_type_2).change();
+                        }
+                    })
+                    .fail(function(res, error) {
+                        if (res.status == 400 || res.status == 422) {
+                            $.each(res.responseJSON.errors, function(index, err) {
+                                if (Array.isArray(err)) {
+                                    $.each(err, function(index, val) {
+                                        toastr.error(val, 'Failed')
+                                    });
+                                }
+                                else {
+                                    toastr.error(err, 'Failed')
+                                }
+                            });
+                        }
+                        else {
+                            toastr.error(res.responseJSON.message, 'Failed')
+                        }
+                    })
+                    .always(function() {
+
+                    });
+
+                    showModal('modal-config');
+                });
+
+                $(document).on('change','.package',function(event){
+                    event.preventDefault();
+                    if($(this).val()){
+                        if($(this).data('number') == 1){
+                            selectdisplay1.setData([]);
+                            $.ajax({
+                                url: `{{ url('public/get-class') }}/${$(this).val()}`,
+                                type: `GET`,
+                            })
+                            .done(function(res, xhr, meta) {
+                                let element = ``;
+                                $.each(res.data, function(index, data) {
+                                    element += `<option value="${data.id}">${data.name}</option>`
+                                });
+                                $('#selectdisplay1').html(element);
+
+                                if(selectdisplay1){
+                                    selectdisplay1.destroy();
+                                }
+
+                                selectdisplay1 = new SlimSelect({
+                                    select: '#selectdisplay1',
+                                    closeOnSelect: false
+                                });
+                                selectdisplay1.set(data1);
+                            })
+                            .fail(function(res, error) {
+                                if (res.status == 400 || res.status == 422) {
+                                    $.each(res.responseJSON.errors, function(index, err) {
+                                        if (Array.isArray(err)) {
+                                            $.each(err, function(index, val) {
+                                                toastr.error(val, 'Failed')
+                                            });
+                                        }
+                                        else {
+                                            toastr.error(err, 'Failed')
+                                        }
+                                    });
+                                }
+                                else {
+                                    toastr.error(res.responseJSON.message, 'Failed')
+                                }
+                            })
+                            .always(function() {
+
+                            });
+                        }
+                        else{
+                            selectdisplay2.setData([]);
+                            $.ajax({
+                                url: `{{ url('public/get-class') }}/${$(this).val()}`,
+                                type: `GET`,
+                            })
+                            .done(function(res, xhr, meta) {
+                                let element = ``;
+                                $.each(res.data, function(index, data) {
+                                    element += `<option value="${data.id}">${data.name}</option>`
+                                });
+                                $('#selectdisplay2').html(element);
+
+                                if(selectdisplay2){
+                                    selectdisplay2.destroy();
+                                }
+
+                                selectdisplay2 = new SlimSelect({
+                                    select: '#selectdisplay2',
+                                    closeOnSelect: false
+                                });
+
+                                selectdisplay2.set(data2);
+                            })
+                            .fail(function(res, error) {
+                                if (res.status == 400 || res.status == 422) {
+                                    $.each(res.responseJSON.errors, function(index, err) {
+                                        if (Array.isArray(err)) {
+                                            $.each(err, function(index, val) {
+                                                toastr.error(val, 'Failed')
+                                            });
+                                        }
+                                        else {
+                                            toastr.error(err, 'Failed')
+                                        }
+                                    });
+                                }
+                                else {
+                                    toastr.error(res.responseJSON.message, 'Failed')
+                                }
+                            })
+                            .always(function() {
+
+                            });
+                        }
+                    }
+                });
+
+                $(document).on('click','#btn-add-package',function(event){
+                    event.preventDefault();
+                    init_number_input++;
+                    let package1 = $('#package1').val();
+                    if(package1){
+                        if(init_number_input > 1 ){
+                            $('.add-package').hide();
+                        }
+
+                        if(package1 == 1){
+                            $('#package2').html(`
+                                <option value="">Pilih Package</option>
+                                <option value="2">Reguler</option>
+                            `);
+                        }
+                        else{
+                            $('#package2').html(`
+                                <option value="">Pilih Package</option>
+                                <option value="1">Spesial</option>
+                            `);
+                        }
+
+                        if(selectdisplay2){
+                            selectdisplay2.destroy();
+                        }
+
+                        selectdisplay2 = new SlimSelect({
+                            select: '#selectdisplay2',
+                            closeOnSelect: false
+                        });
+                        $('#selectdisplay2').attr('required',true);
+                        $('.other-package').show();
+                    }
+                    else{
+                        toastr.error('Package pertama harus diisi','Failed')
+                    }
+                })
             },
             getCoachSosmed = (coach_id) => {
                 $.ajax({
@@ -411,7 +574,7 @@
                                 <div class="col-11 text-right">
                                     <input type="hidden" name="init_sosmed_coach[]" class="init_sosmed_coach" value="${data.id}">
                                     <div class="input-group">
-                                        <input type="text" name="url_sosmed[]" class="form-control" required value="${data.url}">
+                                        <input type="text" name="url_sosmed[]" class="form-control" required value="${data.url}" placeholder="Alamat URL">
                                         <select name="sosmed[]" class="form-control" required>
                                             <option value="">Pilih Sosmed</option>
                         `;
@@ -443,7 +606,7 @@
                         `;
 
                     });
-                    console.log(element);
+
                     $('#medsos').html(element);
                 })
                 .fail(function(res, error) {
@@ -538,6 +701,46 @@
                         btn_loading('stop')
                     });
                 });
+
+                $('#form-config').submit(function(event){
+                    event.preventDefault();
+                    btn_loading('start')
+                    $.ajax({
+                        url: $(this).attr('action'),
+                        type: $(this).attr('method'),
+                        data: new FormData(this),
+                        contentType: false,
+                        cache: false,
+                        processData: false,
+                    })
+                    .done(function(res, xhr, meta) {
+                        if(res.status == 200){
+                            toastr.success(res.message, 'Success');
+                            init_table.draw(false);
+                            hideModal('modal-config');
+                        }
+                    })
+                    .fail(function(res, error) {
+                        if (res.status == 400 || res.status == 422) {
+                            $.each(res.responseJSON.errors, function(index, err) {
+                                if (Array.isArray(err)) {
+                                    $.each(err, function(index, val) {
+                                        toastr.error(val, 'Failed')
+                                    });
+                                }
+                                else {
+                                    toastr.error(err, 'Failed')
+                                }
+                            });
+                        }
+                        else {
+                            toastr.error(res.responseJSON.message, 'Failed')
+                        }
+                    })
+                    .always(function() {
+                        btn_loading('stop')
+                    });
+                });
             },
             getSosmed = () => {
                 $.ajax({
@@ -551,7 +754,7 @@
                             <div class="col-11 text-right">
                                 <input type="hidden" name="init_sosmed_coach[]" class="init_sosmed_coach">
                                 <div class="input-group">
-                                    <input type="text" name="url_sosmed[]" class="form-control" required>
+                                    <input type="text" name="url_sosmed[]" class="form-control" required placeholder="Alamat URL">
                                     <select name="sosmed[]" class="form-control" required>
                                         <option value="">Pilih Sosmed</option>
                     `;
@@ -590,146 +793,146 @@
         };
 
         const initTreeTable = () => {
-                $('#tree-table').fancytree({
-                    extensions: ['table'],
-                    checkbox: false,
-                    icon: false,
-                    table: {
-                        nodeColumnIdx: 0,
-                    },
-                    source: {
-                        url: '{{ asset('data/coach.json') }}'
-                    },
-                    lazyLoad: function(event, data) {
-                        data.result = {url: '{{ asset('data/coach.json') }}'}
-                    },
-                    renderColumns: function(event, data) {
-                        var node = data.node;
+            $('#tree-table').fancytree({
+                extensions: ['table'],
+                checkbox: false,
+                icon: false,
+                table: {
+                    nodeColumnIdx: 0,
+                },
+                source: {
+                    url: '{{ asset('data/coach.json') }}'
+                },
+                lazyLoad: function(event, data) {
+                    data.result = {url: '{{ asset('data/coach.json') }}'}
+                },
+                renderColumns: function(event, data) {
+                    var node = data.node;
 
-                        $tdList = $(node.tr).find('>td');
+                    $tdList = $(node.tr).find('>td');
 
-                        $tdList.eq(0).addClass('text-left');
-                        $tdList.eq(1).addClass('text-center').html(`<input type="checkbox" class="form-input-styled permissions ${node.key}" data-parent="${node.parent.key}" name="permissions[]" value="${node.key}" id="${node.key}">`);
-                        if (node.data.crud) {
-                            $tdList.eq(2).addClass(`text-center`).html(`<input type="checkbox" class="form-input-styled permissions ${node.key}_crud" name="permissions[]" value="${node.key}_list" data-parent="${node.key}">`);
-                            $tdList.eq(3).addClass(`text-center`).html(`<input type="checkbox" class="form-input-styled permissions ${node.key}_crud" name="permissions[]" value="${node.key}_insert" data-parent="${node.key}">`);
-                            $tdList.eq(4).addClass(`text-center`).html(`<input type="checkbox" class="form-input-styled permissions ${node.key}_crud" name="permissions[]" value="${node.key}_update" data-parent="${node.key}">`);
-                            $tdList.eq(5).addClass(`text-center`).html(`<input type="checkbox" class="form-input-styled permissions ${node.key}_crud" name="permissions[]" value="${node.key}_delete" data-parent="${node.key}">`);
-                            $tdList.eq(6).addClass(`text-center`).html(`<input type="checkbox" class="form-input-styled permissions ${node.key}_crud" name="permissions[]" value="${node.key}_print" data-parent="${node.key}">`);
-                        }
+                    $tdList.eq(0).addClass('text-left');
+                    $tdList.eq(1).addClass('text-center').html(`<input type="checkbox" class="form-input-styled permissions ${node.key}" data-parent="${node.parent.key}" name="permissions[]" value="${node.key}" id="${node.key}">`);
+                    if (node.data.crud) {
+                        $tdList.eq(2).addClass(`text-center`).html(`<input type="checkbox" class="form-input-styled permissions ${node.key}_crud" name="permissions[]" value="${node.key}_list" data-parent="${node.key}">`);
+                        $tdList.eq(3).addClass(`text-center`).html(`<input type="checkbox" class="form-input-styled permissions ${node.key}_crud" name="permissions[]" value="${node.key}_insert" data-parent="${node.key}">`);
+                        $tdList.eq(4).addClass(`text-center`).html(`<input type="checkbox" class="form-input-styled permissions ${node.key}_crud" name="permissions[]" value="${node.key}_update" data-parent="${node.key}">`);
+                        $tdList.eq(5).addClass(`text-center`).html(`<input type="checkbox" class="form-input-styled permissions ${node.key}_crud" name="permissions[]" value="${node.key}_delete" data-parent="${node.key}">`);
+                        $tdList.eq(6).addClass(`text-center`).html(`<input type="checkbox" class="form-input-styled permissions ${node.key}_crud" name="permissions[]" value="${node.key}_print" data-parent="${node.key}">`);
+                    }
 
-                        if (node.data.other) {
+                    if (node.data.other) {
 
-                            var element = ``;
+                        var element = ``;
 
-                            $.each(node.data.other, function(key, val) {
-                                element += `
-                                    <div class="form-check form-check-inline">
-                                        <label class="form-check-label">
-                                            <input type="checkbox" class="form-check-input-styled permissions ${node.key}_crud" name="permissions[]" value="${key}" data-parent="${node.key}" data-fouc>&nbsp;&nbsp;
-                                            ${val}
-                                        </label>
-                                    </div>
-                                `;
-                            });
-                            $tdList.eq(7).addClass('text-left').html(`
-                                <div class="d-flex align-items-center justify-content-start">
-                                    ${element}
+                        $.each(node.data.other, function(key, val) {
+                            element += `
+                                <div class="form-check form-check-inline">
+                                    <label class="form-check-label">
+                                        <input type="checkbox" class="form-check-input-styled permissions ${node.key}_crud" name="permissions[]" value="${key}" data-parent="${node.key}" data-fouc>&nbsp;&nbsp;
+                                        ${val}
+                                    </label>
                                 </div>
-                            `);
-                        }
-
-                        $tdList.addClass('pt-1 pb-1');
-
-                    }
-                });
-
-                $('#tree-table').on('change', 'input[name="permissions[]"]', function(e) {
-                    $input = $(e.target);
-
-                    var value = $input.val();
-
-                    var parent = $input.data('parent');
-
-                    if ($('#tree-table').find(`[data-parent="${value}"]`).length > 0) {
-                        if($input.is(':checked')){
-                            var val = $input.val();
-                            $('#tree-table').find(`[data-parent="${val}"]`).prop('checked', true).trigger('change');
-                        }
-                        else{
-                            var val = $input.val();
-                            $('#tree-table').find(`[data-parent="${val}"]`).prop('checked', false).trigger('change');
-                        }
-                    }
-                    else {
-                        if($input.is(':checked')){
-                            var val = $input.val();
-                            $('#tree-table').find(`[data-parent="${val}"]`).prop('checked', true);
-                        }
-                        else{
-                            var val = $input.val();
-                            $('#tree-table').find(`[data-parent="${val}"]`).prop('checked', false);
-                        }
-                    }
-                });
-
-                $('#tree-table').on('click', 'input[name="permissions[]"]', function(e) {
-                    $input = $(e.target);
-
-                    var value = $input.val();
-
-                    var parent = $input.data('parent');
-
-                    if (typeof parent != 'undefined') {
-                        if (parent != 'root_1') {
-
-                            parent_parent = $(`#${parent}`).data('parent');
-
-                            if($input.is(':checked')){
-                                $('#tree-table').find(`.${parent}`).prop('checked', true);
-                            }
-                            else{
-                                if ($('#tree-table').find(`[data-parent="${parent}"]:checked`).length <= 0) {
-                                    $('#tree-table').find(`.${parent}`).prop('checked', false);
-                                }
-                            }
-
-                            if (typeof parent_parent != 'undefined') {
-                                if (parent_parent != 'root_1') {
-                                    if($('#tree-table').find(`[data-parent="${parent_parent}"]:checked`).length > 0){
-                                        $('#tree-table').find(`.${parent_parent}`).prop('checked', true);
-                                    }
-                                    else{
-                                        if ($('#tree-table').find(`[data-parent="${parent_parent}"]:checked`).length <= 0) {
-                                            $('#tree-table').find(`.${parent_parent}`).prop('checked', false);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-            },
-            setChecked = (url) => {
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    dataType: 'json',
-                })
-                .done(function(res, xhr, meta) {
-                    if (res.status == 200) {
-                        let val;
-                        $.each(res.data, function(index, data) {
-                            val = `:checkbox[value=${data.name}]`;
-                            $(val).prop("checked","true");
+                            `;
                         });
+                        $tdList.eq(7).addClass('text-left').html(`
+                            <div class="d-flex align-items-center justify-content-start">
+                                ${element}
+                            </div>
+                        `);
                     }
-                })
-                .fail(function(res, error) {
-                    toastr.error(res.responseJSON.message, 'Gagal')
-                })
-                .always(function() { });
-            }
+
+                    $tdList.addClass('pt-1 pb-1');
+
+                }
+            });
+
+            $('#tree-table').on('change', 'input[name="permissions[]"]', function(e) {
+                $input = $(e.target);
+
+                var value = $input.val();
+
+                var parent = $input.data('parent');
+
+                if ($('#tree-table').find(`[data-parent="${value}"]`).length > 0) {
+                    if($input.is(':checked')){
+                        var val = $input.val();
+                        $('#tree-table').find(`[data-parent="${val}"]`).prop('checked', true).trigger('change');
+                    }
+                    else{
+                        var val = $input.val();
+                        $('#tree-table').find(`[data-parent="${val}"]`).prop('checked', false).trigger('change');
+                    }
+                }
+                else {
+                    if($input.is(':checked')){
+                        var val = $input.val();
+                        $('#tree-table').find(`[data-parent="${val}"]`).prop('checked', true);
+                    }
+                    else{
+                        var val = $input.val();
+                        $('#tree-table').find(`[data-parent="${val}"]`).prop('checked', false);
+                    }
+                }
+            });
+
+            $('#tree-table').on('click', 'input[name="permissions[]"]', function(e) {
+                $input = $(e.target);
+
+                var value = $input.val();
+
+                var parent = $input.data('parent');
+
+                if (typeof parent != 'undefined') {
+                    if (parent != 'root_1') {
+
+                        parent_parent = $(`#${parent}`).data('parent');
+
+                        if($input.is(':checked')){
+                            $('#tree-table').find(`.${parent}`).prop('checked', true);
+                        }
+                        else{
+                            if ($('#tree-table').find(`[data-parent="${parent}"]:checked`).length <= 0) {
+                                $('#tree-table').find(`.${parent}`).prop('checked', false);
+                            }
+                        }
+
+                        if (typeof parent_parent != 'undefined') {
+                            if (parent_parent != 'root_1') {
+                                if($('#tree-table').find(`[data-parent="${parent_parent}"]:checked`).length > 0){
+                                    $('#tree-table').find(`.${parent_parent}`).prop('checked', true);
+                                }
+                                else{
+                                    if ($('#tree-table').find(`[data-parent="${parent_parent}"]:checked`).length <= 0) {
+                                        $('#tree-table').find(`.${parent_parent}`).prop('checked', false);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        },
+        setChecked = (url) => {
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+            })
+            .done(function(res, xhr, meta) {
+                if (res.status == 200) {
+                    let val;
+                    $.each(res.data, function(index, data) {
+                        val = `:checkbox[value=${data.name}]`;
+                        $(val).prop("checked","true");
+                    });
+                }
+            })
+            .fail(function(res, error) {
+                toastr.error(res.responseJSON.message, 'Gagal')
+            })
+            .always(function() { });
+        }
 
         const readURL = (input) => {
             if (input.files && input.files[0]) {

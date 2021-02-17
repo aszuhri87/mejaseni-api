@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Coach;
 use Illuminate\Support\Facades\Hash;
 use App\Models\CoachSosmed;
+use App\Models\CoachClassroom;
 use Storage;
 
 use DataTables;
@@ -248,6 +249,62 @@ class CoachController extends BaseMenu
                 "status"=>200,
                 "data"  => "OK",
                 "message"=> 'Izin Behasil Disesuaikan'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "status" => 400,
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function get_class($id)
+    {
+        try {
+            $result = DB::table('coach_classrooms')
+                ->select([
+                    'coach_classrooms.*',
+                    'classrooms.package_type',
+                    'classrooms.name as classroom_name',
+                ])
+                ->leftJoin('classrooms','coach_classrooms.classroom_id','=','classrooms.id')
+                ->where('coach_id', $id)
+                ->whereNull('coach_classrooms.deleted_at')
+                ->get();
+
+            return response([
+                "status"=>200,
+                "data"  => $result,
+                "message"=> 'OK'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "status" => 400,
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function config(Request $request, $id)
+    {
+        try {
+            $result = DB::table('coach_classrooms')
+                ->where('coach_id', $id)
+                ->whereNull('deleted_at')
+                ->delete();
+
+            foreach ($request->select as $key => $value) {
+                $insert = CoachClassroom::create([
+                    'coach_id' => $id,
+                    'classroom_id' => $value
+                ]);
+            }
+            return response([
+                "status"=>200,
+                "data"  => $result,
+                "message"=> 'OK'
             ], 200);
         } catch (Exception $e) {
             throw new Exception($e);

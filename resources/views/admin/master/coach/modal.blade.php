@@ -179,3 +179,63 @@
         </div>
     </div>
 </div>
+
+<div class="modal" id="modal-config" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="form-config" autocomplete="off">
+                <div class="modal-header">
+                    <h5 class="modal-title">Konfigurasi Coach</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i aria-hidden="true" class="ki ki-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label>Pilih Package<span class="text-danger">*</span></label>
+                                <div class="init-package">
+                                    <select name="package[]" class="form-control package" id="package1" data-number="1" required>
+                                        <option value="">Pilih Package</option>
+                                        <option value="1">Spesial</option>
+                                        <option value="2">Reguler</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Pilih Class yang Diampu<span class="text-danger">*</span></label>
+                                <select id="selectdisplay1" name="select[]" multiple>
+
+                                </select>
+                            </div>
+                            <div class="mt-5 pt-5 other-package" style="display: none">
+                                <div class="form-group">
+                                    <label>Pilih Package<span class="text-danger">*</span></label>
+                                    <div class="init-package">
+                                        <select name="package[]" class="form-control package" id="package2" data-number="2">
+
+                                        </select>
+                                    </div>      
+                                </div>
+                                <div class="form-group">
+                                    <label>Pilih Class yang Diampu<span class="text-danger">*</span></label>
+                                    <select id="selectdisplay2" name="select[]" multiple>
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="add-package">
+                                <button class="btn btn-success" id="btn-add-package" type="button">Tambah Package</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary btn-loading">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
