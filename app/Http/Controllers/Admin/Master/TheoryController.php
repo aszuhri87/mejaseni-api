@@ -47,15 +47,22 @@ class TheoryController extends BaseMenu
                 'theories.url',
                 'theories.description',
                 'theories.price',
+                'theories.confirmed',
                 'theories.upload_date',
                 'sessions.name as session',
                 DB::raw("CONCAT('{$path}',theories.url) as file_url"),
                 'sessions.classroom_id',
                 'classrooms.classroom_category_id',
+                'classrooms.name as classroom',
+                'classrooms.package_type',
+                'classroom_categories.name as category',
+                'sub_classroom_categories.name as sub_category',
                 'classrooms.sub_classroom_category_id',
             ])
             ->leftJoin('sessions', 'sessions.id','=','theories.session_id')
             ->leftJoin('classrooms', 'classrooms.id','=','sessions.classroom_id')
+            ->leftJoin('classroom_categories', 'classroom_categories.id','=','classrooms.classroom_category_id')
+            ->leftJoin('sub_classroom_categories', 'sub_classroom_categories.id','=','classrooms.sub_classroom_category_id')
             ->whereNull([
                 'theories.deleted_at'
             ])
@@ -88,6 +95,7 @@ class TheoryController extends BaseMenu
                     'description' => $request->description,
                     'price' => isset($request->is_premium) ? $request->price : 0,
                     'upload_date' => date('Y-m-d'),
+                    'confirmed' => true
                 ]);
 
                 return $result;

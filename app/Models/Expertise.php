@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\Uuid;
 
-class Theory extends Model
+class Expertise extends Model
 {
     use HasFactory, Uuid, SoftDeletes;
 
@@ -16,15 +16,7 @@ class Theory extends Model
     public $keyType = 'string';
 
     protected $fillable = [
-        'session_id',
-        'name',
-        'is_premium',
-        'is_video',
-        'url',
-        'description',
-        'upload_date',
-        'price',
-        'confirmed'
+        'name'
     ];
 
     protected $dates = ['deleted_at'];
