@@ -21,6 +21,8 @@ use App\Http\Controllers\Admin\Master\PackageController;
 use App\Http\Controllers\Admin\Master\PlatformController;
 use App\Http\Controllers\Admin\Master\ClassroomController;
 use App\Http\Controllers\Admin\Master\ClassroomCategoryController;
+use App\Http\Controllers\Admin\Master\SessionVideoController;
+use App\Http\Controllers\Admin\Master\TheoryVideoController;
 use App\Http\Controllers\Admin\Master\SubClassroomCategoryController;
 use App\Http\Controllers\Admin\Master\CoachController;
 use App\Http\Controllers\Admin\Master\AdminController;
@@ -84,6 +86,13 @@ Route::group(['middleware' => ['auth-handling']], function () {
                 Route::post('classroom/dt', [ClassroomController::class, 'dt']);
                 Route::post('classroom/update/{id}', [ClassroomController::class, 'update']);
                 Route::resource('classroom', ClassroomController::class);
+
+                Route::post('session-video/detail/dt/{id}', [TheoryVideoController::class, 'dt']);
+                Route::post('session-video/detail/update/{id}', [TheoryVideoController::class, 'update']);
+                Route::post('session-video/detail/store', [TheoryVideoController::class, 'store']);
+
+                Route::post('session-video/dt', [SessionVideoController::class, 'dt']);
+                Route::resource('session-video', SessionVideoController::class);
             });
 
             Route::post('coach/dt', [CoachController::class, 'dt']);
@@ -129,6 +138,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
 
     Route::group(['prefix' => 'public'], function () {
         Route::get('get-classroom-category', [PublicController::class, 'get_classroom_category']);
+        Route::get('get-has-classroom-category', [PublicController::class, 'get_has_classroom_category']);
         Route::get('get-sub-classroom-category', [PublicController::class, 'get_sub_classroom_category']);
         Route::get('get-sub-classroom-category-by-category/{id}', [PublicController::class, 'get_sub_classroom_category_by_category']);
         Route::get('get-profile-coach-video', [PublicController::class, 'get_profile_coach_videos']);
@@ -137,5 +147,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::get('get-class/{package_id}',[PublicController::class, 'get_class']);
         Route::get('get-classroom/{category_id}&{sub_category_id}', [PublicController::class, 'get_classroom']);
         Route::get('get-session/{classroom_id}', [PublicController::class, 'get_session']);
+        Route::get('get-coach',[PublicController::class, 'get_coach']);
+        Route::get('get-expertise',[PublicController::class, 'get_expertise']);
     });
 });

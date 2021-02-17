@@ -30,6 +30,71 @@ class PublicController extends Controller
         }
     }
 
+    public function get_has_classroom_category()
+    {
+        try {
+            $result = \App\Models\ClassroomCategory::select([
+                'id','name'
+            ])->whereHas('sub_classroom_categories')->get();
+
+            return response([
+                "data"      => $result,
+                "message"   => 'OK'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function get_coach()
+    {
+        try {
+            $result = DB::table('coaches')
+                ->select([
+                    'id',
+                    'name'
+                ])
+                ->whereNull('deleted_at')
+                ->get();
+
+            return response([
+                "data"      => $result,
+                "message"   => 'OK'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function get_expertise()
+    {
+        try {
+            $result = DB::table('expertises')
+                ->select([
+                    'id',
+                    'name'
+                ])
+                ->whereNull('deleted_at')
+                ->get();
+
+            return response([
+                "data"      => $result,
+                "message"   => 'OK'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
     public function get_sub_classroom_category()
     {
         try {
