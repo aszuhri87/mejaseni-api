@@ -25,7 +25,8 @@ class Coach extends Authenticatable
         'phone',
         'description',
         'image',
-        'expertise'
+        'expertise',
+        'suspend',
     ];
 
     protected $dates = ['deleted_at'];
