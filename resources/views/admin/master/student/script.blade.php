@@ -24,10 +24,8 @@
                     columns: [
                         { data: 'DT_RowIndex' },
                         { data: 'name' },
-                        { data: 'email' },
-                        { data: 'phone' },
-                        { data: 'jumlah_class' },
-                        { data: 'expertise' },
+                        { data: 'class' },
+                        { data: 'status' },
                         { defaultContent: '' }
                         ],
                     columnDefs: [
@@ -65,18 +63,18 @@
                             searchable: false,
                             orderable: false,
                             className: "text-center",
-                        },
-                        {
-                            targets: 4,
-                            searchable: false,
-                            orderable: false,
-                            className: "text-center",
-                        },
-                        {
-                            targets: 5,
-                            searchable: false,
-                            orderable: false,
-                            className: "text-center",
+                            render : function(data, type, full, meta) {
+                                return `
+                                <div class="d-flex justify-content-center">
+                                    <span class="switch switch-sm switch-outline switch-icon switch-success">
+                                        <label>
+                                        <input type="checkbox" checked="checked" name="select"/>
+                                        <span></span>
+                                        </label>
+                                    </span>
+                                </div>
+                                `
+                            }
                         },
                         {
                             targets: -1,
@@ -169,7 +167,7 @@
                     event.preventDefault();
 
                     var data = init_table.row($(this).parents('tr')).data();
-
+                    console.log(data);
                     $('#form-student').trigger("reset");
                     $('#form-student').attr('action', $(this).attr('href'));
                     $('#form-student').attr('method','POST');

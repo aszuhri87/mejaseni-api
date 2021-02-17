@@ -67,13 +67,16 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-6">
-                                    <div class="form-group">
-                                        <label>Expertise<span class="text-danger">*</span></label>
-                                        <div class="expertise">
-                                            <input type="text" class="form-control" name="expertise" id="expertise" required placeholder="Pilih Expertise">
-                                        </div>
-                                    </div>
+                                <div class="form-group col-6">
+                                    <label>
+                                        Expertise
+                                        <span class="text-danger d-none">*</span>
+                                    </label>
+                                    <select class="form-control" id="expertise" name="expertise">
+                                        @foreach ($expertise as $key => $item)
+                                            <option value="{{ $key }}">{{ $item }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 <div class="col-6">
                                     <div class="form-group">
