@@ -43,9 +43,11 @@ class CoachController extends BaseMenu
             ->select([
                 'coaches.*',
                 DB::raw("CONCAT('{$path}',coaches.image) as image_url"),
+                'expertises.name as expertise_name',
             ])
+            ->leftJoin('expertises','coaches.expertise_id','=','expertises.id')
             ->whereNull([
-                'deleted_at'
+                'coaches.deleted_at'
             ])
             ->get();
 
@@ -70,16 +72,18 @@ class CoachController extends BaseMenu
                     'password' => Hash::make($request->password),
                     'phone' => $request->phone,
                     'description' => $request->profil_description,
-                    'expertise' => $request->expertise,
+                    'expertise_id' => $request->expertise,
                     'image' => $path,
                 ]);
 
-                foreach ($request->sosmed as $key => $value) {
-                    CoachSosmed::create([
-                        'coach_id' => $result->id,
-                        'url' => $request->url_sosmed[$key],
-                        'sosmed_id' => $value
-                    ]);
+                if(!empty($request->sosmed)){
+                    foreach ($request->sosmed as $key => $value) {
+                        CoachSosmed::create([
+                            'coach_id' => $result->id,
+                            'url' => $request->url_sosmed[$key],
+                            'sosmed_id' => $value
+                        ]);
+                    }
                 }
 
                 return $result;
@@ -113,7 +117,7 @@ class CoachController extends BaseMenu
                         'email' => $request->email,
                         'phone' => $request->phone,
                         'description' => $request->profil_description,
-                        'expertise' => $request->expertise,
+                        'expertise_id' => $request->expertise,
                         'image' => $path,
                     ];
                 }else{
@@ -123,7 +127,7 @@ class CoachController extends BaseMenu
                         'email' => $request->email,
                         'phone' => $request->phone,
                         'description' => $request->profil_description,
-                        'expertise' => $request->expertise,
+                        'expertise_id' => $request->expertise,
                     ];
                 }
                 $coach->update($update);
@@ -314,4 +318,80 @@ class CoachController extends BaseMenu
             ]);
         }
     }
+
+    public function activate_suspend($id)
+    {
+        try {
+            $result = Coach::find($id)->update([
+                'suspend' => true
+            ]);
+
+            return response([
+                "status"=>200,
+                "data"  => $result,
+                "message"=> 'Successfully Activate'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "status" => 400,
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function suspend($id)
+    {
+        try {
+            $result = Coach::find($id)->update([
+                'suspend' => false
+            ]);
+
+            return response([
+                "status"=>200,
+                "data"  => $result,
+                "message"=> 'Successfully Suspend'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "status" => 400,
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
+    // view calendar
+
+    public function view_calendar($id)
+    {
+        $navigation = [
+            [
+                'title' => 'Master'
+            ],
+            [
+                'title' => 'Coach'
+            ],
+            [
+                'title' => 'Calendar'
+            ],
+        ];
+        $path = Storage::disk('s3')->url('/');
+        $data = DB::table('coaches')
+            ->select([
+                'coaches.*',
+                DB::raw("CONCAT('{$path}',coaches.image) as image_url")
+            ])
+            ->where('id',$id)
+            ->first();
+
+        return view('admin.master.coach-calendar.index', [
+            'title' => 'Calendar',
+            'navigation' => $navigation,
+            'list_menu' => $this->menu_admin(),
+            'data' => $data
+        ]);
+    }
+
+    // view list
 }

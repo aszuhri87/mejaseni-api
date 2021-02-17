@@ -51,9 +51,14 @@ class AdminController extends BaseMenu
 
         return DataTables::of($data)
             ->addIndexColumn()
-            ->addColumn('role', function ($data) {
+            ->addColumn('tipe_admin', function ($data) {
                 $user = Admin::find($data->id);
                 return !empty($user->getRoleNames()) ? $user->getRoleNames()->first() : '-';
+            })
+            ->addColumn('role_id', function ($data) {
+                $user = Admin::find($data->id);
+                $role = Role::where('name', $user->getRoleNames()->first())->first();
+                return !empty($role->id) ? $role->id : '-';
             })
             ->make(true);
     }
@@ -75,7 +80,8 @@ class AdminController extends BaseMenu
                     'email' => $request->email,
                     'password' => Hash::make($request->password),
                 ]);
-                $role = Role::find($request->role);
+
+                $role = Role::whereIn('id', $request->role)->get();
 
                 $admin->assignRole($role);
 
@@ -114,8 +120,19 @@ class AdminController extends BaseMenu
                     'name' => $request->name,
                     'username' => $request->username,
                     'email' => $request->email,
-                    'password' => Hash::make($request->password),
                 ]);
+
+                if ($request->password != null) {
+                    $result = Admin::find($id)->update([
+                        'password' => Hash::make($request->password),
+                    ]);
+                }
+
+                $result = Admin::find($id);
+
+                $role = Role::whereIn('id', $request->role)->get();
+
+                $result->syncRoles($role);
 
                 return $result;
             });
@@ -150,6 +167,47 @@ class AdminController extends BaseMenu
         } catch (Exception $e) {
             throw new Exception($e);
             return response([
+                "message" => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function get_permission($id)
+    {
+        try {
+            $admin = Admin::find($id);
+            $permissions = $admin->getAllPermissions();
+
+            return response([
+                "status" => 200,
+                "data" => $permissions,
+                "message" => 'Izin Ditemukan'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "status" => 400,
+                "message" => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function set_permission(Request $request, $id)
+    {
+        try {
+
+            $admin = Admin::find($id);
+            $admin->syncPermissions($request->permissions);
+
+            return response([
+                "status" => 200,
+                "data"  => "OK",
+                "message" => 'Izin Behasil Disesuaikan'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "status" => 400,
                 "message" => $e->getMessage(),
             ]);
         }

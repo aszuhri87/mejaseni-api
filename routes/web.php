@@ -95,18 +95,26 @@ Route::group(['middleware' => ['auth-handling']], function () {
                 Route::resource('session-video', SessionVideoController::class);
             });
 
+            Route::group(['prefix' => 'coach'], function () {
+                Route::get('coach-sosmed/{id}', [CoachController::class, 'coach_sosmed']);
+                Route::get('permission/{id}', [CoachController::class, 'get_permission']);
+                Route::get('class/{id}', [CoachController::class, 'get_class']);
+                Route::get('view-calendar/{id}', [CoachController::class, 'view_calendar']);
+                Route::post('update/{id}', [CoachController::class, 'update']);
+                Route::post('permission/{id}', [CoachController::class, 'set_permission']);
+                Route::post('config/{id}', [CoachController::class, 'config']);
+                Route::post('activate-suspend/{id}', [CoachController::class, 'activate_suspend']);
+                Route::post('suspend/{id}', [CoachController::class, 'suspend']);
+                Route::delete('delete-medsos/{id}', [CoachController::class, 'delete_medsos']);
+            });
+
             Route::post('coach/dt', [CoachController::class, 'dt']);
-            Route::post('coach/update/{id}', [CoachController::class, 'update']);
-            Route::delete('coach/delete-medsos/{id}', [CoachController::class, 'delete_medsos']);
-            Route::get('coach/coach-sosmed/{id}', [CoachController::class, 'coach_sosmed']);
-            Route::get('coach/permission/{id}', [CoachController::class, 'get_permission']);
-            Route::post('coach/permission/{id}', [CoachController::class, 'set_permission']);
-            Route::get('coach/class/{id}', [CoachController::class, 'get_class']);
-            Route::post('coach/config/{id}', [CoachController::class, 'config']);
             Route::resource('coach', CoachController::class);
 
-            Route::post('admin/dt', [AdminController::class, 'dt']);
             Route::resource('admin', AdminController::class);
+            Route::post('admin/dt', [AdminController::class, 'dt']);
+            Route::get('admin/permission/{id}', [AdminController::class, 'get_permission']);
+            Route::post('admin/permission/{id}', [AdminController::class, 'set_permission']);
 
             Route::post('student/dt', [StudentController::class, 'dt']);
             Route::post('student/update/{id}', [StudentController::class, 'update']);
