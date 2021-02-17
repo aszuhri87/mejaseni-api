@@ -54,7 +54,7 @@
                                                 <img src="${full.image_url}" class="rounded" width="50" height="50"/>
                                             </div>
                                             <div class="d-flex flex-column font-weight-bold">
-                                                <a href="javascript::void(0);" class="text-dark text-hover-primary mb-1 font-size-lg">${data}</a>
+                                                <p class="mb-1 font-size-lg">${data}</p>
                                                 <span class="text-muted">${package_type} Package</span>
                                             </div>
                                         </div>
@@ -67,7 +67,7 @@
                             render: function(data, type, full, meta) {
                                 return `
                                     <div class="d-flex flex-column font-weight-bold">
-                                        <a href="javascript::void(0);" class="text-dark text-hover-primary mb-1 font-size-lg">${data}</a>
+                                        <p class="mb-1 font-size-lg">${data}</p>
                                         <span class="text-muted">${full.sub_category ? full.sub_category : '-'}</span>
                                     </div>
                                 `;
@@ -79,7 +79,7 @@
                             render: function(data, type, full, meta) {
                                 return `
                                     <div class="d-flex flex-column font-weight-bold">
-                                        <a href="javascript::void(0);" class="text-dark text-hover-primary mb-1 font-size-lg">Rp ${numeral(data).format('0,0')}</a>
+                                        <p class="mb-1 font-size-lg">Rp ${numeral(data).format('0,0')}</p>
                                         <span class="text-muted">Per Package</span>
                                     </div>
                                 `;
