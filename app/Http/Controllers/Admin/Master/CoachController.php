@@ -74,12 +74,14 @@ class CoachController extends BaseMenu
                     'image' => $path,
                 ]);
 
-                foreach ($request->sosmed as $key => $value) {
-                    CoachSosmed::create([
-                        'coach_id' => $result->id,
-                        'url' => $request->url_sosmed[$key],
-                        'sosmed_id' => $value
-                    ]);
+                if(!empty($request->sosmed)){
+                    foreach ($request->sosmed as $key => $value) {
+                        CoachSosmed::create([
+                            'coach_id' => $result->id,
+                            'url' => $request->url_sosmed[$key],
+                            'sosmed_id' => $value
+                        ]);
+                    }
                 }
 
                 return $result;
@@ -314,4 +316,72 @@ class CoachController extends BaseMenu
             ]);
         }
     }
+
+    public function activate_suspend($id)
+    {
+        try {
+            $result = Coach::find($id)->update([
+                'suspend' => true
+            ]);
+
+            return response([
+                "status"=>200,
+                "data"  => $result,
+                "message"=> 'Successfully Activate'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "status" => 400,
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function suspend($id)
+    {
+        try {
+            $result = Coach::find($id)->update([
+                'suspend' => false
+            ]);
+
+            return response([
+                "status"=>200,
+                "data"  => $result,
+                "message"=> 'Successfully Suspend'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "status" => 400,
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
+    // view calendar
+
+    public function view_calendar($id)
+    {
+        $navigation = [
+            [
+                'title' => 'Master'
+            ],
+            [
+                'title' => 'Coach'
+            ],
+            [
+                'title' => 'Calendar'
+            ],
+        ];
+        // $data = DB::table('coaches')
+
+        return view('admin.master.coach-calendar.index', [
+            'title' => 'Calendar',
+            'navigation' => $navigation,
+            'list_menu' => $this->menu_admin(),
+        ]);
+    }
+
+    // view list
 }
