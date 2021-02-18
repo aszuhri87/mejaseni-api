@@ -135,6 +135,9 @@ Route::group(['middleware' => ['auth-handling']], function () {
         });
 
         Route::get('schedule', [ScheduleController::class, 'index']);
+        Route::get('schedule/{id}', [ScheduleController::class, 'show']);
+        Route::post('schedule', [ScheduleController::class, 'store']);
+        Route::post('schedule/{id}', [ScheduleController::class, 'update']);
     });
 
     Route::group(['prefix' => 'coach', 'middleware' => 'coach-handling'], function () {
@@ -160,6 +163,8 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::get('get-classroom/{category_id}&{sub_category_id}', [PublicController::class, 'get_classroom']);
         Route::get('get-session/{classroom_id}', [PublicController::class, 'get_session']);
         Route::get('get-coach',[PublicController::class, 'get_coach']);
+        Route::get('get-coach-by-class/{id}',[PublicController::class, 'get_coach_by_class']);
         Route::get('get-expertise',[PublicController::class, 'get_expertise']);
+        Route::get('get-platform',[PublicController::class, 'get_platform']);
     });
 });

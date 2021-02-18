@@ -1,18 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<style>
-    .dz-style-custom{
-        font-size: 10px;
-        height: 15px;
-        background-color: gainsboro;
-        color: black;
-    }
-
-    .dz-image img{
-        width: 100%;
-    }
-</style>
 <div class="card">
     <div class="card-body">
         <div class="d-flex justify-content-between align-items-center">

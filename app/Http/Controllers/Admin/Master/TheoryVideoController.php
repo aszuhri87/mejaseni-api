@@ -9,13 +9,19 @@ use Illuminate\Http\Request;
 use App\Models\TheoryVideo;
 
 use DataTables;
-
+use Storage;
 
 class TheoryVideoController extends BaseMenu
 {
     public function dt($id)
     {
+        $path = Storage::disk('s3')->url('/');
+
         $data = DB::table('theory_videos')
+            ->select([
+                'theory_videos.*',
+                DB::raw("CONCAT('{$path}',url) as file_url"),
+            ])
             ->whereNull("theory_videos.deleted_at")
             ->where('theory_videos.session_video_id', $id)
             ->get();
