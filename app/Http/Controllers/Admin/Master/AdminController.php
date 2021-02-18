@@ -29,7 +29,7 @@ class AdminController extends BaseMenu
                 'title' => 'Admin'
             ],
         ];
-        $role = Role::pluck('name', 'id');
+        $role = Role::where('guard_name','admin')->pluck('name', 'id');
         return view('admin.master.admin.index', [
             'title' => 'Admin',
             'navigation' => $navigation,
@@ -81,7 +81,7 @@ class AdminController extends BaseMenu
                     'password' => Hash::make($request->password),
                 ]);
 
-                $role = Role::whereIn('id', $request->role)->get();
+                $role = Role::where('id', $request->role)->get();
 
                 $admin->assignRole($role);
 
@@ -122,17 +122,21 @@ class AdminController extends BaseMenu
                     'email' => $request->email,
                 ]);
 
-                if ($request->password != null) {
+                if (!empty($request->change_password)) {
                     $result = Admin::find($id)->update([
                         'password' => Hash::make($request->password),
                     ]);
                 }
+                
+                if (!empty($request->change_role)) {
+                    $result = Admin::find($id);
 
-                $result = Admin::find($id);
+                    $role = Role::where('id', $request->role)->first();
+    
+                    $result->syncRoles($role->name);
+                }
 
-                $role = Role::whereIn('id', $request->role)->get();
-
-                $result->syncRoles($role);
+               
 
                 return $result;
             });
