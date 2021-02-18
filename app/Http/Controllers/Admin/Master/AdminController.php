@@ -14,6 +14,7 @@ use App\Models\ClassroomTools;
 use DataTables;
 use Exception;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
 use Storage;
 
@@ -29,7 +30,7 @@ class AdminController extends BaseMenu
                 'title' => 'Admin'
             ],
         ];
-        $role = Role::where('guard_name','admin')->pluck('name', 'id');
+        $role = Role::where('guard_name', 'admin')->pluck('name', 'id');
         return view('admin.master.admin.index', [
             'title' => 'Admin',
             'navigation' => $navigation,
@@ -41,8 +42,12 @@ class AdminController extends BaseMenu
     public function dt()
     {
         $data = DB::table('admins')
+            ->join('model_has_roles', 'model_has_roles.model_id', 'admins.id')
+            ->join('roles', 'roles.id', 'model_has_roles.role_id')
             ->select([
                 'admins.*',
+                'roles.name as tipe_admin',
+                'roles.id as role_id',
             ])
             ->whereNull([
                 'admins.deleted_at'
@@ -51,15 +56,6 @@ class AdminController extends BaseMenu
 
         return DataTables::of($data)
             ->addIndexColumn()
-            ->addColumn('tipe_admin', function ($data) {
-                $user = Admin::find($data->id);
-                return !empty($user->getRoleNames()) ? $user->getRoleNames()->first() : '-';
-            })
-            ->addColumn('role_id', function ($data) {
-                $user = Admin::find($data->id);
-                $role = Role::where('name', $user->getRoleNames()->first())->first();
-                return !empty($role->id) ? $role->id : '-';
-            })
             ->make(true);
     }
 
@@ -71,7 +67,9 @@ class AdminController extends BaseMenu
 
     public function store(Request $request)
     {
+
         try {
+            
             $result = DB::transaction(function () use ($request) {
 
                 $admin = Admin::create([
@@ -81,9 +79,10 @@ class AdminController extends BaseMenu
                     'password' => Hash::make($request->password),
                 ]);
 
-                $role = Role::where('id', $request->role)->get();
-
-                $admin->assignRole($role);
+                if (!empty($request->tipe_admin)) {
+                    $role = Role::where('id', $request->tipe_admin)->get();
+                    $admin->assignRole($role);
+                }
 
                 return $admin;
             });
@@ -127,17 +126,14 @@ class AdminController extends BaseMenu
                         'password' => Hash::make($request->password),
                     ]);
                 }
-                
-                if (!empty($request->change_role)) {
-                    $result = Admin::find($id);
 
-                    $role = Role::where('id', $request->role)->first();
-    
+                if (!empty($request->tipe_admin)) {
+
+                    $result = Admin::find($id);
+                    $role = Role::where('id', $request->tipe_admin)->first();
                     $result->syncRoles($role->name);
                 }
-
-               
-
+                
                 return $result;
             });
 

@@ -29,5 +29,17 @@ class Coach extends Authenticatable
         'suspend',
     ];
 
+    protected $cascadeDeletes = ['classrooms'];
+
     protected $dates = ['deleted_at'];
+
+    /**
+     * Get all of the comments for the Coach
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function classrooms()
+    {
+        return $this->hasMany(CoachClassroom::class, 'coach_id', 'id');
+    }
 }
