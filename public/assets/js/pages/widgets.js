@@ -1357,13 +1357,13 @@ var KTWidgets = function () {
         if (!element) {
             return;
         }
-
+        console.log(KTApp.getSettings());
         var options = {
             series: [{
-                name: 'Net Profit',
+                name: 'Kelas Hadir',
                 data: [40, 50, 65, 70, 50, 30]
             }, {
-                name: 'Revenue',
+                name: 'Kelas dibooking',
                 data: [-30, -40, -55, -60, -40, -20]
             }],
             chart: {
@@ -1454,7 +1454,7 @@ var KTWidgets = function () {
                     }
                 }
             },
-            colors: [KTApp.getSettings()['colors']['theme']['base']['info'], KTApp.getSettings()['colors']['theme']['base']['primary']],
+            colors: [KTApp.getSettings()['colors']['theme']['base']['warning'], KTApp.getSettings()['colors']['theme']['base']['primary']],
             grid: {
                 borderColor: KTApp.getSettings()['colors']['gray']['gray-200'],
                 strokeDashArray: 4,
