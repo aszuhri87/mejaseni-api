@@ -106,6 +106,20 @@
         format:'d MM yyyy'
     });
 
+    $('.datepicker').datepicker({
+        rtl: KTUtil.isRTL(),
+        todayHighlight: true,
+        orientation: "bottom left",
+        templates: arrows,
+        format:'d MM yyyy'
+    });
+
+    $('.timepicker').timepicker({
+        minuteStep: 1,
+        showSeconds: true,
+        showMeridian: false
+    });
+
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
