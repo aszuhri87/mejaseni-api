@@ -5,11 +5,13 @@
             let init_table, element_sosmed, option = new Array, element_package, selectdisplay1, selectdisplay2, init_number_input = 1;
             let data1 = new Array;
             let data2 = new Array;
+            let init_select_expertise;
             $(document).ready(function() {
                 initTable();
                 formSubmit();
                 initAction();
                 getSosmed();
+                getExpertise();
                 initTreeTable();
                 selectdisplay1 = new SlimSelect({
                     select: '#selectdisplay1',
@@ -35,7 +37,7 @@
                         { data: 'DT_RowIndex' },
                         { data: 'name' },
                         { defaultContent: '' },
-                        { data: 'expertise' },
+                        { data: 'expertise_name' },
                         { data: 'suspend' },
                         { defaultContent: '' }
                         ],
@@ -187,7 +189,9 @@
                     $('#form-coach').attr('action','{{url('admin/master/coach')}}');
                     $('#form-coach').attr('method','POST');
                     $('#form-coach').attr('data-form','insert');
-                    $('#form-coach').find('input[name="profile_avatar"]').attr('required',true);
+                    $('.img-profile-edit').attr('src',`{{asset('assets/images/profile.png')}}`);
+                    init_select_expertise.set([]);
+                    $('#medsos').empty();
 
                     $('.password-setting').html(`
                         <div class="row mb-5">
@@ -224,11 +228,10 @@
                     $('#form-coach').find('input[name="name"]').val(data.name);
                     $('#form-coach').find('input[name="username"]').val(data.username);
                     $('#form-coach').find('input[name="email"]').val(data.email);
-                    $('#form-coach').find('input[name="expertise"]').val(data.expertise);
                     $('#form-coach').find('textarea[name="profil_description"]').val(data.description);
                     $('#form-coach').find('input[name="phone"]').val(data.phone);
                     $('#form-coach').find('input[name="profile_avatar"]').attr('required',false);
-
+                    init_select_expertise.set(data.expertise_id);
                     $('.img-profile-edit').attr('src',`${data.image_url}`);
 
                     getCoachSosmed(data.id);
@@ -696,9 +699,18 @@
                     event.preventDefault();
                     let avatar = $('.upload').val();
                     let form = $(this).data('form');
+                    let expertise = $('#expertise').val();
                     if(form == 'insert'){
-                        if(avatar == null || avatar == ''){
+                        if(!avatar){
                             return toastr.error('Avatar harus diisi', 'Failed')
+                        }
+
+                        if(!expertise){
+                            return toastr.error('Expertise harus diisi', 'Failed')
+                        }
+                    }else{
+                        if(!expertise){
+                            return toastr.error('Expertise harus diisi', 'Failed')
                         }
                     }
                     btn_loading('start')
@@ -843,6 +855,29 @@
                             </div>
                         </div>
                     </div>`;
+                })
+                .fail(function(res, error) {
+                    toastr.error(res.responseJSON.message, 'Failed')
+                })
+                .always(function() {
+
+                });
+            },
+            getExpertise = () =>{
+                $.ajax({
+                    url: `{{ url('public/get-expertise') }}`,
+                    type: 'GET',
+                })
+                .done(function(res, xhr, meta) {
+                    let element = `<option value="">Pilih Expertise</option>`;
+                    $.each(res.data, function(index, data) {
+                        element += `<option value="${data.id}">${data.name}</option>`;
+                    });
+                    $('#expertise').html(element);
+                    init_select_expertise = new SlimSelect({
+                        select: '#expertise',
+                        searchPlaceholder:'Search Expertise',
+                    });
                 })
                 .fail(function(res, error) {
                     toastr.error(res.responseJSON.message, 'Failed')

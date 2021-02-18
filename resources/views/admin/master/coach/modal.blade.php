@@ -71,7 +71,7 @@
                                     <div class="form-group">
                                         <label>Expertise<span class="text-danger">*</span></label>
                                         <div class="expertise">
-                                            <input type="text" class="form-control" name="expertise" id="expertise" required placeholder="Pilih Expertise">
+                                            <select name="expertise" id="expertise"></select>
                                         </div>
                                     </div>
                                 </div>
@@ -216,7 +216,7 @@
                                         <select name="package[]" class="form-control package" id="package2" data-number="2">
 
                                         </select>
-                                    </div>      
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label>Pilih Class yang Diampu<span class="text-danger">*</span></label>
