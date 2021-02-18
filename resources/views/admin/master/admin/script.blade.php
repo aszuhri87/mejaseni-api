@@ -122,12 +122,12 @@
                         $('#form-admin').trigger("reset");
                         $('#form-admin').attr('action', '{{ url('admin/master/admin') }}');
                         $('#form-admin').attr('method', 'POST');
+                        
                         $('.change_password').hide();
-                        $('.change_role').hide();
                         $('input[type=password]').attr('required');
                         $('#password').css('display', '');
-                        $('input[type=role]').attr('required');
-                        $('#role').css('display', '');
+                        $('#password_confirmation').css('display', '');
+
                         showModal('modal-admin');
                     });
 
@@ -143,18 +143,14 @@
                         $('#form-admin').find('input[name="name"]').val(data.name);
                         $('#form-admin').find('input[name="username"]').val(data.username);
                         $('#form-admin').find('input[name="email"]').val(data.email);
-                        $(`#${data.role_id}`).attr('checked', true);
+                        $(`#tipe_admin_${data.role_id}`).attr('checked', true);
 
                         $('.change_password').show();
-                        $('.change_role').show();
-
                         $('#change_password').attr('checked', true)
+
                         $('input[type=password]').attr('required');
                         $('#password').css('display', '');
-                        
-                        $('#change_role').attr('checked', true)
-                        $('input[type=role]').attr('required');
-                        $('#role').css('display', '');
+                        $('#password_confirmation').css('display', '');
 
                         showModal('modal-admin');
                     });
@@ -281,22 +277,14 @@
                         if ($(this).prop('checked') == true) {
 
                             $('input[type=password]').attr('required');
-                            $('#password').css('display', '');
+
+                            $('#password').css('display', '');                            
+                            $('#password_confirmation').css('display', '');
                         } else {
                             $('input[type=password]').removeAttr('required');
+
                             $('#password').css('display', 'none');
-                        }
-                    });
-
-                    $(document).on('click', '.btn-change-role', function(event) {
-
-                        if ($(this).prop('checked') == true) {
-
-                            $('input[type=password]').attr('required');
-                            $('#role').css('display', '');
-                        } else {
-                            $('input[type=role]').removeAttr('required');
-                            $('#role').css('display', 'none');
+                            $('#password_confirmation').css('display', 'none');
                         }
                     });
                 },
