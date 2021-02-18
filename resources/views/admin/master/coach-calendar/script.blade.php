@@ -1,7 +1,7 @@
 <script type="text/javascript">
     var Page = function() {
         var _componentPage = function(){
-            var init_table;
+            var init_table, calendar;
 
             $(document).ready(function() {
                 formSubmit();
@@ -86,7 +86,7 @@
                         btn_loading('stop')
                     });
                 });
-            }
+            },
         };
 
         return {

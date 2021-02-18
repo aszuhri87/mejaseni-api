@@ -81,9 +81,9 @@ class BaseMenu extends Controller
                                 'permission' => 'classroom'
                             ],
                             [
-                                'key' => 'video',
+                                'key' => 'session-video',
                                 'title' => 'Video',
-                                'url' => 'admin/master/courses/video',
+                                'url' => 'admin/master/courses/session-video',
                                 'permission' => 'video'
                             ],
                         ],

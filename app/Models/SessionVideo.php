@@ -17,6 +17,10 @@ class SessionVideo extends Model
 
     protected $fillable = [
         'sub_classroom_category_id',
+        'expertise_id',
+        'coach_id',
+        'description',
+        'price',
         'name',
         'datetime'
     ];
