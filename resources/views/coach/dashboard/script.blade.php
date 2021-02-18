@@ -4,13 +4,175 @@
             var init_table;
 
             $(document).ready(function() {
+                summary_course_chart();
+                side_summary_course();
                 initTable();
                 formSubmit();
                 initAction();
                 initTreeTable();
             });
 
-            const initTable = () => {
+            const summary_course_chart = () => {
+                    $('#summary_course_chart').empty();
+                    $.ajax({
+                            url: `{{ url('coach/dashboard/summary-course-chart') }}`,
+                            type: 'GET',
+                            dataType: 'json',
+                        })
+                        .done(function(res, xhr, meta) {
+                            if (res.status == 200) {
+                                let data = 0;
+                                $.each(res.data.total_booking, function(index, value) {
+                                    data = data + value;
+                                });
+
+                                var options = {
+                                    series: [{
+                                        name: 'Kelas Hadir',
+                                        data: res.data.kelas_dihadiri
+                                    }, {
+                                        name: 'Kelas dibooking',
+                                        data: res.data.kelas_booking
+                                    }],
+                                    chart: {
+                                        type: 'bar',
+                                        stacked: true,
+                                        height: 350,
+                                        toolbar: {
+                                            show: false
+                                        }
+                                    },
+                                    plotOptions: {
+                                        bar: {
+                                            horizontal: false,
+                                            columnWidth: ['12%'],
+                                            endingShape: 'rounded'
+                                        },
+                                    },
+                                    legend: {
+                                        show: false
+                                    },
+                                    dataLabels: {
+                                        enabled: false
+                                    },
+                                    stroke: {
+                                        show: true,
+                                        width: 2,
+                                        colors: ['transparent']
+                                    },
+                                    xaxis: {
+                                        categories: res.data.range_time,
+                                        axisBorder: {
+                                            show: false,
+                                        },
+                                        axisTicks: {
+                                            show: false
+                                        },
+                                        labels: {
+                                            style: {
+                                                colors: KTApp.getSettings()['colors']['gray'][
+                                                    'gray-500'],
+                                                fontSize: '12px',
+                                                fontFamily: KTApp.getSettings()['font-family']
+                                            }
+                                        }
+                                    },
+                                    yaxis: {
+                                        min: -80,
+                                        max: 80,
+                                        labels: {
+                                            style: {
+                                                colors: KTApp.getSettings()['colors']['gray'][
+                                                    'gray-500'],
+                                                fontSize: '12px',
+                                                fontFamily: KTApp.getSettings()['font-family']
+                                            }
+                                        }
+                                    },
+                                    fill: {
+                                        opacity: 1
+                                    },
+                                    states: {
+                                        normal: {
+                                            filter: {
+                                                type: 'none',
+                                                value: 0
+                                            }
+                                        },
+                                        hover: {
+                                            filter: {
+                                                type: 'none',
+                                                value: 0
+                                            }
+                                        },
+                                        active: {
+                                            allowMultipleDataPointsSelection: false,
+                                            filter: {
+                                                type: 'none',
+                                                value: 0
+                                            }
+                                        }
+                                    },
+                                    tooltip: {
+                                        style: {
+                                            fontSize: '12px',
+                                            fontFamily: KTApp.getSettings()['font-family']
+                                        },
+                                        y: {
+                                            formatter: function(val) {
+                                                return "$" + val + " thousands"
+                                            }
+                                        }
+                                    },
+                                    colors: [KTApp.getSettings()['colors']['theme']['base']['warning'],
+                                        KTApp.getSettings()['colors']['theme']['base']['primary']
+                                    ],
+                                    grid: {
+                                        borderColor: KTApp.getSettings()['colors']['gray']['gray-200'],
+                                        strokeDashArray: 4,
+                                        yaxis: {
+                                            lines: {
+                                                show: true
+                                            }
+                                        }
+                                    }
+                                }
+
+                                var chart = new ApexCharts(document.querySelector("#summary_course_chart"),
+                                    options);
+
+                                chart.render();
+                            }
+                        })
+                        .fail(function(res, error) {
+                            toastr.error(res.responseJSON.message, 'Failed')
+                        })
+                        .always(function() {
+
+                        });
+                },
+                side_summary_course = () => {
+                    $.ajax({
+                            url: `{{ url('coach/dashboard/side-summary-course') }}`,
+                            type: 'GET',
+                            dataType: 'json',
+                        })
+                        .done(function(res, xhr, meta) {
+                            if (res.status == 200) {
+                                $('.total-kelas').text(res.data.total_kelas)
+                                $('.video-tutorial').text(res.data.video_tutorial)
+                                $('.booking-saat-ini').text(res.data.video_tutorial)
+                                $('.riwayat-booking').text(res.data.video_tutorial)
+                            }
+                        })
+                        .fail(function(res, error) {
+                            toastr.error(res.responseJSON.message, 'Failed')
+                        })
+                        .always(function() {
+
+                        });
+                },
+                initTable = () => {
                     init_table = $('#init-table').DataTable({
                         destroy: true,
                         processing: true,
@@ -122,12 +284,12 @@
                         $('#form-admin').trigger("reset");
                         $('#form-admin').attr('action', '{{ url('admin/master/admin') }}');
                         $('#form-admin').attr('method', 'POST');
-                        
                         $('.change_password').hide();
+                        $('.change_role').hide();
                         $('input[type=password]').attr('required');
                         $('#password').css('display', '');
-                        $('#password_confirmation').css('display', '');
-
+                        $('input[type=role]').attr('required');
+                        $('#role').css('display', '');
                         showModal('modal-admin');
                     });
 
@@ -143,14 +305,18 @@
                         $('#form-admin').find('input[name="name"]').val(data.name);
                         $('#form-admin').find('input[name="username"]').val(data.username);
                         $('#form-admin').find('input[name="email"]').val(data.email);
-                        $(`#tipe_admin_${data.role_id}`).attr('checked', true);
+                        $(`#${data.role_id}`).attr('checked', true);
 
                         $('.change_password').show();
-                        $('#change_password').attr('checked', true)
+                        $('.change_role').show();
 
+                        $('#change_password').attr('checked', true)
                         $('input[type=password]').attr('required');
                         $('#password').css('display', '');
-                        $('#password_confirmation').css('display', '');
+
+                        $('#change_role').attr('checked', true)
+                        $('input[type=role]').attr('required');
+                        $('#role').css('display', '');
 
                         showModal('modal-admin');
                     });
@@ -277,14 +443,22 @@
                         if ($(this).prop('checked') == true) {
 
                             $('input[type=password]').attr('required');
-
-                            $('#password').css('display', '');                            
-                            $('#password_confirmation').css('display', '');
+                            $('#password').css('display', '');
                         } else {
                             $('input[type=password]').removeAttr('required');
-
                             $('#password').css('display', 'none');
-                            $('#password_confirmation').css('display', 'none');
+                        }
+                    });
+
+                    $(document).on('click', '.btn-change-role', function(event) {
+
+                        if ($(this).prop('checked') == true) {
+
+                            $('input[type=password]').attr('required');
+                            $('#role').css('display', '');
+                        } else {
+                            $('input[type=role]').removeAttr('required');
+                            $('#role').css('display', 'none');
                         }
                     });
                 },
