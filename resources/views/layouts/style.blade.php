@@ -28,4 +28,21 @@
         height: 40px;
         padding: 0 12px 0 12px;
     }
+
+    .dz-style-custom{
+        font-size: 10px;
+        height: 15px;
+        background-color: gainsboro;
+        color: black;
+    }
+
+    .dz-image img{
+        width: 100%;
+    }
+
+    .fc-button-group button{
+        background-color: #b1d583;
+        background-image: none;
+    }
 </style>
+
