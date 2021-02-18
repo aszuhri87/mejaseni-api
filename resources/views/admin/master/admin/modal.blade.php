@@ -36,7 +36,7 @@
                             <label>
                             <input type="checkbox" class="btn-change-password" name="change_password" id="change_password"/>
                             <span></span>
-                                Switch this button if you need change password!
+                                Switch to change password!
                             </label>
                         </span>
                     </div>
@@ -47,13 +47,21 @@
                         </label>
                         <input required type="password" name="password" class="form-control" placeholder="Password" />
                     </div>
-                    <div class="form-group  col-12">
+                    <div class="form-group col-12 change_role">
+                        <span class="switch switch-sm switch-outline switch-icon switch-primary">
+                            <label>
+                            <input type="checkbox" class="btn-change-role"  name="change_role" id="change_role"/>
+                            <span></span>
+                            Switch to change role!
+                        </label>
+                        </span>
+                    </div>
+                    <div id="role" class="form-group col-12">
                         <label>Tipe Admin</label>
-
                         <div class="radio-inline">
                             @foreach ($role as $key => $item)
                                 <label class="radio">
-                                    <input type="radio" id="{{$key}}" selected name="role" value="{{ $key }}">
+                                    <input type="radio" id="{{$key}}" name="role" value="{{ $key }}">
                                     <span></span>{{ $item }}
                                 </label>
                             @endforeach
