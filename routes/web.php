@@ -45,6 +45,11 @@ use App\Http\Controllers\Coach\TheoryController as CoachTheoryController;
 |--------------------------------------------------------------------------
 */
 
+use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
+use App\Http\Controllers\Student\InvoiceController as StudentInvoiceController;
+use App\Http\Controllers\Student\ScheduleController as StudentScheduleController;
+use App\Http\Controllers\Student\MyClassController as StudentMyClassController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -163,7 +168,14 @@ Route::group(['middleware' => ['auth-handling']], function () {
     });
 
     Route::group(['prefix' => 'student', 'middleware' => 'student-handling'], function () {
+        Route::get('/dashboard', [StudentDashboardController::class, 'index']);
 
+        Route::get('invoice', [StudentInvoiceController::class, 'index']);
+
+        Route::get('schedule', [StudentScheduleController::class, 'index']);
+        Route::get('schedule/regular-class', [StudentScheduleController::class, 'regular_class']);
+
+        Route::get('my-class',[StudentMyClassController::class, 'index']);
     });
 
     Route::group(['prefix' => 'public'], function () {

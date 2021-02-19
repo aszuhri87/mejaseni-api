@@ -296,25 +296,74 @@ class BaseMenu extends Controller
     {
         return [
             [
-                'key' => 'master',
-                'title' => 'Master Data',
+                'key' => 'dashboard',
+                'title' => 'Dashboard',
+                'url' => 'student/dashboard',
+                'permission' => 'student_dashboard',
+                'icon' => $this->icon('dashboard'),
+            ],
+            [
+                'key' => 'schedule',
+                'title' => 'Schedule',
+                'url' => 'student/schedule',
+                'permission' => 'student_schedule',
+                'icon' => $this->icon('schedule'),
+            ],
+            [
+                'key' => 'class',
+                'title' => 'My Class',
+                'url' => 'student/my-class',
+                'permission' => 'student_class',
+                'icon' => $this->icon('schedule'),
+            ],
+            [
+                'key' => 'theory',
+                'title' => 'Materi',
+                'permission' => 'student_theory',
                 'url' => '#',
-                'permission' => 'division',
-                'icon' => $this->icon('master'),
+                'icon' => $this->icon('materi'),
                 'children' => [
                     [
-                        'key' => 'package',
-                        'title' => 'Package',
-                        'url' => 'student/master/package',
-                        'permission' => 'package'
+                        'key' => 'class_theory',
+                        'title' => 'Materi Kelas',
+                        'url' => 'student/theory-class',
+                        'permission' => 'student_theory',
                     ],
                     [
-                        'key' => 'category_class',
-                        'title' => 'Category Class',
-                        'url' => 'student/master/category-class',
-                        'permission' => 'category_class'
+                        'key' => 'class_video',
+                        'title' => 'Video Kelas',
+                        'url' => 'student/video-class',
+                        'permission' => 'student_theory',
                     ],
-                ],
+                ]
+            ],
+            [
+                'key' => 'exercise',
+                'title' => 'Exercise',
+                'url' => 'student/exercise',
+                'permission' => 'student_exercise',
+                'icon' => $this->icon('exercise'),
+            ],
+            [
+                'key' => 'review',
+                'title' => 'Review',
+                'url' => 'student/review',
+                'permission' => 'student_review',
+                'icon' => $this->icon('exercise'),
+            ],
+            [
+                'key' => 'new_package',
+                'title' => 'Buy New Package',
+                'url' => 'student/new_package',
+                'permission' => 'student_new_package',
+                'icon' => $this->icon('exercise'),
+            ],
+            [
+                'key' => 'invoice',
+                'title' => 'Invoice List',
+                'url' => 'student/invoice',
+                'permission' => 'student_invoice',
+                'icon' => $this->icon('exercise'),
             ],
         ];
     }
