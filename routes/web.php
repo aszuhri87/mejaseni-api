@@ -25,6 +25,7 @@ use App\Http\Controllers\Admin\Master\SessionVideoController;
 use App\Http\Controllers\Admin\Master\TheoryVideoController;
 use App\Http\Controllers\Admin\Master\SubClassroomCategoryController;
 use App\Http\Controllers\Admin\Master\CoachController;
+use App\Http\Controllers\Admin\Master\CoachListController;
 use App\Http\Controllers\Admin\Master\AdminController;
 use App\Http\Controllers\Admin\Master\StudentController;
 use App\Http\Controllers\Admin\Master\ExpertiseController;
@@ -106,6 +107,13 @@ Route::group(['middleware' => ['auth-handling']], function () {
                 Route::post('activate-suspend/{id}', [CoachController::class, 'activate_suspend']);
                 Route::post('suspend/{id}', [CoachController::class, 'suspend']);
                 Route::delete('delete-medsos/{id}', [CoachController::class, 'delete_medsos']);
+
+                Route::group(['prefix' => 'view-list'], function () {
+                    Route::get('get-class-by-coach/{id}', [CoachListController::class, 'get_class']);
+                    Route::get('{id}', [CoachListController::class, 'index']);
+                    Route::post('store', [CoachListController::class, 'store']);
+
+                });
             });
 
             Route::post('coach/dt', [CoachController::class, 'dt']);
@@ -157,5 +165,6 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::get('get-session/{classroom_id}', [PublicController::class, 'get_session']);
         Route::get('get-coach',[PublicController::class, 'get_coach']);
         Route::get('get-expertise',[PublicController::class, 'get_expertise']);
+        Route::get('get-platform',[PublicController::class, 'get_platform']);
     });
 });

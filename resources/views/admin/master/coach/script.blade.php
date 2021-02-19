@@ -185,6 +185,7 @@
             initAction = () => {
                 $(document).on('click', '#add-btn', function(event){
                     event.preventDefault();
+                    $('#title').html('Tambah');
                     $('#form-coach').trigger("reset");
                     $('#form-coach').attr('action','{{url('admin/master/coach')}}');
                     $('#form-coach').attr('method','POST');
@@ -220,6 +221,7 @@
                     event.preventDefault();
                     var data = init_table.row($(this).parents('tr')).data();
 
+                    $('#title').html('Edit');
                     $('#form-coach').trigger("reset");
                     $('#form-coach').attr('action', $(this).attr('href'));
                     $('#form-coach').attr('method','POST');
@@ -425,9 +427,9 @@
                     $('#form-config').trigger("reset");
                     $('#form-config').attr('action', $(this).attr('href'));
                     $('#form-config').attr('method','POST');
-                    $('.other-package').hide();
+
                     $('.add-package').show();
-                    $('#selectdisplay2').attr('required',false);
+
                     selectdisplay1.set([]);
                     selectdisplay2.set([]);
                     let init_package_type = 0;
@@ -584,42 +586,30 @@
                     }
                 });
 
-                $(document).on('click','#btn-add-package',function(event){
+                $(document).on('change','#package1',function(event){
                     event.preventDefault();
-                    init_number_input++;
-                    let package1 = $('#package1').val();
-                    if(package1){
-                        if(init_number_input > 1 ){
-                            $('.add-package').hide();
-                        }
-
-                        if(package1 == 1){
-                            $('#package2').html(`
-                                <option value="">Pilih Package</option>
-                                <option value="2">Reguler</option>
-                            `);
-                        }
-                        else{
-                            $('#package2').html(`
-                                <option value="">Pilih Package</option>
-                                <option value="1">Spesial</option>
-                            `);
-                        }
-
-                        if(selectdisplay2){
-                            selectdisplay2.destroy();
-                        }
-
-                        selectdisplay2 = new SlimSelect({
-                            select: '#selectdisplay2',
-                            closeOnSelect: false
-                        });
-                        $('#selectdisplay2').attr('required',true);
-                        $('.other-package').show();
+                    let package1 = $(this).val();
+                    if(package1 == 1){
+                        $('#package2').html(`
+                            <option value="">Pilih Package</option>
+                            <option value="2">Reguler</option>
+                        `);
                     }
                     else{
-                        toastr.error('Package pertama harus diisi','Failed')
+                        $('#package2').html(`
+                            <option value="">Pilih Package</option>
+                            <option value="1">Spesial</option>
+                        `);
                     }
+
+                    if(selectdisplay2){
+                        selectdisplay2.destroy();
+                    }
+
+                    selectdisplay2 = new SlimSelect({
+                        select: '#selectdisplay2',
+                        closeOnSelect: false
+                    });
                 })
             },
             getCoachSosmed = (coach_id) => {
@@ -787,11 +777,9 @@
                         processData: false,
                     })
                     .done(function(res, xhr, meta) {
-                        if(res.status == 200){
-                            toastr.success(res.message, 'Success');
-                            init_table.draw(false);
-                            hideModal('modal-config');
-                        }
+                        toastr.success(res.message, 'Success');
+                        init_table.draw(false);
+                        hideModal('modal-config');
                     })
                     .fail(function(res, error) {
                         if (res.status == 400 || res.status == 422) {
