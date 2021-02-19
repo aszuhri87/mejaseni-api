@@ -30,7 +30,6 @@ use App\Http\Controllers\Admin\Master\AdminController;
 use App\Http\Controllers\Admin\Master\StudentController;
 use App\Http\Controllers\Admin\Master\ExpertiseController;
 use App\Http\Controllers\Admin\Schedule\ScheduleController;
-use App\Http\Controllers\Coach\DashboardController;
 
 /*
 |--------------------------------------------------------------------------

@@ -280,7 +280,7 @@
                                                                     <span class="text-dark">${data.coaches_name}</span>
                                                                 </div>
                                                                 <div class="d-flex">
-                                                                    <span class="text-dark">${data.upload_date}</span>
+                                                                    <span class="text-dark">${data.upload_at}</span>
                                                                 </div>
                                                             </div>
                                                         </div>
