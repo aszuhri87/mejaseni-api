@@ -26,7 +26,7 @@ class StudentController extends BaseMenu
             ],
         ];
 
-        $expertise = DB::table('expertises')->pluck('name','id');
+        $expertise = DB::table('expertises')->pluck('name', 'id');
 
         return view('admin.master.student.index', [
             'title' => 'Student',
@@ -41,29 +41,21 @@ class StudentController extends BaseMenu
         $path = Storage::disk('s3')->url('/');
 
         $data = DB::table('students')
+            ->join('student_classrooms', 'student_classrooms.student_id', 'students.id')
             ->select([
                 'students.*',
                 DB::raw("CONCAT('{$path}',students.image) as image_url"),
+                DB::raw("COUNT(student_classrooms.id) AS class"),
+                DB::raw("COUNT(student_classrooms.id) AS status"),
             ])
             ->whereNull([
-                'deleted_at'
+                'students.deleted_at'
             ])
+            ->groupBy('students.id')
             ->get();
 
         return DataTables::of($data)
             ->addIndexColumn()
-            ->addColumn('class', function ($data) {
-                $student_classroom = DB::table('student_classrooms')
-                    ->where('student_id', $data->id)
-                    ->count();
-                return $student_classroom;
-            })
-            ->addColumn('status', function ($data) {
-                $student_classroom = DB::table('student_classrooms')
-                    ->where('student_id', $data->id)
-                    ->count();
-                return $student_classroom;
-            })
             ->make(true);
     }
 

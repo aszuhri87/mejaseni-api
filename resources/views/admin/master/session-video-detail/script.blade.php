@@ -2,7 +2,7 @@
     var Page = function() {
         var _componentPage = function(){
             var init_table, init_classroom_category, init_sub_classroom_category, init_coach, init_expertise;
-            var arr_path = [];
+            var arr_path = [], docsDropzone;
 
             $(document).ready(function() {
                 initTable();
@@ -117,8 +117,31 @@
                     $('#form-session-video-detail').attr('method','POST');
 
                     $('#form-session-video-detail').find('input[name="name"]').val(data.name);
-                    $('#form-session-video-detail').find('input[name="price"]').val(data.price);
-                    $('#form-session-video-detail').find('textarea[name="description"]').val(data.description);
+
+                    if(data.is_youtube){
+                        $('#form-session-video-detail').find('input[name="url"]').val(data.url);
+                        $('#switch-youtube').attr('checked', true);
+                        $('#i-url').prop('required', true);
+                        $('.file-upload').hide()
+                        $('.url-input').show()
+                    }else{
+                        $('#switch-youtube').attr('checked', false);
+                        $('#i-url').prop('required', false);
+                        $('.file-upload').show()
+                        $('.url-input').hide()
+
+                        docsDropzone.removeAllFiles( true );
+
+                        var mockFile = {
+                            name: data.url,
+                            accepted: true
+                        };
+
+                        docsDropzone.files.push(mockFile);
+                        docsDropzone.emit("addedfile", mockFile);
+                        docsDropzone.emit("thumbnail", mockFile, data.file_url);
+                        docsDropzone.emit("complete", mockFile);
+                    }
 
                     showModal('modal-session-video-detail');
                 });

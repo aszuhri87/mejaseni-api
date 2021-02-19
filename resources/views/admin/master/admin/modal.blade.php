@@ -34,9 +34,10 @@
                     <div class="form-group col-12 change_password">
                         <span class="switch switch-sm switch-outline switch-icon switch-primary">
                             <label>
-                            <input type="checkbox" class="btn-change-password" name="change_password" id="change_password"/>
-                            <span></span>
-                                Switch this button if you need change password!
+                                <input type="checkbox" class="btn-change-password" name="change_password"
+                                    id="change_password" />
+                                <span></span>
+                                Change password!
                             </label>
                         </span>
                     </div>
@@ -47,17 +48,25 @@
                         </label>
                         <input required type="password" name="password" class="form-control" placeholder="Password" />
                     </div>
-                    <div class="form-group  col-12">
-                        <label>Tipe Admin</label>
-
-                        <div class="radio-inline">
-                            @foreach ($role as $key => $item)
-                                <label class="radio">
-                                    <input type="radio" id="{{$key}}" selected name="role" value="{{ $key }}">
-                                    <span></span>{{ $item }}
+                    <div id="password_confirmation" class="form-group col-12">
+                        <label>
+                            Confirm Password
+                            <span class="text-danger d-none">*</span>
+                        </label>
+                        <input type="password" name="password_confirmation" parsley-trigger="change" required
+                            placeholder="Konfirmasi Password" class="form-control">
+                    </div>
+                    <div class="form-group col-12 tipe_admin">
+                        @foreach ($role as $key => $item)
+                            <span class="switch switch-sm switch-outline switch-icon switch-primary">
+                                <label>
+                                    <input type="checkbox" value="{{ $key }}" class="btn-change-role"
+                                        name="tipe_admin" id="tipe_admin_{{ $key }}" />
+                                    <span></span>
+                                    {{ $item }}
                                 </label>
-                            @endforeach
-                        </div>
+                            </span>
+                        @endforeach
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -92,7 +101,7 @@
                                     <th width="5%">Edit</th>
                                     <th width="5%">Hapus</th>
                                     <th width="5%">Print</th>
-                                    <th >Lain-lain</th>
+                                    <th>Lain-lain</th>
                                 </tr>
                             </thead>
                             <tbody>

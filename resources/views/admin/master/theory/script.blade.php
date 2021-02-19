@@ -387,6 +387,7 @@
 
                         $('#sub-classroom-category').html(element);
                         $('.parent-sub-category').addClass('col-md-6');
+                        get_classroom()
                     }else{
                         $('.select-sub-category').hide();
                         $('.parent-sub-category').removeClass('col-md-6');

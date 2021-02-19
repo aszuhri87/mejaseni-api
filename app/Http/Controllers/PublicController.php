@@ -30,6 +30,61 @@ class PublicController extends Controller
         }
     }
 
+    public function get_platform()
+    {
+        try {
+            $result = DB::table('platforms')
+                ->select([
+                    'id',
+                    'name'
+                ])
+                ->whereNull('deleted_at')
+                ->get();
+
+            return response([
+                "data"      => $result,
+                "message"   => 'OK'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function get_coach_by_class($id)
+    {
+        try {
+            if($id == 'undefined'){
+                return response([
+                    "data"      => [],
+                    "message"   => 'OK'
+                ], 200);
+            }
+
+            $result = \App\Models\Coach::whereHas('classrooms', function($query) use($id){
+                    $query->where('classroom_id', $id);
+                })
+                ->select([
+                    'id',
+                    'name'
+                ])
+                ->whereNull('deleted_at')
+                ->get();
+
+            return response([
+                "data"      => $result,
+                "message"   => 'OK'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
     public function get_has_classroom_category()
     {
         try {
