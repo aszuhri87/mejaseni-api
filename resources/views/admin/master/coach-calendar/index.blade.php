@@ -1,4 +1,7 @@
 @extends('layouts.app')
+@push('style')
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.5.1/main.min.css"/>
+@endpush
 @section('content')
 <div class="card">
     <div class="card-body">
@@ -74,12 +77,16 @@
     <div class="col-lg-8">
         <div class="card">
             <div class="card-body">
-                <div class="row">
-                    <div class="col text-center">
-                        <a href="#" class="btn btn-primary btn-pill btn-light-primary btn-rounded">View List</a>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div style="width: 40%">
+                        <div class="separator separator-solid"></div>
+                    </div>
+                    <a href="{{ url('admin/master/coach/view-list') }}/{{$data->id}}" class="btn btn-outline-primary btn-sm" style="border-radius: 10px">View List</a>
+                    <div style="width: 40%">
+                        <div class="separator separator-solid"></div>
                     </div>
                 </div>
-                <div id='calendar' class="mt-3"></div>
+                <div class="mt-5" id="calendar"></div>
             </div>
         </div>
     </div>
@@ -89,5 +96,6 @@
 @endsection
 
 @push('script')
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.5.1/main.min.js"></script>
     @include('admin.master.coach-calendar.script')
 @endpush

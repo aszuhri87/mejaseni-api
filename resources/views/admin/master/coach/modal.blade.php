@@ -4,7 +4,7 @@
         <div class="modal-content">
             <form id="form-coach" autocomplete="off">
                 <div class="modal-header">
-                    <h5 class="modal-title">Tambah Coach</h5>
+                    <h5 class="modal-title"><span id="title"></span> Coach</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <i aria-hidden="true" class="ki ki-close"></i>
                     </button>
@@ -209,7 +209,7 @@
 
                                 </select>
                             </div>
-                            <div class="mt-5 pt-5 other-package" style="display: none">
+                            <div class="mt-5 pt-5 other-package">
                                 <div class="form-group">
                                     <label>Pilih Package<span class="text-danger">*</span></label>
                                     <div class="init-package">
@@ -226,7 +226,7 @@
                                 </div>
                             </div>
                             <div class="add-package">
-                                <button class="btn btn-success" id="btn-add-package" type="button">Tambah Package</button>
+                                {{-- <button class="btn btn-success" id="btn-add-package" type="button">Tambah Package</button> --}}
                             </div>
                         </div>
                     </div>

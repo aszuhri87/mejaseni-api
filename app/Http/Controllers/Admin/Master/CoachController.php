@@ -394,6 +394,4 @@ class CoachController extends BaseMenu
             'data' => $data
         ]);
     }
-
-    // view list
 }
