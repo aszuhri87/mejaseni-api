@@ -6,6 +6,7 @@
             $(document).ready(function() {
                 formSubmit();
                 initAction();
+                initCalendar();
             });
 
             const initAction = () => {
@@ -87,6 +88,21 @@
                     });
                 });
             },
+            initCalendar = () => {
+                var element = document.getElementById('calendar');
+                var calendar = new FullCalendar.Calendar(element, {
+                    initialView: 'dayGridMonth',
+                    headerToolbar: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'dayGridMonth,timeGridWeek,timeGridDay,list'
+                    },
+                    locale: 'ind',
+                    timeZone: 'Asia/Jakarta',
+                });
+
+                calendar.render();
+            }
         };
 
         return {
