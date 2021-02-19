@@ -321,7 +321,7 @@ class BaseMenu extends Controller
                 'title' => 'Materi',
                 'permission' => 'student_theory',
                 'url' => '#',
-                'icon' => $this->icon('materi'),
+                'icon' => $this->icon('theory'),
                 'children' => [
                     [
                         'key' => 'class_theory',
