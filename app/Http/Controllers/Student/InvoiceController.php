@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers\Student;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\BaseMenu;
+use Illuminate\Http\Request;
 
-class DashboardController extends BaseMenu
+class InvoiceController extends BaseMenu
 {
     public function index()
     {
         $navigation = [
             [
-                'title' => 'Dashboard'
+                'title' => 'Invoice'
             ],
         ];
 
-        return view('student.dashboard.index', [
-            'title' => 'Dashboard',
+        return view('student.invoice.index', [
+            'title' => 'Invoice',
             'navigation' => $navigation,
             'list_menu' => $this->menu_student(),
         ]);
