@@ -207,6 +207,8 @@ class TheoryController extends BaseMenu
                     'classrooms.name as classrooms_name',
                     'coaches.name as coaches_name',
                     DB::raw("CONCAT('{$path}',theories.url) as file_url"),
+                    DB::raw("to_char(theories.upload_date, 'DD Month YYYY') as upload_at")
+                    
                 )
                 ->join('sessions', 'sessions.id', 'theories.session_id')
                 ->join('classrooms', 'classrooms.id', 'sessions.classroom_id')
