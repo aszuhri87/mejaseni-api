@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class PublicController extends Controller
@@ -339,6 +341,63 @@ class PublicController extends Controller
     }
 
     public function get_session($classroom_id)
+    {
+        try {
+            if($classroom_id == 'undefined'){
+                return response([
+                    "data"      => null,
+                    "message"   => 'OK'
+                ], 200);
+            }
+
+            $result = DB::table('classrooms')
+                ->select([
+                    'id',
+                    'session_total',
+                ])
+                ->where('id', $classroom_id)
+                ->first();
+
+            return response([
+                "data"      => $result,
+                "message"   => 'OK'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function get_classroom_coach()
+    {
+        try {
+            $result = DB::table('classrooms')
+                ->select([
+                    'classrooms.id',
+                    'classrooms.name',
+                    'classroom_category_id',
+                    'sub_classroom_category_id',
+                ])
+                ->join('coach_classrooms','coach_classrooms.classroom_id','classrooms.id')
+                ->where('coach_classrooms.coach_id',Auth::guard('coach')->id())
+                ->whereNull('classrooms.deleted_at')
+                ->get();
+
+            return response([
+                "data"      => $result,
+                "message"   => 'OK'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function get_session_coach($classroom_id)
     {
         try {
             if($classroom_id == 'undefined'){

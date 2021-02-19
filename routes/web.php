@@ -30,13 +30,14 @@ use App\Http\Controllers\Admin\Master\AdminController;
 use App\Http\Controllers\Admin\Master\StudentController;
 use App\Http\Controllers\Admin\Master\ExpertiseController;
 use App\Http\Controllers\Admin\Schedule\ScheduleController;
-use App\Http\Controllers\Coach\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
 | Coach Controller
 |--------------------------------------------------------------------------
 */
+use App\Http\Controllers\Coach\DashboardController;
+use App\Http\Controllers\Coach\TheoryController as CoachTheoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -153,6 +154,12 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::get('dashboard/side-summary-course', [DashboardController::class, 'side_summary_course']);
         Route::resource('dashboard', DashboardController::class);
 
+        Route::post('theory/file', [CoachTheoryController::class, 'theory_file']);
+        Route::delete('theory/file/{id}', [CoachTheoryController::class, 'theory_file_delete']);
+        Route::get('theory/list/{classroom_id}/{session_id}', [CoachTheoryController::class, 'theory_list']);
+        Route::get('theory/download/{path}', [CoachTheoryController::class, 'download']);
+        Route::resource('theory', CoachTheoryController::class);
+
     });
 
     Route::group(['prefix' => 'student', 'middleware' => 'student-handling'], function () {
@@ -174,5 +181,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::get('get-coach-by-class/{id}',[PublicController::class, 'get_coach_by_class']);
         Route::get('get-expertise',[PublicController::class, 'get_expertise']);
         Route::get('get-platform',[PublicController::class, 'get_platform']);
+        Route::get('get-classroom-coach', [PublicController::class, 'get_classroom_coach']);
+        Route::get('get-session-coach/{classroom_id}', [PublicController::class, 'get_session_coach']);
     });
 });
