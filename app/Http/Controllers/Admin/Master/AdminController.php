@@ -121,7 +121,7 @@ class AdminController extends BaseMenu
                     'email' => $request->email,
                 ]);
 
-                if ($request->password != null) {
+                if (!empty($request->change_password)) {
                     $result = Admin::find($id)->update([
                         'password' => Hash::make($request->password),
                     ]);
