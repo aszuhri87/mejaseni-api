@@ -49,6 +49,7 @@ use App\Http\Controllers\Student\DashboardController as StudentDashboardControll
 use App\Http\Controllers\Student\InvoiceController as StudentInvoiceController;
 use App\Http\Controllers\Student\ScheduleController as StudentScheduleController;
 use App\Http\Controllers\Student\MyClassController as StudentMyClassController;
+use App\Http\Controllers\Student\NewPackageController as StudentNewPackageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -181,6 +182,11 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::get('schedule/regular-class', [StudentScheduleController::class, 'regular_class']);
 
         Route::get('my-class',[StudentMyClassController::class, 'index']);
+
+        Route::group(['prefix' => 'new-package'], function () {
+            Route::get('/',[StudentNewPackageController::class, 'index']);
+            Route::get('get-package',[StudentNewPackageController::class, 'get_package']);
+        });
     });
 
     Route::group(['prefix' => 'public'], function () {

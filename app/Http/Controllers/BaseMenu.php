@@ -366,7 +366,7 @@ class BaseMenu extends Controller
             [
                 'key' => 'new_package',
                 'title' => 'Buy New Package',
-                'url' => 'student/new_package',
+                'url' => 'student/new-package',
                 'permission' => 'student_new_package',
                 'icon' => $this->icon('exercise'),
             ],
