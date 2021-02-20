@@ -149,9 +149,14 @@ Route::group(['middleware' => ['auth-handling']], function () {
         });
 
         Route::get('schedule', [ScheduleController::class, 'index']);
+        Route::get('schedule/all', [ScheduleController::class, 'all']);
         Route::get('schedule/{id}', [ScheduleController::class, 'show']);
+        Route::get('schedule-show/{id}', [ScheduleController::class, 'show_edit']);
         Route::post('schedule', [ScheduleController::class, 'store']);
         Route::post('schedule/{id}', [ScheduleController::class, 'update']);
+        Route::post('schedule/update/{id}', [ScheduleController::class, 'update_time']);
+        Route::post('schedule/confirm/{id}', [ScheduleController::class, 'confirm']);
+        Route::post('schedule/delete/{id}', [ScheduleController::class, 'delete']);
     });
 
     Route::group(['prefix' => 'coach', 'middleware' => 'coach-handling'], function () {
