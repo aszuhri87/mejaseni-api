@@ -230,7 +230,6 @@
                     docsDropzone.emit("thumbnail", mockFile, data.file_url);
                     docsDropzone.emit("complete", mockFile);
 
-
                     showModal('modal-theory');
                 });
 

@@ -133,6 +133,12 @@ class BaseMenu extends Controller
                                 'url' => 'admin/master/courses/session-video',
                                 'permission' => 'video'
                             ],
+                            [
+                                'key' => 'master-lesson',
+                                'title' => 'Master Lesson',
+                                'url' => 'admin/master/courses/master-lesson',
+                                'permission' => 'master_lesson'
+                            ],
                         ],
                     ],
                     [
@@ -164,6 +170,12 @@ class BaseMenu extends Controller
                         'title' => 'Coach',
                         'url' => 'admin/master/coach',
                         'permission' => 'coach'
+                    ],
+                    [
+                        'key' => 'gust-star',
+                        'title' => 'Gust Star',
+                        'url' => 'admin/master/gust-star',
+                        'permission' => 'gust_star'
                     ],
                     [
                         'key' => 'student',
