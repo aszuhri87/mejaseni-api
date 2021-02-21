@@ -186,6 +186,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::group(['prefix' => 'new-package'], function () {
             Route::get('/',[StudentNewPackageController::class, 'index']);
             Route::get('get-package',[StudentNewPackageController::class, 'get_package']);
+            Route::get('classroom-category/{classroom_category_id}',[StudentNewPackageController::class, 'get_classroom_by_category_id']);
         });
     });
 

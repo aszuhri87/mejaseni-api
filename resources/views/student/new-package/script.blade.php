@@ -1,10 +1,8 @@
 <script type="text/javascript">
     var Page = function() {
         var _componentPage = function(){
-            var init_table;
 
             $(document).ready(function() {
-                // initTable();
                 // formSubmit();
                 initAction();
                 getCategory();
@@ -15,9 +13,9 @@
                 $(document).on('click', '#add-btn', function(event){
                     event.preventDefault();
 
-                    $('#form-invoice').trigger("reset");
-                    $('#form-invoice').attr('action','{{url('admin/master/courses/classroom-category')}}');
-                    $('#form-invoice').attr('method','POST');
+                    $('#form-new-package').trigger("reset");
+                    $('#form-new-package').attr('action','{{url('admin/master/courses/classroom-category')}}');
+                    $('#form-new-package').attr('method','POST');
 
                     showModal('modal-invoice');
                 });
@@ -27,11 +25,11 @@
 
                     var data = init_table.row($(this).parents('tr')).data();
 
-                    $('#form-invoice').trigger("reset");
-                    $('#form-invoice').attr('action', $(this).attr('href'));
-                    $('#form-invoice').attr('method','PUT');
+                    $('#form-new-package').trigger("reset");
+                    $('#form-new-package').attr('action', $(this).attr('href'));
+                    $('#form-new-package').attr('method','PUT');
 
-                    $('#form-invoice').find('input[name="name"]').val(data.name);
+                    $('#form-new-package').find('input[name="name"]').val(data.name);
 
                     showModal('modal-invoice');
                 });
@@ -66,27 +64,43 @@
                     })
                     $('.swal2-title').addClass('justify-content-center')
                 });
+
+                $(document).on('click','.btn-registration',function(event){
+                    event.preventDefault();
+                    let classroom_id = $(this).data('classroom_id');
+                    let price = $(this).data('price');
+                    let classroom_name = $(this).data('classroom_name');
+                    console.log(classroom_id,price,classroom_name);
+                    $('#classroom-name').html(`Kelas "${classroom_name}"`);
+                    $('#price').html(`Rp. ${numeral(price).format('0,0')}`);
+                    $('#total-price').html(`Rp. ${numeral(price).format('0,0')}`);
+                    showModal('modal-new-package');
+                });
+
+                $(document).on('click','.btn-category',function(event){
+                    event.preventDefault();
+                    let id = $(this).data('id');
+                    getPackageByCategory(id);
+                })
             },
             formSubmit = () => {
-                $('#form-invoice').submit(function(event){
+                $('#form-new-package').submit(function(event){
                     event.preventDefault();
-
-                    btn_loading('start')
+                    return true;
+                    // btn_loading('start')
                     $.ajax({
                         url: $(this).attr('action'),
                         type: $(this).attr('method'),
                         data: $(this).serialize(),
                     })
                     .done(function(res, xhr, meta) {
-                        toastr.success(res.message, 'Success')
-                        init_table.draw(false);
-                        hideModal('modal-invoice');
+
                     })
                     .fail(function(res, error) {
                         toastr.error(res.responseJSON.message, 'Failed')
                     })
                     .always(function() {
-                        btn_loading('stop')
+                        // btn_loading('stop')
                     });
                 });
             },
@@ -100,7 +114,7 @@
                     $.each(res.data, function(index, data) {
                         element += `
                             <div class="mr-2">
-                                <button type="button" class="btn btn-outline-primary btn-category" data-id="${data.id}">${data.name}</button>
+                                <button type="button" class="btn btn-outline-primary btn-category btn-pill" data-id="${data.id}">${data.name}</button>
                             </div>
                         `;
                     });
@@ -122,23 +136,23 @@
                     let element = ``;
                     $.each(res.data, function(index, data) {
                         element += `
-                        <div class="col-lg-6">
+                        <div class="col-lg-6 mb-5">
                             <div class="card">
                                 <div class="card-body">
                                     <div class="card" style="border: none !important">
-                                        <img class="card-img-top rounded" src="${data.image_url}" alt="Card image cap">
+                                        <img class="card-img-top rounded" src="${data.image_url}" alt="Card image cap" style="height: 300px !important">
                                         <h5 class="card-title mt-5" id="title-package">${data.classroom_name}</h5>
                                         <div class="card-toolbar">
                                             <ul class="nav nav-tabs nav-bold nav-tabs-line nav-tabs-line-3x">
                                                 {{-- description --}}
                                                 <li class="nav-item mr-3">
-                                                    <a class="nav-link active" data-toggle="tab" href="#tab-description-${data.coach_schedule_id}">
+                                                    <a class="nav-link active" data-toggle="tab" href="#tab-description-${data.classroom_id}">
                                                         <span class="nav-icon">
-                                                            <span class="svg-icon"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-02-01-052524/theme/html/demo1/dist/../src/media/svg/icons/Clothes/Crown.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                            <span class="svg-icon"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-02-01-052524/theme/html/demo1/dist/../src/media/svg/icons/Text/Article.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                                    <polygon points="0 0 24 0 24 24 0 24"/>
-                                                                    <path d="M11.2600599,5.81393408 L2,16 L22,16 L12.7399401,5.81393408 C12.3684331,5.40527646 11.7359848,5.37515988 11.3273272,5.7466668 C11.3038503,5.7680094 11.2814025,5.79045722 11.2600599,5.81393408 Z" fill="#000000" opacity="0.3"/>
-                                                                    <path d="M12.0056789,15.7116802 L20.2805786,6.85290308 C20.6575758,6.44930487 21.2903735,6.42774054 21.6939717,6.8047378 C21.8964274,6.9938498 22.0113578,7.25847607 22.0113578,7.535517 L22.0113578,20 L16.0113578,20 L2,20 L2,7.535517 C2,7.25847607 2.11493033,6.9938498 2.31738608,6.8047378 C2.72098429,6.42774054 3.35378194,6.44930487 3.7307792,6.85290308 L12.0056789,15.7116802 Z" fill="#000000"/>
+                                                                    <rect x="0" y="0" width="24" height="24"/>
+                                                                    <rect fill="#000000" x="4" y="5" width="16" height="3" rx="1.5"/>
+                                                                    <path d="M5.5,15 L18.5,15 C19.3284271,15 20,15.6715729 20,16.5 C20,17.3284271 19.3284271,18 18.5,18 L5.5,18 C4.67157288,18 4,17.3284271 4,16.5 C4,15.6715729 4.67157288,15 5.5,15 Z M5.5,10 L12.5,10 C13.3284271,10 14,10.6715729 14,11.5 C14,12.3284271 13.3284271,13 12.5,13 L5.5,13 C4.67157288,13 4,12.3284271 4,11.5 C4,10.6715729 4.67157288,10 5.5,10 Z" fill="#000000" opacity="0.3"/>
                                                                 </g>
                                                             </svg><!--end::Svg Icon--></span>
                                                         </span>
@@ -150,17 +164,15 @@
 
                                                 {{-- Coach --}}
                                                 <li class="nav-item mr-3">
-                                                    <a class="nav-link" data-toggle="tab" href="#tab-coach-${data.coach_schedule_id}">
+                                                    <a class="nav-link" data-toggle="tab" href="#tab-coach-${data.classroom_id}">
                                                         <span class="nav-icon">
-                                                            <span class="svg-icon">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                                                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                                        <rect x="0" y="0" width="24" height="24"></rect>
-                                                                        <path d="M2.56066017,10.6819805 L4.68198052,8.56066017 C5.26776695,7.97487373 6.21751442,7.97487373 6.80330086,8.56066017 L8.9246212,10.6819805 C9.51040764,11.267767 9.51040764,12.2175144 8.9246212,12.8033009 L6.80330086,14.9246212 C6.21751442,15.5104076 5.26776695,15.5104076 4.68198052,14.9246212 L2.56066017,12.8033009 C1.97487373,12.2175144 1.97487373,11.267767 2.56066017,10.6819805 Z M14.5606602,10.6819805 L16.6819805,8.56066017 C17.267767,7.97487373 18.2175144,7.97487373 18.8033009,8.56066017 L20.9246212,10.6819805 C21.5104076,11.267767 21.5104076,12.2175144 20.9246212,12.8033009 L18.8033009,14.9246212 C18.2175144,15.5104076 17.267767,15.5104076 16.6819805,14.9246212 L14.5606602,12.8033009 C13.9748737,12.2175144 13.9748737,11.267767 14.5606602,10.6819805 Z" fill="#000000" opacity="0.3"></path>
-                                                                        <path d="M8.56066017,16.6819805 L10.6819805,14.5606602 C11.267767,13.9748737 12.2175144,13.9748737 12.8033009,14.5606602 L14.9246212,16.6819805 C15.5104076,17.267767 15.5104076,18.2175144 14.9246212,18.8033009 L12.8033009,20.9246212 C12.2175144,21.5104076 11.267767,21.5104076 10.6819805,20.9246212 L8.56066017,18.8033009 C7.97487373,18.2175144 7.97487373,17.267767 8.56066017,16.6819805 Z M8.56066017,4.68198052 L10.6819805,2.56066017 C11.267767,1.97487373 12.2175144,1.97487373 12.8033009,2.56066017 L14.9246212,4.68198052 C15.5104076,5.26776695 15.5104076,6.21751442 14.9246212,6.80330086 L12.8033009,8.9246212 C12.2175144,9.51040764 11.267767,9.51040764 10.6819805,8.9246212 L8.56066017,6.80330086 C7.97487373,6.21751442 7.97487373,5.26776695 8.56066017,4.68198052 Z" fill="#000000"></path>
-                                                                    </g>
-                                                                </svg>
-                                                            </span>
+                                                            <span class="svg-icon"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-02-01-052524/theme/html/demo1/dist/../src/media/svg/icons/General/User.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                                    <polygon points="0 0 24 0 24 24 0 24"/>
+                                                                    <path d="M12,11 C9.790861,11 8,9.209139 8,7 C8,4.790861 9.790861,3 12,3 C14.209139,3 16,4.790861 16,7 C16,9.209139 14.209139,11 12,11 Z" fill="#000000" fill-rule="nonzero" opacity="0.3"/>
+                                                                    <path d="M3.00065168,20.1992055 C3.38825852,15.4265159 7.26191235,13 11.9833413,13 C16.7712164,13 20.7048837,15.2931929 20.9979143,20.2 C21.0095879,20.3954741 20.9979143,21 20.2466999,21 C16.541124,21 11.0347247,21 3.72750223,21 C3.47671215,21 2.97953825,20.45918 3.00065168,20.1992055 Z" fill="#000000" fill-rule="nonzero"/>
+                                                                </g>
+                                                            </svg><!--end::Svg Icon--></span>
                                                         </span>
                                                         <span class="nav-text font-size-lg">Coach</span>
                                                     </a>
@@ -169,13 +181,13 @@
 
                                                 {{-- tools --}}
                                                 <li class="nav-item mr-3">
-                                                    <a class="nav-link" data-toggle="tab" href="#tab-tools-${data.coach_schedule_id}">
+                                                    <a class="nav-link" data-toggle="tab" href="#tab-tools-${data.classroom_id}">
                                                         <span class="nav-icon">
-                                                            <span class="svg-icon"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-02-01-052524/theme/html/demo1/dist/../src/media/svg/icons/Clothes/Crown.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                            <span class="svg-icon"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-02-01-052524/theme/html/demo1/dist/../src/media/svg/icons/Home/Library.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                                    <polygon points="0 0 24 0 24 24 0 24"/>
-                                                                    <path d="M11.2600599,5.81393408 L2,16 L22,16 L12.7399401,5.81393408 C12.3684331,5.40527646 11.7359848,5.37515988 11.3273272,5.7466668 C11.3038503,5.7680094 11.2814025,5.79045722 11.2600599,5.81393408 Z" fill="#000000" opacity="0.3"/>
-                                                                    <path d="M12.0056789,15.7116802 L20.2805786,6.85290308 C20.6575758,6.44930487 21.2903735,6.42774054 21.6939717,6.8047378 C21.8964274,6.9938498 22.0113578,7.25847607 22.0113578,7.535517 L22.0113578,20 L16.0113578,20 L2,20 L2,7.535517 C2,7.25847607 2.11493033,6.9938498 2.31738608,6.8047378 C2.72098429,6.42774054 3.35378194,6.44930487 3.7307792,6.85290308 L12.0056789,15.7116802 Z" fill="#000000"/>
+                                                                    <rect x="0" y="0" width="24" height="24"/>
+                                                                    <path d="M5,3 L6,3 C6.55228475,3 7,3.44771525 7,4 L7,20 C7,20.5522847 6.55228475,21 6,21 L5,21 C4.44771525,21 4,20.5522847 4,20 L4,4 C4,3.44771525 4.44771525,3 5,3 Z M10,3 L11,3 C11.5522847,3 12,3.44771525 12,4 L12,20 C12,20.5522847 11.5522847,21 11,21 L10,21 C9.44771525,21 9,20.5522847 9,20 L9,4 C9,3.44771525 9.44771525,3 10,3 Z" fill="#000000"/>
+                                                                    <rect fill="#000000" opacity="0.3" transform="translate(17.825568, 11.945519) rotate(-19.000000) translate(-17.825568, -11.945519) " x="16.3255682" y="2.94551858" width="3" height="18" rx="1"/>
                                                                 </g>
                                                             </svg><!--end::Svg Icon--></span>
                                                         </span>
@@ -186,45 +198,248 @@
                                                 {{-- end tools --}}
                                             </ul>
                                         </div>
-                                        <div class="tab-content" >
+                                        <div class="tab-content" style="height:200px !important">
                                             {{-- description --}}
-                                            <div class="tab-pane show active" id="tab-description-${data.coach_schedule_id}" role="tabpanel">
-                                                <div class="form-group mt-5">
+                                            <div class="tab-pane show active" id="tab-description-${data.classroom_id}" role="tabpanel">
+                                                <div class="form-group mt-5 overflow-auto" style="height:130px !important">
                                                     ${data.description}
                                                 </div>
                                                 <div class="footer d-flex justify-content-between">
                                                     <div class="pt-3">
-                                                        <span> <h4>Rp ${numeral(data.price).format('0,0')},-</h4> </span>
+                                                        <span> <h4>Rp. ${numeral(data.price).format('0,0')},-</h4> </span>
                                                     </div>
                                                     <div class="pt-3">
-                                                        <span>${data.session_total} Sesi </span><span>@${data.session_duration}</span>
+                                                        <span>${data.session_total} Sesi </span><span>@${data.session_duration}Menit</span>
                                                     </div>
                                                     <div>
-                                                        <button type="button" class="btn btn-primary">Daftar Kelas</button>
+                                                        <button type="button" class="btn btn-primary btn-registration" data-id="${data.classroom_id}" data-classroom_name="${data.classroom_name}" data-price="${data.price}">
+                                                            <span class="svg-icon svg-icon-2x"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-02-01-052524/theme/html/demo1/dist/../src/media/svg/icons/Communication/Add-user.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                                    <polygon points="0 0 24 0 24 24 0 24"/>
+                                                                    <path d="M18,8 L16,8 C15.4477153,8 15,7.55228475 15,7 C15,6.44771525 15.4477153,6 16,6 L18,6 L18,4 C18,3.44771525 18.4477153,3 19,3 C19.5522847,3 20,3.44771525 20,4 L20,6 L22,6 C22.5522847,6 23,6.44771525 23,7 C23,7.55228475 22.5522847,8 22,8 L20,8 L20,10 C20,10.5522847 19.5522847,11 19,11 C18.4477153,11 18,10.5522847 18,10 L18,8 Z M9,11 C6.790861,11 5,9.209139 5,7 C5,4.790861 6.790861,3 9,3 C11.209139,3 13,4.790861 13,7 C13,9.209139 11.209139,11 9,11 Z" fill="#000000" fill-rule="nonzero" opacity="0.3"/>
+                                                                    <path d="M0.00065168429,20.1992055 C0.388258525,15.4265159 4.26191235,13 8.98334134,13 C13.7712164,13 17.7048837,15.2931929 17.9979143,20.2 C18.0095879,20.3954741 17.9979143,21 17.2466999,21 C13.541124,21 8.03472472,21 0.727502227,21 C0.476712155,21 -0.0204617505,20.45918 0.00065168429,20.1992055 Z" fill="#000000" fill-rule="nonzero"/>
+                                                                </g>
+                                                            </svg><!--end::Svg Icon--></span>
+                                                            Daftar Kelas
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>
                                             {{-- end description --}}
 
                                             {{-- coach --}}
-                                            <div class="tab-pane show" id="tab-coach-${data.coach_schedule_id}" role="tabpanel">
+                                            <div class="tab-pane show" id="tab-coach-${data.classroom_id}" role="tabpanel">
                                                 <div class="form-group mt-5">
-                                                    ${data.coach_name}
+                                                    `;
+                        if(data.coach.length > 0){
+                            $.each(data.coach, function(index, item) {
+                                element += `
+                                    <div class="d-flex align-items-center overflow-auto">
+                                        <div class="mr-5 mb-3">
+                                            <img src="${item.coach_image_url}" class="rounded" width="50" height="50"/>
+                                        </div>
+                                        <div class="d-flex flex-column font-weight-bold">
+                                            <p class="mb-1 font-size-lg">${item.coach_name}</p>
+                                        </div>
+                                    </div>
+                                `;
+                            });
+                        }
+                        else{
+                            element += `
+                                    <div class="mb-3 d-flex align-items-center">
+                                        <p class="mb-1 font-size-lg text-muted">Coach Not Available</p>
+                                    </div>
+                                `;
+                        }
+                        element += `
                                                 </div>
                                             </div>
                                             {{-- end coach --}}
 
                                             {{-- tools --}}
-                                            <div class="tab-pane show" id="tab-tools-${data.coach_schedule_id}" role="tabpanel">
+                                            <div class="tab-pane show" id="tab-tools-${data.classroom_id}" role="tabpanel">
                                                 <div class="form-group mt-5">
-                                                    <ul>
-                                                        `;
 
-                        $.each(data.tools, function(index, value) {
-                            element += `<li>${value.tool_name}</li>`;
-                        });
+                                                        `;
+                        if(data.tools.length >0){
+                            element += `<ul>`;
+                            $.each(data.tools, function(index, value) {
+                                element += `<li>${value.tool_name}</li>`;
+                            });
+                            element += `</ul>`;
+                        }
+                        else{
+                            element += `<p class="mb-1 font-size-lg text-muted">Tools Not Available</p>`;
+                        }
                         element+=`
-                                                    </ul>
+
+                                                </div>
+                                            </div>
+                                            {{-- end tools --}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        `;
+                    });
+                    $('#conference-package').html(element);
+                })
+                .fail(function(res, error) {
+                    toastr.error(res.responseJSON.message, 'Failed')
+                })
+                .always(function() {
+
+                });
+            },
+            getPackageByCategory = (classroom_category_id) => {
+                $.ajax({
+                    url: `{{ url('student/new-package/classroom-category') }}/${classroom_category_id}`,
+                    type: `GET`,
+                })
+                .done(function(res, xhr, meta) {
+                    let element = ``;
+                    $.each(res.data, function(index, data) {
+                        element += `
+                        <div class="col-lg-6 mb-5">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="card" style="border: none !important">
+                                        <img class="card-img-top rounded" src="${data.image_url}" alt="Card image cap" style="height: 300px !important">
+                                        <h5 class="card-title mt-5" id="title-package">${data.classroom_name}</h5>
+                                        <div class="card-toolbar">
+                                            <ul class="nav nav-tabs nav-bold nav-tabs-line nav-tabs-line-3x">
+                                                {{-- description --}}
+                                                <li class="nav-item mr-3">
+                                                    <a class="nav-link active" data-toggle="tab" href="#tab-description-${data.classroom_id}">
+                                                        <span class="nav-icon">
+                                                            <span class="svg-icon"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-02-01-052524/theme/html/demo1/dist/../src/media/svg/icons/Text/Article.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                                    <rect x="0" y="0" width="24" height="24"/>
+                                                                    <rect fill="#000000" x="4" y="5" width="16" height="3" rx="1.5"/>
+                                                                    <path d="M5.5,15 L18.5,15 C19.3284271,15 20,15.6715729 20,16.5 C20,17.3284271 19.3284271,18 18.5,18 L5.5,18 C4.67157288,18 4,17.3284271 4,16.5 C4,15.6715729 4.67157288,15 5.5,15 Z M5.5,10 L12.5,10 C13.3284271,10 14,10.6715729 14,11.5 C14,12.3284271 13.3284271,13 12.5,13 L5.5,13 C4.67157288,13 4,12.3284271 4,11.5 C4,10.6715729 4.67157288,10 5.5,10 Z" fill="#000000" opacity="0.3"/>
+                                                                </g>
+                                                            </svg><!--end::Svg Icon--></span>
+                                                        </span>
+
+                                                        <span class="nav-text font-size-lg">Deskripsi</span>
+                                                    </a>
+                                                </li>
+                                                {{-- end description --}}
+
+                                                {{-- Coach --}}
+                                                <li class="nav-item mr-3">
+                                                    <a class="nav-link" data-toggle="tab" href="#tab-coach-${data.classroom_id}">
+                                                        <span class="nav-icon">
+                                                            <span class="svg-icon"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-02-01-052524/theme/html/demo1/dist/../src/media/svg/icons/General/User.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                                    <polygon points="0 0 24 0 24 24 0 24"/>
+                                                                    <path d="M12,11 C9.790861,11 8,9.209139 8,7 C8,4.790861 9.790861,3 12,3 C14.209139,3 16,4.790861 16,7 C16,9.209139 14.209139,11 12,11 Z" fill="#000000" fill-rule="nonzero" opacity="0.3"/>
+                                                                    <path d="M3.00065168,20.1992055 C3.38825852,15.4265159 7.26191235,13 11.9833413,13 C16.7712164,13 20.7048837,15.2931929 20.9979143,20.2 C21.0095879,20.3954741 20.9979143,21 20.2466999,21 C16.541124,21 11.0347247,21 3.72750223,21 C3.47671215,21 2.97953825,20.45918 3.00065168,20.1992055 Z" fill="#000000" fill-rule="nonzero"/>
+                                                                </g>
+                                                            </svg><!--end::Svg Icon--></span>
+                                                        </span>
+                                                        <span class="nav-text font-size-lg">Coach</span>
+                                                    </a>
+                                                </li>
+                                                {{-- end Coach --}}
+
+                                                {{-- tools --}}
+                                                <li class="nav-item mr-3">
+                                                    <a class="nav-link" data-toggle="tab" href="#tab-tools-${data.classroom_id}">
+                                                        <span class="nav-icon">
+                                                            <span class="svg-icon"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-02-01-052524/theme/html/demo1/dist/../src/media/svg/icons/Home/Library.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                                    <rect x="0" y="0" width="24" height="24"/>
+                                                                    <path d="M5,3 L6,3 C6.55228475,3 7,3.44771525 7,4 L7,20 C7,20.5522847 6.55228475,21 6,21 L5,21 C4.44771525,21 4,20.5522847 4,20 L4,4 C4,3.44771525 4.44771525,3 5,3 Z M10,3 L11,3 C11.5522847,3 12,3.44771525 12,4 L12,20 C12,20.5522847 11.5522847,21 11,21 L10,21 C9.44771525,21 9,20.5522847 9,20 L9,4 C9,3.44771525 9.44771525,3 10,3 Z" fill="#000000"/>
+                                                                    <rect fill="#000000" opacity="0.3" transform="translate(17.825568, 11.945519) rotate(-19.000000) translate(-17.825568, -11.945519) " x="16.3255682" y="2.94551858" width="3" height="18" rx="1"/>
+                                                                </g>
+                                                            </svg><!--end::Svg Icon--></span>
+                                                        </span>
+
+                                                        <span class="nav-text font-size-lg">Tools</span>
+                                                    </a>
+                                                </li>
+                                                {{-- end tools --}}
+                                            </ul>
+                                        </div>
+                                        <div class="tab-content" style="height:200px !important">
+                                            {{-- description --}}
+                                            <div class="tab-pane show active" id="tab-description-${data.classroom_id}" role="tabpanel">
+                                                <div class="form-group mt-5 overflow-auto" style="height:130px !important">
+                                                    ${data.description}
+                                                </div>
+                                                <div class="footer d-flex justify-content-between">
+                                                    <div class="pt-3">
+                                                        <span> <h4>Rp. ${numeral(data.price).format('0,0')},-</h4> </span>
+                                                    </div>
+                                                    <div class="pt-3">
+                                                        <span>${data.session_total} Sesi </span><span>@${data.session_duration}Menit</span>
+                                                    </div>
+                                                    <div>
+                                                        <button type="button" class="btn btn-primary btn-registration" data-id="${data.classroom_id}" data-classroom_name="${data.classroom_name}" data-price="${data.price}">
+                                                            <span class="svg-icon svg-icon-2x"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-02-01-052524/theme/html/demo1/dist/../src/media/svg/icons/Communication/Add-user.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                                    <polygon points="0 0 24 0 24 24 0 24"/>
+                                                                    <path d="M18,8 L16,8 C15.4477153,8 15,7.55228475 15,7 C15,6.44771525 15.4477153,6 16,6 L18,6 L18,4 C18,3.44771525 18.4477153,3 19,3 C19.5522847,3 20,3.44771525 20,4 L20,6 L22,6 C22.5522847,6 23,6.44771525 23,7 C23,7.55228475 22.5522847,8 22,8 L20,8 L20,10 C20,10.5522847 19.5522847,11 19,11 C18.4477153,11 18,10.5522847 18,10 L18,8 Z M9,11 C6.790861,11 5,9.209139 5,7 C5,4.790861 6.790861,3 9,3 C11.209139,3 13,4.790861 13,7 C13,9.209139 11.209139,11 9,11 Z" fill="#000000" fill-rule="nonzero" opacity="0.3"/>
+                                                                    <path d="M0.00065168429,20.1992055 C0.388258525,15.4265159 4.26191235,13 8.98334134,13 C13.7712164,13 17.7048837,15.2931929 17.9979143,20.2 C18.0095879,20.3954741 17.9979143,21 17.2466999,21 C13.541124,21 8.03472472,21 0.727502227,21 C0.476712155,21 -0.0204617505,20.45918 0.00065168429,20.1992055 Z" fill="#000000" fill-rule="nonzero"/>
+                                                                </g>
+                                                            </svg><!--end::Svg Icon--></span>
+                                                            Daftar Kelas
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {{-- end description --}}
+
+                                            {{-- coach --}}
+                                            <div class="tab-pane show" id="tab-coach-${data.classroom_id}" role="tabpanel">
+                                                <div class="form-group mt-5">
+                                                    `;
+                        if(data.coach.length > 0){
+                            $.each(data.coach, function(index, item) {
+                                element += `
+                                    <div class="d-flex align-items-center overflow-auto">
+                                        <div class="mr-5 mb-3">
+                                            <img src="${item.coach_image_url}" class="rounded" width="50" height="50"/>
+                                        </div>
+                                        <div class="d-flex flex-column font-weight-bold">
+                                            <p class="mb-1 font-size-lg">${item.coach_name}</p>
+                                        </div>
+                                    </div>
+                                `;
+                            });
+                        }
+                        else{
+                            element += `
+                                    <div class="mb-3 d-flex align-items-center">
+                                        <p class="mb-1 font-size-lg text-muted">Coach Not Available</p>
+                                    </div>
+                                `;
+                        }
+                        element += `
+                                                </div>
+                                            </div>
+                                            {{-- end coach --}}
+
+                                            {{-- tools --}}
+                                            <div class="tab-pane show" id="tab-tools-${data.classroom_id}" role="tabpanel">
+                                                <div class="form-group mt-5">
+
+                                                        `;
+                        if(data.tools.length >0){
+                            element += `<ul>`;
+                            $.each(data.tools, function(index, value) {
+                                element += `<li>${value.tool_name}</li>`;
+                            });
+                            element += `</ul>`;
+                        }
+                        else{
+                            element += `<p class="mb-1 font-size-lg text-muted">Tools Not Available</p>`;
+                        }
+                        element+=`
+
                                                 </div>
                                             </div>
                                             {{-- end tools --}}
