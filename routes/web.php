@@ -44,7 +44,6 @@ use App\Http\Controllers\Coach\TheoryController as CoachTheoryController;
 | Student Controller
 |--------------------------------------------------------------------------
 */
-
 use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
 use App\Http\Controllers\Student\InvoiceController as StudentInvoiceController;
 use App\Http\Controllers\Student\ScheduleController as StudentScheduleController;
