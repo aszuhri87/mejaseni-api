@@ -72,7 +72,14 @@ Route::group(['middleware' => ['guest-handling']], function () {
 });
 
 Route::group(['middleware' => ['auth-handling']], function () {
+
     Route::get('logout', [LoginController::class, 'logout']);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Admins Route
+    |--------------------------------------------------------------------------
+    */
 
     Route::group(['prefix' => 'admin', 'middleware' => 'admin-handling'], function () {
         Route::get('dashboard', [AdminDashboard::class, 'index']);
@@ -135,6 +142,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::post('student/dt', [StudentController::class, 'dt']);
             Route::post('student/update/{id}', [StudentController::class, 'update']);
             Route::resource('student', StudentController::class);
+
             Route::post('media-conference/dt', [PlatformController::class, 'dt']);
             Route::post('media-conference/update/{id}', [PlatformController::class, 'update']);
             Route::resource('media-conference', PlatformController::class);
@@ -160,6 +168,12 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::post('schedule/delete/{id}', [ScheduleController::class, 'delete']);
     });
 
+    /*
+    |--------------------------------------------------------------------------
+    | Coaches Route
+    |--------------------------------------------------------------------------
+    */
+
     Route::group(['prefix' => 'coach', 'middleware' => 'coach-handling'], function () {
         Route::get('dashboard/summary-course-chart', [DashboardController::class, 'summary_course_chart']);
         Route::get('dashboard/side-summary-course', [DashboardController::class, 'side_summary_course']);
@@ -172,6 +186,12 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::resource('theory', CoachTheoryController::class);
 
     });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Students Route
+    |--------------------------------------------------------------------------
+    */
 
     Route::group(['prefix' => 'student', 'middleware' => 'student-handling'], function () {
         Route::get('/dashboard', [StudentDashboardController::class, 'index']);
@@ -188,6 +208,12 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::get('get-package',[StudentNewPackageController::class, 'get_package']);
         });
     });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Public Route
+    |--------------------------------------------------------------------------
+    */
 
     Route::group(['prefix' => 'public'], function () {
         Route::get('get-classroom-category', [PublicController::class, 'get_classroom_category']);
@@ -207,4 +233,5 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::get('get-classroom-coach', [PublicController::class, 'get_classroom_coach']);
         Route::get('get-session-coach/{classroom_id}', [PublicController::class, 'get_session_coach']);
     });
+
 });
