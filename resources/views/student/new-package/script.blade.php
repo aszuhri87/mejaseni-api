@@ -230,16 +230,19 @@
                                             {{-- coach --}}
                                             <div class="tab-pane show" id="tab-coach-${data.classroom_id}" role="tabpanel">
                                                 <div class="form-group mt-5">
-                                                    `;
+                                                    <div style="height:180px !important" class="overflow-auto">
+                                                    <div class="row">`;
                         if(data.coach.length > 0){
                             $.each(data.coach, function(index, item) {
                                 element += `
-                                    <div class="d-flex align-items-center overflow-auto">
-                                        <div class="mr-5 mb-3">
-                                            <img src="${item.coach_image_url}" class="rounded" width="50" height="50"/>
-                                        </div>
-                                        <div class="d-flex flex-column font-weight-bold">
-                                            <p class="mb-1 font-size-lg">${item.coach_name}</p>
+                                    <div class="col-3">
+                                        <div class="d-flex align-items-center">
+                                            <div class="mr-5 mb-3">
+                                                <img src="${item.coach_image_url}" class="rounded" width="50" height="50"/>
+                                            </div>
+                                            <div class="d-flex flex-column font-weight-bold">
+                                                <p class="mb-1 font-size-lg">${item.coach_name}</p>
+                                            </div>
                                         </div>
                                     </div>
                                 `;
@@ -247,12 +250,16 @@
                         }
                         else{
                             element += `
-                                    <div class="mb-3 d-flex align-items-center">
-                                        <p class="mb-1 font-size-lg text-muted">Coach Not Available</p>
+                                    <div class="col-12">
+                                        <div class="mb-3 d-flex align-items-center">
+                                            <p class="mb-1 font-size-lg text-muted">Coach Not Available</p>
+                                        </div>
                                     </div>
                                 `;
                         }
                         element += `
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                             {{-- end coach --}}
@@ -395,12 +402,12 @@
 
                                             {{-- coach --}}
                                             <div class="tab-pane show" id="tab-coach-${data.classroom_id}" role="tabpanel">
-                                                <div class="form-group mt-5">
+                                                <div class="form-group mt-5 overflow-auto">
                                                     `;
                         if(data.coach.length > 0){
                             $.each(data.coach, function(index, item) {
                                 element += `
-                                    <div class="d-flex align-items-center overflow-auto">
+                                    <div class="d-flex align-items-center">
                                         <div class="mr-5 mb-3">
                                             <img src="${item.coach_image_url}" class="rounded" width="50" height="50"/>
                                         </div>
