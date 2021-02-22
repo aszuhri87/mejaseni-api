@@ -6,9 +6,11 @@ use App\Http\Controllers\BaseMenu;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
+use Storage;
+
 class PackageDetailController extends BaseMenu
 {
-    public function index()
+    public function index($session_video_id)
     {
         $navigation = [
             [
@@ -18,11 +20,50 @@ class PackageDetailController extends BaseMenu
                 'title' => 'Video Course'
             ],
         ];
+        $path = Storage::disk('s3')->url('/');
+        $sub_classroom_category = DB::table('sub_classroom_categories')
+            ->select([
+                'sub_classroom_categories.id',
+                'sub_classroom_categories.name',
+                'sub_classroom_categories.image',
+            ])
+            ->whereNull('sub_classroom_categories.deleted_at');
+
+        $coach = DB::table('coaches')
+            ->select([
+                'coaches.id',
+                'coaches.name',
+            ])
+            ->whereNull('deleted_at');
+
+        $result = DB::table('session_videos')
+            ->select([
+                'session_videos.id',
+                'session_videos.sub_classroom_category_id',
+                'session_videos.expertise_id',
+                'session_videos.coach_id',
+                'session_videos.name',
+                'session_videos.datetime',
+                'session_videos.description',
+                'session_videos.price',
+                'coaches.name as coach_name',
+                'sub_classroom_categories.name as sub_classroom_category_name',
+                DB::raw("CONCAT('{$path}',sub_classroom_categories.image) as image_url"),
+            ])
+            ->joinSub($coach, 'coaches', function ($join) {
+                $join->on('session_videos.coach_id', '=', 'coaches.id');
+            })
+            ->joinSub($sub_classroom_category, 'sub_classroom_categories', function ($join) {
+                $join->on('session_videos.sub_classroom_category_id', '=', 'sub_classroom_categories.id');
+            })
+            ->where('session_videos.id',$session_video_id)
+            ->first();
 
         return view('student.package-detail.index', [
-            'title' => 'Buy New Package',
-            'navigation' => $navigation,
-            'list_menu' => $this->menu_student(),
+            'title'         => 'Buy New Package',
+            'navigation'    => $navigation,
+            'list_menu'     => $this->menu_student(),
+            'data'          => $result
         ]);
     }
 }

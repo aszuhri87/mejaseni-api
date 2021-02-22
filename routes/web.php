@@ -183,7 +183,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::delete('theory/file/{id}', [CoachTheoryController::class, 'theory_file_delete']);
         Route::get('theory/list/{classroom_id}/{session_id}', [CoachTheoryController::class, 'theory_list']);
         Route::get('theory/download/{path}', [CoachTheoryController::class, 'download']);
-        Route::resource('theory', CoachTheoryController::class);
+        // Route::resource('theory', CoachTheoryController::class);
 
     });
 
@@ -207,9 +207,10 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::get('/',[StudentNewPackageController::class, 'index']);
             Route::get('get-package',[StudentNewPackageController::class, 'get_package']);
             Route::get('classroom-category/{classroom_category_id}',[StudentNewPackageController::class, 'get_classroom_by_category_id']);
+            Route::get('get-session-video', [StudentNewPackageController::class, 'get_session_video']);
         });
 
-        Route::get('package-detail',[StudentPackageDetailController::class, 'index']);
+        Route::get('package-detail/{session_video_id}',[StudentPackageDetailController::class, 'index']);
     });
 
     /*

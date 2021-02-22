@@ -225,4 +225,68 @@ class NewPackageController extends BaseMenu
             ]);
         }
     }
+
+    public function get_session_video()
+    {
+        try {
+            $path = Storage::disk('s3')->url('/');
+            $expertise = DB::table('expertises')
+                ->select([
+                    'expertises.id',
+                    'expertises.name',
+                ])
+                ->whereNull('expertises.deleted_at');
+
+            $coach = DB::table('coaches')
+                ->select([
+                    'coaches.id',
+                    'coaches.name',
+                ])
+                ->whereNull('coaches.deleted_at');
+
+            $sub_classroom_category = DB::table('sub_classroom_categories')
+                ->select([
+                    'sub_classroom_categories.id',
+                    'sub_classroom_categories.image',
+                ])
+                ->whereNull('sub_classroom_categories.deleted_at');
+
+            $result = DB::table('session_videos')
+                ->select([
+                    'session_videos.id',
+                    'session_videos.sub_classroom_category_id',
+                    'session_videos.name',
+                    'session_videos.datetime',
+                    'session_videos.description',
+                    'session_videos.price',
+                    'session_videos.coach_id',
+                    'session_videos.expertise_id',
+                    DB::raw("CONCAT('{$path}',sub_classroom_categories.image) as image_url"),
+                    'coaches.name as coach_name',
+                    'expertises.name as expertise_name',
+                ])
+                ->joinSub($sub_classroom_category, 'sub_classroom_categories', function ($join) {
+                    $join->on('session_videos.sub_classroom_category_id', '=', 'sub_classroom_categories.id');
+                })
+                ->joinSub($coach, 'coaches', function ($join) {
+                    $join->on('session_videos.coach_id', '=', 'coaches.id');
+                })
+                ->joinSub($expertise, 'expertises', function ($join) {
+                    $join->on('session_videos.expertise_id', '=', 'expertises.id');
+                })
+                ->whereNull('session_videos.deleted_at')
+                ->get();
+
+            return response([
+                "status" => 200,
+                "data"      => $result,
+                "message"   => 'OK'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
 }

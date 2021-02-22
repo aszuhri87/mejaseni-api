@@ -5,14 +5,14 @@
     <div class="card-body">
         <div class="row">
             <div class="col-lg-6">
-                <h5 class="text-primary">Seni Musik</h5>
-                <h3 class="mt-5">Jazz Piano - Ultimate Beginners Course for Piano & Keyboard</h3>
-                <p class="mt-5">Mentored by Rinady Imam</p>
-                <p class="mt-5"><h2 class="text-primary">Rp. 499.000</h2></p>
+                <h5 class="text-primary">{{$data->sub_classroom_category_name}}</h5>
+                <h3 class="mt-5">{{$data->name}}</h3>
+                <p class="mt-5">Mentored by {{$data->coach_name}}</p>
+                <p class="mt-5"><h2 class="text-primary">Rp. {{number_format($data->price)}}</h2></p>
                 <button class="btn btn-primary mt-3 btn-buy">Buy Course</button>
             </div>
             <div class="col-lg-6">
-                <img src="https://mejaseni.yk1.s3.gmedia.id/media/UeSNulAy5goyVikDwkLCLh7HZZ4Uduz3Dz4cp6RO.webp" class="rounded" style="height: 200px !important;box-shadow: 0 15px 20px -20px #7F16A7;" width="100%">
+                <img src="{{$data->image_url}}" class="rounded" style="height: 200px !important;box-shadow: 0 15px 20px -20px #7F16A7;" width="100%">
             </div>
         </div>
         <div class="row" style="margin-top: 3% !important">
@@ -78,9 +78,7 @@
                     {{-- learning --}}
                     <div class="tab-pane show active" id="tab-learning" role="tabpanel">
                         <div class="form-group mt-5">
-                            <p>This course is for beginners on the Piano, and so starts with the basics, but quickly moves onto learning about the different kinds of chords and how they are constructed, gradually getting more and more advanced as you progress. You don't just learn about chords though. Along the way you will learn about different kinds of rhythms, playing patterns and techniques that can be applied to the chords. By the end you'll be able to play the piano by reading a chord sheet, but sound like a pro!</p>
-                            <p>I believe the best way to learn is by applying your new found knowledge, and so throughout the course you will learn famous songs or chord progressions on the Piano, relevant to the particular chord/rhythm or playing pattern you've just been learning. The course uses examples from songs by a wide variety of artists such as Adele, Sam Smith, The Commodores, Christina Perri, John Legend and Don McLean to name a few.</p>
-
+                            <p>{{$data->description}}</p>
                         </div>
                     </div>
                     {{-- end learning --}}
