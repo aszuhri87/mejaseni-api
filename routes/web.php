@@ -54,6 +54,8 @@ use App\Http\Controllers\Student\MyClassController as StudentMyClassController;
 use App\Http\Controllers\Student\NewPackageController as StudentNewPackageController;
 use App\Http\Controllers\Student\PackageDetailController as StudentPackageDetailController;
 use App\Http\Controllers\Student\TheoryController as StudentTheoryController;
+use App\Http\Controllers\Student\VideoController as StudentVideoController;
+use App\Http\Controllers\Student\ProfileController as StudentProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -234,6 +236,15 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::get('get-theory', [StudentTheoryController::class, 'get_theory']);
             Route::get('get-class/{student_id}', [StudentTheoryController::class, 'get_class']);
         });
+
+        Route::group(['prefix' => 'video'], function () {
+            Route::get('/', [StudentVideoController::class, 'index']);
+            Route::get('get-video', [StudentVideoController::class, 'get_video']);
+        });
+
+        Route::post('profile/{id}', [StudentProfileController::class,'update']);
+        Route::post('profile/change-password/{id}', [StudentProfileController::class,'change_password']);
+        Route::get('profile', [StudentProfileController::class,'index']);
 
         Route::get('package-detail/{session_video_id}',[StudentPackageDetailController::class, 'index']);
     });

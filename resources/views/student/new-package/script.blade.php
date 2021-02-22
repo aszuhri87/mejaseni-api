@@ -80,9 +80,10 @@
 
                 $(document).on('click','.btn-category',function(event){
                     event.preventDefault();
-                    KTApp.block('#conference-package', {
+                    KTApp.block('#kt_body', {
                         overlayColor: '#000000',
                         state: 'primary',
+                        opacity: 0.5,
                         message: 'Processing...'
                     });
                     let id = $(this).data('id');
@@ -464,7 +465,7 @@
                         `;
                     });
                     $('#conference-package').html(element);
-                    KTApp.unblock('#conference-package');
+                    KTApp.unblock('#kt_body');
                 })
                 .fail(function(res, error) {
                     toastr.error(res.responseJSON.message, 'Failed')

@@ -69,7 +69,22 @@ class PackageDetailController extends BaseMenu
             ->where('theory_videos.session_video_id',$result->id)
             ->whereNull('theory_videos.deleted_at')
             ->get();
+
+        $file_video = DB::table('theory_video_files')
+            ->select([
+                'theory_video_files.id',
+                'theory_video_files.name',
+                'theory_video_files.description',
+                'theory_video_files.url',
+                'theory_video_files.updated_at',
+                DB::raw("CONCAT('{$path}',theory_video_files.url) as file_url"),
+            ])
+            ->where('theory_video_files.session_video_id',$result->id)
+            ->whereNull('theory_video_files.deleted_at')
+            ->get();
+
         $result->video = $video;
+        $result->file_video = $file_video;
 
         return view('student.package-detail.index', [
             'title'         => 'Buy New Package',

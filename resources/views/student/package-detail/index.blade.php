@@ -85,35 +85,97 @@
 
                     {{-- video-couse --}}
                     <div class="tab-pane show" id="tab-video-couse" role="tabpanel">
-                        @foreach ($data->video as $key => $item)
-                            <div class="row mt-5">
-                                <div class="col-lg-3">
-                                    @if ($item->is_youtube)
-                                        {{-- <iframe width="100%" height="150px" src="{{$item->url}}"></iframe> --}}
-                                        <img src="{{asset('assets/images/thumbnail.png')}}" class="rounded" height="150px" width="100%">
-                                    @else
-                                        <img src="{{asset('assets/images/thumbnail-lock.png')}}" class="rounded" height="150px" width="100%">
-                                    @endif
+                        @if (count($data->video) > 0)
+                            @foreach ($data->video as $key => $item)
+                                <div class="row mt-5">
+                                    <div class="col-lg-3">
+                                        @if ($item->is_youtube)
+                                            {{-- <iframe width="100%" height="150px" src="{{$item->url}}"></iframe> --}}
+                                            <img src="{{asset('assets/images/thumbnail.png')}}" class="rounded" height="150px" width="100%">
+                                        @else
+                                            <img src="{{asset('assets/images/thumbnail-lock.png')}}" class="rounded" height="150px" width="100%">
+                                        @endif
+                                    </div>
+                                    <div class="col-lg-9">
+                                        <p><h4>#{{$key+1}} {{$item->name}}</h4></p>
+                                        {{-- <p>This course is for beginners on the Piano, and so starts with the basics, but quickly moves onto learning about the different kinds of chords and how they are constructed, gradually getting more and more advanced as you progress. You don't just learn about chords though. Along the way you will learn about different kinds of rhythms, playing patterns and techniques that can be applied to the chords. By the end you'll be able to play the piano by reading a chord sheet, but sound like a pro!</p> --}}
+                                    </div>
                                 </div>
-                                <div class="col-lg-9">
-                                    <p><h4>#{{$key+1}} {{$item->name}}</h4></p>
-                                    {{-- <p>This course is for beginners on the Piano, and so starts with the basics, but quickly moves onto learning about the different kinds of chords and how they are constructed, gradually getting more and more advanced as you progress. You don't just learn about chords though. Along the way you will learn about different kinds of rhythms, playing patterns and techniques that can be applied to the chords. By the end you'll be able to play the piano by reading a chord sheet, but sound like a pro!</p> --}}
+                                <div class="row mt-5">
+                                    <div class="col-lg-9 offset-3">
+                                        <hr>
+                                    </div>
                                 </div>
+                            @endforeach
+                        @else
+                            <div class="form-group mt-5">
+                                <h5 class="text-muted">Video Not Available</h5>
                             </div>
-                            <div class="row mt-5">
-                                <div class="col-lg-9 offset-3">
-                                    <hr>
-                                </div>
-                            </div>
-                        @endforeach
+                        @endif
                     </div>
                     {{-- end video-couse --}}
 
                     {{-- material --}}
                     <div class="tab-pane show" id="tab-material" role="tabpanel">
-                        <div class="form-group mt-5">
-                            <h5 class="text-muted">Materi Not Available</h5>
-                        </div>
+                        @if (count($data->file_video) > 0)
+                            <div class="row mt-5">
+                            @foreach ($data->file_video as $key => $value)
+                                <div class="col-lg-4 mb-5">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-2">
+                                                    <img src="{{asset('assets/images/pdf-file-extension.png')}}" width="50px" height="50px">
+                                                </div>
+                                                <div class="col-10">
+                                                    <p style="margin-bottom: 0 !important"><strong>{{$value->name}}</strong></p>
+                                                </div>
+                                            </div>
+                                            <div class="row mt-5">
+                                                <div class="col text-justify overflow-auto" style="height:80px !important">
+                                                    {{$value->description}}
+                                                </div>
+                                            </div>
+                                            <div class="row mt-5">
+                                                <div class="col">
+                                                    <table class="bordered-less">
+                                                        <tr>
+                                                            <td width="100px"><span class="text-muted">Coach</span></td>
+                                                            <td>{{$data->coach_name}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td width="100px"><span class="text-muted">Upload At</span></td>
+                                                            <td>{{ date('d F Y',strtotime($value->updated_at)) }}</td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            {{-- <div class="row mt-5">
+                                                <div class="col-12">
+                                                    <a target="_blank" href="${data.file_url}" class="btn btn-primary">
+                                                        <span class="svg-icon">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                                <rect x="0" y="0" width="24" height="24"/>
+                                                                <path d="M2,13 C2,12.5 2.5,12 3,12 C3.5,12 4,12.5 4,13 C4,13.3333333 4,15 4,18 C4,19.1045695 4.8954305,20 6,20 L18,20 C19.1045695,20 20,19.1045695 20,18 L20,13 C20,12.4477153 20.4477153,12 21,12 C21.5522847,12 22,12.4477153 22,13 L22,18 C22,20.209139 20.209139,22 18,22 L6,22 C3.790861,22 2,20.209139 2,18 C2,15 2,13.3333333 2,13 Z" fill="#000000" fill-rule="nonzero" opacity="0.3"/>
+                                                                <rect fill="#000000" opacity="0.3" transform="translate(12.000000, 8.000000) rotate(-180.000000) translate(-12.000000, -8.000000) " x="11" y="1" width="2" height="14" rx="1"/>
+                                                                <path d="M7.70710678,15.7071068 C7.31658249,16.0976311 6.68341751,16.0976311 6.29289322,15.7071068 C5.90236893,15.3165825 5.90236893,14.6834175 6.29289322,14.2928932 L11.2928932,9.29289322 C11.6689749,8.91681153 12.2736364,8.90091039 12.6689647,9.25670585 L17.6689647,13.7567059 C18.0794748,14.1261649 18.1127532,14.7584547 17.7432941,15.1689647 C17.3738351,15.5794748 16.7415453,15.6127532 16.3310353,15.2432941 L12.0362375,11.3779761 L7.70710678,15.7071068 Z" fill="#000000" fill-rule="nonzero" transform="translate(12.000004, 12.499999) rotate(-180.000000) translate(-12.000004, -12.499999) "/>
+                                                            </g>
+                                                        </svg></span>
+                                                        Download
+                                                    <a>
+                                                </div>
+                                            </div> --}}
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                            </div>
+                        @else
+                            <div class="form-group mt-5">
+                                <h5 class="text-muted">Materi Not Available</h5>
+                            </div>
+                        @endif
                     </div>
                     {{-- end material --}}
                 </div>
@@ -122,9 +184,9 @@
     </div>
 </div>
 
-@include('student.package-detail.modal')
+{{-- @include('student.package-detail.modal') --}}
 @endsection
 
 @push('script')
-    @include('student.package-detail.script')
+    {{-- @include('student.package-detail.script') --}}
 @endpush
