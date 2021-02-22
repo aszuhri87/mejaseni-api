@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 */
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PublicController;
+use App\Http\Controllers\MediaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +30,8 @@ use App\Http\Controllers\Admin\Master\CoachListController;
 use App\Http\Controllers\Admin\Master\AdminController;
 use App\Http\Controllers\Admin\Master\StudentController;
 use App\Http\Controllers\Admin\Master\ExpertiseController;
+use App\Http\Controllers\Admin\Master\GuestStarController;
+use App\Http\Controllers\Admin\Master\MasterLessonController;
 use App\Http\Controllers\Admin\Schedule\ScheduleController;
 
 /*
@@ -75,6 +78,8 @@ Route::group(['middleware' => ['guest-handling']], function () {
 Route::group(['middleware' => ['auth-handling']], function () {
 
     Route::get('logout', [LoginController::class, 'logout']);
+    Route::post('media/file', [MediaController::class, 'file_upload']);
+    Route::delete('media/file/{id}', [MediaController::class, 'file_delete']);
 
     /*
     |--------------------------------------------------------------------------
@@ -107,10 +112,22 @@ Route::group(['middleware' => ['auth-handling']], function () {
                 Route::post('session-video/detail/dt/{id}', [TheoryVideoController::class, 'dt']);
                 Route::post('session-video/detail/update/{id}', [TheoryVideoController::class, 'update']);
                 Route::post('session-video/detail/store', [TheoryVideoController::class, 'store']);
+                Route::delete('session-video/detail/{id}', [TheoryVideoController::class, 'destroy']);
+
+                Route::post('session-video/file/dt/{id}', [TheoryVideoController::class, 'file_dt']);
+                Route::post('session-video/file/update/{id}', [TheoryVideoController::class, 'file_update']);
+                Route::post('session-video/file/store', [TheoryVideoController::class, 'file_store']);
+                Route::delete('session-video/file/{id}', [TheoryVideoController::class, 'file_destroy']);
 
                 Route::post('session-video/dt', [SessionVideoController::class, 'dt']);
                 Route::resource('session-video', SessionVideoController::class);
+
+                Route::post('master-lesson/dt', [MasterLessonController::class, 'dt']);
+                Route::resource('master-lesson', MasterLessonController::class);
             });
+
+            Route::post('guest-star/dt', [GuestStarController::class, 'dt']);
+            Route::resource('guest-star', GuestStarController::class);
 
             Route::group(['prefix' => 'coach'], function () {
                 Route::get('coach-sosmed/{id}', [CoachController::class, 'coach_sosmed']);
@@ -148,8 +165,6 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::post('media-conference/update/{id}', [PlatformController::class, 'update']);
             Route::resource('media-conference', PlatformController::class);
 
-            Route::post('theory/file', [TheoryController::class, 'theory_file']);
-            Route::delete('theory/file/{id}', [TheoryController::class, 'theory_file_delete']);
             Route::post('theory/dt', [TheoryController::class, 'dt']);
             Route::post('theory/update/{id}', [TheoryController::class, 'update']);
             Route::resource('theory', TheoryController::class);

@@ -172,10 +172,10 @@ class BaseMenu extends Controller
                         'permission' => 'coach'
                     ],
                     [
-                        'key' => 'gust-star',
-                        'title' => 'Gust Star',
-                        'url' => 'admin/master/gust-star',
-                        'permission' => 'gust_star'
+                        'key' => 'guest-star',
+                        'title' => 'Guest Star',
+                        'url' => 'admin/master/guest-star',
+                        'permission' => 'guest_star'
                     ],
                     [
                         'key' => 'student',

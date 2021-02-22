@@ -310,7 +310,7 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    url: "{{url('admin/master/theory/file')}}",
+                    url: "{{url('media/file')}}",
                     paramName: "file",
                     maxFiles: 1,
                     maxFilesize: 2,
@@ -332,7 +332,7 @@
                                 arr_path.splice(index, 1);
 
                                 $.ajax({
-                                    url: "{{url('admin/master/theory/file')}}/"+arr_data['path_id'],
+                                    url: "{{url('media/file')}}/"+arr_data['path_id'],
                                     type: 'DELETE',
                                     dataType: 'json',
                                 })

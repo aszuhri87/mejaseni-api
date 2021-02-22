@@ -176,48 +176,4 @@ class TheoryController extends BaseMenu
             ]);
         }
     }
-
-    public function theory_file(Request $request)
-    {
-        try {
-            $path = Storage::disk('s3')->put('media', $request->file);
-            $url = Storage::disk('s3')->url('/');
-
-            $temp = TemporaryMedia::create([
-                'path' => $path
-            ]);
-
-            return response([
-                "status" => 200,
-                "data" => $temp,
-                "message"   => 'Successfully saved!'
-            ], 200);
-        } catch (Exception $e) {
-            throw new Exception($e);
-            return response([
-                "message"=> $e->getMessage(),
-            ]);
-        }
-    }
-
-    public function theory_file_delete($id)
-    {
-        try {
-            $result = TemporaryMedia::find($id);
-
-            DB::transaction(function () use($result){
-                Storage::disk('s3')->delete($result->path);
-                $result->delete();
-            });
-
-            return response([
-                "message"   => 'Successfully deleted!'
-            ], 200);
-        } catch (Exception $e) {
-            throw new Exception($e);
-            return response([
-                "message"=> $e->getMessage(),
-            ]);
-        }
-    }
 }
