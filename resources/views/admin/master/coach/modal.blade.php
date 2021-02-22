@@ -193,7 +193,7 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col">
-                            <div class="form-group">
+                            {{-- <div class="form-group">
                                 <label>Pilih Package<span class="text-danger">*</span></label>
                                 <div class="init-package">
                                     <select name="package[]" class="form-control package" id="package1" data-number="1" required>
@@ -202,32 +202,32 @@
                                         <option value="2">Reguler</option>
                                     </select>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="form-group">
-                                <label>Pilih Class yang Diampu<span class="text-danger">*</span></label>
+                                <label>Kelas Spesial</label>
                                 <select id="selectdisplay1" name="select[]" multiple>
 
                                 </select>
                             </div>
-                            <div class="mt-5 pt-5 other-package">
-                                <div class="form-group">
+                            {{-- <div class="other-package"> --}}
+                                {{-- <div class="form-group">
                                     <label>Pilih Package<span class="text-danger">*</span></label>
                                     <div class="init-package">
                                         <select name="package[]" class="form-control package" id="package2" data-number="2">
 
                                         </select>
                                     </div>
-                                </div>
+                                </div> --}}
                                 <div class="form-group">
-                                    <label>Pilih Class yang Diampu<span class="text-danger">*</span></label>
+                                    <label>Kelas Reguler</label>
                                     <select id="selectdisplay2" name="select[]" multiple>
 
                                     </select>
                                 </div>
-                            </div>
-                            <div class="add-package">
+                            {{-- </div> --}}
+                            {{-- <div class="add-package"> --}}
                                 {{-- <button class="btn btn-success" id="btn-add-package" type="button">Tambah Package</button> --}}
-                            </div>
+                            {{-- </div> --}}
                         </div>
                     </div>
                 </div>
