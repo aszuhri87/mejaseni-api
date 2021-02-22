@@ -338,13 +338,13 @@ class BaseMenu extends Controller
                     [
                         'key' => 'class_theory',
                         'title' => 'Materi Kelas',
-                        'url' => 'student/theory-class',
+                        'url' => 'student/theory',
                         'permission' => 'student_theory',
                     ],
                     [
                         'key' => 'class_video',
                         'title' => 'Video Kelas',
-                        'url' => 'student/video-class',
+                        'url' => 'student/video',
                         'permission' => 'student_theory',
                     ],
                 ]

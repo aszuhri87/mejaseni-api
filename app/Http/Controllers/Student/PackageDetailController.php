@@ -59,6 +59,18 @@ class PackageDetailController extends BaseMenu
             ->where('session_videos.id',$session_video_id)
             ->first();
 
+        $video = DB::table('theory_videos')
+            ->select([
+                'theory_videos.id',
+                'theory_videos.name',
+                'theory_videos.is_youtube',
+                'theory_videos.url',
+            ])
+            ->where('theory_videos.session_video_id',$result->id)
+            ->whereNull('theory_videos.deleted_at')
+            ->get();
+        $result->video = $video;
+
         return view('student.package-detail.index', [
             'title'         => 'Buy New Package',
             'navigation'    => $navigation,

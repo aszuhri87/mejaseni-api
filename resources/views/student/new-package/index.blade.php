@@ -1,5 +1,11 @@
 @extends('layouts.app')
-
+@push('style')
+    <style>
+        a:hover{
+            color: #7F16A7 !important
+        }
+    </style>
+@endpush
 @section('content')
 <div id="category" class="d-flex">
 
@@ -11,7 +17,7 @@
 <h5 class="mt-5 mb-5">Video Course</h5>
 <div class="video-course">
 
-    
+
 </div>
 @include('student.new-package.modal')
 @endsection

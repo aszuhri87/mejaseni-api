@@ -50,6 +50,7 @@ use App\Http\Controllers\Student\ScheduleController as StudentScheduleController
 use App\Http\Controllers\Student\MyClassController as StudentMyClassController;
 use App\Http\Controllers\Student\NewPackageController as StudentNewPackageController;
 use App\Http\Controllers\Student\PackageDetailController as StudentPackageDetailController;
+use App\Http\Controllers\Student\TheoryController as StudentTheoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -198,8 +199,11 @@ Route::group(['middleware' => ['auth-handling']], function () {
 
         Route::get('invoice', [StudentInvoiceController::class, 'index']);
 
-        Route::get('schedule', [StudentScheduleController::class, 'index']);
-        Route::get('schedule/regular-class', [StudentScheduleController::class, 'regular_class']);
+        Route::group(['prefix' => 'schedule'], function () {
+            Route::get('/', [StudentScheduleController::class, 'index']);
+            Route::get('regular-class', [StudentScheduleController::class, 'regular_class']);
+            Route::get('special-class', [StudentScheduleController::class, 'special_class']);
+        });
 
         Route::get('my-class',[StudentMyClassController::class, 'index']);
 
@@ -208,6 +212,12 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::get('get-package',[StudentNewPackageController::class, 'get_package']);
             Route::get('classroom-category/{classroom_category_id}',[StudentNewPackageController::class, 'get_classroom_by_category_id']);
             Route::get('get-session-video', [StudentNewPackageController::class, 'get_session_video']);
+        });
+
+        Route::group(['prefix' => 'theory'], function () {
+            Route::get('/', [StudentTheoryController::class, 'index']);
+            Route::get('get-theory', [StudentTheoryController::class, 'get_theory']);
+            Route::get('get-class/{student_id}', [StudentTheoryController::class, 'get_class']);
         });
 
         Route::get('package-detail/{session_video_id}',[StudentPackageDetailController::class, 'index']);

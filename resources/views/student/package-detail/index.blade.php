@@ -85,27 +85,34 @@
 
                     {{-- video-couse --}}
                     <div class="tab-pane show" id="tab-video-couse" role="tabpanel">
-                        <div class="row mt-5">
-                            <div class="col-lg-3">
-                                <img src="https://mejaseni.yk1.s3.gmedia.id/media/UeSNulAy5goyVikDwkLCLh7HZZ4Uduz3Dz4cp6RO.webp" class="rounded" height="150px" width="100%">
+                        @foreach ($data->video as $key => $item)
+                            <div class="row mt-5">
+                                <div class="col-lg-3">
+                                    @if ($item->is_youtube)
+                                        {{-- <iframe width="100%" height="150px" src="{{$item->url}}"></iframe> --}}
+                                        <img src="{{asset('assets/images/thumbnail.png')}}" class="rounded" height="150px" width="100%">
+                                    @else
+                                        <img src="{{asset('assets/images/thumbnail-lock.png')}}" class="rounded" height="150px" width="100%">
+                                    @endif
+                                </div>
+                                <div class="col-lg-9">
+                                    <p><h4>#{{$key+1}} {{$item->name}}</h4></p>
+                                    {{-- <p>This course is for beginners on the Piano, and so starts with the basics, but quickly moves onto learning about the different kinds of chords and how they are constructed, gradually getting more and more advanced as you progress. You don't just learn about chords though. Along the way you will learn about different kinds of rhythms, playing patterns and techniques that can be applied to the chords. By the end you'll be able to play the piano by reading a chord sheet, but sound like a pro!</p> --}}
+                                </div>
                             </div>
-                            <div class="col-lg-9">
-                                <p><h4>#1 Introducing</h4></p>
-                                <p>This course is for beginners on the Piano, and so starts with the basics, but quickly moves onto learning about the different kinds of chords and how they are constructed, gradually getting more and more advanced as you progress. You don't just learn about chords though. Along the way you will learn about different kinds of rhythms, playing patterns and techniques that can be applied to the chords. By the end you'll be able to play the piano by reading a chord sheet, but sound like a pro!</p>
+                            <div class="row mt-5">
+                                <div class="col-lg-9 offset-3">
+                                    <hr>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row mt-5">
-                            <div class="col-lg-9 offset-3">
-                                <hr>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
                     {{-- end video-couse --}}
 
                     {{-- material --}}
                     <div class="tab-pane show" id="tab-material" role="tabpanel">
                         <div class="form-group mt-5">
-                            Material
+                            <h5 class="text-muted">Materi Not Available</h5>
                         </div>
                     </div>
                     {{-- end material --}}

@@ -488,7 +488,7 @@
                                     <img style="float: left !important;" src="${data.image_url}" class="rounded" width="20%" height="150px">
                                     <div class="row">
                                         <div class="col">
-                                            <a href="{{url('student/package-detail')}}/${data.id}" style="color: black">
+                                            <a href="{{url('student/package-detail')}}/${data.id}" style="color: black;">
                                                 <h4>${data.name}</h4>
                                             </a>
                                             <p>${data.description}</p>
