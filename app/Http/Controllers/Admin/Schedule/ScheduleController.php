@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 use App\Models\CoachSchedule;
+use App\Models\MasterLesson;
 
 use Storage;
 use Auth;
@@ -168,7 +169,7 @@ class ScheduleController extends BaseMenu
     public function all()
     {
         try {
-            $result = DB::table('coach_schedules')
+            $coach_schedules = DB::table('coach_schedules')
                 ->select([
                     'coach_schedules.id',
                     'coach_schedules.datetime',
@@ -178,7 +179,8 @@ class ScheduleController extends BaseMenu
                         WHEN coach_schedules.accepted = false THEN 'warning'
                         WHEN students.id IS NOT NULL THEN 'primary'
                         ELSE 'success'
-                    END color")
+                    END color"),
+                    DB::raw("1 as type")
                 ])
                 ->leftJoin('coach_classrooms','coach_schedules.coach_classroom_id','=','coach_classrooms.id')
                 ->leftJoin('coaches','coach_classrooms.coach_id','=','coaches.id')
@@ -189,7 +191,24 @@ class ScheduleController extends BaseMenu
                 ->leftJoin('students','students.id','=','student_classrooms.student_id')
                 ->whereNull('coach_schedules.deleted_at')
                 ->whereNull('coach_schedules.deleted_at')
-                ->get();
+                ->get()
+                ->toArray();
+
+            $master_lessons = DB::table('master_lessons')
+                ->select([
+                    'master_lessons.id',
+                    'master_lessons.datetime',
+                    'master_lessons.name',
+                    DB::raw("'info' as color"),
+                    DB::raw("2 as type")
+                ])
+                ->whereNull([
+                    'master_lessons.deleted_at'
+                ])
+                ->get()
+                ->toArray();
+
+            $result = array_merge($coach_schedules, $master_lessons);
 
             return response([
                 "data"      => $result,
@@ -241,6 +260,46 @@ class ScheduleController extends BaseMenu
 
             return response([
                 "data"      => $result,
+                "message"   => 'OK'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function show_master_lesson($id)
+    {
+        try {
+            $path = Storage::disk('s3')->url('/');
+
+            $result = DB::table('master_lessons')
+                ->select([
+                    'master_lessons.name',
+                    'master_lessons.slot',
+                    'master_lessons.datetime',
+                    DB::raw("CONCAT('{$path}',poster) as image_url"),
+                    DB::raw("0 as slot_uses"),
+                ])
+                ->leftJoin('classroom_categories','classroom_categories.id','=','master_lessons.classroom_category_id')
+                ->leftJoin('sub_classroom_categories','sub_classroom_categories.id','=','master_lessons.sub_classroom_category_id')
+                ->where('master_lessons.id', $id)
+                ->first();
+
+            $guest_stars = DB::table('guest_star_master_lessons')
+                ->select([
+                    'guest_stars.name',
+                    DB::raw("CONCAT('{$path}',guest_stars.image) as image_url"),
+                ])
+                ->leftJoin('guest_stars','guest_star_master_lessons.guest_star_id','=','guest_stars.id')
+                ->where('guest_star_master_lessons.master_lesson_id', $id)
+                ->get();
+
+            return response([
+                "data" => $result,
+                "guest_stars" => $guest_stars,
                 "message"   => 'OK'
             ], 200);
         } catch (Exception $e) {
@@ -326,6 +385,25 @@ class ScheduleController extends BaseMenu
     {
         try {
             $data = CoachSchedule::find($id)->delete();
+
+            return response([
+                "data"      => $data,
+                "message"   => 'OK'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function update_time_master_lesson(Request $request, $id)
+    {
+        try {
+            $data = MasterLesson::find($id)->update([
+                'datetime' => date('Y-m-d H:i:s', strtotime($request->date.' '.$request->time)),
+            ]);
 
             return response([
                 "data"      => $data,

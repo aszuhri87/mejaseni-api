@@ -24,7 +24,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group d-none">
                         <label>Tipe Kelas</label>
                         <div class="radio-inline mt-2">
                             <label class="radio radio-lg">
@@ -117,7 +117,6 @@
     </div>
 </div>
 
-
 <!-- Modal-->
 <div class="modal" id="modal-schedule-detail" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
@@ -197,6 +196,66 @@
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal-->
+<div class="modal" id="modal-schedule-detail-ml" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Schedule Detail</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i aria-hidden="true" class="ki ki-close"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card card-custom bg-light-secondary card-stretch gutter-b p-7">
+                    <div class="d-flex align-items-between">
+                        <div class="d-flex flex-column flex-grow-1 font-weight-bold">
+                            <span class="text-muted">Class</span>
+                            <p class="text-dark mb-1 font-size-lg ml-class-name">-</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="d-flex flex-column flex-grow-1 font-weight-bold">
+                                <span class="text-muted">Package</span>
+                                <p class="text-dark mb-1 font-size-lg ml-package-name">Master Lesson</p>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="d-flex flex-column flex-grow-1 font-weight-bold">
+                                <span class="text-muted">Slot</span>
+                                <p class="text-dark mb-1 font-size-lg ml-slot-place">-</p>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row" id="ml-coach-place">
+                    </div>
+                </div>
+                <div class="row p-7">
+                    <div class="col-6">
+                        <div class="d-flex flex-column flex-grow-1 font-weight-bold">
+                            <span class="text-muted">Tanggal</span>
+                            <p class="text-dark mb-1 font-size-lg ml-date-place">-</p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="d-flex flex-column flex-grow-1 font-weight-bold">
+                            <span class="text-muted">Waktu</span>
+                            <p class="text-dark mb-1 font-size-lg ml-time-place">-</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
+            </div>
         </div>
     </div>
 </div>

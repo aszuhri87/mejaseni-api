@@ -124,6 +124,8 @@ Route::group(['middleware' => ['auth-handling']], function () {
                 Route::post('session-video/dt', [SessionVideoController::class, 'dt']);
                 Route::resource('session-video', SessionVideoController::class);
 
+                Route::get('master-lesson/guest-star/{id}', [MasterLessonController::class, 'get_guest_star']);
+                Route::delete('master-lesson/guest-star/{id}', [MasterLessonController::class, 'destroy_guest_star']);
                 Route::post('master-lesson/dt', [MasterLessonController::class, 'dt']);
                 Route::resource('master-lesson', MasterLessonController::class);
             });
@@ -176,6 +178,9 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::post('expertise/dt', [ExpertiseController::class, 'dt']);
             Route::resource('expertise', ExpertiseController::class);
         });
+
+        Route::get('schedule/master-lesson/{id}', [ScheduleController::class, 'show_master_lesson']);
+        Route::post('schedule/master-lesson/update/{id}', [ScheduleController::class, 'update_time_master_lesson']);
 
         Route::get('schedule', [ScheduleController::class, 'index']);
         Route::get('schedule/all', [ScheduleController::class, 'all']);
@@ -274,6 +279,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::get('get-platform',[PublicController::class, 'get_platform']);
         Route::get('get-classroom-coach', [PublicController::class, 'get_classroom_coach']);
         Route::get('get-session-coach/{classroom_id}', [PublicController::class, 'get_session_coach']);
+        Route::get('get-guest-star', [PublicController::class, 'get_guest_star']);
     });
 
 });
