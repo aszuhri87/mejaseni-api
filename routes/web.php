@@ -177,6 +177,9 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::resource('expertise', ExpertiseController::class);
         });
 
+        Route::get('schedule/master-lesson/{id}', [ScheduleController::class, 'show_master_lesson']);
+        Route::post('schedule/master-lesson/update/{id}', [ScheduleController::class, 'update_time_master_lesson']);
+
         Route::get('schedule', [ScheduleController::class, 'index']);
         Route::get('schedule/all', [ScheduleController::class, 'all']);
         Route::get('schedule/{id}', [ScheduleController::class, 'show']);

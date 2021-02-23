@@ -284,7 +284,7 @@ class BaseMenu extends Controller
                     [
                         'key' => 'general',
                         'title' => 'Umum',
-                        'url' => 'student/master/general',
+                        'url' => 'admin/master/general',
                         'permission' => 'general'
                     ],
                     [
@@ -298,6 +298,21 @@ class BaseMenu extends Controller
                         'title' => 'Student',
                         'url' => 'admin/master/student',
                         'permission' => 'student'
+                    ],
+                ],
+            ],
+            [
+                'key' => 'additional-data',
+                'title' => 'Additional Data',
+                'url' => '#',
+                'permission' => 'additional_data',
+                'icon' => $this->icon('master'),
+                'children' => [
+                    [
+                        'key' => 'faq',
+                        'title' => 'FAQ',
+                        'url' => 'admin/additional-data/faq',
+                        'permission' => 'faq'
                     ],
                 ],
             ],
