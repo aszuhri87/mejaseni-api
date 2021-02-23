@@ -117,8 +117,8 @@
                     var url = $(this).attr('href');
 
                     Swal.fire({
-                        title: 'Delete Classroom Category?',
-                        text: "Deleted Classroom Category will be permanently lost!",
+                        title: 'Delete Expertise?',
+                        text: "Deleted Expertise will be permanently lost!",
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#7F16A7',

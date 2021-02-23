@@ -16,6 +16,10 @@ class MasterLesson extends Model
     public $keyType = 'string';
 
     protected $fillable = [
+        'classroom_category_id',
+        'sub_classroom_category_id',
+        'price',
+        'datetime',
         'platform_id',
         'name',
         'poster',
