@@ -5,12 +5,12 @@
             $(document).ready(function() {
                 formSubmit();
                 initAction();
-                // getClass();
-                // getVideo();
+                getSubClassroomCategory();
+                getVideo();
             });
 
             const initAction = () => {
-                $(document).on('change','#filter-class',function(event){
+                $(document).on('change','#filter',function(event){
                     event.preventDefault();
                     KTApp.block('#kt_body', {
                         overlayColor: '#000000',
@@ -18,28 +18,8 @@
                         opacity: 0.5,
                         message: 'Processing...'
                     });
-                    getTheory($(this).val())
+                    getVideo($(this).val())
                 });
-
-                $(document).on('change','#date_end',function(event){
-                    event.preventDefault();
-                    let date_end = $(this).val();
-                    let date_start = $('#date_start').val();
-                    let classroom_id = $('#filter-class').val();
-                    if(date_end && date_start){
-                        if(moment(date_end).isBefore(date_start)){
-                            return toastr.error('Filter date invalid', 'Failed')
-                        }else{
-                            KTApp.block('#kt_body', {
-                                overlayColor: '#000000',
-                                state: 'primary',
-                                opacity: 0.5,
-                                message: 'Processing...'
-                            });
-                            getTheory(classroom_id,date_start,date_end)
-                        }
-                    }
-                })
             },
             formSubmit = () => {
                 $('#form-invoice').submit(function(event){
@@ -64,19 +44,19 @@
                     });
                 });
             },
-            getClass = () => {
+            getSubClassroomCategory = () => {
                 $.ajax({
-                    url: `{{ url('student/video/get-class') }}/{{Auth::guard('student')->user()->id}}`,
+                    url: `{{ url('public/get-sub-classroom-category') }}`,
                     type: 'GET',
                 })
                 .done(function(res, xhr, meta) {
-                    element = `<option value="">Pilih Kelas</option>`;
+                    element = `<option value="">Pilih Sub Kategori Kelas</option>`;
 
                     $.each(res.data, function(index, data){
-                        element += `<option value="${data.classroom_id}">${data.classroom_name}</option>`;
+                        element += `<option value="${data.id}">${data.name}</option>`;
                     });
 
-                    $('#filter-class').html(element);
+                    $('#filter').html(element);
                 })
                 .fail(function(res, error) {
                     toastr.error(res.responseJSON.message, 'Failed')
@@ -85,61 +65,58 @@
 
                 });
             },
-            getVideo = () => {
+            getVideo = (sub_classroom_category) => {
                 $.ajax({
-                    url: `{{ url('student/theory/get-video') }}`,
+                    url: `{{ url('student/video/get-video') }}`,
                     type: `GET`,
+                    data: {
+                        sub_classroom_category_id:sub_classroom_category
+                    }
                 })
                 .done(function(res, xhr, meta) {
                     if (res.status == 200) {
                         let element = ``;
-                        $.each(res.data, function(index, data) {
-                            element += `
-                            <div class="card mb-4">
-                                <div width="100%" class="p-5">
-                                    <img style="float: left !important;" src="${data.image_url}" class="rounded" width="20%" height="150px">
-                                    <div class="row">
-                                        <div class="col">
-                                            <a href="{{url('student/package-detail')}}/${data.id}" style="color: black;">
-                                                <h4>${data.name}</h4>
-                                            </a>
-                                            <p>${data.description}</p>
-                                            <p>Mentored by ${data.coach_name}</p>
-                                            <p>
-                                                <span class="svg-icon svg-icon-warning"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-02-01-052524/theme/html/demo1/dist/../src/media/svg/icons/General/Star.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                        <polygon points="0 0 24 0 24 24 0 24"/>
-                                                        <path d="M12,18 L7.91561963,20.1472858 C7.42677504,20.4042866 6.82214789,20.2163401 6.56514708,19.7274955 C6.46280801,19.5328351 6.42749334,19.309867 6.46467018,19.0931094 L7.24471742,14.545085 L3.94038429,11.3241562 C3.54490071,10.938655 3.5368084,10.3055417 3.92230962,9.91005817 C4.07581822,9.75257453 4.27696063,9.65008735 4.49459766,9.61846284 L9.06107374,8.95491503 L11.1032639,4.81698575 C11.3476862,4.32173209 11.9473121,4.11839309 12.4425657,4.36281539 C12.6397783,4.46014562 12.7994058,4.61977315 12.8967361,4.81698575 L14.9389263,8.95491503 L19.5054023,9.61846284 C20.0519472,9.69788046 20.4306287,10.2053233 20.351211,10.7518682 C20.3195865,10.9695052 20.2170993,11.1706476 20.0596157,11.3241562 L16.7552826,14.545085 L17.5353298,19.0931094 C17.6286908,19.6374458 17.263103,20.1544017 16.7187666,20.2477627 C16.5020089,20.2849396 16.2790408,20.2496249 16.0843804,20.1472858 L12,18 Z" fill="#000000"/>
-                                                    </g>
-                                                </svg><!--end::Svg Icon--></span>
-                                                <span class="svg-icon svg-icon-warning"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-02-01-052524/theme/html/demo1/dist/../src/media/svg/icons/General/Star.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                        <polygon points="0 0 24 0 24 24 0 24"/>
-                                                        <path d="M12,18 L7.91561963,20.1472858 C7.42677504,20.4042866 6.82214789,20.2163401 6.56514708,19.7274955 C6.46280801,19.5328351 6.42749334,19.309867 6.46467018,19.0931094 L7.24471742,14.545085 L3.94038429,11.3241562 C3.54490071,10.938655 3.5368084,10.3055417 3.92230962,9.91005817 C4.07581822,9.75257453 4.27696063,9.65008735 4.49459766,9.61846284 L9.06107374,8.95491503 L11.1032639,4.81698575 C11.3476862,4.32173209 11.9473121,4.11839309 12.4425657,4.36281539 C12.6397783,4.46014562 12.7994058,4.61977315 12.8967361,4.81698575 L14.9389263,8.95491503 L19.5054023,9.61846284 C20.0519472,9.69788046 20.4306287,10.2053233 20.351211,10.7518682 C20.3195865,10.9695052 20.2170993,11.1706476 20.0596157,11.3241562 L16.7552826,14.545085 L17.5353298,19.0931094 C17.6286908,19.6374458 17.263103,20.1544017 16.7187666,20.2477627 C16.5020089,20.2849396 16.2790408,20.2496249 16.0843804,20.1472858 L12,18 Z" fill="#000000"/>
-                                                    </g>
-                                                </svg><!--end::Svg Icon--></span>
-                                                <span class="svg-icon svg-icon-warning"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-02-01-052524/theme/html/demo1/dist/../src/media/svg/icons/General/Star.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                        <polygon points="0 0 24 0 24 24 0 24"/>
-                                                        <path d="M12,18 L7.91561963,20.1472858 C7.42677504,20.4042866 6.82214789,20.2163401 6.56514708,19.7274955 C6.46280801,19.5328351 6.42749334,19.309867 6.46467018,19.0931094 L7.24471742,14.545085 L3.94038429,11.3241562 C3.54490071,10.938655 3.5368084,10.3055417 3.92230962,9.91005817 C4.07581822,9.75257453 4.27696063,9.65008735 4.49459766,9.61846284 L9.06107374,8.95491503 L11.1032639,4.81698575 C11.3476862,4.32173209 11.9473121,4.11839309 12.4425657,4.36281539 C12.6397783,4.46014562 12.7994058,4.61977315 12.8967361,4.81698575 L14.9389263,8.95491503 L19.5054023,9.61846284 C20.0519472,9.69788046 20.4306287,10.2053233 20.351211,10.7518682 C20.3195865,10.9695052 20.2170993,11.1706476 20.0596157,11.3241562 L16.7552826,14.545085 L17.5353298,19.0931094 C17.6286908,19.6374458 17.263103,20.1544017 16.7187666,20.2477627 C16.5020089,20.2849396 16.2790408,20.2496249 16.0843804,20.1472858 L12,18 Z" fill="#000000"/>
-                                                    </g>
-                                                </svg><!--end::Svg Icon--></span>
-                                                <span class="svg-icon svg-icon-warning"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-02-01-052524/theme/html/demo1/dist/../src/media/svg/icons/General/Star.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                        <polygon points="0 0 24 0 24 24 0 24"/>
-                                                        <path d="M12,18 L7.91561963,20.1472858 C7.42677504,20.4042866 6.82214789,20.2163401 6.56514708,19.7274955 C6.46280801,19.5328351 6.42749334,19.309867 6.46467018,19.0931094 L7.24471742,14.545085 L3.94038429,11.3241562 C3.54490071,10.938655 3.5368084,10.3055417 3.92230962,9.91005817 C4.07581822,9.75257453 4.27696063,9.65008735 4.49459766,9.61846284 L9.06107374,8.95491503 L11.1032639,4.81698575 C11.3476862,4.32173209 11.9473121,4.11839309 12.4425657,4.36281539 C12.6397783,4.46014562 12.7994058,4.61977315 12.8967361,4.81698575 L14.9389263,8.95491503 L19.5054023,9.61846284 C20.0519472,9.69788046 20.4306287,10.2053233 20.351211,10.7518682 C20.3195865,10.9695052 20.2170993,11.1706476 20.0596157,11.3241562 L16.7552826,14.545085 L17.5353298,19.0931094 C17.6286908,19.6374458 17.263103,20.1544017 16.7187666,20.2477627 C16.5020089,20.2849396 16.2790408,20.2496249 16.0843804,20.1472858 L12,18 Z" fill="#000000"/>
-                                                    </g>
-                                                </svg><!--end::Svg Icon--></span>
-
-                                                <span class="text-primary font-size-h5 font-weight-bold"> Rp. ${numeral(data.price).format('0,0')},- </span>
-                                            </p>
+                        if(res.data.length > 0 ){
+                            $.each(res.data, function(index, data) {
+                                element += `
+                                <div class="card mb-4">
+                                    <div width="100%" class="p-5">
+                                        <img style="float: left !important;" src="${data.image_url}" class="rounded" width="20%" height="150px">
+                                        <div class="row">
+                                            <div class="col">
+                                                <a href="{{url('student/video/video-detail')}}/${data.session_video_id}" style="color: black;">
+                                                    <h4>${data.name}</h4>
+                                                </a>
+                                                <p>${data.description}</p>
+                                                <p>Mentored by ${data.coach_name}</p>
+                                                <p>
+                                                    <a href="{{url('student/video/video-detail')}}/${data.session_video_id}" class="btn btn-primary">
+                                                        <span class="svg-icon"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                                <rect x="0" y="0" width="24" height="24"/>
+                                                                <path d="M9.82866499,18.2771971 L16.5693679,12.3976203 C16.7774696,12.2161036 16.7990211,11.9002555 16.6175044,11.6921539 C16.6029128,11.6754252 16.5872233,11.6596867 16.5705402,11.6450431 L9.82983723,5.72838979 C9.62230202,5.54622572 9.30638833,5.56679309 9.12422426,5.7743283 C9.04415337,5.86555116 9,5.98278612 9,6.10416552 L9,17.9003957 C9,18.1765381 9.22385763,18.4003957 9.5,18.4003957 C9.62084305,18.4003957 9.73759731,18.3566309 9.82866499,18.2771971 Z" fill="#000000"/>
+                                                            </g>
+                                                        </svg></span>
+                                                        Lihat Video
+                                                    </a>
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                                `;
+                            });
+                        }else{
+                            element += `
+                                <div class="card">
+                                    <div class="card-body text-muted text-center">
+                                        <h4>Video Not Available</h4>
+                                    </div>
+                                </div>
                             `;
-                        });
-                        $('.video-course').html(element);
+                        }
+                        $('.video').html(element);
+                        KTApp.unblock('#kt_body');
                     }
                 })
                 .fail(function(res, error) {
