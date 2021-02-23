@@ -20,15 +20,17 @@
 
                 get_classroom_coach();
 
+                $('#due_date').datetimepicker();
+
             });
 
             const  initAction = () => {
                     $(document).on('click', '#add-btn', function(event) {
                         event.preventDefault();
 
-                        $('#form-theory').trigger("reset");
-                        $('#form-theory').attr('action', '{{ url('coach/theory') }}');
-                        $('#form-theory').attr('method', 'POST');
+                        $('#form-assignment').trigger("reset");
+                        $('#form-assignment').attr('action', '{{ url('coach/exercise/assignment') }}');
+                        $('#form-assignment').attr('method', 'POST');
 
                         get_classroom_category();
                         get_sub_classroom_category();
@@ -40,17 +42,17 @@
 
                         docsDropzone.removeAllFiles(true);
 
-                        showModal('modal-theory');
+                        showModal('modal-assignment');
                     });
 
                     $(document).on('click', '.btn-delete', function(event) {
                         event.preventDefault();
-
+                        
                         var url = $(this).attr('href');
 
                         Swal.fire({
-                            title: 'Delete Theory?',
-                            text: "Deleted Theory will be permanently lost!",
+                            title: 'Delete assignment?',
+                            text: "Deleted assignment will be permanently lost!",
                             icon: 'warning',
                             showCancelButton: true,
                             confirmButtonColor: '#7F16A7',
@@ -67,7 +69,7 @@
 
                                         var classroom_coach = $('#classroom_coach').val();
                                         var session_coach = $('#session_coach').val();
-                                        get_theory_list(classroom_coach, session_coach)
+                                        get_assignment_list(classroom_coach, session_coach)
 
                                     })
                                     .fail(function(res, error) {
@@ -110,7 +112,7 @@
                         var session_coach = $('#session_coach').val();
 
                         $.ajax({
-                                url: '{{ url('coach/theory/list') }}/' + classroom_coach + '/' +
+                                url: '{{ url('coach/exercise/assignment/list') }}/' + classroom_coach + '/' +
                                     session_coach,
                                 type: 'GET',
                                 dataType: 'json',
@@ -119,17 +121,7 @@
                                 if (res.status == 200) {
                                     let element = ``
 
-                                    $.each(res.data.theory, function(index, data) {
-
-                                        if (data.is_premium) {
-                                            var premium =
-                                                `<i class="symbol-badge bg-warning"></i>`;
-
-                                        } else {
-                                            var premium = ``;
-
-                                        }
-
+                                    $.each(res.data.assignment, function(index, data) {
                                         element += `<div class="col-12 col-sm-12 col-md-4 col-lg-4">
                                                 <!--begin::Card-->
                                                 <div class="card card-custom card-border">
@@ -138,7 +130,6 @@
                                                             <span class="card-icon">
                                                                 <div class="symbol symbol-circle symbol-60  mr-3">
                                                                     <img alt="Pic" src="{{ asset('assets/media/users/300_1.jpg') }}" />
-                                                                    ` + premium + `
                                                                 </div>
                                                             </span>
                                                             <div class="card-label">${data.name}
@@ -155,7 +146,7 @@
                                                                     <!--begin::Navigation-->
                                                                     <ul class="navi navi-hover">
                                                                         <li class="navi-header font-weight-bold py-4">
-                                                                            <a href="{{ url('/coach/theory') }}/${data.id}" class="font-weight-bold text-primary btn-delete">Hapus</a>
+                                                                            <a href="{{ url('/coach/exercise/assignment') }}/${data.id}" class="font-weight-bold text-primary btn-delete">Hapus</a>
                                                                         </li>
                                                                     </ul>
                                                                     <!--end::Navigation-->
@@ -168,10 +159,10 @@
                                                         <div class="row mt-5">
                                                             <div class="col-4 col-sm-4 col-md-4 col-lg-4">
                                                                 <div class="d-flex mb-3">
-                                                                    <span class="text-muted">Coach</span>
+                                                                    <span class="text-muted">Upload At</span>
                                                                 </div>
                                                                 <div class="d-flex">
-                                                                    <span class="text-muted">Upload At</span>
+                                                                    <span class="text-muted">Due Date</span>
                                                                 </div>
                                                             </div>
                                                             <div class="col-8 col-sm-8 col-md-8 col-lg-8">
@@ -186,7 +177,7 @@
                                                         <div class="row mt-10">
                                                             <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                                                                 <div class="d-flex mb-3">
-                                                                    <a href="{{ url('/coach/theory/download') }}/${data.id}" target="_blank" class="btn btn-white btn-icon w-auto px-2 waves-effect width-md waves-light ml-1"                                                                    
+                                                                    <a href="{{ url('/coach/exercise/assignment/download') }}/${data.id}" target="_blank" class="btn btn-primary btn-icon w-auto px-2 waves-effect width-md waves-light ml-1"                                                                    
                                                                         <span class="svg-icon svg-icon-white svg-icon-2x">
                                                                             <!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-02-01-052524/theme/html/demo1/dist/../src/media/svg/icons/Files/Download.svg--><svg
                                                                                 xmlns="http://www.w3.org/2000/svg"
@@ -223,8 +214,8 @@
                                     $('.my-title').html('<h3>Materi ' + res.data.classroom + ' - ' +
                                         res
                                         .data.session + '</h3>');
-                                    $('#theory-list').html(element);
-                                    $('#card-theory').css('display', '');
+                                    $('#assignment-list').html(element);
+                                    $('#card-assignment').css('display', '');
                                     btn_loading('stop')
 
                                 }
@@ -236,16 +227,6 @@
                                 btn_loading_basic('stop','Tampilkan')
                             });
                     });
-
-                    $(document).on('change', '#is-premium', function() {
-                        if ($('input[name="is_premium"]:checked').length == 1) {
-                            $('.i-price').show();
-                            $('#i-price').attr('required', true);
-                        } else {
-                            $('.i-price').hide();
-                            $('#i-price').prop('required', false);
-                        }
-                    })
 
                     $(document).on('change', '#classroom-category', function() {
                         if ($('#classroom-category').val() == "") {
@@ -274,7 +255,7 @@
                     })
                 },
                 formSubmit = () => {
-                    $('#form-theory').submit(function(event) {
+                    $('#form-assignment').submit(function(event) {
                         event.preventDefault();
 
                         let form_data = new FormData(this)
@@ -296,7 +277,7 @@
                                 toastr.success(res.message, 'Success')
                                 init_table.draw(false);
                                 arr_path = [];
-                                hideModal('modal-theory');
+                                hideModal('modal-assignment');
                             })
                             .fail(function(res, error) {
                                 toastr.error(res.responseJSON.message, 'Failed')
@@ -470,10 +451,10 @@
                             $('#session').html(element);
                         })
                 },
-                get_theory_list = (classroom_coach, session_coach) => {
+                get_assignment_list = (classroom_coach, session_coach) => {
 
                     $.ajax({
-                            url: '{{ url('coach/theory/list') }}/' + classroom_coach + '/' +
+                            url: '{{ url('coach/exercise/assignment/list') }}/' + classroom_coach + '/' +
                                 session_coach,
                             type: 'GET',
                             dataType: 'json',
@@ -482,7 +463,7 @@
                             if (res.status == 200) {
                                 let element = ``
 
-                                $.each(res.data.theory, function(index, data) {
+                                $.each(res.data.assignment, function(index, data) {
 
                                     if (data.is_premium) {
                                         var premium = `<i class="symbol-badge bg-warning"></i>`;
@@ -517,7 +498,7 @@
                                                                     <!--begin::Navigation-->
                                                                     <ul class="navi navi-hover">
                                                                         <li class="navi-header font-weight-bold py-4">
-                                                                            <a href="{{ url('/coach/theory') }}/${data.id}" class="font-weight-bold text-danger btn-delete">Hapus</a>
+                                                                            <a href="{{ url('/coach/exercise/assignment') }}/${data.id}" class="font-weight-bold text-danger btn-delete">Hapus</a>
                                                                         </li>
                                                                     </ul>
                                                                     <!--end::Navigation-->
@@ -586,8 +567,8 @@
                                 $('.my-title').html('<h3>Materi ' + res.data.classroom + ' - ' +
                                     res
                                     .data.session + '</h3>');
-                                $('#theory-list').html(element);
-                                $('#card-theory').css('display', '');
+                                $('#assignment-list').html(element);
+                                $('#card-assignment').css('display', '');
                             }
                         })
                 }
@@ -649,7 +630,7 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    url: "{{ url('coach/theory/file') }}",
+                    url: "{{ url('coach/exercise/assignment/file') }}",
                     paramName: "file",
                     maxFiles: 1,
                     maxFilesize: 2,
@@ -675,7 +656,7 @@
                                 arr_path.splice(index, 1);
 
                                 $.ajax({
-                                        url: "{{ url('coach/theory/file') }}/" +
+                                        url: "{{ url('coach/exercise/assignment/file') }}/" +
                                             arr_data['path_id'],
                                         type: 'DELETE',
                                         dataType: 'json',

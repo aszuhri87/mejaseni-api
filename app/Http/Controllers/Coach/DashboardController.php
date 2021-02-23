@@ -7,6 +7,7 @@ use App\Models\Coach;
 use App\Models\CoachClassroom;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends BaseMenu
@@ -35,18 +36,21 @@ class DashboardController extends BaseMenu
             date_default_timezone_set("Asia/Jakarta");
 
             $data = DB::table('classrooms')
-                ->select(['created_at'])
+                ->select('classrooms.*')
                 ->whereRaw("
-                    (SELECT EXTRACT(WEEK FROM current_date)) = (SELECT EXTRACT(WEEK FROM created_at))
+                    (SELECT EXTRACT(WEEK FROM current_date)) = (SELECT EXTRACT(WEEK FROM classrooms.created_at))
                 ")
                 ->whereRaw("
-                    (SELECT EXTRACT(MONTH FROM current_date)) = (SELECT EXTRACT(MONTH FROM created_at))
+                    (SELECT EXTRACT(MONTH FROM current_date)) = (SELECT EXTRACT(MONTH FROM classrooms.created_at))
                 ")
                 ->whereRaw("
-                    (SELECT EXTRACT(YEAR FROM current_date)) = (SELECT EXTRACT(YEAR FROM created_at))
+                    (SELECT EXTRACT(YEAR FROM current_date)) = (SELECT EXTRACT(YEAR FROM classrooms.created_at))
                 ")
-                ->WhereNull('deleted_at')
-                ->orderBy('created_at', 'asc')
+                ->join('coach_classrooms','coach_classrooms.classroom_id','classrooms.id')
+                ->join('coaches','coaches.id','coach_classrooms.coach_id')
+                ->WhereNull('classrooms.deleted_at')
+                ->where('coaches.id',Auth::guard('coach')->id())
+                ->orderBy('classrooms.created_at', 'asc')
                 ->get();
 
             $range_time = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];

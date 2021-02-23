@@ -33,7 +33,7 @@
                         <div class="col-md-12 col-sm-12 select-session-coach">
                             <div class="form-group">
                                 <button type="button" id="show-btn"
-                                    class="btn btn-primary btn-icon w-auto px-2 waves-effect width-md waves-light ml-1 text-center btn-loading">
+                                    class="btn btn-primary btn-icon w-auto px-2 waves-effect width-md waves-light ml-1 text-center btn-loading-basic">
                                     Tampilkan
                                 </button>
                             </div>
