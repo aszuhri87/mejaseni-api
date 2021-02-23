@@ -26,7 +26,7 @@
                     headerToolbar: {
                         left: 'prev,next today',
                         center: 'title',
-                        right: 'dayGridMonth,timeGridWeek,timeGridDay,list'
+                        right: 'dayGridMonth,timeGridWeek,timeGridDay'
                     },
                     locale: 'ind',
                     timeZone: 'local',
@@ -34,6 +34,8 @@
                     eventColor: '#fff',
                     editable: true,
                     selectable: true,
+                    events: renderCalender(),
+                    height: 750,
                     select: function(info) {
                         $('#form-schedule').trigger("reset");
 
@@ -47,11 +49,107 @@
                         $('#form-schedule').attr('method','POST');
 
                         showModal('modal-schedule');
+                    },
+                    eventDrop: function(info) {
+                        Swal.fire({
+                            title: 'Ubah Jadwal?',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#7F16A7',
+                            confirmButtonText: 'Ya, Ubah',
+                        }).then(function (result) {
+                            if (result.value) {
+                                $.ajax({
+                                    url: "{{url('admin/schedule/update')}}/"+info.event.id,
+                                    type: 'POST',
+                                    data: {
+                                        date: moment(info.event.start).format('DD MMMM YYYY'),
+                                        time: moment(info.event.start).format('HH:mm:ss')
+                                    },
+                                })
+                                .done(function(res, xhr, meta) {
+                                    renderCalender()
+                                });
+                            }else{
+                                info.revert();
+                            }
+                        })
+
+                        $('.swal2-title').addClass('justify-content-center')
+                    },
+                    eventClick: function(info) {
+                        calendarDetail(info.event.id);
                     }
                 });
 
                 calendar.render();
-            }
+            },
+            renderCalender = () => {
+                if(calendar){
+                    calendar.removeAllEvents();
+                }
+
+                $.ajax({
+                    url: "{{url('admin/schedule/all')}}",
+                    type: 'GET',
+                    dataType: 'json',
+                })
+                .done(function(res, xhr, meta) {
+
+                    let schedules = [];
+
+                    $.each(res.data, function(index, data){
+                        calendar.addEvent({
+                            "id": data.id,
+                            "title": data.name,
+                            "start": data.datetime,
+                            "className": `bg-${data.color} border-${data.color} p-1 ${data.color == 'primary' ? 'text-white' : ''}`
+                        });
+                    })
+
+                    return schedules;
+
+                });
+            },
+            calendarDetail = (id) => {
+                $.ajax({
+                    url: "{{url('admin/schedule')}}/"+id,
+                    type: 'GET',
+                    dataType: 'json',
+                })
+                .done(function(res, xhr, meta) {
+                    $('.coach-image').attr('src', res.data.image_url)
+                    $('.coach-name').text(res.data.coach_name)
+                    $('.class-name').text(res.data.name)
+                    $('.package-name').text(res.data.package_type)
+                    $('.session-place').text(res.data.session ? res.data.session+'/'+res.data.session_total : '-')
+                    $('.student-name').text(res.data.student_name ? res.data.student_name : '-')
+                    $('.date-place').text(moment(res.data.datetime).format('dddd, DD MMMM YYYY'))
+                    $('.time-place').text(moment(res.data.datetime).format('HH:mm')+' - '+moment(res.data.end_datetime).format('HH:mm'))
+
+                    $('.function-btn').attr('data-id', res.data.id);
+
+                    if(res.data.status == 1){
+                        $('.btn-edit').hide()
+                        $('.btn-delete').hide()
+                        $('.btn-confirm').hide()
+                    }else if(res.data.status == 2){
+                        $('.btn-edit').show()
+                        $('.btn-delete').show()
+                        $('.btn-confirm').show()
+                    }else if(res.data.status == 3){
+                        $('.btn-edit').hide()
+                        $('.btn-delete').hide()
+                        $('.btn-confirm').hide()
+                    }else if(res.data.status == 4){
+                        $('.btn-edit').show()
+                        $('.btn-delete').show()
+                        $('.btn-confirm').hide()
+                    }
+
+                    showModal('modal-schedule-detail');
+                });
+            },
             initAction = () => {
                 $(document).on('change', '.type-class', function(){
                     if($(this).val() == 1){
@@ -82,6 +180,96 @@
                 $(document).on('change', '#classroom', function(){
                     get_coach($('#classroom').val())
                 })
+
+                $(document).on('click', '.btn-edit', function(){
+                    event.preventDefault();
+
+                    let id = $(this).attr('data-id');
+
+                    $.ajax({
+                        url: "{{url('admin/schedule-show')}}/"+id,
+                        type: 'GET',
+                        dataType: 'json',
+                    })
+                    .done(function(res, xhr, meta) {
+
+                        $('#form-schedule').trigger("reset");
+                        $('#form-schedule').attr('action', "{{url('admin/schedule')}}/"+id);
+                        $('#form-schedule').attr('method','POST');
+
+                        $('#form-schedule').find('input[name="date"]').val(moment(res.data.datetime).format('DD MMMM YYYY'));
+                        $('#form-schedule').find('input[name="time"]').val(moment(res.data.datetime).format('HH:mm:ss'));
+                        $('#form-schedule').find('input[name="platform_link"]').val(res.data.platform_link);
+                        $("input[name=type_class][value=" + 1 + "]").attr('checked', 'checked');
+
+                        get_classroom_category(res.data.classroom_category_id)
+
+                        if(res.data.sub_classroom_category_id){
+                            get_sub_classroom_category(res.data.classroom_category_id, res.data.sub_classroom_category_id)
+                            $('.parent-sub-category').removeClass('col-12')
+                        }else{
+                            $('.parent-sub-category').addClass('col-12')
+                            $('.select-sub-category').hide();
+                        }
+
+                        get_classroom_edit(res.data.classroom_category_id, res.data.sub_classroom_category_id, res.data.classroom_id)
+                        get_coach(res.data.classroom_id, res.data.coach_id)
+                        get_platform(res.data.platform_id)
+
+                        showModal('modal-schedule')
+                        hideModal('modal-schedule-detail');
+                    });
+                })
+
+                $(document).on('click', '.btn-delete', function(){
+                    let id = $(this).attr('data-id');
+
+                    Swal.fire({
+                        title: 'Hapus Jadwal?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#7F16A7',
+                        confirmButtonText: 'Ya, Hapus',
+                    }).then(function (result) {
+                        if (result.value) {
+                            $.ajax({
+                                url: "{{url('admin/schedule/delete')}}/"+id,
+                                type: 'POST',
+                            })
+                            .done(function(res, xhr, meta) {
+                                renderCalender()
+                                hideModal('modal-schedule-detail');
+                            });
+                        }
+                    })
+
+                    $('.swal2-title').addClass('justify-content-center')
+                })
+
+                $(document).on('click', '.btn-confirm', function(){
+                    let id = $(this).attr('data-id');
+
+                    Swal.fire({
+                        title: 'Konfirmasi Jadwal?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#7F16A7',
+                        confirmButtonText: 'Ya, Konfirmasi',
+                    }).then(function (result) {
+                        if (result.value) {
+                            $.ajax({
+                                url: "{{url('admin/schedule/confirm')}}/"+id,
+                                type: 'POST',
+                            })
+                            .done(function(res, xhr, meta) {
+                                renderCalender()
+                                hideModal('modal-schedule-detail');
+                            });
+                        }
+                    })
+
+                    $('.swal2-title').addClass('justify-content-center')
+                })
             },
             formSubmit = () => {
                 $('#form-schedule').submit(function(event){
@@ -104,9 +292,9 @@
                     })
                     .done(function(res, xhr, meta) {
                         toastr.success(res.message, 'Success')
-                        init_table.draw(false);
                         arr_path = [];
-                        hideModal('modal-session-video-detail');
+                        hideModal('modal-schedule');
+                        renderCalender()
                     })
                     .fail(function(res, error) {
                         toastr.error(res.responseJSON.message, 'Failed')
@@ -122,7 +310,7 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    url: "{{url('admin/master/theory/file')}}",
+                    url: "{{url('media/file')}}",
                     paramName: "file",
                     maxFiles: 1,
                     maxFilesize: 2,
@@ -144,7 +332,7 @@
                                 arr_path.splice(index, 1);
 
                                 $.ajax({
-                                    url: "{{url('admin/master/theory/file')}}/"+arr_data['path_id'],
+                                    url: "{{url('media/file')}}/"+arr_data['path_id'],
                                     type: 'DELETE',
                                     dataType: 'json',
                                 })
@@ -220,7 +408,9 @@
 
                         $('#sub-classroom-category').html(element);
                         $('.parent-sub-category').addClass('col-md-6');
-                        get_classroom()
+                        if(!select_id && !id){
+                            get_classroom()
+                        }
                     }else{
                         $('.select-sub-category').hide();
                         $('.parent-sub-category').removeClass('col-md-6');
@@ -274,6 +464,10 @@
                 })
 
                 if(category_id == ''){
+                    category_id = undefined;
+                }
+
+                if(sub_category_id == ''){
                     category_id = undefined;
                 }
 

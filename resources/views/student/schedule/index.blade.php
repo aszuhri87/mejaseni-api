@@ -74,7 +74,7 @@
             <ul class="nav nav-tabs nav-bold nav-tabs-line nav-tabs-line-3x">
                 {{-- reguler class --}}
                 <li class="nav-item mr-3">
-                    <a class="nav-link active" data-toggle="tab" href="#reguler-class">
+                    <a class="nav-link active tab-regular" data-toggle="tab" href="#reguler-class">
                         <span class="nav-icon">
                             <span class="svg-icon"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-02-01-052524/theme/html/demo1/dist/../src/media/svg/icons/Clothes/Crown.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -92,7 +92,7 @@
 
                 {{-- special class --}}
                 <li class="nav-item mr-3">
-                    <a class="nav-link" data-toggle="tab" href="#special-class">
+                    <a class="nav-link tab-special" data-toggle="tab" href="#special-class">
                         <span class="nav-icon">
                             <span class="svg-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -111,7 +111,7 @@
 
                 {{-- master lesson class --}}
                 <li class="nav-item mr-3">
-                    <a class="nav-link" data-toggle="tab" href="#master-lesson-class">
+                    <a class="nav-link tab-master-lesson" data-toggle="tab" href="#master-lesson-class">
                         <span class="nav-icon">
                             <span class="svg-icon"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-02-01-052524/theme/html/demo1/dist/../src/media/svg/icons/Clothes/Crown.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -159,7 +159,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group">
-                                    <div class="mt-5" id="calendar-reguler"></div>
+                                    <div class="mt-5" id="calendar-regular"></div>
                                 </div>
                             </div>
                         </div>

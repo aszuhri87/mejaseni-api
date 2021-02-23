@@ -133,6 +133,12 @@ class BaseMenu extends Controller
                                 'url' => 'admin/master/courses/session-video',
                                 'permission' => 'video'
                             ],
+                            [
+                                'key' => 'master-lesson',
+                                'title' => 'Master Lesson',
+                                'url' => 'admin/master/courses/master-lesson',
+                                'permission' => 'master_lesson'
+                            ],
                         ],
                     ],
                     [
@@ -164,6 +170,12 @@ class BaseMenu extends Controller
                         'title' => 'Coach',
                         'url' => 'admin/master/coach',
                         'permission' => 'coach'
+                    ],
+                    [
+                        'key' => 'guest-star',
+                        'title' => 'Guest Star',
+                        'url' => 'admin/master/guest-star',
+                        'permission' => 'guest_star'
                     ],
                     [
                         'key' => 'student',
@@ -321,18 +333,18 @@ class BaseMenu extends Controller
                 'title' => 'Materi',
                 'permission' => 'student_theory',
                 'url' => '#',
-                'icon' => $this->icon('materi'),
+                'icon' => $this->icon('theory'),
                 'children' => [
                     [
                         'key' => 'class_theory',
                         'title' => 'Materi Kelas',
-                        'url' => 'student/theory-class',
+                        'url' => 'student/theory',
                         'permission' => 'student_theory',
                     ],
                     [
                         'key' => 'class_video',
                         'title' => 'Video Kelas',
-                        'url' => 'student/video-class',
+                        'url' => 'student/video',
                         'permission' => 'student_theory',
                     ],
                 ]
@@ -354,7 +366,7 @@ class BaseMenu extends Controller
             [
                 'key' => 'new_package',
                 'title' => 'Buy New Package',
-                'url' => 'student/new_package',
+                'url' => 'student/new-package',
                 'permission' => 'student_new_package',
                 'icon' => $this->icon('exercise'),
             ],

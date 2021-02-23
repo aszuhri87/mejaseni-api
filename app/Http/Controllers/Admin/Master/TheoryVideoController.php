@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 use App\Models\TheoryVideo;
+use App\Models\TheoryVideoFile;
 
 use DataTables;
 use Storage;
@@ -85,6 +86,96 @@ class TheoryVideoController extends BaseMenu
     {
         try {
             $result = TheoryVideo::find($id);
+
+            DB::transaction(function () use($result){
+                $result->delete();
+            });
+
+            if ($result->trashed()) {
+                return response([
+                    "message"   => 'Successfully deleted!'
+                ], 200);
+            }
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function file_dt($id)
+    {
+        $path = Storage::disk('s3')->url('/');
+
+        $data = DB::table('theory_video_files')
+            ->select([
+                'theory_video_files.*',
+                DB::raw("CONCAT('{$path}',url) as file_url"),
+            ])
+            ->whereNull("theory_video_files.deleted_at")
+            ->where('theory_video_files.session_video_id', $id)
+            ->get();
+
+        return DataTables::of($data)->addIndexColumn()->make(true);
+    }
+
+    public function file_store(Request $request)
+    {
+        try {
+            $result = DB::transaction(function () use($request){
+                $result = TheoryVideoFile::create([
+                    'session_video_id' => $request->session_video_id,
+                    'name' => $request->name,
+                    'url' => $request->file,
+                    'description' => $request->description,
+                ]);
+
+                return $result;
+            });
+
+            return response([
+                "data"      => $result,
+                "message"   => 'Successfully saved!'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function file_update(Request $request, $id)
+    {
+        try {
+            $result = DB::transaction(function () use($request, $id){
+                $result = TheoryVideoFile::find($id)->update([
+                    'session_video_id' => $request->session_video_id,
+                    'name' => $request->name,
+                    'url' => $request->file,
+                    'description' => $request->description,
+                ]);
+
+                return $result;
+            });
+
+            return response([
+                "data"      => $result,
+                "message"   => 'Successfully updated!'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function file_destroy($id)
+    {
+        try {
+            $result = TheoryVideoFile::find($id);
 
             DB::transaction(function () use($result){
                 $result->delete();

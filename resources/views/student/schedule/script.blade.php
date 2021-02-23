@@ -1,12 +1,14 @@
 <script type="text/javascript">
     var Page = function() {
         var _componentPage = function(){
-            var init_table, calendar;
+            var init_table, calendar, calendar_regular, calendar_special;
 
             $(document).ready(function() {
                 formSubmit();
                 initAction();
                 initCalendarReguler();
+                initCalendarSpecial();
+                // renderCalendarSpecial();
             });
 
             const initAction = () => {
@@ -64,6 +66,21 @@
                     })
                     $('.swal2-title').addClass('justify-content-center')
                 });
+
+                $(document).on('click','.tab-regular',function(event){
+                    event.preventDefault();
+
+                });
+
+                $(document).on('click','.tab-special',function(event){
+                    event.preventDefault();
+
+                });
+
+                $(document).on('click','.tab-master-lesson',function(event){
+                    event.preventDefault();
+
+                });
             },
             formSubmit = () => {
                 $('#form-schedule').submit(function(event){
@@ -88,15 +105,66 @@
                     });
                 });
             },
+            initCalendarSpecial = () => {
+                var element = document.getElementById('calendar-special');
+                if(calendar){
+                    calendar.removeAllEvents();
+                }
+                calendar = new FullCalendar.Calendar(element, {
+                    initialView: 'dayGridMonth',
+                    headerToolbar: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'dayGridMonth,timeGridWeek,timeGridDay,list'
+                    },
+                    locale: 'ind',
+                    timeZone: 'Asia/Jakarta',
+                    events: renderCalendarSpecial(),
+                    eventClick: function(info) {
+                        // calendarDetail(info.event.id);
+                    }
+                });
+                calendar.render();
+                // $.ajax({
+                //     url: `{{ url('student/schedule/special-class') }}`,
+                //     type: `GET`,
+                // })
+                // .done(function(res, xhr, meta) {
+                //     if(res.status == 200){
+                //         data = res.data;
+                //         calendar_special = new FullCalendar.Calendar(element, {
+                //             initialView: 'dayGridMonth',
+                //             headerToolbar: {
+                //                 left: 'prev,next today',
+                //                 center: 'title',
+                //                 right: 'dayGridMonth,timeGridWeek,timeGridDay,list'
+                //             },
+                //             locale: 'ind',
+                //             timeZone: 'Asia/Jakarta',
+                //             events: data,
+                //             eventClick: function(info) {
+                //                 // calendarDetail(info.event.id);
+                //             }
+                //         });
+                //         calendar_special.render();
+                //     }
+                // })
+                // .fail(function(res, error) {
+                //     toastr.error(res.responseJSON.message, 'Failed')
+                // })
+                // .always(function() {
+
+                // });
+            },
             initCalendarReguler = () => {
-                var element = document.getElementById('calendar-reguler');
+                var element = document.getElementById('calendar-regular');
                 $.ajax({
                     url: `{{ url('student/schedule/regular-class') }}`,
                     type: `GET`,
                 })
                 .done(function(res, xhr, meta) {
                     if(res.status == 200){
-                        var calendar = new FullCalendar.Calendar(element, {
+                        calendar_regular = new FullCalendar.Calendar(element, {
                             initialView: 'dayGridMonth',
                             headerToolbar: {
                                 left: 'prev,next today',
@@ -107,7 +175,7 @@
                             timeZone: 'Asia/Jakarta',
                             events: res.data
                         });
-                        calendar.render();
+                        calendar_regular.render();
                     }
                 })
                 .fail(function(res, error) {
@@ -116,8 +184,38 @@
                 .always(function() {
 
                 });
+            },
+            renderCalendarSpecial = () => {
+                if(calendar_special){
+                    calendar_special.removeAllEvents();
+                }
+                $.ajax({
+                    url: `{{ url('student/schedule/special-class') }}`,
+                    type: `GET`,
+                })
+                .done(function(res, xhr, meta) {
+                    if(res.status == 200){
+                        let data = res.data;
+                        let schedules = [];
 
+                        $.each(data, function(index, data){
+                            calendar.addEvent({
+                                "id": data.id,
+                                "title": data.name,
+                                "start": data.datetime,
+                                "className": `bg-${data.color} border-${data.color} p-1 ${data.color == 'primary' ? 'text-white' : ''}`
+                            });
+                        })
 
+                        return schedules;
+                    }
+                })
+                .fail(function(res, error) {
+                    toastr.error(res.responseJSON.message, 'Failed')
+                })
+                .always(function() {
+
+                });
             }
         };
 
