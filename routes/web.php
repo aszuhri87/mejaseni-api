@@ -41,6 +41,7 @@ use App\Http\Controllers\Admin\Schedule\ScheduleController;
 */
 use App\Http\Controllers\Coach\DashboardController;
 use App\Http\Controllers\Coach\TheoryController as CoachTheoryController;
+use App\Http\Controllers\Coach\Exercise\AssignmentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -125,6 +126,8 @@ Route::group(['middleware' => ['auth-handling']], function () {
                 Route::post('session-video/dt', [SessionVideoController::class, 'dt']);
                 Route::resource('session-video', SessionVideoController::class);
 
+                Route::get('master-lesson/guest-star/{id}', [MasterLessonController::class, 'get_guest_star']);
+                Route::delete('master-lesson/guest-star/{id}', [MasterLessonController::class, 'destroy_guest_star']);
                 Route::post('master-lesson/dt', [MasterLessonController::class, 'dt']);
                 Route::resource('master-lesson', MasterLessonController::class);
             });
@@ -162,6 +165,8 @@ Route::group(['middleware' => ['auth-handling']], function () {
 
             Route::post('student/dt', [StudentController::class, 'dt']);
             Route::post('student/update/{id}', [StudentController::class, 'update']);
+            Route::post('student/actived/{id}', [StudentController::class, 'actived']);
+            Route::post('student/verified/{id}', [StudentController::class, 'verified']);
             Route::resource('student', StudentController::class);
 
             Route::post('media-conference/dt', [PlatformController::class, 'dt']);
@@ -175,6 +180,9 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::post('expertise/dt', [ExpertiseController::class, 'dt']);
             Route::resource('expertise', ExpertiseController::class);
         });
+
+        Route::get('schedule/master-lesson/{id}', [ScheduleController::class, 'show_master_lesson']);
+        Route::post('schedule/master-lesson/update/{id}', [ScheduleController::class, 'update_time_master_lesson']);
 
         Route::get('schedule', [ScheduleController::class, 'index']);
         Route::get('schedule/all', [ScheduleController::class, 'all']);
@@ -201,8 +209,18 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::post('theory/file', [CoachTheoryController::class, 'theory_file']);
         Route::delete('theory/file/{id}', [CoachTheoryController::class, 'theory_file_delete']);
         Route::get('theory/list/{classroom_id}/{session_id}', [CoachTheoryController::class, 'theory_list']);
-        Route::get('theory/download/{path}', [CoachTheoryController::class, 'download']);
-        // Route::resource('theory', CoachTheoryController::class);
+        Route::get('theory/download/{id}', [CoachTheoryController::class, 'theory_download']);
+        Route::resource('theory', CoachTheoryController::class);
+        
+        Route::group(['prefix' => 'exercise'], function () {
+            
+            Route::post('assignment/file', [AssignmentController::class, 'assignment_file']);
+            Route::delete('assignment/file/{id}', [AssignmentController::class, 'assignment_file_delete']);
+            Route::get('assignment/list/{classroom_id}/{session_id}', [AssignmentController::class, 'assignment_list']);
+            Route::get('assignment/download/{id}', [AssignmentController::class, 'assignment_download']);
+            Route::resource('assignment', AssignmentController::class);    
+    
+        });
 
     });
 
@@ -277,6 +295,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::get('get-platform',[PublicController::class, 'get_platform']);
         Route::get('get-classroom-coach', [PublicController::class, 'get_classroom_coach']);
         Route::get('get-session-coach/{classroom_id}', [PublicController::class, 'get_session_coach']);
+        Route::get('get-guest-star', [PublicController::class, 'get_guest_star']);
     });
 
 });

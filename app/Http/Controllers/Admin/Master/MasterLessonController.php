@@ -7,11 +7,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 use App\Models\MasterLesson;
+use App\Models\GuestStarMasterLesson;
 
 use DataTables;
 use Storage;
 
-class MasterLessonController extends Controller
+class MasterLessonController extends BaseMenu
 {
     public function index()
     {
@@ -38,20 +39,17 @@ class MasterLessonController extends Controller
     {
         $path = Storage::disk('s3')->url('/');
 
-        $data = DB::table('guest_stars')
+        $data = DB::table('master_lessons')
             ->select([
-                'guest_stars.id',
-                'guest_stars.coach_id',
-                'guest_stars.expertise_id',
-                'guest_stars.name',
-                'guest_stars.image',
-                'guest_stars.description',
-                DB::raw("CONCAT('{$path}',guest_stars.image) as image_url"),
-                'expertises.name as expertise'
+                'master_lessons.*',
+                'classroom_categories.name as category',
+                'sub_classroom_categories.name as sub_category',
+                DB::raw("CONCAT('{$path}',poster) as image_url"),
             ])
-            ->leftJoin('expertises','expertises.id','=', 'guest_stars.expertise_id')
+            ->leftJoin('classroom_categories','classroom_categories.id','=','master_lessons.classroom_category_id')
+            ->leftJoin('sub_classroom_categories','sub_classroom_categories.id','=','master_lessons.sub_classroom_category_id')
             ->whereNull([
-                'guest_stars.deleted_at'
+                'master_lessons.deleted_at'
             ])
             ->get();
 
@@ -61,38 +59,48 @@ class MasterLessonController extends Controller
     public function store(Request $request)
     {
         try {
-            if(!isset($request->file) && !isset($request->is_coach)){
+            if(!isset($request->file)){
                 return response([
-                    "message"   => 'Gambar harus diisi!'
+                    "message"   => 'Poster harus diisi!'
                 ], 400);
             }
 
-            if(isset($request->is_coach)){
-                $coach = DB::table('coaches')
-                    ->where('id', $request->coach_id)
-                    ->first();
+            $sub_category_check = DB::table('sub_classroom_categories')
+                ->select([
+                    'id',
+                    'name'
+                ])
+                ->where('classroom_category_id', $request->classroom_category_id)
+                ->whereNull('deleted_at')
+                ->count();
 
-                if(!$coach){
-                    return response([
-                        "message"   => 'Coach harus diisi!'
-                    ], 400);
-                }
+            if($sub_category_check > 0 && !isset($request->sub_classroom_category_id)){
+                return response([
+                    "message"   => 'Sub Kategori harus diisi!'
+                ], 400);
             }
 
             $result = DB::transaction(function () use($request){
-                if(isset($request->is_coach)){
-                    $coach = DB::table('coaches')
-                        ->where('id', $request->coach_id)
-                        ->first();
-                }
-
-                $result = GuestStar::create([
-                    'coach_id' => $request->coach_id,
-                    'expertise_id' => $request->is_coach ? $coach->expertise_id : $request->expertise_id,
-                    'name' => $request->is_coach ? $coach->name : $request->name,
-                    'image' => $request->is_coach ? $coach->image : $request->file,
-                    'description' => $request->is_coach ? $coach->description : $request->description,
+                $result = MasterLesson::create([
+                    'classroom_category_id' => $request->classroom_category_id,
+                    'sub_classroom_category_id' => $request->sub_classroom_category_id,
+                    'price' => $request->price,
+                    'datetime' => date('Y-m-d H:i:s', strtotime($request->date.' '.$request->time)),
+                    'platform_id' => $request->platform_id,
+                    'name' => $request->name,
+                    'poster' => $request->file,
+                    'slot' => $request->slot,
+                    'platform_link' => $request->platform_link,
                 ]);
+
+                if(count($request->guests) > 0){
+                    foreach ($request->guests as $key => $value) {
+                        GuestStarMasterLesson::create([
+                            'master_lesson_id' => $result->id,
+                            'guest_star_id' => $value,
+                        ]);
+                    }
+                }
 
                 return $result;
             });
@@ -137,7 +145,7 @@ class MasterLessonController extends Controller
                         ->first();
                 }
 
-                $result = GuestStar::find($id)->update([
+                $result = MasterLesson::find($id)->update([
                     'coach_id' => $request->coach_id,
                     'expertise_id' => $request->is_coach ? $coach->expertise_id : $request->expertise_id,
                     'name' => $request->is_coach ? $coach->name : $request->name,
@@ -163,7 +171,7 @@ class MasterLessonController extends Controller
     public function destroy($id)
     {
         try {
-            $result = GuestStar::find($id);
+            $result = MasterLesson::find($id);
 
             DB::transaction(function () use($result){
                 $result->delete();
@@ -174,6 +182,47 @@ class MasterLessonController extends Controller
                     "message"   => 'Successfully deleted!'
                 ], 200);
             }
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function get_guest_star($id)
+    {
+        try {
+            $result = GuestStarMasterLesson::select([
+                    'guest_star_master_lessons.id',
+                    'guest_star_master_lessons.master_lesson_id',
+                    'guest_stars.name'
+                ])
+                ->leftJoin('guest_stars', 'guest_stars.id','=','guest_star_master_lessons.guest_star_id')
+                ->where('master_lesson_id', $id)
+                ->get();
+
+            return response([
+                "data"      => $result,
+                "message"   => 'OK'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function destroy_guest_star($id)
+    {
+        try {
+            $result = GuestStarMasterLesson::find($id)->delete();
+
+            return response([
+                "data"      => $result,
+                "message"   => 'OK'
+            ], 200);
         } catch (Exception $e) {
             throw new Exception($e);
             return response([

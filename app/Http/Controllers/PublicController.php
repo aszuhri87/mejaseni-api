@@ -55,6 +55,29 @@ class PublicController extends Controller
         }
     }
 
+    public function get_guest_star()
+    {
+        try {
+            $result = DB::table('guest_stars')
+                ->select([
+                    'id',
+                    'name'
+                ])
+                ->whereNull('deleted_at')
+                ->get();
+
+            return response([
+                "data"      => $result,
+                "message"   => 'OK'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
     public function get_coach_by_class($id)
     {
         try {

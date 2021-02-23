@@ -34,7 +34,6 @@
                     eventColor: '#fff',
                     editable: true,
                     selectable: true,
-                    events: renderCalender(),
                     height: 750,
                     select: function(info) {
                         $('#form-schedule').trigger("reset");
@@ -51,36 +50,70 @@
                         showModal('modal-schedule');
                     },
                     eventDrop: function(info) {
-                        Swal.fire({
-                            title: 'Ubah Jadwal?',
-                            icon: 'warning',
-                            showCancelButton: true,
-                            confirmButtonColor: '#7F16A7',
-                            confirmButtonText: 'Ya, Ubah',
-                        }).then(function (result) {
-                            if (result.value) {
-                                $.ajax({
-                                    url: "{{url('admin/schedule/update')}}/"+info.event.id,
-                                    type: 'POST',
-                                    data: {
-                                        date: moment(info.event.start).format('DD MMMM YYYY'),
-                                        time: moment(info.event.start).format('HH:mm:ss')
-                                    },
-                                })
-                                .done(function(res, xhr, meta) {
-                                    renderCalender()
-                                });
-                            }else{
-                                info.revert();
-                            }
-                        })
+                        if(info.event.extendedProps.source_type == 1){
+                            Swal.fire({
+                                title: 'Ubah Jadwal?',
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#7F16A7',
+                                confirmButtonText: 'Ya, Ubah',
+                            }).then(function (result) {
+                                if (result.value) {
+                                    $.ajax({
+                                        url: "{{url('admin/schedule/update')}}/"+info.event.id,
+                                        type: 'POST',
+                                        data: {
+                                            date: moment(info.event.start).format('DD MMMM YYYY'),
+                                            time: moment(info.event.start).format('HH:mm:ss')
+                                        },
+                                    })
+                                    .done(function(res, xhr, meta) {
+                                        renderCalender()
+                                    });
+                                }else{
+                                    info.revert();
+                                }
+                            })
 
-                        $('.swal2-title').addClass('justify-content-center')
+                            $('.swal2-title').addClass('justify-content-center')
+                        }else{
+                            Swal.fire({
+                                title: 'Ubah Jadwal?',
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#7F16A7',
+                                confirmButtonText: 'Ya, Ubah',
+                            }).then(function (result) {
+                                if (result.value) {
+                                    $.ajax({
+                                        url: "{{url('admin/schedule/master-lesson/update')}}/"+info.event.id,
+                                        type: 'POST',
+                                        data: {
+                                            date: moment(info.event.start).format('DD MMMM YYYY'),
+                                            time: moment(info.event.start).format('HH:mm:ss')
+                                        },
+                                    })
+                                    .done(function(res, xhr, meta) {
+                                        renderCalender()
+                                    });
+                                }else{
+                                    info.revert();
+                                }
+                            })
+
+                            $('.swal2-title').addClass('justify-content-center')
+                        }
                     },
                     eventClick: function(info) {
-                        calendarDetail(info.event.id);
+                        if(info.event.extendedProps.source_type == 1){
+                            calendarDetail(info.event.id);
+                        }else{
+                            calendarMasterLessonDetail(info.event.id);
+                        }
                     }
                 });
+
+                renderCalender()
 
                 calendar.render();
             },
@@ -96,18 +129,15 @@
                 })
                 .done(function(res, xhr, meta) {
 
-                    let schedules = [];
-
                     $.each(res.data, function(index, data){
                         calendar.addEvent({
                             "id": data.id,
                             "title": data.name,
                             "start": data.datetime,
-                            "className": `bg-${data.color} border-${data.color} p-1 ${data.color == 'primary' ? 'text-white' : ''}`
+                            "className": `bg-${data.color} border-${data.color} p-1 ${data.color == 'primary' || data.color == 'info' ? 'text-white' : ''}`,
+                            "source_type": data.type
                         });
                     })
-
-                    return schedules;
 
                 });
             },
@@ -148,6 +178,40 @@
                     }
 
                     showModal('modal-schedule-detail');
+                });
+            },
+            calendarMasterLessonDetail = (id) => {
+                $.ajax({
+                    url: "{{url('admin/schedule/master-lesson')}}/"+id,
+                    type: 'GET',
+                    dataType: 'json',
+                })
+                .done(function(res, xhr, meta) {
+                    $('.ml-class-name').text(res.data.name)
+                    $('.ml-slot-place').text(res.data.slot_uses+'/'+res.data.slot)
+                    $('.ml-date-place').text(moment(res.data.datetime).format('dddd, DD MMMM YYYY'))
+                    $('.ml-time-place').text(moment(res.data.datetime).format('HH:mm'))
+
+                    let element = '';
+                    $.each(res.guest_stars, function(index, data){
+                        element += `<div class="col-12 mt-2">
+                            <div class="d-flex align-items-center">
+                                <div class="symbol symbol-40 symbol-light-success mr-5">
+                                    <span class="symbol-label">
+                                        <img src="${data.image_url}" width="40" height="40" class="align-self-center rounded" alt=""/>
+                                    </span>
+                                </div>
+                                <div class="d-flex flex-column flex-grow-1 font-weight-bold">
+                                    <span class="text-muted">Guest Star</span>
+                                    <p class="text-dark mb-1 font-size-lg">${data.name}</p>
+                                </div>
+                            </div>
+                        </div> `
+                    })
+
+                    $('#ml-coach-place').html(element);
+
+                    showModal('modal-schedule-detail-ml');
                 });
             },
             initAction = () => {

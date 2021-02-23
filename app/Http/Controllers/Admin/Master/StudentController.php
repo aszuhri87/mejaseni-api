@@ -46,7 +46,6 @@ class StudentController extends BaseMenu
                 'students.*',
                 DB::raw("CONCAT('{$path}',students.image) as image_url"),
                 DB::raw("COUNT(student_classrooms.id) AS class"),
-                DB::raw("COUNT(student_classrooms.id) AS status"),
             ])
             ->whereNull([
                 'students.deleted_at'
@@ -77,6 +76,8 @@ class StudentController extends BaseMenu
                     'email' => $request->email,
                     'password' => Hash::make($request->password),
                     'phone' => $request->phone,
+                    'active' => true,
+                    'verified' => true,
                     'description' => $request->profil_description,
                     'expertise' => $expertise->name,
                     'image' => $path,
@@ -201,6 +202,61 @@ class StudentController extends BaseMenu
             throw new Exception($e);
             return response([
                 "status" => 400,
+                "message" => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function verified(Request $request, $id)
+    {
+
+        try {
+            $result = DB::transaction(function () use ($request, $id) {
+
+                $student = Student::find($id);
+                $update = [
+                    'verified' => $request->verified,
+                ];
+                $student->update($update);
+
+                return $student;
+            });
+
+            return response([
+                "data"      => $result,
+                "status"      => 200,
+                "message"   => 'Successfully updated!'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message" => $e->getMessage(),
+            ]);
+        }
+    }
+    public function actived(Request $request, $id)
+    {
+
+        try {
+            $result = DB::transaction(function () use ($request, $id) {
+
+                $student = Student::find($id);
+                $update = [
+                    'actived' => $request->actived,
+                ];
+                $student->update($update);
+
+                return $student;
+            });
+
+            return response([
+                "data"      => $result,
+                "status"      => 200,
+                "message"   => 'Successfully updated!'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
                 "message" => $e->getMessage(),
             ]);
         }

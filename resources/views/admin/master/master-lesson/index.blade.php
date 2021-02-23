@@ -1,13 +1,11 @@
 @extends('layouts.app')
-@push('style')
-<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.fancytree/2.35.0/skin-win8/ui.fancytree.min.css">
-@endpush
+
 @section('content')
 <div class="card">
     <div class="card-body">
         <div class="d-flex justify-content-between align-items-center">
             <div class="my-title">
-                <h4 class="m-0 p-0">Student</h4>
+                <h4 class="m-0 p-0">Master Lesson</h4>
             </div>
             <div class="my-toolbar d-flex">
                 <div class="form-group">
@@ -65,10 +63,12 @@
             <thead>
                 <tr>
                     <th>No</th>
-                    <th width="40%">Nama</th>
-                    <th width="20%">Class</th>
-                    <th width="20%">Actived</th>
-                    <th width="20%">Actions</th>
+                    <th width="30%">Name</th>
+                    <th width="20%">Kategori</th>
+                    <th width="15%">Tanggal</th>
+                    <th width="10%">Slot</th>
+                    <th width="15%">Harga</th>
+                    <th width="10%">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -77,11 +77,9 @@
     </div>
 </div>
 
-@include('admin.master.student.modal')
+@include('admin.master.master-lesson.modal')
 @endsection
 
 @push('script')
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.fancytree/2.35.0/jquery.fancytree-all.min.js"></script>
-    @include('admin.master.student.script')
+    @include('admin.master.master-lesson.script')
 @endpush
