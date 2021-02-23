@@ -23,7 +23,9 @@ class Student extends Authenticatable
         'password',
         'phone',
         'image',
-        'expertise'
+        'expertise',
+        'actived',
+        'verified'
     ];
 
     protected $dates = ['deleted_at'];
