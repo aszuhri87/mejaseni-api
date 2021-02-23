@@ -137,8 +137,6 @@ class TheoryController extends BaseMenu
             DB::transaction(function () use ($result) {
                 Storage::disk('s3')->delete($result->path);
                 $result->delete();
-
-                $result->delete();
             });
 
             if ($result->trashed()) {
@@ -158,7 +156,6 @@ class TheoryController extends BaseMenu
     {
         try {
             $path = Storage::disk('s3')->put('media', $request->file);
-            $url = Storage::disk('s3')->url('/');
 
             $temp = TemporaryMedia::create([
                 'path' => $path
