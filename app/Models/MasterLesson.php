@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\Uuid;
 
-class CoachSchedule extends Model
+class MasterLesson extends Model
 {
     use HasFactory, Uuid, SoftDeletes;
 
@@ -16,12 +16,11 @@ class CoachSchedule extends Model
     public $keyType = 'string';
 
     protected $fillable = [
-        'coach_classroom_id',
-        'admin_id',
         'platform_id',
-        'platform_link',
-        'accepted',
-        'datetime'
+        'name',
+        'poster',
+        'slot',
+        'platform_link'
     ];
 
     protected $dates = ['deleted_at'];

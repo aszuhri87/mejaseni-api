@@ -13,6 +13,7 @@
                 getSosmed();
                 getExpertise();
                 initTreeTable();
+
                 selectdisplay1 = new SlimSelect({
                     select: '#selectdisplay1',
                     closeOnSelect: false
@@ -21,6 +22,9 @@
                     select: '#selectdisplay2',
                     closeOnSelect: false
                 });
+
+                getSpesialClass();
+                getRegulerClass();
             });
 
             const initTable = () => {
@@ -442,30 +446,25 @@
                     .done(function(res, xhr, meta) {
 
                         $.each(res.data, function(index, data) {
-                            if(init_package_type == 0){
-                                init_package_type = data.package_type
+                            if(data.package_type==1){
                                 data1[index] = data.classroom_id;
-                                package_type_1 = data.package_type;
-                            }
-                            else if(init_package_type == data.package_type){
-                                data1[index] = data.classroom_id;
-                            }
-                            else{
-                                if(increment==0){
-                                    $('.other-package').show();
-                                    package_type_2 = data.package_type;
-
-                                }
+                            }else{
                                 data2[increment] = data.classroom_id;
                                 increment++;
                             }
                         });
-                        if(package_type_1){
-                            $('#package1').val(package_type_1).change();
+
+                        if(data1.length>0){
+                            selectdisplay1.set(data1);
+                        }else{
+                            selectdisplay1.setData([]);
                         }
-                        if(package_type_2){
-                            $('#package2').val(package_type_2).change();
+                        if(data2.length>0){
+                            selectdisplay2.set(data2);
+                        }else{
+                            selectdisplay2.setData([]);
                         }
+
                     })
                     .fail(function(res, error) {
                         if (res.status == 400 || res.status == 422) {
@@ -490,127 +489,6 @@
 
                     showModal('modal-config');
                 });
-
-                $(document).on('change','.package',function(event){
-                    event.preventDefault();
-                    if($(this).val()){
-                        if($(this).data('number') == 1){
-                            selectdisplay1.setData([]);
-                            $.ajax({
-                                url: `{{ url('public/get-class') }}/${$(this).val()}`,
-                                type: `GET`,
-                            })
-                            .done(function(res, xhr, meta) {
-                                let element = ``;
-                                $.each(res.data, function(index, data) {
-                                    element += `<option value="${data.id}">${data.name}</option>`
-                                });
-                                $('#selectdisplay1').html(element);
-
-                                if(selectdisplay1){
-                                    selectdisplay1.destroy();
-                                }
-
-                                selectdisplay1 = new SlimSelect({
-                                    select: '#selectdisplay1',
-                                    closeOnSelect: false
-                                });
-                                selectdisplay1.set(data1);
-                            })
-                            .fail(function(res, error) {
-                                if (res.status == 400 || res.status == 422) {
-                                    $.each(res.responseJSON.errors, function(index, err) {
-                                        if (Array.isArray(err)) {
-                                            $.each(err, function(index, val) {
-                                                toastr.error(val, 'Failed')
-                                            });
-                                        }
-                                        else {
-                                            toastr.error(err, 'Failed')
-                                        }
-                                    });
-                                }
-                                else {
-                                    toastr.error(res.responseJSON.message, 'Failed')
-                                }
-                            })
-                            .always(function() {
-
-                            });
-                        }
-                        else{
-                            selectdisplay2.setData([]);
-                            $.ajax({
-                                url: `{{ url('public/get-class') }}/${$(this).val()}`,
-                                type: `GET`,
-                            })
-                            .done(function(res, xhr, meta) {
-                                let element = ``;
-                                $.each(res.data, function(index, data) {
-                                    element += `<option value="${data.id}">${data.name}</option>`
-                                });
-                                $('#selectdisplay2').html(element);
-
-                                if(selectdisplay2){
-                                    selectdisplay2.destroy();
-                                }
-
-                                selectdisplay2 = new SlimSelect({
-                                    select: '#selectdisplay2',
-                                    closeOnSelect: false
-                                });
-
-                                selectdisplay2.set(data2);
-                            })
-                            .fail(function(res, error) {
-                                if (res.status == 400 || res.status == 422) {
-                                    $.each(res.responseJSON.errors, function(index, err) {
-                                        if (Array.isArray(err)) {
-                                            $.each(err, function(index, val) {
-                                                toastr.error(val, 'Failed')
-                                            });
-                                        }
-                                        else {
-                                            toastr.error(err, 'Failed')
-                                        }
-                                    });
-                                }
-                                else {
-                                    toastr.error(res.responseJSON.message, 'Failed')
-                                }
-                            })
-                            .always(function() {
-
-                            });
-                        }
-                    }
-                });
-
-                $(document).on('change','#package1',function(event){
-                    event.preventDefault();
-                    let package1 = $(this).val();
-                    if(package1 == 1){
-                        $('#package2').html(`
-                            <option value="">Pilih Package</option>
-                            <option value="2">Reguler</option>
-                        `);
-                    }
-                    else{
-                        $('#package2').html(`
-                            <option value="">Pilih Package</option>
-                            <option value="1">Spesial</option>
-                        `);
-                    }
-
-                    if(selectdisplay2){
-                        selectdisplay2.destroy();
-                    }
-
-                    selectdisplay2 = new SlimSelect({
-                        select: '#selectdisplay2',
-                        closeOnSelect: false
-                    });
-                })
             },
             getCoachSosmed = (coach_id) => {
                 $.ajax({
@@ -801,6 +679,95 @@
                     .always(function() {
                         btn_loading('stop')
                     });
+                });
+            },
+            getSpesialClass = () => {
+                selectdisplay1.setData([]);
+                $.ajax({
+                    url: `{{ url('public/get-class') }}/1`,
+                    type: `GET`,
+                })
+                .done(function(res, xhr, meta) {
+                    let element = ``;
+                    $.each(res.data, function(index, data) {
+                        element += `<option value="${data.id}">${data.name}</option>`
+                    });
+                    $('#selectdisplay1').html(element);
+
+                    if(selectdisplay1){
+                        selectdisplay1.destroy();
+                    }
+
+                    selectdisplay1 = new SlimSelect({
+                        select: '#selectdisplay1',
+                        closeOnSelect: false
+                    });
+                    selectdisplay1.set(data1);
+                })
+                .fail(function(res, error) {
+                    if (res.status == 400 || res.status == 422) {
+                        $.each(res.responseJSON.errors, function(index, err) {
+                            if (Array.isArray(err)) {
+                                $.each(err, function(index, val) {
+                                    toastr.error(val, 'Failed')
+                                });
+                            }
+                            else {
+                                toastr.error(err, 'Failed')
+                            }
+                        });
+                    }
+                    else {
+                        toastr.error(res.responseJSON.message, 'Failed')
+                    }
+                })
+                .always(function() {
+
+                });
+            },
+            getRegulerClass = () => {
+                selectdisplay2.setData([]);
+                $.ajax({
+                    url: `{{ url('public/get-class') }}/2`,
+                    type: `GET`,
+                })
+                .done(function(res, xhr, meta) {
+                    let element = ``;
+                    $.each(res.data, function(index, data) {
+                        element += `<option value="${data.id}">${data.name}</option>`
+                    });
+                    $('#selectdisplay2').html(element);
+
+                    if(selectdisplay2){
+                        selectdisplay2.destroy();
+                    }
+
+                    selectdisplay2 = new SlimSelect({
+                        select: '#selectdisplay2',
+                        closeOnSelect: false
+                    });
+
+                    selectdisplay2.set(data2);
+                })
+                .fail(function(res, error) {
+                    if (res.status == 400 || res.status == 422) {
+                        $.each(res.responseJSON.errors, function(index, err) {
+                            if (Array.isArray(err)) {
+                                $.each(err, function(index, val) {
+                                    toastr.error(val, 'Failed')
+                                });
+                            }
+                            else {
+                                toastr.error(err, 'Failed')
+                            }
+                        });
+                    }
+                    else {
+                        toastr.error(res.responseJSON.message, 'Failed')
+                    }
+                })
+                .always(function() {
+
                 });
             },
             getSosmed = () => {

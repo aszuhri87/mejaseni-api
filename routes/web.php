@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 */
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PublicController;
+use App\Http\Controllers\MediaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +30,8 @@ use App\Http\Controllers\Admin\Master\CoachListController;
 use App\Http\Controllers\Admin\Master\AdminController;
 use App\Http\Controllers\Admin\Master\StudentController;
 use App\Http\Controllers\Admin\Master\ExpertiseController;
+use App\Http\Controllers\Admin\Master\GuestStarController;
+use App\Http\Controllers\Admin\Master\MasterLessonController;
 use App\Http\Controllers\Admin\Schedule\ScheduleController;
 
 /*
@@ -44,11 +47,15 @@ use App\Http\Controllers\Coach\TheoryController as CoachTheoryController;
 | Student Controller
 |--------------------------------------------------------------------------
 */
-
 use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
 use App\Http\Controllers\Student\InvoiceController as StudentInvoiceController;
 use App\Http\Controllers\Student\ScheduleController as StudentScheduleController;
 use App\Http\Controllers\Student\MyClassController as StudentMyClassController;
+use App\Http\Controllers\Student\NewPackageController as StudentNewPackageController;
+use App\Http\Controllers\Student\PackageDetailController as StudentPackageDetailController;
+use App\Http\Controllers\Student\TheoryController as StudentTheoryController;
+use App\Http\Controllers\Student\VideoController as StudentVideoController;
+use App\Http\Controllers\Student\ProfileController as StudentProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,7 +78,16 @@ Route::group(['middleware' => ['guest-handling']], function () {
 });
 
 Route::group(['middleware' => ['auth-handling']], function () {
+
     Route::get('logout', [LoginController::class, 'logout']);
+    Route::post('media/file', [MediaController::class, 'file_upload']);
+    Route::delete('media/file/{id}', [MediaController::class, 'file_delete']);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Admins Route
+    |--------------------------------------------------------------------------
+    */
 
     Route::group(['prefix' => 'admin', 'middleware' => 'admin-handling'], function () {
         Route::get('dashboard', [AdminDashboard::class, 'index']);
@@ -98,10 +114,22 @@ Route::group(['middleware' => ['auth-handling']], function () {
                 Route::post('session-video/detail/dt/{id}', [TheoryVideoController::class, 'dt']);
                 Route::post('session-video/detail/update/{id}', [TheoryVideoController::class, 'update']);
                 Route::post('session-video/detail/store', [TheoryVideoController::class, 'store']);
+                Route::delete('session-video/detail/{id}', [TheoryVideoController::class, 'destroy']);
+
+                Route::post('session-video/file/dt/{id}', [TheoryVideoController::class, 'file_dt']);
+                Route::post('session-video/file/update/{id}', [TheoryVideoController::class, 'file_update']);
+                Route::post('session-video/file/store', [TheoryVideoController::class, 'file_store']);
+                Route::delete('session-video/file/{id}', [TheoryVideoController::class, 'file_destroy']);
 
                 Route::post('session-video/dt', [SessionVideoController::class, 'dt']);
                 Route::resource('session-video', SessionVideoController::class);
+
+                Route::post('master-lesson/dt', [MasterLessonController::class, 'dt']);
+                Route::resource('master-lesson', MasterLessonController::class);
             });
+
+            Route::post('guest-star/dt', [GuestStarController::class, 'dt']);
+            Route::resource('guest-star', GuestStarController::class);
 
             Route::group(['prefix' => 'coach'], function () {
                 Route::get('coach-sosmed/{id}', [CoachController::class, 'coach_sosmed']);
@@ -134,12 +162,11 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::post('student/dt', [StudentController::class, 'dt']);
             Route::post('student/update/{id}', [StudentController::class, 'update']);
             Route::resource('student', StudentController::class);
+
             Route::post('media-conference/dt', [PlatformController::class, 'dt']);
             Route::post('media-conference/update/{id}', [PlatformController::class, 'update']);
             Route::resource('media-conference', PlatformController::class);
 
-            Route::post('theory/file', [TheoryController::class, 'theory_file']);
-            Route::delete('theory/file/{id}', [TheoryController::class, 'theory_file_delete']);
             Route::post('theory/dt', [TheoryController::class, 'dt']);
             Route::post('theory/update/{id}', [TheoryController::class, 'update']);
             Route::resource('theory', TheoryController::class);
@@ -149,10 +176,21 @@ Route::group(['middleware' => ['auth-handling']], function () {
         });
 
         Route::get('schedule', [ScheduleController::class, 'index']);
+        Route::get('schedule/all', [ScheduleController::class, 'all']);
         Route::get('schedule/{id}', [ScheduleController::class, 'show']);
+        Route::get('schedule-show/{id}', [ScheduleController::class, 'show_edit']);
         Route::post('schedule', [ScheduleController::class, 'store']);
         Route::post('schedule/{id}', [ScheduleController::class, 'update']);
+        Route::post('schedule/update/{id}', [ScheduleController::class, 'update_time']);
+        Route::post('schedule/confirm/{id}', [ScheduleController::class, 'confirm']);
+        Route::post('schedule/delete/{id}', [ScheduleController::class, 'delete']);
     });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Coaches Route
+    |--------------------------------------------------------------------------
+    */
 
     Route::group(['prefix' => 'coach', 'middleware' => 'coach-handling'], function () {
         Route::get('dashboard/summary-course-chart', [DashboardController::class, 'summary_course_chart']);
@@ -163,20 +201,59 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::delete('theory/file/{id}', [CoachTheoryController::class, 'theory_file_delete']);
         Route::get('theory/list/{classroom_id}/{session_id}', [CoachTheoryController::class, 'theory_list']);
         Route::get('theory/download/{path}', [CoachTheoryController::class, 'download']);
-        Route::resource('theory', CoachTheoryController::class);
+        // Route::resource('theory', CoachTheoryController::class);
 
     });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Students Route
+    |--------------------------------------------------------------------------
+    */
 
     Route::group(['prefix' => 'student', 'middleware' => 'student-handling'], function () {
         Route::get('/dashboard', [StudentDashboardController::class, 'index']);
 
         Route::get('invoice', [StudentInvoiceController::class, 'index']);
 
-        Route::get('schedule', [StudentScheduleController::class, 'index']);
-        Route::get('schedule/regular-class', [StudentScheduleController::class, 'regular_class']);
+        Route::group(['prefix' => 'schedule'], function () {
+            Route::get('/', [StudentScheduleController::class, 'index']);
+            Route::get('regular-class', [StudentScheduleController::class, 'regular_class']);
+            Route::get('special-class', [StudentScheduleController::class, 'special_class']);
+        });
 
         Route::get('my-class',[StudentMyClassController::class, 'index']);
+
+        Route::group(['prefix' => 'new-package'], function () {
+            Route::get('/',[StudentNewPackageController::class, 'index']);
+            Route::get('get-package',[StudentNewPackageController::class, 'get_package']);
+            Route::get('classroom-category/{classroom_category_id}',[StudentNewPackageController::class, 'get_classroom_by_category_id']);
+            Route::get('get-session-video', [StudentNewPackageController::class, 'get_session_video']);
+        });
+
+        Route::group(['prefix' => 'theory'], function () {
+            Route::get('/', [StudentTheoryController::class, 'index']);
+            Route::get('get-theory', [StudentTheoryController::class, 'get_theory']);
+            Route::get('get-class/{student_id}', [StudentTheoryController::class, 'get_class']);
+        });
+
+        Route::group(['prefix' => 'video'], function () {
+            Route::get('/', [StudentVideoController::class, 'index']);
+            Route::get('get-video', [StudentVideoController::class, 'get_video']);
+        });
+
+        Route::post('profile/{id}', [StudentProfileController::class,'update']);
+        Route::post('profile/change-password/{id}', [StudentProfileController::class,'change_password']);
+        Route::get('profile', [StudentProfileController::class,'index']);
+
+        Route::get('package-detail/{session_video_id}',[StudentPackageDetailController::class, 'index']);
     });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Public Route
+    |--------------------------------------------------------------------------
+    */
 
     Route::group(['prefix' => 'public'], function () {
         Route::get('get-classroom-category', [PublicController::class, 'get_classroom_category']);
@@ -196,4 +273,5 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::get('get-classroom-coach', [PublicController::class, 'get_classroom_coach']);
         Route::get('get-session-coach/{classroom_id}', [PublicController::class, 'get_session_coach']);
     });
+
 });
