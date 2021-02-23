@@ -1,7 +1,8 @@
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+    integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
 <script type="text/javascript">
     var Page = function() {
-        var _componentPage = function(){
+        var _componentPage = function() {
             var init_table, element_sosmed, option = new Array;
 
             $(document).ready(function() {
@@ -12,35 +13,44 @@
             });
 
             const initTable = () => {
-                init_table = $('#init-table').DataTable({
-                    destroy: true,
-                    processing: true,
-                    serverSide: true,
-                    sScrollY: ($(window).height() < 700) ? $(window).height() - 200 : $(window).height() - 450,
-                    ajax: {
-                        type: 'POST',
-                        url: "{{ url('admin/master/student/dt') }}",
-                    },
-                    columns: [
-                        { data: 'DT_RowIndex' },
-                        { data: 'name' },
-                        { data: 'class' },
-                        { data: 'status' },
-                        { defaultContent: '' }
-                        ],
-                    columnDefs: [
-                        {
-                            targets: 0,
-                            searchable: false,
-                            orderable: false,
-                            className: "text-center"
+                    init_table = $('#init-table').DataTable({
+                        destroy: true,
+                        processing: true,
+                        serverSide: true,
+                        sScrollY: ($(window).height() < 700) ? $(window).height() - 200 : $(window)
+                            .height() - 450,
+                        ajax: {
+                            type: 'POST',
+                            url: "{{ url('admin/master/student/dt') }}",
                         },
-                        {
-                            targets: 1,
-                            data: "name",
-                            render : function(data, type, full, meta) {
+                        columns: [{
+                                data: 'DT_RowIndex'
+                            },
+                            {
+                                data: 'name'
+                            },
+                            {
+                                data: 'class'
+                            },
+                            {
+                                data: 'actived'
+                            },
+                            {
+                                defaultContent: ''
+                            }
+                        ],
+                        columnDefs: [{
+                                targets: 0,
+                                searchable: false,
+                                orderable: false,
+                                className: "text-center"
+                            },
+                            {
+                                targets: 1,
+                                data: "name",
+                                render: function(data, type, full, meta) {
 
-                                return `
+                                    return `
                                         <div class="d-flex align-items-center">
                                             <div class="mr-5">
                                                 <img src="${full.image_url}" class="rounded" width="50" height="50"/>
@@ -50,41 +60,55 @@
                                             </div>
                                         </div>
                                 `;
-                            }
-                        },
-                        {
-                            targets: 2,
-                            searchable: false,
-                            orderable: true,
-                            className: "text-center",
-                        },
-                        {
-                            targets: 3,
-                            searchable: false,
-                            orderable: false,
-                            className: "text-center",
-                            render : function(data, type, full, meta) {
-                                return `
-                                <div class="d-flex justify-content-center">
-                                    <span class="switch switch-sm switch-outline switch-icon switch-success">
-                                        <label>
-                                        <input type="checkbox" checked="checked" name="select"/>
-                                        <span></span>
-                                        </label>
-                                    </span>
-                                </div>
-                                `
-                            }
-                        },
-                        {
-                            targets: -1,
-                            searchable: false,
-                            orderable: false,
-                            className: "text-center",
-                            data: "id",
-                            render : function(data, type, full, meta) {
-                                return `
-                                    <a href="{{url('/admin/master/student/update')}}/${data}" title="Edit" class="btn btn-edit btn-sm btn-clean btn-icon mr-2" title="Edit details">
+                                }
+                            },
+                            {
+                                targets: 2,
+                                searchable: false,
+                                orderable: true,
+                                className: "text-center",
+                            },
+                            {
+                                targets: 3,
+                                searchable: false,
+                                orderable: false,
+                                className: "text-center",
+                                render: function(data, type, full, meta) {
+
+                                    if (full.actived == true) {
+                                        return `
+                                        <div class="d-flex justify-content-center">
+                                            <span class="switch switch-sm switch-outline switch-icon switch-success">
+                                                <label>
+                                                <input class="btn-active" type="checkbox" checked="checked" name="status"/>
+                                                <span></span>
+                                                </label>
+                                            </span>
+                                        </div>
+                                        `
+                                    } else {
+                                        return `
+                                        <div class="d-flex justify-content-center">
+                                            <span class="switch switch-sm switch-outline switch-icon switch-success">
+                                                <label>
+                                                <input class="btn-active" type="checkbox" name="status"/>
+                                                <span></span>
+                                                </label>
+                                            </span>
+                                        </div>
+                                        `
+                                    }
+                                }
+                            },
+                            {
+                                targets: -1,
+                                searchable: false,
+                                orderable: false,
+                                className: "text-center",
+                                data: "id",
+                                render: function(data, type, full, meta) {
+                                    return `
+                                    <a href="{{ url('/admin/master/student/update') }}/${data}" title="Edit" class="btn btn-edit btn-sm btn-clean btn-icon mr-2" title="Edit details">
                                         <span class="svg-icon svg-icon-md">
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -95,7 +119,7 @@
                                             </svg>
                                         </span>
                                     </a>
-                                    <a href="{{url('/admin/master/student')}}/${data}" title="Delete" class="btn btn-delete btn-sm btn-clean btn-icon" title="Delete">
+                                    <a href="{{ url('/admin/master/student') }}/${data}" title="Delete" class="btn btn-delete btn-sm btn-clean btn-icon" title="Delete">
                                         <span class="svg-icon svg-icon-md">
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -107,42 +131,44 @@
                                         </span>
                                     </a>
                                     `
-                            }
+                                }
+                            },
+                        ],
+                        order: [
+                            [1, 'asc']
+                        ],
+                        searching: true,
+                        paging: true,
+                        lengthChange: false,
+                        bInfo: true,
+                        dom: '<"datatable-header"><tr><"datatable-footer"ip>',
+                        language: {
+                            search: '<span>Search:</span> _INPUT_',
+                            searchPlaceholder: 'Search.',
+                            lengthMenu: '<span>Show:</span> _MENU_',
+                            processing: '<div class="d-flex justify-content-center align-items-center"><div class="mr-1 my-spinner-loading"></div>Loading...</div>',
                         },
-                    ],
-                    order: [[1, 'asc']],
-                    searching: true,
-                    paging:true,
-                    lengthChange:false,
-                    bInfo:true,
-                    dom: '<"datatable-header"><tr><"datatable-footer"ip>',
-                    language: {
-                        search: '<span>Search:</span> _INPUT_',
-                        searchPlaceholder: 'Search.',
-                        lengthMenu: '<span>Show:</span> _MENU_',
-                        processing: '<div class="d-flex justify-content-center align-items-center"><div class="mr-1 my-spinner-loading"></div>Loading...</div>',
-                    },
-                });
+                    });
 
-                $('#search').keyup(searchDelay(function(event) {
-                    init_table.search($(this).val()).draw()
-                }, 1000));
+                    $('#search').keyup(searchDelay(function(event) {
+                        init_table.search($(this).val()).draw()
+                    }, 1000));
 
-                $('#pageLength').on('change', function () {
-                    init_table.page.len(this.value).draw();
-                });
-            },
-            initAction = () => {
-                $(document).on('click', '#add-btn', function(event){
-                    event.preventDefault();
+                    $('#pageLength').on('change', function() {
+                        init_table.page.len(this.value).draw();
+                    });
+                },
+                initAction = () => {
+                    $(document).on('click', '#add-btn', function(event) {
+                        event.preventDefault();
 
-                    $('#form-student').trigger("reset");
-                    $('#form-student').attr('action','{{url('admin/master/student')}}');
-                    $('#form-student').attr('method','POST');
-                    $('#form-student').attr('data-form','insert');
-                    $('#form-student').find('input[name="profile_avatar"]').attr('required',true);
+                        $('#form-student').trigger("reset");
+                        $('#form-student').attr('action', '{{ url('admin/master/student') }}');
+                        $('#form-student').attr('method', 'POST');
+                        $('#form-student').attr('data-form', 'insert');
+                        $('#form-student').find('input[name="profile_avatar"]').attr('required', true);
 
-                    $('.password-setting').html(`
+                        $('.password-setting').html(`
                         <div class="row mb-5">
                             <div class="col-6">
                                 <label>Password<span class="text-danger">*</span></label>
@@ -158,238 +184,325 @@
                             </div>
                         </div>
                     `);
-                    $('.password-setting').addClass('col-6');
+                        $('.password-setting').addClass('col-6');
 
-                    showModal('modal-student');
-                });
+                        showModal('modal-student');
+                    });
 
-                $(document).on('click', '.btn-edit', function(event){
-                    event.preventDefault();
+                    $(document).on('click', '.btn-edit', function(event) {
+                        event.preventDefault();
 
-                    var data = init_table.row($(this).parents('tr')).data();
-                    console.log(data);
-                    $('#form-student').trigger("reset");
-                    $('#form-student').attr('action', $(this).attr('href'));
-                    $('#form-student').attr('method','POST');
-                    $('#form-student').attr('data-form','update');
+                        var data = init_table.row($(this).parents('tr')).data();
+                        console.log(data);
+                        $('#form-student').trigger("reset");
+                        $('#form-student').attr('action', $(this).attr('href'));
+                        $('#form-student').attr('method', 'POST');
+                        $('#form-student').attr('data-form', 'update');
 
-                    $('#form-student').find('input[name="name"]').val(data.name);
-                    $('#form-student').find('input[name="username"]').val(data.username);
-                    $('#form-student').find('input[name="email"]').val(data.email);
-                    $('#form-student').find('input[name="expertise"]').val(data.expertise);
-                    $('#form-student').find('textarea[name="profil_description"]').val(data.description);
-                    $('#form-student').find('input[name="phone"]').val(data.phone);
-                    $('#form-student').find('input[name="profile_avatar"]').attr('required',false);
+                        $('#form-student').find('input[name="name"]').val(data.name);
+                        $('#form-student').find('input[name="username"]').val(data.username);
+                        $('#form-student').find('input[name="email"]').val(data.email);
+                        $('#form-student').find('input[name="expertise"]').val(data.expertise);
+                        $('#form-student').find('textarea[name="profil_description"]').val(data
+                            .description);
+                        $('#form-student').find('input[name="phone"]').val(data.phone);
+                        $('#form-student').find('input[name="profile_avatar"]').attr('required', false);
 
-                    $('.img-profile-edit').attr('src',`${data.image_url}`);
+                        $('.img-profile-edit').attr('src', `${data.image_url}`);
 
-                    $('.password-setting').removeClass('col-6');
-                    $('.password-setting').empty();
+                        $('.password-setting').removeClass('col-6');
+                        $('.password-setting').empty();
 
-                    showModal('modal-student');
-                });
+                        showModal('modal-student');
+                    });
 
-                $(document).on('click', '.btn-delete', function(event){
-                    event.preventDefault();
-                    var url = $(this).attr('href');
+                    $(document).on('click', '.btn-delete', function(event) {
+                        event.preventDefault();
+                        var url = $(this).attr('href');
 
-                    Swal.fire({
-                        title: 'Delete Student?',
-                        text: "Deleted Student will be permanently lost!",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#7F16A7',
-                        confirmButtonText: 'Yes, Delete',
-                    }).then(function (result) {
-                        if (result.value) {
-                            $.ajax({
-                                url: url,
-                                type: 'DELETE',
-                                dataType: 'json',
-                            })
-                            .done(function(res, xhr, meta) {
-                                toastr.success(res.message, 'Success')
-                                init_table.draw(false);
-                            })
-                            .fail(function(res, error) {
-                                toastr.error(res.responseJSON.message, 'Failed')
-                            })
-                            .always(function() { });
-                        }
-                    })
-
-                    $('.swal2-title').addClass('justify-content-center')
-                });
-
-                $('.upload').on('change', function() {
-                    console.log('ua');
-                    let sizeFile = $(this)[0].files[0].size/1024/1024;
-                    sizeFile = sizeFile.toFixed(2);
-                    if(sizeFile > 2){
-                        toastr.error('Maksimal Upload: 2 MB', 'Failed')
-                    }
-                    readURL(this);
-                });                
-
-                $(document).on('click','.btn-add-medsos',function(event){
-                    event.preventDefault();
-                    $('#medsos').append(element_sosmed);
-                })
-
-                $(document).on('click','.delete-medsos',function(event){
-                    event.preventDefault();
-                    let element = $(this);
-                    let url = $(this).data('url');
-
-                    if( url == "" || url == null){
                         Swal.fire({
-                            title: 'Delete student?',
-                            text: "Deleted student will be permanently lost!",
+                            title: 'Delete Student?',
+                            text: "Deleted Student will be permanently lost!",
                             icon: 'warning',
                             showCancelButton: true,
                             confirmButtonColor: '#7F16A7',
                             confirmButtonText: 'Yes, Delete',
-                        }).then(function (result) {
+                        }).then(function(result) {
                             if (result.value) {
-                                element.parent().parent().remove();
+                                $.ajax({
+                                        url: url,
+                                        type: 'DELETE',
+                                        dataType: 'json',
+                                    })
+                                    .done(function(res, xhr, meta) {
+                                        toastr.success(res.message, 'Success')
+                                        init_table.draw(false);
+                                    })
+                                    .fail(function(res, error) {
+                                        toastr.error(res.responseJSON.message, 'Failed')
+                                    })
+                                    .always(function() {});
                             }
                         })
 
                         $('.swal2-title').addClass('justify-content-center')
-                    }else{
-                        Swal.fire({
-                            title: 'Delete Media Social?',
-                            text: "Deleted Media Social will be permanently lost!",
-                            icon: 'warning',
-                            showCancelButton: true,
-                            confirmButtonColor: '#7F16A7',
-                            confirmButtonText: 'Yes, Delete',
-                        }).then(function (result) {
-                            if (result.value) {
-                                element.parent().parent().remove();
-                                $.ajax({
-                                    url: `${url}`,
-                                    type: 'DELETE',
+                    });
+
+                    $('.upload').on('change', function() {
+                        console.log('ua');
+                        let sizeFile = $(this)[0].files[0].size / 1024 / 1024;
+                        sizeFile = sizeFile.toFixed(2);
+                        if (sizeFile > 2) {
+                            toastr.error('Maksimal Upload: 2 MB', 'Failed')
+                        }
+                        readURL(this);
+                    });
+
+                    $(document).on('click', '.btn-add-medsos', function(event) {
+                        event.preventDefault();
+                        $('#medsos').append(element_sosmed);
+                    })
+
+                    $(document).on('click', '.delete-medsos', function(event) {
+                        event.preventDefault();
+                        let element = $(this);
+                        let url = $(this).data('url');
+
+                        if (url == "" || url == null) {
+                            Swal.fire({
+                                title: 'Delete student?',
+                                text: "Deleted student will be permanently lost!",
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#7F16A7',
+                                confirmButtonText: 'Yes, Delete',
+                            }).then(function(result) {
+                                if (result.value) {
+                                    element.parent().parent().remove();
+                                }
+                            })
+
+                            $('.swal2-title').addClass('justify-content-center')
+                        } else {
+                            Swal.fire({
+                                title: 'Delete Media Social?',
+                                text: "Deleted Media Social will be permanently lost!",
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#7F16A7',
+                                confirmButtonText: 'Yes, Delete',
+                            }).then(function(result) {
+                                if (result.value) {
+                                    element.parent().parent().remove();
+                                    $.ajax({
+                                            url: `${url}`,
+                                            type: 'DELETE',
+                                        })
+                                        .done(function(res, xhr, meta) {
+
+                                        })
+                                        .fail(function(res, error) {
+                                            if (res.status == 400 || res.status == 422) {
+                                                $.each(res.responseJSON.errors, function(
+                                                    index, err) {
+                                                    if (Array.isArray(err)) {
+                                                        $.each(err, function(index,
+                                                            val) {
+                                                            toastr.error(
+                                                                val,
+                                                                'Failed'
+                                                            )
+                                                        });
+                                                    } else {
+                                                        toastr.error(err, 'Failed')
+                                                    }
+                                                });
+                                            } else {
+                                                toastr.error(res.responseJSON.message,
+                                                    'Failed')
+                                            }
+                                        })
+                                        .always(function() {
+                                            btn_loading('stop')
+                                        });
+                                }
+                            })
+
+                            $('.swal2-title').addClass('justify-content-center')
+                        }
+                    });
+
+                    $(document).on('click', '.btn-permission', function(event) {
+                        event.preventDefault();
+
+                        $('#form_permission').attr('action', $(this).attr('href'));
+                        showModal('modal_permission');
+
+                        $.ui.fancytree.getTree("#tree-table").visit(function(node) {
+                            if (node.expanded == true && node.children != null) {
+                                node.toggleExpanded();
+                            }
+                        });
+
+                        $('input[type=checkbox]').prop('checked', false);
+
+                        setChecked($(this).attr('href'));
+                    });
+                    
+                    $(document).on('click', '.btn-active', function(event) {
+                        var data = init_table.row($(this).parents('tr')).data();
+
+                        if ($(this).prop('checked') == true) {
+                            $.ajax({
+                                    url: `{{ url('admin/master/student/actived') }}/${data.id}`,
+                                    type: 'post',
+                                    data: {
+                                        'actived': true
+                                    },
+                                    dataType: 'json',
                                 })
                                 .done(function(res, xhr, meta) {
-
+                                    if (res.status == 200) {
+                                        init_table.draw(false);
+                                    }
                                 })
                                 .fail(function(res, error) {
-                                    if (res.status == 400 || res.status == 422) {
-                                        $.each(res.responseJSON.errors, function(index, err) {
-                                            if (Array.isArray(err)) {
-                                                $.each(err, function(index, val) {
-                                                    toastr.error(val, 'Failed')
-                                                });
-                                            }
-                                            else {
-                                                toastr.error(err, 'Failed')
-                                            }
-                                        });
-                                    }
-                                    else {
-                                        toastr.error(res.responseJSON.message, 'Failed')
+                                    toastr.error(res.responseJSON.message, 'Gagal')
+                                })
+                                .always(function() {});
+                        } else {
+                            $.ajax({
+                                    url: `{{ url('admin/master/student/actived') }}/${data.id}`,
+                                    type: 'post',
+                                    data: {
+                                        'actived': false
+                                    },
+                                    dataType: 'json',
+                                })
+                                .done(function(res, xhr, meta) {
+                                    if (res.status == 200) {
+                                        init_table.draw(false);
                                     }
                                 })
-                                .always(function() {
-                                    btn_loading('stop')
-                                });
+                                .fail(function(res, error) {
+                                    toastr.error(res.responseJSON.message, 'Gagal')
+                                })
+                                .always(function() {});
+                        }
+                    });
+
+                    $(document).on('click', '.btn-verified', function(event) {
+                        var data = init_table.row($(this).parents('tr')).data();
+
+                        if ($(this).prop('checked') == true) {
+                            $.ajax({
+                                    url: `{{ url('admin/master/student/verified') }}/${data.id}`,
+                                    type: 'post',
+                                    data: {
+                                        'verified': true
+                                    },
+                                    dataType: 'json',
+                                })
+                                .done(function(res, xhr, meta) {
+                                    if (res.status == 200) {
+                                        init_table.draw(false);
+                                    }
+                                })
+                                .fail(function(res, error) {
+                                    toastr.error(res.responseJSON.message, 'Gagal')
+                                })
+                                .always(function() {});
+                        } else {
+                            $.ajax({
+                                    url: `{{ url('admin/master/student/verified') }}/${data.id}`,
+                                    type: 'post',
+                                    data: {
+                                        'verified': false
+                                    },
+                                    dataType: 'json',
+                                })
+                                .done(function(res, xhr, meta) {
+                                    if (res.status == 200) {
+                                        init_table.draw(false);
+                                    }
+                                })
+                                .fail(function(res, error) {
+                                    toastr.error(res.responseJSON.message, 'Gagal')
+                                })
+                                .always(function() {});
+                        }
+                    });
+                },
+                formSubmit = () => {
+                    $('#form-student').submit(function(event) {
+                        event.preventDefault();
+                        let avatar = $('.upload').val();
+                        let form = $(this).data('form');
+                        if (form == 'insert') {
+                            if (avatar == null || avatar == '') {
+                                return toastr.error('Avatar harus diisi', 'Failed')
                             }
-                        })
-
-                        $('.swal2-title').addClass('justify-content-center')
-                    }
-                });
-
-                $(document).on('click', '.btn-permission', function(event){
-                    event.preventDefault();
-
-                    $('#form_permission').attr('action', $(this).attr('href'));
-                    showModal('modal_permission');
-
-                    $.ui.fancytree.getTree("#tree-table").visit(function(node){
-                        if(node.expanded == true && node.children != null){
-                            node.toggleExpanded();
                         }
-                    });
-
-                    $('input[type=checkbox]').prop('checked', false);
-
-                    setChecked($(this).attr('href'));
-                });
-            },
-            formSubmit = () => {
-                $('#form-student').submit(function(event){
-                    event.preventDefault();
-                    let avatar = $('.upload').val();
-                    let form = $(this).data('form');
-                    if(form == 'insert'){
-                        if(avatar == null || avatar == ''){
-                            return toastr.error('Avatar harus diisi', 'Failed')
-                        }
-                    }
-                    btn_loading('start')
-                    $.ajax({
-                        url: $(this).attr('action'),
-                        type: $(this).attr('method'),
-                        data: new FormData(this),
-                        contentType: false,
-                        cache: false,
-                        processData: false,
-                    })
-                    .done(function(res, xhr, meta) {
-                        // if(res.status == 200){
-                            toastr.success(res.message, 'Success');
-                            init_table.draw(false);
-                            hideModal('modal-student');
-                        // }
-                    })
-                    .fail(function(res, error) {
-                        if (res.status == 400 || res.status == 422) {
-                            $.each(res.responseJSON.errors, function(index, err) {
-                                if (Array.isArray(err)) {
-                                    $.each(err, function(index, val) {
-                                        toastr.error(val, 'Failed')
+                        btn_loading('start')
+                        $.ajax({
+                                url: $(this).attr('action'),
+                                type: $(this).attr('method'),
+                                data: new FormData(this),
+                                contentType: false,
+                                cache: false,
+                                processData: false,
+                            })
+                            .done(function(res, xhr, meta) {
+                                // if(res.status == 200){
+                                toastr.success(res.message, 'Success');
+                                init_table.draw(false);
+                                hideModal('modal-student');
+                                // }
+                            })
+                            .fail(function(res, error) {
+                                if (res.status == 400 || res.status == 422) {
+                                    $.each(res.responseJSON.errors, function(index, err) {
+                                        if (Array.isArray(err)) {
+                                            $.each(err, function(index, val) {
+                                                toastr.error(val, 'Failed')
+                                            });
+                                        } else {
+                                            toastr.error(err, 'Failed')
+                                        }
                                     });
+                                } else {
+                                    toastr.error(res.responseJSON.message, 'Failed')
                                 }
-                                else {
-                                    toastr.error(err, 'Failed')
-                                }
+                            })
+                            .always(function() {
+                                btn_loading('stop')
                             });
-                        }
-                        else {
-                            toastr.error(res.responseJSON.message, 'Failed')
-                        }
-                    })
-                    .always(function() {
-                        btn_loading('stop')
                     });
-                });
 
-                $('#form_permission').submit(function(event){
-                    event.preventDefault();
+                    $('#form_permission').submit(function(event) {
+                        event.preventDefault();
 
-                    btn_loading('start')
-                    $.ajax({
-                        url: $(this).attr('action'),
-                        type: $(this).attr('method'),
-                        data: $(this).serialize(),
-                    })
-                    .done(function(res, xhr, meta) {
-                        if (res.status == 200) {
-                            toastr.success(res.message, 'Success')
-                            init_table.draw(false);
-                            hideModal('modal_permission');
-                        }
-                    })
-                    .fail(function(res, error) {
-                        toastr.error(res.responseJSON.message, 'Gagal')
-                    })
-                    .always(function() {
-                        btn_loading('stop')
+                        btn_loading('start')
+                        $.ajax({
+                                url: $(this).attr('action'),
+                                type: $(this).attr('method'),
+                                data: $(this).serialize(),
+                            })
+                            .done(function(res, xhr, meta) {
+                                if (res.status == 200) {
+                                    toastr.success(res.message, 'Success')
+                                    init_table.draw(false);
+                                    hideModal('modal_permission');
+                                }
+                            })
+                            .fail(function(res, error) {
+                                toastr.error(res.responseJSON.message, 'Gagal')
+                            })
+                            .always(function() {
+                                btn_loading('stop')
+                            });
                     });
-                });
-            }
+                }
         };
 
         const initTreeTable = () => {
@@ -404,7 +517,9 @@
                         url: '{{ asset('data/student.json') }}'
                     },
                     lazyLoad: function(event, data) {
-                        data.result = {url: '{{ asset('data/student.json') }}'}
+                        data.result = {
+                            url: '{{ asset('data/student.json') }}'
+                        }
                     },
                     renderColumns: function(event, data) {
                         var node = data.node;
@@ -412,13 +527,25 @@
                         $tdList = $(node.tr).find('>td');
 
                         $tdList.eq(0).addClass('text-left');
-                        $tdList.eq(1).addClass('text-center').html(`<input type="checkbox" class="form-input-styled permissions ${node.key}" data-parent="${node.parent.key}" name="permissions[]" value="${node.key}" id="${node.key}">`);
+                        $tdList.eq(1).addClass('text-center').html(
+                            `<input type="checkbox" class="form-input-styled permissions ${node.key}" data-parent="${node.parent.key}" name="permissions[]" value="${node.key}" id="${node.key}">`
+                        );
                         if (node.data.crud) {
-                            $tdList.eq(2).addClass(`text-center`).html(`<input type="checkbox" class="form-input-styled permissions ${node.key}_crud" name="permissions[]" value="${node.key}_list" data-parent="${node.key}">`);
-                            $tdList.eq(3).addClass(`text-center`).html(`<input type="checkbox" class="form-input-styled permissions ${node.key}_crud" name="permissions[]" value="${node.key}_insert" data-parent="${node.key}">`);
-                            $tdList.eq(4).addClass(`text-center`).html(`<input type="checkbox" class="form-input-styled permissions ${node.key}_crud" name="permissions[]" value="${node.key}_update" data-parent="${node.key}">`);
-                            $tdList.eq(5).addClass(`text-center`).html(`<input type="checkbox" class="form-input-styled permissions ${node.key}_crud" name="permissions[]" value="${node.key}_delete" data-parent="${node.key}">`);
-                            $tdList.eq(6).addClass(`text-center`).html(`<input type="checkbox" class="form-input-styled permissions ${node.key}_crud" name="permissions[]" value="${node.key}_print" data-parent="${node.key}">`);
+                            $tdList.eq(2).addClass(`text-center`).html(
+                                `<input type="checkbox" class="form-input-styled permissions ${node.key}_crud" name="permissions[]" value="${node.key}_list" data-parent="${node.key}">`
+                            );
+                            $tdList.eq(3).addClass(`text-center`).html(
+                                `<input type="checkbox" class="form-input-styled permissions ${node.key}_crud" name="permissions[]" value="${node.key}_insert" data-parent="${node.key}">`
+                            );
+                            $tdList.eq(4).addClass(`text-center`).html(
+                                `<input type="checkbox" class="form-input-styled permissions ${node.key}_crud" name="permissions[]" value="${node.key}_update" data-parent="${node.key}">`
+                            );
+                            $tdList.eq(5).addClass(`text-center`).html(
+                                `<input type="checkbox" class="form-input-styled permissions ${node.key}_crud" name="permissions[]" value="${node.key}_delete" data-parent="${node.key}">`
+                            );
+                            $tdList.eq(6).addClass(`text-center`).html(
+                                `<input type="checkbox" class="form-input-styled permissions ${node.key}_crud" name="permissions[]" value="${node.key}_print" data-parent="${node.key}">`
+                            );
                         }
 
                         if (node.data.other) {
@@ -455,21 +582,20 @@
                     var parent = $input.data('parent');
 
                     if ($('#tree-table').find(`[data-parent="${value}"]`).length > 0) {
-                        if($input.is(':checked')){
+                        if ($input.is(':checked')) {
                             var val = $input.val();
-                            $('#tree-table').find(`[data-parent="${val}"]`).prop('checked', true).trigger('change');
-                        }
-                        else{
+                            $('#tree-table').find(`[data-parent="${val}"]`).prop('checked', true).trigger(
+                                'change');
+                        } else {
                             var val = $input.val();
-                            $('#tree-table').find(`[data-parent="${val}"]`).prop('checked', false).trigger('change');
+                            $('#tree-table').find(`[data-parent="${val}"]`).prop('checked', false).trigger(
+                                'change');
                         }
-                    }
-                    else {
-                        if($input.is(':checked')){
+                    } else {
+                        if ($input.is(':checked')) {
                             var val = $input.val();
                             $('#tree-table').find(`[data-parent="${val}"]`).prop('checked', true);
-                        }
-                        else{
+                        } else {
                             var val = $input.val();
                             $('#tree-table').find(`[data-parent="${val}"]`).prop('checked', false);
                         }
@@ -488,23 +614,25 @@
 
                             parent_parent = $(`#${parent}`).data('parent');
 
-                            if($input.is(':checked')){
+                            if ($input.is(':checked')) {
                                 $('#tree-table').find(`.${parent}`).prop('checked', true);
-                            }
-                            else{
-                                if ($('#tree-table').find(`[data-parent="${parent}"]:checked`).length <= 0) {
+                            } else {
+                                if ($('#tree-table').find(`[data-parent="${parent}"]:checked`).length <=
+                                    0) {
                                     $('#tree-table').find(`.${parent}`).prop('checked', false);
                                 }
                             }
 
                             if (typeof parent_parent != 'undefined') {
                                 if (parent_parent != 'root_1') {
-                                    if($('#tree-table').find(`[data-parent="${parent_parent}"]:checked`).length > 0){
+                                    if ($('#tree-table').find(`[data-parent="${parent_parent}"]:checked`)
+                                        .length > 0) {
                                         $('#tree-table').find(`.${parent_parent}`).prop('checked', true);
-                                    }
-                                    else{
-                                        if ($('#tree-table').find(`[data-parent="${parent_parent}"]:checked`).length <= 0) {
-                                            $('#tree-table').find(`.${parent_parent}`).prop('checked', false);
+                                    } else {
+                                        if ($('#tree-table').find(
+                                                `[data-parent="${parent_parent}"]:checked`).length <= 0) {
+                                            $('#tree-table').find(`.${parent_parent}`).prop('checked',
+                                                false);
                                         }
                                     }
                                 }
@@ -515,30 +643,30 @@
             },
             setChecked = (url) => {
                 $.ajax({
-                    url: url,
-                    type: 'GET',
-                    dataType: 'json',
-                })
-                .done(function(res, xhr, meta) {
-                    if (res.status == 200) {
-                        let val;
-                        $.each(res.data, function(index, data) {
-                            val = `:checkbox[value=${data.name}]`;
-                            $(val).prop("checked","true");
-                        });
-                    }
-                })
-                .fail(function(res, error) {
-                    toastr.error(res.responseJSON.message, 'Gagal')
-                })
-                .always(function() { });
+                        url: url,
+                        type: 'GET',
+                        dataType: 'json',
+                    })
+                    .done(function(res, xhr, meta) {
+                        if (res.status == 200) {
+                            let val;
+                            $.each(res.data, function(index, data) {
+                                val = `:checkbox[value=${data.name}]`;
+                                $(val).prop("checked", "true");
+                            });
+                        }
+                    })
+                    .fail(function(res, error) {
+                        toastr.error(res.responseJSON.message, 'Gagal')
+                    })
+                    .always(function() {});
             }
 
         const readURL = (input) => {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
 
-                reader.onload = function (e) {
+                reader.onload = function(e) {
 
                     $('.image').html(`
                         <img src="${e.target.result}" class="img-profile-edit rounded" style="width:194px !important; height:194px !important;">
@@ -549,7 +677,7 @@
         };
 
         return {
-            init: function(){
+            init: function() {
                 _componentPage();
             }
         }

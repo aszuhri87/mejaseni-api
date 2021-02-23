@@ -161,6 +161,8 @@ Route::group(['middleware' => ['auth-handling']], function () {
 
             Route::post('student/dt', [StudentController::class, 'dt']);
             Route::post('student/update/{id}', [StudentController::class, 'update']);
+            Route::post('student/actived/{id}', [StudentController::class, 'actived']);
+            Route::post('student/verified/{id}', [StudentController::class, 'verified']);
             Route::resource('student', StudentController::class);
 
             Route::post('media-conference/dt', [PlatformController::class, 'dt']);
@@ -201,7 +203,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::delete('theory/file/{id}', [CoachTheoryController::class, 'theory_file_delete']);
         Route::get('theory/list/{classroom_id}/{session_id}', [CoachTheoryController::class, 'theory_list']);
         Route::get('theory/download/{path}', [CoachTheoryController::class, 'download']);
-        // Route::resource('theory', CoachTheoryController::class);
+        Route::resource('theory', CoachTheoryController::class);
 
     });
 
