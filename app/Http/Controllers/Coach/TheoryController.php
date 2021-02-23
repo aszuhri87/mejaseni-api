@@ -9,6 +9,7 @@ use App\Models\Session;
 use App\Models\TemporaryMedia;
 use App\Models\Theory;
 use Exception;
+use Facade\FlareClient\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -134,6 +135,9 @@ class TheoryController extends BaseMenu
             $result = Theory::find($id);
 
             DB::transaction(function () use ($result) {
+                Storage::disk('s3')->delete($result->path);
+                $result->delete();
+
                 $result->delete();
             });
 
@@ -179,7 +183,6 @@ class TheoryController extends BaseMenu
             $result = TemporaryMedia::find($id);
 
             DB::transaction(function () use ($result) {
-                Storage::disk('s3')->delete($result->path);
                 $result->delete();
             });
 
@@ -208,7 +211,7 @@ class TheoryController extends BaseMenu
                     'coaches.name as coaches_name',
                     DB::raw("CONCAT('{$path}',theories.url) as file_url"),
                     DB::raw("to_char(theories.upload_date, 'DD Month YYYY') as upload_at")
-                    
+
                 )
                 ->join('sessions', 'sessions.id', 'theories.session_id')
                 ->join('classrooms', 'classrooms.id', 'sessions.classroom_id')
@@ -219,6 +222,10 @@ class TheoryController extends BaseMenu
                     ['sessions.name', $session_id],
                     ['coaches.id', Auth::guard('coach')->id()],
                 ])
+                ->whereNull([
+                    'theories.deleted_at'
+                ])
+                ->distinct()
                 ->get();
             $classroom = Classroom::find($classroom_id);
 
@@ -241,14 +248,16 @@ class TheoryController extends BaseMenu
         }
     }
 
-    public function download($path)
+    public function theory_download($id)
     {
         try {
-            $result = Storage::disk('s3')->download('/'.$path);           
+            $theory = Theory::find($id);
+
+            return $result = Storage::disk('s3')->download('/' . $theory->url);
 
             return response([
                 "data"      => $result,
-                "message"   => 'OK',
+                "message"   => 'Successfully download!',
                 "status"   => 200
             ], 200);
         } catch (Exception $e) {

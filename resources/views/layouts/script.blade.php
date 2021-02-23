@@ -200,6 +200,16 @@
         }
     }
 
+    function btn_loading_basic(action,text) {
+        if(action == 'start'){
+            $('.btn-loading').html('<div id="loading" class="mr-1"></div> Loading...');
+            $('.btn-loading').attr('disabled',true);
+        }else{
+            $('.btn-loading').html(text);
+            $('.btn-loading').attr('disabled',false);
+        }
+    }
+
     window.searchDelay = function (callback, ms) {
         var timer = 0;
         return function() {
