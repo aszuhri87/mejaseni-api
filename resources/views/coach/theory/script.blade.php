@@ -5,7 +5,6 @@
             var arr_path = [];
 
             $(document).ready(function() {
-                initTable();
                 formSubmit();
                 initAction();
                 get_session();
@@ -23,176 +22,7 @@
 
             });
 
-            const initTable = () => {
-                    init_table = $('#init-table').DataTable({
-                        destroy: true,
-                        processing: true,
-                        serverSide: true,
-                        sScrollY: ($(window).height() < 700) ? $(window).height() - 200 : $(window)
-                            .height() - 450,
-                        ajax: {
-                            type: 'POST',
-                            url: "{{ url('coach/theory/dt') }}",
-                        },
-                        columns: [{
-                                data: 'DT_RowIndex'
-                            },
-                            {
-                                data: 'name'
-                            },
-                            {
-                                data: 'classroom'
-                            },
-                            {
-                                defaultContent: ''
-                            },
-                            {
-                                data: 'is_premium'
-                            },
-                            {
-                                data: 'confirmed'
-                            },
-                            {
-                                defaultContent: ''
-                            }
-                        ],
-                        columnDefs: [{
-                                targets: 0,
-                                searchable: false,
-                                orderable: false,
-                                className: "text-center"
-                            },
-                            {
-                                targets: 1,
-                                data: "name",
-                                render: function(data, type, full, meta) {
-                                    return `
-                                    <div class="d-flex flex-column font-weight-bold">
-                                        <p class="mb-1 font-size-lg">${data}</p>
-                                        <span class="text-muted">Sesi ${full.session}</span>
-                                    </div>
-                                `;
-                                }
-                            },
-                            {
-                                targets: 2,
-                                data: "classroom",
-                                render: function(data, type, full, meta) {
-                                    let package_type;
-                                    if (full.package_type == 2) {
-                                        package_type = 'Reguler';
-                                    } else {
-                                        package_type = 'Special';
-                                    }
-
-                                    return `
-                                    <div class="d-flex flex-column font-weight-bold">
-                                        <p class="mb-1 font-size-lg">${data}</p>
-                                        <span class="text-muted">${package_type}</span>
-                                    </div>
-                                `;
-                                }
-                            },
-                            {
-                                targets: 3,
-                                data: "category",
-                                render: function(data, type, full, meta) {
-                                    return `
-                                    <div class="d-flex flex-column font-weight-bold">
-                                        <p class="mb-1 font-size-lg">${data}</p>
-                                        <span class="text-muted">${full.sub_category ? full.sub_category : '-'}</span>
-                                    </div>
-                                `;
-                                }
-                            },
-                            {
-                                targets: 4,
-                                data: "is_premium",
-                                render: function(data, type, full, meta) {
-                                    let price = full.price == null ? 0 : full.price;
-                                    return `
-                                    <div class="d-flex flex-column font-weight-bold">
-                                        <p class="mb-1 font-size-lg">${data ? 'Premium' : 'Free'}</p>
-                                        <span class="text-muted">${data ? 'Rp.' + price : '-'}</span>
-                                    </div>
-                                `;
-                                }
-                            },
-                            {
-                                targets: 5,
-                                className: "text-center",
-                                data: "confirmed",
-                                render: function(data, type, full, meta) {
-                                    if (data) {
-                                        return `
-                                        <span class="label label-light-success label-pill label-inline mr-2">Aktif</span>
-                                    `
-                                    } else {
-                                        return `
-                                        <span class="label label-light-warning label-pill label-inline mr-2">Non Active</span>
-                                    `
-                                    }
-                                }
-                            },
-                            {
-                                targets: -1,
-                                searchable: false,
-                                orderable: false,
-                                className: "text-center",
-                                data: "id",
-                                render: function(data, type, full, meta) {
-                                    return `
-                                    <a href="{{ url('/coach/theory/update') }}/${data}" title="Edit" class="btn btn-edit btn-sm btn-clean btn-icon mr-2" title="Edit details">
-                                        <span class="svg-icon svg-icon-md">
-                                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                    <rect x="0" y="0" width="24" height="24"/>
-                                                    <path d="M8,17.9148182 L8,5.96685884 C8,5.56391781 8.16211443,5.17792052 8.44982609,4.89581508 L10.965708,2.42895648 C11.5426798,1.86322723 12.4640974,1.85620921 13.0496196,2.41308426 L15.5337377,4.77566479 C15.8314604,5.0588212 16,5.45170806 16,5.86258077 L16,17.9148182 C16,18.7432453 15.3284271,19.4148182 14.5,19.4148182 L9.5,19.4148182 C8.67157288,19.4148182 8,18.7432453 8,17.9148182 Z" fill="#000000" fill-rule="nonzero" transform="translate(12.000000, 10.707409) rotate(-135.000000) translate(-12.000000, -10.707409) "/>
-                                                    <rect fill="#000000" opacity="0.3" x="5" y="20" width="15" height="2" rx="1"/>
-                                                </g>
-                                            </svg>
-                                        </span>
-                                    </a>
-                                    <a href="{{ url('/coach/theory') }}/${data}" title="Delete" class="btn btn-delete btn-sm btn-clean btn-icon" title="Delete">
-                                        <span class="svg-icon svg-icon-md">
-                                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                    <rect x="0" y="0" width="24" height="24"/>
-                                                    <path d="M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z" fill="#000000" fill-rule="nonzero"/>
-                                                    <path d="M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z" fill="#000000" opacity="0.3"/>
-                                                </g>
-                                            </svg>
-                                        </span>
-                                    </a>
-                                    `
-                                }
-                            },
-                        ],
-                        order: [
-                            [1, 'asc']
-                        ],
-                        searching: true,
-                        paging: true,
-                        lengthChange: false,
-                        bInfo: true,
-                        dom: '<"datatable-header"><tr><"datatable-footer"ip>',
-                        language: {
-                            search: '<span>Search:</span> _INPUT_',
-                            searchPlaceholder: 'Search.',
-                            lengthMenu: '<span>Show:</span> _MENU_',
-                            processing: '<div class="d-flex justify-content-center align-items-center"><div class="mr-1 my-spinner-loading"></div>Loading...</div>',
-                        },
-                    });
-
-                    $('#search').keyup(searchDelay(function(event) {
-                        init_table.search($(this).val()).draw()
-                    }, 1000));
-
-                    $('#pageLength').on('change', function() {
-                        init_table.page.len(this.value).draw();
-                    });
-                },
-                initAction = () => {
+            const  initAction = () => {
                     $(document).on('click', '#add-btn', function(event) {
                         event.preventDefault();
 
@@ -213,8 +43,69 @@
                         showModal('modal-theory');
                     });
 
+                    $(document).on('click', '.btn-delete', function(event) {
+                        event.preventDefault();
+                        var data = init_table.row($(this).parents('tr')).data();
+
+                        var url = $(this).attr('href');
+
+                        Swal.fire({
+                            title: 'Delete Theory?',
+                            text: "Deleted Theory will be permanently lost!",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#7F16A7',
+                            confirmButtonText: 'Yes, Delete',
+                        }).then(function(result) {
+                            if (result.value) {
+                                $.ajax({
+                                        url: url,
+                                        type: 'DELETE',
+                                        dataType: 'json',
+                                    })
+                                    .done(function(res, xhr, meta) {
+                                        toastr.success(res.message, 'Success')
+
+                                        var classroom_coach = $('#classroom_coach').val();
+                                        var session_coach = $('#session_coach').val();
+                                        get_theory_list(classroom_coach, session_coach)
+
+                                    })
+                                    .fail(function(res, error) {
+                                        toastr.error(res.responseJSON.message, 'Failed')
+                                    })
+                                    .always(function() {});
+                            }
+                        })
+                        $('.swal2-title').addClass('justify-content-center')
+                    });
+
+                    $(document).on('click', '.btn-download', function(event) {
+                        event.preventDefault();
+                        var url = $(this).attr('href');
+
+                        $.ajax({
+                                url: url,
+                                type: 'get',
+                            })
+                            .done(function(res, xhr, meta) {
+                                if (res.status == 200) {
+                                    toastr.success(res.message, 'Success')
+                                    init_table.draw(false);
+                                    hideModal('modal_permission');
+                                }
+                            })
+                            .fail(function(res, error) {
+                                toastr.error(res.responseJSON.message, 'Gagal')
+                            })
+                            .always(function() {
+                            });
+
+                    });
+
                     $(document).on('click', '#show-btn', function(event) {
                         event.preventDefault();
+                        btn_loading_basic('start','Tampilkan')
 
                         var classroom_coach = $('#classroom_coach').val();
                         var session_coach = $('#session_coach').val();
@@ -230,20 +121,29 @@
                                     let element = ``
 
                                     $.each(res.data.theory, function(index, data) {
+
+                                        if (data.is_premium) {
+                                            var premium =
+                                                `<i class="symbol-badge bg-warning"></i>`;
+
+                                        } else {
+                                            var premium = ``;
+
+                                        }
+
                                         element += `<div class="col-12 col-sm-12 col-md-4 col-lg-4">
                                                 <!--begin::Card-->
-                                                <div class="card card-custom">
+                                                <div class="card card-custom card-border">
                                                     <div class="card-header">
-                                                        <div class="card-title">
+                                                        <div class="card-title font-weight-bolder">
                                                             <span class="card-icon">
                                                                 <div class="symbol symbol-circle symbol-60  mr-3">
                                                                     <img alt="Pic" src="{{ asset('assets/media/users/300_1.jpg') }}" />
-                                                                    <i class="symbol-badge bg-primary"></i>
+                                                                    ` + premium + `
                                                                 </div>
                                                             </span>
-                                                            <h3 class="card-label">${data.name}</h3><br>
-                                                            <small>${data.classrooms_name}</small>
-
+                                                            <div class="card-label">${data.name}
+                                                            <div class="font-size-sm text-muted mt-2">${data.classrooms_name}</div></div>
                                                         </div>
                                                         <div class="card-toolbar">
                                                             <div class="dropdown dropdown-inline" data-toggle="tooltip" title="Quick actions"
@@ -256,7 +156,7 @@
                                                                     <!--begin::Navigation-->
                                                                     <ul class="navi navi-hover">
                                                                         <li class="navi-header font-weight-bold py-4">
-                                                                            <a href="#" class="font-weight-bold text-danger">Hapus</a>
+                                                                            <a href="{{ url('/coach/theory') }}/${data.id}" class="font-weight-bold text-primary btn-delete">Hapus</a>
                                                                         </li>
                                                                     </ul>
                                                                     <!--end::Navigation-->
@@ -287,8 +187,7 @@
                                                         <div class="row mt-10">
                                                             <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                                                                 <div class="d-flex mb-3">
-                                                                    <a href="${data.file_url}" id="download-btn"
-                                                                        class="btn btn-primary btn-icon w-auto px-2 waves-effect width-md waves-light ml-1">
+                                                                    <a href="{{ url('/coach/theory/download') }}/${data.id}" target="_blank" class="btn btn-white btn-icon w-auto px-2 waves-effect width-md waves-light ml-1"                                                                    
                                                                         <span class="svg-icon svg-icon-white svg-icon-2x">
                                                                             <!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-02-01-052524/theme/html/demo1/dist/../src/media/svg/icons/Files/Download.svg--><svg
                                                                                 xmlns="http://www.w3.org/2000/svg"
@@ -327,8 +226,16 @@
                                         .data.session + '</h3>');
                                     $('#theory-list').html(element);
                                     $('#card-theory').css('display', '');
+                                    btn_loading('stop')
+
                                 }
                             })
+                            .fail(function(res, error) {
+                                toastr.error(res.responseJSON.message, 'Failed')
+                            })
+                            .always(function() {
+                                btn_loading_basic('stop','Tampilkan')
+                            });
                     });
 
                     $(document).on('change', '#is-premium', function() {
@@ -563,6 +470,127 @@
 
                             $('#session').html(element);
                         })
+                },
+                get_theory_list = (classroom_coach, session_coach) => {
+
+                    $.ajax({
+                            url: '{{ url('coach/theory/list') }}/' + classroom_coach + '/' +
+                                session_coach,
+                            type: 'GET',
+                            dataType: 'json',
+                        })
+                        .done(function(res, xhr, meta) {
+                            if (res.status == 200) {
+                                let element = ``
+
+                                $.each(res.data.theory, function(index, data) {
+
+                                    if (data.is_premium) {
+                                        var premium = `<i class="symbol-badge bg-warning"></i>`;
+
+                                    } else {
+                                        var premium = ``;
+
+                                    }
+
+                                    element += `<div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                <!--begin::Card-->
+                                                <div class="card card-custom">
+                                                    <div class="card-header">
+                                                        <div class="card-title font-weight-bolder">
+                                                            <span class="card-icon">
+                                                                <div class="symbol symbol-circle symbol-60  mr-3">
+                                                                    <img alt="Pic" src="{{ asset('assets/media/users/300_1.jpg') }}" />
+                                                                    ` + premium + `
+                                                                </div>
+                                                            </span>
+                                                            <div class="card-label">${data.name}
+                                                            <div class="font-size-sm text-muted mt-2">${data.classrooms_name}</div></div>
+                                                        </div>
+                                                        <div class="card-toolbar">
+                                                            <div class="dropdown dropdown-inline" data-toggle="tooltip" title="Quick actions"
+                                                                data-placement="left">
+                                                                <a href="#" class="btn btn-hover-light-primary btn-sm btn-icon" data-toggle="dropdown"
+                                                                    aria-haspopup="true" aria-expanded="false">
+                                                                    <i class="ki ki-bold-more-hor"></i>
+                                                                </a>
+                                                                <div class="dropdown-menu p-0 m-0 dropdown-menu-right">
+                                                                    <!--begin::Navigation-->
+                                                                    <ul class="navi navi-hover">
+                                                                        <li class="navi-header font-weight-bold py-4">
+                                                                            <a href="{{ url('/coach/theory') }}/${data.id}" class="font-weight-bold text-danger btn-delete">Hapus</a>
+                                                                        </li>
+                                                                    </ul>
+                                                                    <!--end::Navigation-->
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        ${data.description}.
+                                                        <div class="row mt-5">
+                                                            <div class="col-4 col-sm-4 col-md-4 col-lg-4">
+                                                                <div class="d-flex mb-3">
+                                                                    <span class="text-muted">Coach</span>
+                                                                </div>
+                                                                <div class="d-flex">
+                                                                    <span class="text-muted">Upload At</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-8 col-sm-8 col-md-8 col-lg-8">
+                                                                <div class="d-flex mb-3">
+                                                                    <span class="text-dark">${data.coaches_name}</span>
+                                                                </div>
+                                                                <div class="d-flex">
+                                                                    <span class="text-dark">${data.upload_at}</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-10">
+                                                            <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                                                                <div class="d-flex mb-3">
+                                                                    <a href="${data.file_url}" id="download-btn"
+                                                                        class="btn btn-primary btn-icon w-auto px-2 waves-effect width-md waves-light ml-1">
+                                                                        <span class="svg-icon svg-icon-white svg-icon-2x">
+                                                                            <!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-02-01-052524/theme/html/demo1/dist/../src/media/svg/icons/Files/Download.svg--><svg
+                                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                                xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
+                                                                                viewBox="0 0 24 24" version="1.1">
+                                                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                                                    <rect x="0" y="0" width="24" height="24" />
+                                                                                    <path
+                                                                                        d="M2,13 C2,12.5 2.5,12 3,12 C3.5,12 4,12.5 4,13 C4,13.3333333 4,15 4,18 C4,19.1045695 4.8954305,20 6,20 L18,20 C19.1045695,20 20,19.1045695 20,18 L20,13 C20,12.4477153 20.4477153,12 21,12 C21.5522847,12 22,12.4477153 22,13 L22,18 C22,20.209139 20.209139,22 18,22 L6,22 C3.790861,22 2,20.209139 2,18 C2,15 2,13.3333333 2,13 Z"
+                                                                                        fill="#000000" fill-rule="nonzero" opacity="0.3" />
+                                                                                    <rect fill="#000000" opacity="0.3"
+                                                                                        transform="translate(12.000000, 8.000000) rotate(-180.000000) translate(-12.000000, -8.000000) "
+                                                                                        x="11" y="1" width="2" height="14" rx="1" />
+                                                                                    <path
+                                                                                        d="M7.70710678,15.7071068 C7.31658249,16.0976311 6.68341751,16.0976311 6.29289322,15.7071068 C5.90236893,15.3165825 5.90236893,14.6834175 6.29289322,14.2928932 L11.2928932,9.29289322 C11.6689749,8.91681153 12.2736364,8.90091039 12.6689647,9.25670585 L17.6689647,13.7567059 C18.0794748,14.1261649 18.1127532,14.7584547 17.7432941,15.1689647 C17.3738351,15.5794748 16.7415453,15.6127532 16.3310353,15.2432941 L12.0362375,11.3779761 L7.70710678,15.7071068 Z"
+                                                                                        fill="#000000" fill-rule="nonzero"
+                                                                                        transform="translate(12.000004, 12.499999) rotate(-180.000000) translate(-12.000004, -12.499999) " />
+                                                                                </g>
+                                                                            </svg>
+                                                                            <!--end::Svg Icon-->
+                                                                        </span>
+                                                                        Download
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!--end::Card-->
+                                            </div>`;
+                                });
+
+
+                                $('.my-title').html('<h3>Materi ' + res.data.classroom + ' - ' +
+                                    res
+                                    .data.session + '</h3>');
+                                $('#theory-list').html(element);
+                                $('#card-theory').css('display', '');
+                            }
+                        })
                 }
 
             const get_classroom_coach = () => {
@@ -590,6 +618,8 @@
                         })
                 },
                 get_session_coach = (id, select_id) => {
+                    btn_loading_basic('start','Tampilkan')
+
                     $.ajax({
                             url: '{{ url('public/get-session-coach') }}/' + id,
                             type: 'GET',
@@ -609,6 +639,7 @@
                                     }
                                 }
                             }
+                            btn_loading_basic('stop','Tampilkan')
 
                             $('#session_coach').html(element);
                         })

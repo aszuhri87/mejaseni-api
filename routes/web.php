@@ -204,7 +204,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::post('theory/file', [CoachTheoryController::class, 'theory_file']);
         Route::delete('theory/file/{id}', [CoachTheoryController::class, 'theory_file_delete']);
         Route::get('theory/list/{classroom_id}/{session_id}', [CoachTheoryController::class, 'theory_list']);
-        Route::get('theory/download/{path}', [CoachTheoryController::class, 'download']);
+        Route::get('theory/download/{id}', [CoachTheoryController::class, 'theory_download']);
         Route::resource('theory', CoachTheoryController::class);
 
     });
