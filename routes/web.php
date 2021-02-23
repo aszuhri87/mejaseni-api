@@ -41,6 +41,7 @@ use App\Http\Controllers\Admin\Schedule\ScheduleController;
 */
 use App\Http\Controllers\Coach\DashboardController;
 use App\Http\Controllers\Coach\TheoryController as CoachTheoryController;
+use App\Http\Controllers\Coach\Exercise\AssignmentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -209,6 +210,16 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::get('theory/list/{classroom_id}/{session_id}', [CoachTheoryController::class, 'theory_list']);
         Route::get('theory/download/{id}', [CoachTheoryController::class, 'theory_download']);
         Route::resource('theory', CoachTheoryController::class);
+        
+        Route::group(['prefix' => 'exercise'], function () {
+            
+            Route::post('assignment/file', [AssignmentController::class, 'assignment_file']);
+            Route::delete('assignment/file/{id}', [AssignmentController::class, 'assignment_file_delete']);
+            Route::get('assignment/list/{classroom_id}/{session_id}', [AssignmentController::class, 'assignment_list']);
+            Route::get('assignment/download/{id}', [AssignmentController::class, 'assignment_download']);
+            Route::resource('assignment', AssignmentController::class);    
+    
+        });
 
     });
 

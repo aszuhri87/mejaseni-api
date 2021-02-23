@@ -427,16 +427,16 @@ class BaseMenu extends Controller
                 'icon' => $this->icon('exercise'),
                 'children' => [
                     [
-                        'key' => 'penugasan',
-                        'title' => 'Penugasan',
-                        'url' => 'coach/excercise/penugasan',
-                        'permission' => 'penugasan'
+                        'key' => 'assignment',
+                        'title' => 'Assignment',
+                        'url' => 'coach/exercise/assignment',
+                        'permission' => 'assignment'
                     ],
                     [
-                        'key' => 'review_penugasan',
-                        'title' => 'Review Penugasan',
-                        'url' => 'coach/excercise/review-penugasan',
-                        'permission' => 'penugasan'
+                        'key' => 'review_assignment',
+                        'title' => 'Review Assignment',
+                        'url' => 'coach/exercise/review-assignment',
+                        'permission' => 'review_assignment'
                     ],
                 ],
             ],

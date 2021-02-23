@@ -202,11 +202,11 @@
 
     function btn_loading_basic(action,text) {
         if(action == 'start'){
-            $('.btn-loading').html('<div id="loading" class="mr-1"></div> Loading...');
-            $('.btn-loading').attr('disabled',true);
+            $('.btn-loading-basic').html('<div id="loading" class="mr-1"></div> Loading...');
+            $('.btn-loading-basic').attr('disabled',true);
         }else{
-            $('.btn-loading').html(text);
-            $('.btn-loading').attr('disabled',false);
+            $('.btn-loading-basic').html(text);
+            $('.btn-loading-basic').attr('disabled',false);
         }
     }
 
