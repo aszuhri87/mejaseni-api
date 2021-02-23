@@ -91,6 +91,41 @@
                 $(document).on('click','.btn-buy',function(event){
                     event.preventDefault();
                     showModal('modal-package-detail');
+                });
+
+                $(document).on('click','.btn-cart',function(event){
+                    event.preventDefault();
+                    let session_video_id = $(this).data('id');
+                    Swal.fire({
+                        title: 'Add Item Cart?',
+                        text: "Item cart will be add!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#7F16A7',
+                        confirmButtonText: 'Yes, Add to cart',
+                    }).then(function (result) {
+                        if (result.value) {
+                            $.ajax({
+                                url: `{{url('student/add-to-cart')}}`,
+                                type: 'POST',
+                                data: {
+                                    type:4,
+                                    id:session_video_id,
+                                    student_id:`{{Auth::guard('student')->user()->id}}`
+                                },
+                            })
+                            .done(function(res, xhr, meta) {
+                                getCart();
+                                toastr.success(res.message, 'Success')
+                            })
+                            .fail(function(res, error) {
+                                toastr.error(res.responseJSON.message, 'Failed')
+                            })
+                            .always(function() { });
+                        }
+                    })
+
+                    $('.swal2-title').addClass('justify-content-center')
                 })
             },
             formSubmit = () => {

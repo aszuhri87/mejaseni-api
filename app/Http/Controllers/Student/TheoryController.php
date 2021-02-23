@@ -43,6 +43,7 @@ class TheoryController extends BaseMenu
                     'theories.is_video',
                     'theories.description',
                     'theories.upload_date',
+                    'theories.price',
                 ])
                 ->whereNull('deleted_at');
 
@@ -57,6 +58,7 @@ class TheoryController extends BaseMenu
                     'theories.is_video',
                     'theories.description',
                     'theories.upload_date',
+                    'theories.price',
                 ])
                 ->joinSub($theory, 'theories', function ($join) {
                     $join->on('sessions.id', '=', 'theories.session_id');
@@ -75,6 +77,7 @@ class TheoryController extends BaseMenu
                     'sessions.is_video',
                     'sessions.description',
                     'sessions.upload_date',
+                    'sessions.price',
                 ])
                 ->joinSub($session, 'sessions', function ($join) {
                     $join->on('classrooms.id', '=', 'sessions.classroom_id');
@@ -135,6 +138,7 @@ class TheoryController extends BaseMenu
                     'classrooms.is_video',
                     'classrooms.description',
                     'classrooms.upload_date',
+                    'classrooms.price',
                     'student_schedules.coach_name',
                     DB::raw("CONCAT('{$path}',classrooms.url) as file_url"),
                 ])
@@ -145,7 +149,7 @@ class TheoryController extends BaseMenu
                     $join->on('student_classrooms.id', '=', 'student_schedules.student_classroom_id');
                 })
                 ->whereNull('student_classrooms.deleted_at')
-                ->where('student_id',Auth::guard('student')->user()->id)
+                ->where('student_classrooms.student_id',Auth::guard('student')->user()->id)
                 ->where(function($query) use($request){
                     if(!empty($request->classroom_id)){
                         $query->where('classrooms.id',$request->classroom_id);
@@ -159,6 +163,43 @@ class TheoryController extends BaseMenu
                     }
                 })
                 ->get();
+
+            foreach ($result as $key => $value) {
+                // cek transaction
+                $chart = DB::table('charts')
+                    ->select([
+                        'charts.id',
+                        'charts.theory_id'
+                    ]);
+
+                $transaction_detail = DB::table('transaction_details')
+                    ->select([
+                        'transaction_details.transaction_id',
+                        'transaction_details.chart_id',
+                        'charts.theory_id'
+                    ])
+                    ->joinSub($chart, 'charts', function ($join) {
+                        $join->on('transaction_details.chart_id', '=', 'charts.id');
+                    });
+
+                $transaction = DB::table('transactions')
+                    ->select([
+                        'transactions.id',
+                        'transactions.student_id',
+                        'transaction_details.theory_id',
+                    ])
+                    ->joinSub($transaction_detail, 'transaction_details', function ($join) {
+                        $join->on('transactions.id', '=', 'transaction_details.transaction_id');
+                    })
+                    ->where('transactions.student_id',$value->student_id)
+                    ->count();
+                if($transaction > 0 ){
+                    $value->is_buy = true;
+                }
+                else{
+                    $value->is_buy = false;
+                }
+            }
 
             return response([
                 "status" => 200,

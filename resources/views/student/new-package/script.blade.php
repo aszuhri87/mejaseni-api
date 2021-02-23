@@ -3,7 +3,7 @@
         var _componentPage = function(){
 
             $(document).ready(function() {
-                // formSubmit();
+                formSubmit();
                 initAction();
                 getCategory();
                 getSessionVideo()
@@ -71,7 +71,11 @@
                     let classroom_id = $(this).data('classroom_id');
                     let price = $(this).data('price');
                     let classroom_name = $(this).data('classroom_name');
-                    console.log(classroom_id,price,classroom_name);
+                    let id = $(this).data('id');
+                    let type = $(this).data('type');
+
+                    $('#id').val(id);
+                    $('#type').val(type);
                     $('#classroom-name').html(`Kelas "${classroom_name}"`);
                     $('#price').html(`Rp. ${numeral(price).format('0,0')}`);
                     $('#total-price').html(`Rp. ${numeral(price).format('0,0')}`);
@@ -88,26 +92,30 @@
                     });
                     let id = $(this).data('id');
                     getPackageByCategory(id);
-                })
+                });
             },
             formSubmit = () => {
                 $('#form-new-package').submit(function(event){
                     event.preventDefault();
-                    return true;
-                    // btn_loading('start')
+                    // return true;
+                    btn_loading('start')
                     $.ajax({
-                        url: $(this).attr('action'),
-                        type: $(this).attr('method'),
+                        url: `{{url('student/add-to-cart')}}`,
+                        type: 'POST',
                         data: $(this).serialize(),
                     })
                     .done(function(res, xhr, meta) {
-
+                        if (res.status == 200) {
+                            toastr.success(res.message, 'Success');
+                            hideModal('modal-new-package');
+                            this.getCart();
+                        }
                     })
                     .fail(function(res, error) {
                         toastr.error(res.responseJSON.message, 'Failed')
                     })
                     .always(function() {
-                        // btn_loading('stop')
+                        btn_loading('stop')
                     });
                 });
             },
@@ -219,7 +227,7 @@
                                                         <span>${data.session_total} Sesi </span><span>@${data.session_duration}Menit</span>
                                                     </div>
                                                     <div>
-                                                        <button type="button" class="btn btn-primary btn-registration" data-id="${data.classroom_id}" data-classroom_name="${data.classroom_name}" data-price="${data.price}">
+                                                        <button type="button" class="btn btn-primary btn-registration" data-type="1" data-id="${data.classroom_id}" data-classroom_name="${data.classroom_name}" data-price="${data.price}">
                                                             <span class="svg-icon svg-icon-2x"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-02-01-052524/theme/html/demo1/dist/../src/media/svg/icons/Communication/Add-user.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                                                     <polygon points="0 0 24 0 24 24 0 24"/>
@@ -242,7 +250,7 @@
                         if(data.coach.length > 0){
                             $.each(data.coach, function(index, item) {
                                 element += `
-                                    <div class="col-3">
+                                    <div class="col-6">
                                         <div class="d-flex align-items-center">
                                             <div class="mr-5 mb-3">
                                                 <img src="${item.coach_image_url}" class="rounded" width="50" height="50"/>
@@ -392,7 +400,7 @@
                                                         <span>${data.session_total} Sesi </span><span>@${data.session_duration}Menit</span>
                                                     </div>
                                                     <div>
-                                                        <button type="button" class="btn btn-primary btn-registration" data-id="${data.classroom_id}" data-classroom_name="${data.classroom_name}" data-price="${data.price}">
+                                                        <button type="button" class="btn btn-primary btn-registration" data-type="1" data-id="${data.classroom_id}" data-classroom_name="${data.classroom_name}" data-price="${data.price}">
                                                             <span class="svg-icon svg-icon-2x"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-02-01-052524/theme/html/demo1/dist/../src/media/svg/icons/Communication/Add-user.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                                                     <polygon points="0 0 24 0 24 24 0 24"/>

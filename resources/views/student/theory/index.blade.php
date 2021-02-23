@@ -44,7 +44,7 @@
 </div>
 
 
-{{-- @include('student.theory.modal') --}}
+@include('student.theory.modal')
 @endsection
 
 @push('script')

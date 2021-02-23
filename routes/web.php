@@ -56,6 +56,7 @@ use App\Http\Controllers\Student\PackageDetailController as StudentPackageDetail
 use App\Http\Controllers\Student\TheoryController as StudentTheoryController;
 use App\Http\Controllers\Student\VideoController as StudentVideoController;
 use App\Http\Controllers\Student\ProfileController as StudentProfileController;
+use App\Http\Controllers\Student\CartController as StudentCartController;
 
 /*
 |--------------------------------------------------------------------------
@@ -247,6 +248,10 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::get('profile', [StudentProfileController::class,'index']);
 
         Route::get('package-detail/{session_video_id}',[StudentPackageDetailController::class, 'index']);
+
+        Route::post('add-to-cart',[StudentCartController::class, 'store']);
+        Route::get('get-cart/{student_id}',[StudentCartController::class, 'get_cart']);
+        Route::delete('delete-cart/{cart_id}',[StudentCartController::class, 'delete_cart']);
     });
 
     /*
