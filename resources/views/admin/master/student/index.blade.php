@@ -67,7 +67,7 @@
                     <th>No</th>
                     <th width="40%">Nama</th>
                     <th width="20%">Class</th>
-                    <th width="20%">Status</th>
+                    <th width="20%">Actived</th>
                     <th width="20%">Actions</th>
                 </tr>
             </thead>
