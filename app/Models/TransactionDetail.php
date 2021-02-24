@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\Uuid;
 
-class Collection extends Model
+class TransactionDetail extends Model
 {
     use HasFactory, Uuid, SoftDeletes;
 
@@ -16,11 +16,9 @@ class Collection extends Model
     public $keyType = 'string';
 
     protected $fillable = [
-        'student_id',
-        'assignment_id',
-        'description',
-        'upload_date',
-        'name',
+        'transaction_id',
+        'chard_id',
+        'price',
     ];
 
     protected $dates = ['deleted_at'];

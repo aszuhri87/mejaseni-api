@@ -68,7 +68,7 @@
             </div>
         </div>
         <!--end::Header-->
-        @if (Auth::guard('student'))
+        @if (Auth::guard('student')->check())
         <div class="separator separator-dashed mt-8 mb-5"></div>
         <div class="row">
             <div class="col">
@@ -111,3 +111,38 @@
     <!--end::Content-->
 </div>
 <!-- end::User Panel-->
+
+<div id="kt_quick_cart" class="offcanvas offcanvas-right-chart p-10" style="width: 500px !important">
+    <!--begin::Header-->
+    <div class="offcanvas-header d-flex align-items-center justify-content-between pb-7" kt-hidden-height="47" style="">
+        <h4 class="font-weight-bold m-0">Cart</h4>
+        <a href="#" class="btn btn-xs btn-icon btn-light btn-hover-primary" id="kt_quick_cart_close">
+            <i class="ki ki-close icon-xs text-muted"></i>
+        </a>
+    </div>
+    <!--end::Header-->
+    <!--begin::Content-->
+    <div class="offcanvas-content">
+        <!--begin::Wrapper-->
+        <form id="form-pay">
+        <div class="offcanvas-wrapper mb-5 scroll-pull scroll ps ps--active-y" style="height: 123px; overflow: hidden;">
+            <div class="cart">
+
+            </div>
+        <div class="ps__rail-x" style="left: 0px; bottom: -50px;"><div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__rail-y" style="top: 50px; height: 123px; right: -2px;"><div class="ps__thumb-y" tabindex="0" style="top: 8px; height: 40px;"></div></div></div>
+        <!--end::Wrapper-->
+        <!--begin::Purchase-->
+        <div class="offcanvas-footer" kt-hidden-height="112" style="">
+            <div class="d-flex align-items-center justify-content-between mb-7">
+                <span class="font-weight-bold text-muted font-size-sm mr-2">Total Bayar</span>
+                <span class="font-weight-bolder text-primary text-right total-price"></span>
+            </div>
+            <div>
+                <button type="submit" style="width: 100%" class="btn btn-primary text-weight-bold">Bayar Sekarang</button>
+            </div>
+        </div>
+        </form>
+        <!--end::Purchase-->
+    </div>
+    <!--end::Content-->
+</div>
