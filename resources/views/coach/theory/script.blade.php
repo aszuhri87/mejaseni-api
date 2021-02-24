@@ -22,7 +22,7 @@
 
             });
 
-            const  initAction = () => {
+            const initAction = () => {
                     $(document).on('click', '#add-btn', function(event) {
                         event.preventDefault();
 
@@ -97,14 +97,13 @@
                             .fail(function(res, error) {
                                 toastr.error(res.responseJSON.message, 'Gagal')
                             })
-                            .always(function() {
-                            });
+                            .always(function() {});
 
                     });
 
                     $(document).on('click', '#show-btn', function(event) {
                         event.preventDefault();
-                        btn_loading_basic('start','Tampilkan')
+                        btn_loading_basic('start', 'Tampilkan')
 
                         var classroom_coach = $('#classroom_coach').val();
                         var session_coach = $('#session_coach').val();
@@ -186,7 +185,7 @@
                                                         <div class="row mt-10">
                                                             <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                                                                 <div class="d-flex mb-3">
-                                                                    <a href="{{ url('/coach/theory/download') }}/${data.id}" target="_blank" class="btn btn-white btn-icon w-auto px-2 waves-effect width-md waves-light ml-1"                                                                    
+                                                                    <a href="{{ url('/coach/theory/download') }}/${data.id}" target="_blank" class="btn btn-white btn-icon w-auto px-2 waves-effect width-md waves-light ml-1">                                                                    
                                                                         <span class="svg-icon svg-icon-white svg-icon-2x">
                                                                             <!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-02-01-052524/theme/html/demo1/dist/../src/media/svg/icons/Files/Download.svg--><svg
                                                                                 xmlns="http://www.w3.org/2000/svg"
@@ -233,7 +232,7 @@
                                 toastr.error(res.responseJSON.message, 'Failed')
                             })
                             .always(function() {
-                                btn_loading_basic('stop','Tampilkan')
+                                btn_loading_basic('stop', 'Tampilkan')
                             });
                     });
 
@@ -494,7 +493,7 @@
 
                                     element += `<div class="col-12 col-sm-12 col-md-4 col-lg-4">
                                                 <!--begin::Card-->
-                                                <div class="card card-custom">
+                                                <div class="card card-custom card-border">
                                                     <div class="card-header">
                                                         <div class="card-title font-weight-bolder">
                                                             <span class="card-icon">
@@ -548,8 +547,7 @@
                                                         <div class="row mt-10">
                                                             <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                                                                 <div class="d-flex mb-3">
-                                                                    <a href="${data.file_url}" id="download-btn"
-                                                                        class="btn btn-primary btn-icon w-auto px-2 waves-effect width-md waves-light ml-1">
+                                                                    <a href="${data.file_url}" id="download-btn" target="_blank" class="btn btn-primary btn-icon w-auto px-2 waves-effect width-md waves-light ml-1">
                                                                         <span class="svg-icon svg-icon-white svg-icon-2x">
                                                                             <!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-02-01-052524/theme/html/demo1/dist/../src/media/svg/icons/Files/Download.svg--><svg
                                                                                 xmlns="http://www.w3.org/2000/svg"
@@ -617,7 +615,7 @@
                         })
                 },
                 get_session_coach = (id, select_id) => {
-                    btn_loading_basic('start','Tampilkan')
+                    btn_loading_basic('start', 'Tampilkan')
 
                     $.ajax({
                             url: '{{ url('public/get-session-coach') }}/' + id,
@@ -638,7 +636,7 @@
                                     }
                                 }
                             }
-                            btn_loading_basic('stop','Tampilkan')
+                            btn_loading_basic('stop', 'Tampilkan')
 
                             $('#session_coach').html(element);
                         })
