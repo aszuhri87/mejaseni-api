@@ -42,7 +42,7 @@ use App\Http\Controllers\Admin\Schedule\ScheduleController;
 use App\Http\Controllers\Coach\DashboardController;
 use App\Http\Controllers\Coach\TheoryController as CoachTheoryController;
 use App\Http\Controllers\Coach\Exercise\AssignmentController;
-
+use App\Http\Controllers\Coach\Exercise\ReviewAssignmentController;
 /*
 |--------------------------------------------------------------------------
 | Student Controller
@@ -217,7 +217,14 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::delete('assignment/file/{id}', [AssignmentController::class, 'assignment_file_delete']);
             Route::get('assignment/list/{classroom_id}/{session_id}', [AssignmentController::class, 'assignment_list']);
             Route::get('assignment/download/{id}', [AssignmentController::class, 'assignment_download']);
-            Route::resource('assignment', AssignmentController::class);    
+            Route::resource('assignment', AssignmentController::class);  
+
+            Route::post('review-assignment/file', [ReviewAssignmentController::class, 'assignment_file']);
+            Route::delete('review-assignment/file/{id}', [ReviewAssignmentController::class, 'assignment_file_delete']);
+            Route::get('review-assignment/list/{classroom_id}/{session_id}', [ReviewAssignmentController::class, 'assignment_list']);
+            Route::get('review-assignment/download/{id}', [ReviewAssignmentController::class, 'assignment_download']);
+            Route::post('review-assignment/dt/{classroom_id}/{session_id}', [ReviewAssignmentController::class, 'dt']);
+            Route::resource('review-assignment', ReviewAssignmentController::class);    
     
         });
 

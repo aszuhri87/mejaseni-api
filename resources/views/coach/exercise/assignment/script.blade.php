@@ -24,12 +24,13 @@
 
             });
 
-            const  initAction = () => {
+            const initAction = () => {
                     $(document).on('click', '#add-btn', function(event) {
                         event.preventDefault();
 
                         $('#form-assignment').trigger("reset");
-                        $('#form-assignment').attr('action', '{{ url('coach/exercise/assignment') }}');
+                        $('#form-assignment').attr('action',
+                        '{{ url('coach/exercise/assignment') }}');
                         $('#form-assignment').attr('method', 'POST');
 
                         get_classroom_category();
@@ -47,7 +48,7 @@
 
                     $(document).on('click', '.btn-delete', function(event) {
                         event.preventDefault();
-                        
+
                         var url = $(this).attr('href');
 
                         Swal.fire({
@@ -99,20 +100,20 @@
                             .fail(function(res, error) {
                                 toastr.error(res.responseJSON.message, 'Gagal')
                             })
-                            .always(function() {
-                            });
+                            .always(function() {});
 
                     });
 
                     $(document).on('click', '#show-btn', function(event) {
                         event.preventDefault();
-                        btn_loading_basic('start','Tampilkan')
+                        btn_loading_basic('start', 'Tampilkan')
 
                         var classroom_coach = $('#classroom_coach').val();
                         var session_coach = $('#session_coach').val();
 
                         $.ajax({
-                                url: '{{ url('coach/exercise/assignment/list') }}/' + classroom_coach + '/' +
+                                url: '{{ url('coach/exercise/assignment/list') }}/' +
+                                    classroom_coach + '/' +
                                     session_coach,
                                 type: 'GET',
                                 dataType: 'json',
@@ -177,7 +178,7 @@
                                                         <div class="row mt-10">
                                                             <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                                                                 <div class="d-flex mb-3">
-                                                                    <a href="{{ url('/coach/exercise/assignment/download') }}/${data.id}" target="_blank" class="btn btn-primary btn-icon w-auto px-2 waves-effect width-md waves-light ml-1"                                                                    
+                                                                    <a href="{{ url('/coach/exercise/assignment/download') }}/${data.id}" target="_blank" class="btn btn-primary btn-icon w-auto px-2 waves-effect width-md waves-light ml-1">                                                                    
                                                                         <span class="svg-icon svg-icon-white svg-icon-2x">
                                                                             <!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-02-01-052524/theme/html/demo1/dist/../src/media/svg/icons/Files/Download.svg--><svg
                                                                                 xmlns="http://www.w3.org/2000/svg"
@@ -224,7 +225,7 @@
                                 toastr.error(res.responseJSON.message, 'Failed')
                             })
                             .always(function() {
-                                btn_loading_basic('stop','Tampilkan')
+                                btn_loading_basic('stop', 'Tampilkan')
                             });
                     });
 
@@ -275,7 +276,11 @@
                             })
                             .done(function(res, xhr, meta) {
                                 toastr.success(res.message, 'Success')
-                                init_table.draw(false);
+
+                                var classroom_coach = $('#classroom_coach').val();
+                                var session_coach = $('#session_coach').val();
+                                get_assignment_list(classroom_coach, session_coach)
+
                                 arr_path = [];
                                 hideModal('modal-assignment');
                             })
@@ -475,7 +480,7 @@
 
                                     element += `<div class="col-12 col-sm-12 col-md-4 col-lg-4">
                                                 <!--begin::Card-->
-                                                <div class="card card-custom">
+                                                <div class="card card-custom card-border">
                                                     <div class="card-header">
                                                         <div class="card-title font-weight-bolder">
                                                             <span class="card-icon">
@@ -598,7 +603,7 @@
                         })
                 },
                 get_session_coach = (id, select_id) => {
-                    btn_loading_basic('start','Tampilkan')
+                    btn_loading_basic('start', 'Tampilkan')
 
                     $.ajax({
                             url: '{{ url('public/get-session-coach') }}/' + id,
@@ -619,7 +624,7 @@
                                     }
                                 }
                             }
-                            btn_loading_basic('stop','Tampilkan')
+                            btn_loading_basic('stop', 'Tampilkan')
 
                             $('#session_coach').html(element);
                         })
