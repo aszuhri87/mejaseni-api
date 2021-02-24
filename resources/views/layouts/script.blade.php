@@ -241,6 +241,16 @@
         }
     }
 
+    function btn_loading_exercise(action,text) {
+        if(action == 'start'){
+            $('.btn-loading-exercise').html('<div id="loading" class="mr-1"></div> Loading...');
+            $('.btn-loading-exercise').attr('disabled',true);
+        }else{
+            $('.btn-loading-exercise').html(text);
+            $('.btn-loading-exercise').attr('disabled',false);
+        }
+    }
+
     window.searchDelay = function (callback, ms) {
         var timer = 0;
         return function() {

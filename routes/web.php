@@ -58,6 +58,7 @@ use App\Http\Controllers\Student\TheoryController as StudentTheoryController;
 use App\Http\Controllers\Student\VideoController as StudentVideoController;
 use App\Http\Controllers\Student\ProfileController as StudentProfileController;
 use App\Http\Controllers\Student\CartController as StudentCartController;
+use App\Http\Controllers\Student\ExerciseController as StudentExerciseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -260,6 +261,19 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::get('/', [StudentVideoController::class, 'index']);
             Route::get('get-video', [StudentVideoController::class, 'get_video']);
             Route::get('video-detail/{session_video_id}', [StudentVideoController::class, 'video_detail']);
+        });
+
+        Route::group(['prefix' => 'exercise'], function () {
+            Route::get('/', [StudentExerciseController::class, 'index']);
+            Route::get('get-exercise', [StudentExerciseController::class, 'get_exercise']);
+            Route::get('get-collection/{collection_id}', [StudentExerciseController::class, 'get_collection']);
+            Route::get('get-class/{student_id}', [StudentExerciseController::class, 'get_class']);
+            Route::get('get-result-exercise/{id}', [StudentExerciseController::class, 'get_result']);
+            Route::post('exercise-file', [StudentExerciseController::class, 'exercise_file']);
+            Route::post('update/{collection_id}', [StudentExerciseController::class, 'update']);
+            Route::post('store', [StudentExerciseController::class, 'store']);
+            Route::delete('exercise-file/{id}', [StudentExerciseController::class, 'exercise_file_delete']);
+            Route::delete('exercise-file/delete/{id}', [StudentExerciseController::class, 'file_delete']);
         });
 
         Route::post('profile/{id}', [StudentProfileController::class,'update']);

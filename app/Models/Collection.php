@@ -19,7 +19,8 @@ class Collection extends Model
         'student_id',
         'assignment_id',
         'description',
-        'upload_date'
+        'upload_date',
+        'name',
     ];
 
     protected $dates = ['deleted_at'];
