@@ -39,7 +39,7 @@ class CartController extends Controller
                     ];
                 }
 
-                $cart = Chart::create($data);
+                $cart = Cart::create($data);
                 return $cart;
             });
 
@@ -85,13 +85,13 @@ class CartController extends Controller
                         'theories.*',
                     ]);
 
-                $cart = DB::table('charts')
+                $cart = DB::table('carts')
                     ->select([
-                        'charts.id',
-                        'charts.master_lesson_id',
-                        'charts.classroom_id',
-                        'charts.session_video_id',
-                        'charts.theory_id',
+                        'carts.id',
+                        'carts.master_lesson_id',
+                        'carts.classroom_id',
+                        'carts.session_video_id',
+                        'carts.theory_id',
                         'classrooms.package_type',
                         'classrooms.name as classroom_name',
                         'classrooms.price as classroom_price',
@@ -102,19 +102,19 @@ class CartController extends Controller
                         'theories.price as theory_price',
                     ])
                     ->leftJoinSub($master_lesson, 'master_lessons', function ($join) {
-                        $join->on('charts.master_lesson_id', '=', 'master_lessons.id');
+                        $join->on('carts.master_lesson_id', '=', 'master_lessons.id');
                     })
                     ->leftJoinSub($session_video, 'session_videos', function ($join) {
-                        $join->on('charts.session_video_id', '=', 'session_videos.id');
+                        $join->on('carts.session_video_id', '=', 'session_videos.id');
                     })
                     ->leftJoinSub($classroom, 'classrooms', function ($join) {
-                        $join->on('charts.classroom_id', '=', 'classrooms.id');
+                        $join->on('carts.classroom_id', '=', 'classrooms.id');
                     })
                     ->leftJoinSub($theory, 'theories', function ($join) {
-                        $join->on('charts.theory_id', '=', 'theories.id');
+                        $join->on('carts.theory_id', '=', 'theories.id');
                     })
-                    ->where('charts.student_id',$student_id)
-                    ->whereNull('charts.deleted_at')
+                    ->where('carts.student_id',$student_id)
+                    ->whereNull('carts.deleted_at')
                     ->get();
                 return $cart;
             });
@@ -135,7 +135,7 @@ class CartController extends Controller
     {
         try {
             $result = DB::transaction(function () use($cart_id){
-                $delete = Chart::find($cart_id)->delete();
+                $delete = Cart::find($cart_id)->delete();
                 return $delete;
             });
 
