@@ -308,8 +308,18 @@ Route::group(['middleware' => ['auth-handling']], function () {
 
         Route::group(['prefix' => 'schedule'], function () {
             Route::get('/', [StudentScheduleController::class, 'index']);
+            Route::get('get-total-class/{student_id}', [StudentScheduleController::class, 'get_total_class']);
+
+            // regular class
             Route::get('regular-class', [StudentScheduleController::class, 'regular_class']);
-            Route::get('special-class', [StudentScheduleController::class, 'special_class']);
+
+            // special class
+            Route::group(['prefix' => 'special-class'], function () {
+                Route::get('/', [StudentScheduleController::class, 'special_class']);
+                Route::get('{coach_schedule_id}', [StudentScheduleController::class, 'coach_schedule']);
+                Route::post('booking', [StudentScheduleController::class, 'special_class_booking']);
+                Route::post('reschedule', [StudentScheduleController::class, 'special_class_reschedule']);
+            });
         });
 
         Route::get('my-class',[StudentMyClassController::class, 'index']);

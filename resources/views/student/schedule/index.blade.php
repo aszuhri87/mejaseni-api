@@ -25,7 +25,7 @@
                             </div>
                             <div>
                                 <p class="text-muted" style="margin-bottom: 0 !important">Kelas</p>
-                                <p class="h2" id="total-class" style="margin-bottom: 0 !important">50</p>
+                                <p class="h2" id="total-class" style="margin-bottom: 0 !important"></p>
                             </div>
                         </div>
                         <div class="col-lg-6 d-flex mt-5" style="padding-right: 0 !important">

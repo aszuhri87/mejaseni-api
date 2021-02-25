@@ -16,7 +16,9 @@ class StudentSchedule extends Model
     public $keyType = 'string';
 
     protected $fillable = [
-        'name'
+        'student_classroom_id',
+        'session_id',
+        'coach_schedule_id',
     ];
 
     protected $dates = ['deleted_at'];
