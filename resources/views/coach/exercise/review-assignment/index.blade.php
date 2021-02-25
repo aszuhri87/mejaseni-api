@@ -27,7 +27,7 @@
             color: #FFA800;
         }
 
-        input#rate-1:checked~label {
+        input#rate-5:checked~label {
             color: #FFA800;
             text-shadow: 0 0 20px #952;
         }
@@ -66,10 +66,6 @@
                                 <button type="button" id="show-table"
                                     class="btn btn-primary btn-icon w-auto px-2 waves-effect width-md waves-light ml-1 text-center btn-loading-basic">
                                     Tampilkan
-                                </button>
-                                <button type="button" id="show-table-try"
-                                    class="btn btn-primary btn-icon w-auto px-2 waves-effect width-md waves-light ml-1 text-center btn-loading-basic">
-                                    Tampilkan modal
                                 </button>
                             </div>
                         </div>

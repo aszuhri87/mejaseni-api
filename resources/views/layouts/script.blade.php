@@ -241,6 +241,16 @@
         }
     }
 
+    function btn_loading_class(id_name,action,text) {
+        if(action == 'start'){
+            $('#'+id_name).html('<div id="loading" class="mr-1"></div> Loading...');
+            $('#'+id_name).attr('disabled',true);
+        }else{
+            $('#'+id_name).html(text);
+            $('#'+id_name).attr('dissabled',false);
+        }
+    }
+
     function btn_loading_exercise(action,text) {
         if(action == 'start'){
             $('.btn-loading-exercise').html('<div id="loading" class="mr-1"></div> Loading...');
