@@ -59,6 +59,7 @@ use App\Http\Controllers\Student\VideoController as StudentVideoController;
 use App\Http\Controllers\Student\ProfileController as StudentProfileController;
 use App\Http\Controllers\Student\CartController as StudentCartController;
 use App\Http\Controllers\Student\ExerciseController as StudentExerciseController;
+use App\Http\Controllers\Student\ReviewController as StudentReviewController;
 
 
 /*
@@ -254,7 +255,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
 
             Route::post('career/dt', [CareerAdminController::class, 'dt']);
             Route::resource('career', CareerAdminController::class);
-            
+
         });
     });
 
@@ -281,15 +282,15 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::delete('assignment/file/{id}', [AssignmentController::class, 'assignment_file_delete']);
             Route::get('assignment/list/{classroom_id}/{session_id}', [AssignmentController::class, 'assignment_list']);
             Route::get('assignment/download/{id}', [AssignmentController::class, 'assignment_download']);
-            Route::resource('assignment', AssignmentController::class);  
+            Route::resource('assignment', AssignmentController::class);
 
             Route::post('review-assignment/file', [ReviewAssignmentController::class, 'assignment_file']);
             Route::delete('review-assignment/file/{id}', [ReviewAssignmentController::class, 'assignment_file_delete']);
             Route::get('review-assignment/list/{classroom_id}/{session_id}', [ReviewAssignmentController::class, 'assignment_list']);
             Route::get('review-assignment/download/{id}', [ReviewAssignmentController::class, 'assignment_download']);
             Route::post('review-assignment/dt/{classroom_id}/{session_id}', [ReviewAssignmentController::class, 'dt']);
-            Route::resource('review-assignment', ReviewAssignmentController::class);    
-    
+            Route::resource('review-assignment', ReviewAssignmentController::class);
+
         });
 
     });
@@ -345,6 +346,10 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::delete('exercise-file/delete/{id}', [StudentExerciseController::class, 'file_delete']);
         });
 
+        Route::group(['prefix' => 'review'], function () {
+            Route::get('/', [StudentReviewController::class, 'index']);
+        });
+
         Route::post('profile/{id}', [StudentProfileController::class,'update']);
         Route::post('profile/change-password/{id}', [StudentProfileController::class,'change_password']);
         Route::get('profile', [StudentProfileController::class,'index']);
@@ -382,7 +387,6 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::get('get-guest-star', [PublicController::class, 'get_guest_star']);
     });
 });
-
 
 /*
 |--------------------------------------------------------------------------
