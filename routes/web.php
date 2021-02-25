@@ -60,6 +60,42 @@ use App\Http\Controllers\Student\ProfileController as StudentProfileController;
 use App\Http\Controllers\Student\CartController as StudentCartController;
 use App\Http\Controllers\Student\ExerciseController as StudentExerciseController;
 
+
+/*
+|--------------------------------------------------------------------------
+| CMS Admin Controller
+|--------------------------------------------------------------------------
+*/
+use App\Http\Controllers\Admin\Cms\CompanyController as CompanyController;
+use App\Http\Controllers\Admin\Cms\BranchController as BranchController;
+use App\Http\Controllers\Admin\Cms\ProgramController as ProgramController;
+use App\Http\Controllers\Admin\Cms\EventController as EventController;
+use App\Http\Controllers\Admin\Cms\NewsController as NewsController;
+use App\Http\Controllers\Admin\Cms\PrivacyPolicyController as PrivacyPolicyAdminController;
+use App\Http\Controllers\Admin\Cms\FaqController as FaqAdminController;
+use App\Http\Controllers\Admin\Cms\TeamController as TeamController;
+use App\Http\Controllers\Admin\Cms\CareerController as CareerAdminController;
+
+
+/*
+|--------------------------------------------------------------------------
+| CMS Controller
+|--------------------------------------------------------------------------
+*/
+use App\Http\Controllers\Cms\HomePageController as HomePageController;
+use App\Http\Controllers\Cms\ClassController as ClassController;
+use App\Http\Controllers\Cms\StoreController as StoreController;
+use App\Http\Controllers\Cms\NewsEventController as NewsEventController;
+use App\Http\Controllers\Cms\AboutController as AboutController;
+use App\Http\Controllers\Cms\PrivacyPolicyController as PrivacyPolicyController;
+use App\Http\Controllers\Cms\TosController as TosController;
+use App\Http\Controllers\Cms\FaqController as FaqController;
+use App\Http\Controllers\Cms\CareerController as CareerController;
+use App\Http\Controllers\Cms\CareerDetailController as CareerDetailController;
+
+
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -70,10 +106,6 @@ use App\Http\Controllers\Student\ExerciseController as StudentExerciseController
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', function () {
-    return redirect('/login');
-});
 
 Route::group(['middleware' => ['guest-handling']], function () {
     Route::get('login', [LoginController::class, 'index_login']);
@@ -194,6 +226,36 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::post('schedule/update/{id}', [ScheduleController::class, 'update_time']);
         Route::post('schedule/confirm/{id}', [ScheduleController::class, 'confirm']);
         Route::post('schedule/delete/{id}', [ScheduleController::class, 'delete']);
+
+        Route::group(['prefix' => 'cms'], function () {
+            Route::post('company/dt', [CompanyController::class, 'dt']);
+            Route::resource('company', CompanyController::class);
+
+            Route::post('branch/dt', [BranchController::class, 'dt']);
+            Route::resource('branch', BranchController::class);
+
+            Route::post('program/dt', [ProgramController::class, 'dt']);
+            Route::resource('program', ProgramController::class);
+
+            Route::post('event/dt', [EventController::class, 'dt']);
+            Route::resource('event', EventController::class);
+
+            Route::post('news/dt', [NewsController::class, 'dt']);
+            Route::resource('news', NewsController::class);
+
+            Route::post('privacy-policy/dt', [PrivacyPolicyAdminController::class, 'dt']);
+            Route::resource('privacy-policy', PrivacyPolicyAdminController::class);
+
+            Route::post('faq/dt', [FaqAdminController::class, 'dt']);
+            Route::resource('faq', FaqAdminController::class);
+
+            Route::post('team/dt', [TeamController::class, 'dt']);
+            Route::resource('team', TeamController::class);
+
+            Route::post('career/dt', [CareerAdminController::class, 'dt']);
+            Route::resource('career', CareerAdminController::class);
+            
+        });
     });
 
     /*
@@ -319,5 +381,21 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::get('get-session-coach/{classroom_id}', [PublicController::class, 'get_session_coach']);
         Route::get('get-guest-star', [PublicController::class, 'get_guest_star']);
     });
-
 });
+
+
+/*
+|--------------------------------------------------------------------------
+| CMS
+|--------------------------------------------------------------------------
+*/
+Route::get('/', [HomePageController::class, 'index']);
+Route::get('/class', [ClassController::class, 'index']);
+Route::get('/store', [StoreController::class, 'index']);
+Route::get('/news-event', [NewsEventController::class, 'index']);
+Route::get('/about', [AboutController::class, 'index']);
+Route::get('/privacy-policy', [PrivacyPolicyController::class, 'index']);
+Route::get('/tos', [TosController::class, 'index']);
+Route::get('/faq', [FaqController::class, 'index']);
+Route::get('/career', [CareerController::class, 'index']);
+Route::get('/career-detail', [CareerDetailController::class, 'index']);

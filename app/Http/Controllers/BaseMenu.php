@@ -335,18 +335,67 @@ class BaseMenu extends Controller
                 ],
             ],
             [
-                'key' => 'additional-data',
-                'title' => 'Additional Data',
+                'key' => 'cms',
+                'title' => 'CMS',
                 'url' => '#',
-                'permission' => 'additional_data',
+                'permission' => 'cms',
                 'icon' => $this->icon('master'),
                 'children' => [
                     [
+                        'key' => 'branch',
+                        'title' => 'Branch',
+                        'url' => 'admin/cms/branch',
+                        'permission' => 'branch'
+                    ],
+                    [
+                        'key' => 'career',
+                        'title' => 'Career',
+                        'url' => 'admin/cms/career',
+                        'permission' => 'career'
+                    ],
+                    [
+                        'key' => 'company',
+                        'title' => 'Company',
+                        'url' => 'admin/cms/company',
+                        'permission' => 'company'
+                    ],
+                    [
+                        'key' => 'event',
+                        'title' => 'Event',
+                        'url' => 'admin/cms/event',
+                        'permission' => 'event'
+                    ],
+                    [
                         'key' => 'faq',
                         'title' => 'FAQ',
-                        'url' => 'admin/additional-data/faq',
+                        'url' => 'admin/cms/faq',
                         'permission' => 'faq'
                     ],
+                    [
+                        'key' => 'news',
+                        'title' => 'News',
+                        'url' => 'admin/cms/news',
+                        'permission' => 'news'
+                    ],
+                    [
+                        'key' => 'privacy-policy',
+                        'title' => 'Privacy Policy',
+                        'url' => 'admin/cms/privacy-policy',
+                        'permission' => 'privacy-policy'
+                    ],
+                    [
+                        'key' => 'program',
+                        'title' => 'Program',
+                        'url' => 'admin/cms/program',
+                        'permission' => 'program'
+                    ],
+                    [
+                        'key' => 'team',
+                        'title' => 'Team',
+                        'url' => 'admin/cms/team',
+                        'permission' => 'team'
+                    ],
+
                 ],
             ],
         ];
