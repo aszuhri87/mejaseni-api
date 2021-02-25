@@ -51,12 +51,12 @@
             <thead>
                 <tr>
                     <th>No</th>
-                    <th width="20%">Tanggal</th>
-                    <th width="20%">Kelas</th>
+                    <th width="15%">Tanggal</th>
+                    <th width="15%">Kelas</th>
                     <th width="20%">Materi</th>
                     <th width="20%">Coach</th>
-                    <th width="10%">Rating</th>
-                    <th width="10%">Actions</th>
+                    <th width="15%">Rating</th>
+                    <th width="15%">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -65,9 +65,9 @@
     </div>
 </div>
 
-{{-- @include('student.review.modal') --}}
+@include('student.review.modal')
 @endsection
 
 @push('script')
-    {{-- @include('student.review.script') --}}
+    @include('student.review.script')
 @endpush

@@ -348,6 +348,8 @@ Route::group(['middleware' => ['auth-handling']], function () {
 
         Route::group(['prefix' => 'review'], function () {
             Route::get('/', [StudentReviewController::class, 'index']);
+            Route::get('get-review/{id}', [StudentReviewController::class, 'get_review']);
+            Route::post('dt', [StudentReviewController::class, 'dt']);
         });
 
         Route::post('profile/{id}', [StudentProfileController::class,'update']);
