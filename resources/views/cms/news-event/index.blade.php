@@ -1,0 +1,194 @@
+@extends('cms.layouts.app')
+
+@push('banner')
+  @include('cms.layouts.banner')
+@endpush
+
+@php
+    function FunctionName($date)
+    {
+        return date('l', strtotime($date));
+    }
+@endphp
+
+@section('content')
+<section>
+        <div class="row py-4">
+            <div class="col-12 mb-4 mt-md-0 my-5">
+                <h2 class="text-center">Event Terbaru</h2>
+            </div>
+            @foreach($events as $event)
+                @if($loop->index == 0)
+                    <div class="col-lg-4 col-12 m-0 mb-4 mb-lg-0">
+                        <div class="event-item__wrapper h-100">
+                            <a class="h-100" href="#">
+                                <div class="event-img__wrapper">
+                                    <div class="event-item-overlay">
+                                        <div class="event-item-overlay-desc">
+                                            <h2>{{ $event->date ? FunctionName($event->date):''}}</h2>
+                                            <h3 class="mt-2">{{ $event->title ? $event->title:''}}</h3>
+                                        </div>
+                                    </div>
+                                    <img src="{{ $event->image_url ? $event->image_url:''}}" alt="">
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                @endif
+
+                @if($loop->index == 1)
+                    <div class="col-lg-8 col-12 m-0 mb-4 mb-lg-0">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a class="h-100" href="#">
+                                    <div class="event-item__wrapper mt-4 mt-md-0 mb-4 mb-lg-0">
+                                        <div class="event-item-overlay">
+                                            <div class="event-item-overlay-desc">
+                                                <h2>{{ $event->date ? $event->date:''}}</h2>
+                                                <h3 class="mt-2">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Lorem
+                                                    ipsum dolor
+                                                    sit
+                                                    amet consectetur, adipisicing elit. Reprehenderit facere facilis
+                                                    consequuntur
+                                                    inventore velit suscipit distinctio quod iure, repellendus ad. Alias, rerum!
+                                                </h3>
+                                            </div>
+                                        </div>
+                                        <img class="event-img__wrapper" src="{{ asset('cms/assets/img/master-lesson__banner.jpg') }}" alt="">
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                @endif
+
+                @if($loop->index == 2 || $loop->index == 3)
+                        @if($loop->index == 2)
+                            <div class="row mt-4">
+                                <div class="col-lg-6 col-12 mb-4 mb-lg-0">
+                                    <a class="h-100" href="#">
+                                        <div class="event-item__wrapper">
+                                            <div class="event-item-overlay">
+                                                <div class="event-item-overlay-desc">
+                                                    <h2>{{ $event->date ? $event->date:''}}</h2>
+                                                    <h3 class="mt-2">{{ $event->description ? $event->description:''}}</h3>
+                                                </div>
+                                            </div>
+                                            <img class="event-img__wrapper" src="{{ asset('cms/assets/img/master-lesson__banner.jpg') }}" alt="">
+                                        </div>
+                                    </a>
+                                </div>
+
+                        @else
+                            <div class="col-lg-6 col-12 mb-4 mb-lg-0">
+                                <a class="h-100" href="#">
+                                    <div class="event-item__wrapper mt-4 mt-md-0">
+                                        <div class="event-item-overlay">
+                                            <div class="event-item-overlay-desc">
+                                                <h2>{{ $event->date ? $event->date:''}}</h2>
+                                                <h3 class="mt-2">{{ $event->description ? $event->description:''}}</h3>
+                                            </div>
+                                        </div>
+                                        <img class="event-img__wrapper" src="{{ asset('cms/assets/img/master-lesson__banner.jpg') }}" alt="">
+                                    </div>
+                                </a>
+                            </div>
+                        @endif
+                @endif
+
+                @if($loop->last)
+                        </div>
+                    </div>
+                @endif
+
+            @endforeach
+
+            
+        </div>
+        <div class="row py-4 mt-5 mt-md-0">
+            <div class="col-12 mb-4 my-5">
+                <h2 class="text-center">Berita Terbaru</h2>
+            </div>
+            @foreach($news as $new)
+                <div class="col-lg-4 col-12 col-12 p-4">
+                    <div class="news-item__wrapper">
+                        <img class="h-100" src="{{ $new->image_url ? $new->image_url:''}}" alt="">
+                    </div>
+                    <div class="news-item-desc__wrapper mt-4 mb-5">
+                        <div class="badge-left">
+                            <h3 class="ml-3">{{ $new->title ? $new->title:''}}</h3>
+                        </div>
+                        <div class="pl-3 pt-3">
+                            <p class="mb-3">{{ $new->description ? $new->description:''}}</p>
+                            <a class="link link--arrowed" href="#">Selengkapnya<svg class="arrow-icon ml-1"
+                                    xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+                                    <g fill="none" stroke="#7F16A7" stroke-width="1.5" stroke-linejoin="round"
+                                        stroke-miterlimit="10">
+                                        <circle class="arrow-icon--circle" cx="16" cy="16" r="15.12"></circle>
+                                        <path class="arrow-icon--arrow" d="M16.14 9.93L22.21 16l-6.07 6.07M8.23 16h13.98">
+                                        </path>
+                                    </g>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+            {{-- <div class="col-lg-4 col-12 p-4">
+                <div class="news-item__wrapper">
+                    <img class="h-100" src="{{ asset('cms/assets/img/master-lesson__banner2.jpg') }}" alt="">
+                </div>
+                <div class="news-item-desc__wrapper mt-4 mb-5">
+                    <div class="badge-left">
+                        <h3 class="ml-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi, optio!</h3>
+                    </div>
+                    <div class="pl-3 pt-3">
+                        <p class="mb-3">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Vel veniam mollitia
+                            voluptas temporibus animi impedit harum laborum dolor soluta aliquam quae, culpa, adipisci,
+                            ad omnis ducimus! Laboriosam qui dolorem ex reiciendis nulla sunt reprehenderit ullam
+                            accusantium quae, non ad adipisci?</p>
+                        <a class="link link--arrowed" href="#">Selengkapnya<svg class="arrow-icon ml-1"
+                                xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+                                <g fill="none" stroke="#7F16A7" stroke-width="1.5" stroke-linejoin="round"
+                                    stroke-miterlimit="10">
+                                    <circle class="arrow-icon--circle" cx="16" cy="16" r="15.12"></circle>
+                                    <path class="arrow-icon--arrow" d="M16.14 9.93L22.21 16l-6.07 6.07M8.23 16h13.98">
+                                    </path>
+                                </g>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-12 p-4">
+                <div class="news-item__wrapper">
+                    <img class="h-100" src="{{ asset('cms/assets/img/master-lesson__banner2.jpg') }}" alt="">
+                </div>
+                <div class="news-item-desc__wrapper mt-4 mb-5">
+                    <div class="badge-left">
+                        <h3 class="ml-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi, optio!</h3>
+                    </div>
+                    <div class="pl-3 pt-3">
+                        <p class="mb-3">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Vel veniam mollitia
+                            voluptas temporibus animi impedit harum laborum dolor soluta aliquam quae, culpa, adipisci,
+                            ad omnis ducimus! Laboriosam qui dolorem ex reiciendis nulla sunt reprehenderit ullam
+                            accusantium quae, non ad adipisci?</p>
+                        <a class="link link--arrowed" href="#">Selengkapnya<svg class="arrow-icon ml-1"
+                                xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+                                <g fill="none" stroke="#7F16A7" stroke-width="1.5" stroke-linejoin="round"
+                                    stroke-miterlimit="10">
+                                    <circle class="arrow-icon--circle" cx="16" cy="16" r="15.12"></circle>
+                                    <path class="arrow-icon--arrow" d="M16.14 9.93L22.21 16l-6.07 6.07M8.23 16h13.98">
+                                    </path>
+                                </g>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div> --}}
+        </div>
+    </section>
+@endsection
+
+@push('script')
+@include('cms.news-event.script')
+@endpush
