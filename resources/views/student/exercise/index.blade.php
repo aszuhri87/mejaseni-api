@@ -32,21 +32,21 @@
             </div>
             <div>
                 <select name="filter_class" id="" class="form-control">
-                    <option value="">Semua Materi   </option>
+                    <option value="">Semua Materi</option>
                 </select>
             </div>
         </div>
     </div>
 
-    <div class="row mt-5 theory">
+    <div class="row mt-5 exercise">
 
     </div>
 </div>
 
 
-@include('student.theory.modal')
+@include('student.exercise.modal')
 @endsection
 
 @push('script')
-    @include('student.theory.script')
+    @include('student.exercise.script')
 @endpush

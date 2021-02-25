@@ -167,7 +167,7 @@ class NewPackageController extends BaseMenu
         }
     }
 
-    public function get_classroom_by_category_id($classroom_category_id)
+    public function get_classroom_by_sub_category_id($sub_classroom_category_id)
     {
         try {
             $path = Storage::disk('s3')->url('/');
@@ -178,12 +178,13 @@ class NewPackageController extends BaseMenu
                     'classrooms.description',
                     'classrooms.image',
                     'classrooms.price',
+                    'classrooms.sub_classroom_category_id',
                     'classrooms.session_total',
                     'classrooms.session_duration',
                     DB::raw("CONCAT('{$path}',classrooms.image) as image_url"),
                 ])
                 ->where('classrooms.deleted_at')
-                ->where('classroom_category_id',$classroom_category_id)
+                ->where('classrooms.sub_classroom_category_id',$sub_classroom_category_id)
                 ->get();
 
             foreach ($result as $key => $value) {
@@ -226,7 +227,7 @@ class NewPackageController extends BaseMenu
         }
     }
 
-    public function get_session_video()
+    public function get_session_video(Request $request)
     {
         try {
             $path = Storage::disk('s3')->url('/');
@@ -273,6 +274,11 @@ class NewPackageController extends BaseMenu
                 })
                 ->joinSub($expertise, 'expertises', function ($join) {
                     $join->on('session_videos.expertise_id', '=', 'expertises.id');
+                })
+                ->where(function($query) use($request){
+                    if(!empty($request->sub_classroom_category_id)){
+                        $query->where('session_videos.sub_classroom_category_id',$request->sub_classroom_category_id);
+                    }
                 })
                 ->whereNull('session_videos.deleted_at')
                 ->get();

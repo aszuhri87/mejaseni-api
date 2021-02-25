@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\Uuid;
 
-class Collection extends Model
+class Transaction extends Model
 {
     use HasFactory, Uuid, SoftDeletes;
 
@@ -17,10 +17,8 @@ class Collection extends Model
 
     protected $fillable = [
         'student_id',
-        'assignment_id',
-        'description',
-        'upload_date',
-        'name',
+        'total',
+        'datetime',
     ];
 
     protected $dates = ['deleted_at'];

@@ -62496,6 +62496,15 @@ body {
     right: 0;
     left: auto; }
 
+.offcanvas.offcanvas-right-chart {
+  right: -500px;
+  left: auto; }
+  .offcanvas.offcanvas-right-chart.offcanvas-on {
+    -webkit-transition: left 0.3s ease, right 0.3s ease, bottom 0.3s ease, top 0.3s ease;
+    transition: left 0.3s ease, right 0.3s ease, bottom 0.3s ease, top 0.3s ease;
+    right: 0;
+    left: auto; }
+
 .offcanvas-overlay {
   position: fixed;
   top: 0;

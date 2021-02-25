@@ -6,18 +6,18 @@
         <div class="card-body d-flex justify-content-between">
             <div class="form-group d-flex">
                 <div class="d-flex">
-                    <label class="col-form-label text-right"><strong>Filter Kelas</strong> </label>
+                    <label class="col-form-label text-right"><strong>Filter Sub Kategori Kelas</strong> </label>
                 </div>
                 <div class="d-flex ml-4" style="width: 250px !important">
-                    <select name="filter_class" id="filter-class" class="form-control">
-                        <option value="">Pilih Kelas</option>
+                    <select name="filter" id="filter" class="form-control">
+                        <option value="">Pilih Sub Kategori Kelas</option>
                     </select>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row mt-5 video">
+    <div class="mt-5 video">
 
     </div>
 </div>
