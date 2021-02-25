@@ -29,8 +29,7 @@
                         event.preventDefault();
 
                         $('#form-assignment').trigger("reset");
-                        $('#form-assignment').attr('action',
-                        '{{ url('coach/exercise/assignment') }}');
+                        $('#form-assignment').attr('action','{{ url('coach/exercise/assignment') }}');
                         $('#form-assignment').attr('method', 'POST');
 
                         get_classroom_category();
