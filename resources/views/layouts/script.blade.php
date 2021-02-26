@@ -1,5 +1,6 @@
 <script>
     var HOST_URL = "https://preview.keenthemes.com/metronic/theme/html/tools/preview";
+
 </script>
 <!--begin::Global Config(global config for global JS scripts)-->
 <script>
@@ -103,7 +104,7 @@
         todayHighlight: true,
         orientation: "bottom left",
         templates: arrows,
-        format:'d MM yyyy'
+        format: 'd MM yyyy'
     });
 
     $('.datepicker').datepicker({
@@ -111,7 +112,7 @@
         todayHighlight: true,
         orientation: "bottom left",
         templates: arrows,
-        format:'d MM yyyy'
+        format: 'd MM yyyy'
     });
 
     $('.timepicker').timepicker({
@@ -125,16 +126,16 @@
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
         statusCode: {
-            403: function(){
-                window.location = '{{url('admin/login')}}';
+            403: function() {
+                window.location = '{{ url('admin/login') }}';
             },
-            419: function(){
-                window.location = '{{url('admin/login')}}';
+            419: function() {
+                window.location = '{{ url('admin/login') }}';
             }
         }
     });
 
-    $(document).on('click','.btn-delete-cart',function(event){
+    $(document).on('click', '.btn-delete-cart', function(event) {
         event.preventDefault();
         let url = $(this).attr('href');
         Swal.fire({
@@ -144,21 +145,21 @@
             showCancelButton: true,
             confirmButtonColor: '#7F16A7',
             confirmButtonText: 'Yes, Delete',
-        }).then(function (result) {
+        }).then(function(result) {
             if (result.value) {
                 $.ajax({
-                    url: url,
-                    type: 'DELETE',
-                    dataType: 'json',
-                })
-                .done(function(res, xhr, meta) {
-                    getCart();
-                    toastr.success(res.message, 'Success')
-                })
-                .fail(function(res, error) {
-                    toastr.error(res.responseJSON.message, 'Failed')
-                })
-                .always(function() { });
+                        url: url,
+                        type: 'DELETE',
+                        dataType: 'json',
+                    })
+                    .done(function(res, xhr, meta) {
+                        getCart();
+                        toastr.success(res.message, 'Success')
+                    })
+                    .fail(function(res, error) {
+                        toastr.error(res.responseJSON.message, 'Failed')
+                    })
+                    .always(function() {});
             }
         })
 
@@ -184,192 +185,201 @@
     }
 
     function showModal(selector) {
-        $('#'+selector).modal('show')
+        $('#' + selector).modal('show')
     }
 
     function hideModal(selector) {
-        $('#'+selector).modal('hide')
+        $('#' + selector).modal('hide')
     }
 
-    function ellipsis_text(data, length){
-        if(data.length > length){
+    function ellipsis_text(data, length) {
+        if (data.length > length) {
             return `<span title="${data}">${data.substr( 0, length ) +'…'}</span>`
-        }else{
+        } else {
             return data
         }
     }
 
     function btn_loading(action) {
-        if(action == 'start'){
+        if (action == 'start') {
             $('.btn-loading').html('<div id="loading" class="mr-1"></div> Loading...');
             $('.btn-loading').addClass('d-flex align-items-center');
-            $('.btn-loading').attr('disabled',true);
-        }else{
+            $('.btn-loading').attr('disabled', true);
+        } else {
             $('.btn-loading').html('Submit');
             $('.btn-loading').removeClass('d-flex align-items-center');
-            $('.btn-loading').attr('disabled',false);
+            $('.btn-loading').attr('disabled', false);
         }
     }
 
-    function btn_loading_activate(action,id) {
-        if(action == 'start'){
+    function btn_loading_activate(action, id) {
+        if (action == 'start') {
             $(`.btn-loading-activate-${id}`).html('<div id="loading" class="mr-1"></div> Loading...');
             $(`.btn-loading-activate-${id}`).addClass('d-flex align-items-center');
-            $(`.btn-loading-activate-${id}`).attr('disabled',true);
+            $(`.btn-loading-activate-${id}`).attr('disabled', true);
         }
     }
 
     function btn_loading_profile(action) {
-        if(action == 'start'){
+        if (action == 'start') {
             $('.btn-loading-profile').html('<div id="loading" class="mr-1"></div> Loading...');
             $('.btn-loading-profile').addClass('d-flex align-items-center');
-            $('.btn-loading-profile').attr('disabled',true);
-        }else{
+            $('.btn-loading-profile').attr('disabled', true);
+        } else {
             $('.btn-loading-profile').html('Save Change');
             $('.btn-loading-profile').removeClass('d-flex align-items-center');
-            $('.btn-loading-profile').attr('disabled',false);
+            $('.btn-loading-profile').attr('disabled', false);
         }
     }
 
-    function btn_loading_basic(action,text) {
-        if(action == 'start'){
+    function btn_loading_basic(action, text) {
+        if (action == 'start') {
             $('.btn-loading-basic').html('<div id="loading" class="mr-1"></div> Loading...');
-            $('.btn-loading-basic').attr('disabled',true);
-        }else{
+            $('.btn-loading-basic').attr('disabled', true);
+        } else {
             $('.btn-loading-basic').html(text);
-            $('.btn-loading-basic').attr('disabled',false);
+            $('.btn-loading-basic').attr('disabled', false);
         }
     }
 
-    function btn_loading_class(id_name,action,text) {
-        if(action == 'start'){
-            $('#'+id_name).html('<div id="loading" class="mr-1"></div> Loading...');
-            $('#'+id_name).attr('disabled',true);
-        }else{
-            $('#'+id_name).html(text);
-            $('#'+id_name).attr('dissabled',false);
+    function btn_loading_class(id_name, action, text) {
+        if (action == 'start') {
+            $('#' + id_name).html('<div id="loading" class="mr-1"></div> Loading...');
+            $('#' + id_name).attr('disabled', true);
+        } else {
+            $('#' + id_name).html(text);
+            $('#' + id_name).attr('dissabled', false);
         }
     }
 
-    function btn_loading_exercise(action,text) {
-        if(action == 'start'){
+    function btn_loading_exercise(action, text) {
+        if (action == 'start') {
             $('.btn-loading-exercise').html('<div id="loading" class="mr-1"></div> Loading...');
-            $('.btn-loading-exercise').attr('disabled',true);
-        }else{
+            $('.btn-loading-exercise').attr('disabled', true);
+        } else {
             $('.btn-loading-exercise').html(text);
-            $('.btn-loading-exercise').attr('disabled',false);
+            $('.btn-loading-exercise').attr('disabled', false);
         }
     }
 
-    window.searchDelay = function (callback, ms) {
+    function disable_action(class_name, action) {
+        if (action == 'start') {
+            $('#' + class_name).attr('disabled', true);
+        } else {
+            $('#' + class_name).attr('disabled', false);
+        }
+    }
+
+    window.searchDelay = function(callback, ms) {
         var timer = 0;
         return function() {
-            var context = this, args = arguments;
+            var context = this,
+                args = arguments;
             clearTimeout(timer);
-            timer = setTimeout(function () {
+            timer = setTimeout(function() {
                 callback.apply(context, args);
             }, ms || 0);
         };
     }
+
 </script>
 @if (Auth::guard('student')->check())
     <script>
         function getCart() {
             $.ajax({
-                url: `{{url('student/get-cart')}}/{{Auth::guard('student')->user()->id}}`,
-                type: 'GET',
-            })
-            .done(function(res, xhr, meta) {
-                if (res.status == 200) {
-                    let element = '';
-                    let total_price = 0;
-                    if(res.data.length > 0 ){
-                        $.each(res.data, function(index, data){
-                            if(data.classroom_price){
-                                total_price+=parseInt(data.classroom_price);
-                            }
-                            else if(data.master_lesson_price){
-                                total_price+=parseInt(data.master_lesson_price);
-                            }
-                            else if(data.session_video_price){
-                                total_price+=parseInt(data.session_video_price);
-                            }
-                            else if(data.theory_price){
-                                total_price+=parseInt(data.theory_price);
-                            }
+                    url: `{{ url('student/get-cart') }}/{{ Auth::guard('student')->user()->id }}`,
+                    type: 'GET',
+                })
+                .done(function(res, xhr, meta) {
+                    if (res.status == 200) {
+                        let element = '';
+                        let total_price = 0;
+                        if (res.data.length > 0) {
+                            $.each(res.data, function(index, data) {
+                                if (data.classroom_price) {
+                                    total_price += parseInt(data.classroom_price);
+                                } else if (data.master_lesson_price) {
+                                    total_price += parseInt(data.master_lesson_price);
+                                } else if (data.session_video_price) {
+                                    total_price += parseInt(data.session_video_price);
+                                } else if (data.theory_price) {
+                                    total_price += parseInt(data.theory_price);
+                                }
 
-                            element += `
+                                element += `
                             <div class="py-8">
                                 <div class="row">
                                     <div class="col-1">
                                         <label class="checkbox">`;
-                                            if(data.theory_id){
-                                                element+=`<input type="checkbox" name="cart_id[]" value="${data.theory_id}" checked=true/>`
-                                            }
-                                            else if(data.classroom_id){
-                                                element+=`<input type="checkbox" name="cart_id[]" value="${data.classroom_id}" checked=true/>`
-                                            }
-                                            else if(data.session_video_id){
-                                                element +=`<input type="checkbox" name="cart_id[]" value="${data.session_video_id}" checked=true/>`
-                                            }
-                                        element+=`
+                                if (data.theory_id) {
+                                    element +=
+                                        `<input type="checkbox" name="cart_id[]" value="${data.theory_id}" checked=true/>`
+                                } else if (data.classroom_id) {
+                                    element +=
+                                        `<input type="checkbox" name="cart_id[]" value="${data.classroom_id}" checked=true/>`
+                                } else if (data.session_video_id) {
+                                    element +=
+                                        `<input type="checkbox" name="cart_id[]" value="${data.session_video_id}" checked=true/>`
+                                }
+                                element += `
                                             <span></span>
                                         </label>
                                     </div>
                                     <div class="col-3" style="padding-right:0 !important">
                                         <a href="javascript:void(0)">`;
-                                        if(data.theory_id){
-                                            element+=`<img src="{{asset('assets/images/pdf-file-extension.png')}}" class="rounded" width="80px" height="80px">`
-                                        }
-                                        else if(data.classroom_id){
-                                            element+=`<img src="${data.image_classroom}" class="rounded" width="80px" height="80px">`
-                                        }
-                                        else if(data.session_video_id){
-                                            element +=`<img src="{{asset('assets/images/thumbnail.png')}}" class="rounded" width="80px" height="80px">`
-                                        }
-                                        element += `
+                                if (data.theory_id) {
+                                    element +=
+                                        `<img src="{{ asset('assets/images/pdf-file-extension.png') }}" class="rounded" width="80px" height="80px">`
+                                } else if (data.classroom_id) {
+                                    element +=
+                                        `<img src="${data.image_classroom}" class="rounded" width="80px" height="80px">`
+                                } else if (data.session_video_id) {
+                                    element +=
+                                        `<img src="{{ asset('assets/images/thumbnail.png') }}" class="rounded" width="80px" height="80px">`
+                                }
+                                element += `
                                         </a>
                                     </div>
                                     <div class="col-7">
                                         <div class="d-flex flex-column mr-2">`;
 
-                                        if(data.classroom_name){
-                                            if(data.package_type == 1){
-                                                element += `<span class="label label-light-warning label-inline col-6">Special Class</span>`;
-                                            }else if(data.package_type == 2){
-                                                element += `<span class="label label-light-warning label-inline col-6">Regular Class</span>`;
-                                            }
-                                            element += `
+                                if (data.classroom_name) {
+                                    if (data.package_type == 1) {
+                                        element +=
+                                            `<span class="label label-light-warning label-inline col-6">Special Class</span>`;
+                                    } else if (data.package_type == 2) {
+                                        element +=
+                                            `<span class="label label-light-warning label-inline col-6">Regular Class</span>`;
+                                    }
+                                    element += `
                                                 <a href="javascript:void(0)" class="font-weight-bold text-dark-75 font-size-lg text-hover-primary">${data.classroom_name}</a>
                                                 <div class="d-flex align-items-center mt-2">
                                                     <span class="font-weight-bold mr-1 text-primary-75 font-size-lg text-primary">Rp. ${numeral(data.classroom_price).format('0,0')}</span>
                                                 </div>
                                             `;
-                                        }
-                                        else if(data.session_video_id){
-                                            element += `
+                                } else if (data.session_video_id) {
+                                    element += `
                                                 <span class="label label-light-warning label-inline col-6">Video Course</span>
                                                 <a href="javascript:void(0)" class="font-weight-bold text-dark-75 font-size-lg text-hover-primary">${data.session_video_name}</a>
                                                 <div class="d-flex align-items-center mt-2">
                                                     <span class="font-weight-bold mr-1 text-primary-75 font-size-lg text-primary">Rp. ${numeral(data.session_video_price).format('0,0')}</span>
                                                 </div>
                                             `;
-                                        }
-                                        else if(data.theory_id){
-                                            element += `
+                                } else if (data.theory_id) {
+                                    element += `
                                                 <span class="label label-light-warning label-inline col-6">Theory Course</span>
                                                 <a href="javascript:void(0)" class="font-weight-bold text-dark-75 font-size-lg text-hover-primary">${data.theory_name}</a>
                                                 <div class="d-flex align-items-center mt-2">
                                                     <span class="font-weight-bold mr-1 text-primary-75 font-size-lg text-primary">Rp. ${numeral(data.theory_price).format('0,0')}</span>
                                                 </div>
                                             `;
-                                        }
+                                }
 
-                            element +=`
+                                element += `
                                         </div>
                                     </div>
                                     <div class="col-1">
-                                        <a href="{{url('student/delete-cart')}}/${data.id}" class="btn-delete-cart">
+                                        <a href="{{ url('student/delete-cart') }}/${data.id}" class="btn-delete-cart">
                                             <span class="svg-icon svg-icon-danger svg-icon-2x"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                                     <rect x="0" y="0" width="24" height="24"/>
@@ -383,32 +393,33 @@
                             </div>
                             <div class="separator separator-solid"></div>
                             `;
-                        });
-                        $('.cart').html(element);
+                            });
+                            $('.cart').html(element);
+                        }
+                        $('.total-price').html(`Rp. ${numeral(total_price).format('0,0')}`);
                     }
-                    $('.total-price').html(`Rp. ${numeral(total_price).format('0,0')}`);
-                }
-            })
-            .fail(function(res, error) {
-                toastr.error(res.responseJSON.message, 'Failed')
-            })
-            .always(function() {
+                })
+                .fail(function(res, error) {
+                    toastr.error(res.responseJSON.message, 'Failed')
+                })
+                .always(function() {
 
-            });
+                });
         }
 
-        $('#form-pay').submit(function(event){
+        $('#form-pay').submit(function(event) {
             event.preventDefault();
             let check = 0;
-            $('input[type=checkbox]').each(function () {
-                if(this.checked){
+            $('input[type=checkbox]').each(function() {
+                if (this.checked) {
                     check++;
                 }
             });
-            if(check==0){
-                return toastr.error('No cart checkout','Failed')
+            if (check == 0) {
+                return toastr.error('No cart checkout', 'Failed')
             }
         })
         getCart();
+
     </script>
 @endif

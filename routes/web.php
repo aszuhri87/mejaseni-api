@@ -44,6 +44,7 @@ use App\Http\Controllers\Admin\Schedule\ScheduleController;
 */
 use App\Http\Controllers\Coach\DashboardController;
 use App\Http\Controllers\Coach\TheoryController as CoachTheoryController;
+use App\Http\Controllers\Coach\Schedule\ScheduleController as CoachScheduleController;
 use App\Http\Controllers\Coach\Exercise\AssignmentController;
 use App\Http\Controllers\Coach\Exercise\ReviewAssignmentController;
 /*
@@ -316,6 +317,19 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::resource('review-assignment', ReviewAssignmentController::class);
 
         });
+
+        Route::get('schedule/master-lesson/{id}', [CoachScheduleController::class, 'show_master_lesson']);
+        Route::post('schedule/master-lesson/update/{id}', [CoachScheduleController::class, 'update_time_master_lesson']);
+
+        Route::get('schedule', [CoachScheduleController::class, 'index']);
+        Route::get('schedule/all', [CoachScheduleController::class, 'all']);
+        Route::get('schedule/{id}', [CoachScheduleController::class, 'show']);
+        Route::get('schedule-show/{id}', [CoachScheduleController::class, 'show_edit']);
+        Route::post('schedule', [CoachScheduleController::class, 'store']);
+        Route::post('schedule/{id}', [CoachScheduleController::class, 'update']);
+        Route::post('schedule/update/{id}', [CoachScheduleController::class, 'update_time']);
+        Route::post('schedule/confirm/{id}', [CoachScheduleController::class, 'confirm']);
+        Route::post('schedule/delete/{id}', [CoachScheduleController::class, 'delete']);
 
     });
 
