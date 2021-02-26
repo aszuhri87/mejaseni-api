@@ -11,32 +11,13 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-sm-12 parent-sub-category">
-                            <div class="form-group">
-                                <label>
-                                    Category Class
-                                    <span class="text-danger">*</span>
-                                </label>
-                                <select name="classroom_category_id" id="classroom-category"></select>
-                                <span class="text-small ml-1 text-danger required-classroom-category" style="display: none">&#8226; Harus diisi</span>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-sm-12 select-sub-category" style="display: none;">
-                            <div class="form-group">
-                                <label>
-                                    Sub Category Class
-                                    <span class="text-danger">*</span>
-                                </label>
-                                <select name="sub_classroom_category_id" id="sub-classroom-category"></select>
-                            </div>
-                        </div>
                         <div class="col-md-6 col-sm-12 select-classroom">
                             <div class="form-group">
                                 <label>
                                     Class
                                     <span class="text-danger">*</span>
                                 </label>
-                                <select name="classroom_id" id="classroom"></select>
+                                <select name="classroom_id" id="classroom_coach"></select>
                             </div>
                         </div>
                         <div class="col-md-6 col-sm-12 select-session">
@@ -45,7 +26,7 @@
                                     Session
                                     <span class="text-danger">*</span>
                                 </label>
-                                <select name="session_id" class="form-control" id="session"></select>
+                                <select name="session_id" id="session_coach"></select>
                             </div>
                         </div>
                     </div>

@@ -156,8 +156,8 @@ class AssignmentController extends BaseMenu
             $assignments = DB::table('assignments')
                 ->select(
                     'assignments.*',
-                    'classrooms.name as classrooms_name',
-                    'coaches.name as coaches_name',
+                    'classrooms.name as classroom_name',
+                    'coaches.name as coach_name',
                     DB::raw("CONCAT('{$path}',assignments.file_url) as file_url"),
                     DB::raw("to_char(assignments.upload_date, 'DD Month YYYY') as upload_at"),
                     DB::raw("to_char(assignments.due_date, 'DD Month YYYY') as due_date")

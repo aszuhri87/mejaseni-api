@@ -406,6 +406,8 @@ class PublicController extends Controller
                 ->join('coach_classrooms','coach_classrooms.classroom_id','classrooms.id')
                 ->where('coach_classrooms.coach_id',Auth::guard('coach')->id())
                 ->whereNull('classrooms.deleted_at')
+                ->distinct()
+                ->orderBy('classrooms.name','asc')
                 ->get();
 
             return response([
