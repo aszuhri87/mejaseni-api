@@ -163,7 +163,6 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
-        crocodicstudio\dokularavel\DokuLaravelServiceProvider::class,
 
         /*
          * Package Service Providers...

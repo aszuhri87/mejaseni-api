@@ -79,9 +79,9 @@ class VideoController extends BaseMenu
                 })
                 ->whereNull('session_videos.deleted_at');
 
-            $cart = DB::table('charts')
+            $cart = DB::table('carts')
                 ->select([
-                    'charts.id',
+                    'carts.id',
                     'session_videos.id as session_video_id',
                     'session_videos.sub_classroom_category_id',
                     'session_videos.name',
@@ -95,27 +95,27 @@ class VideoController extends BaseMenu
                     'session_videos.expertise_name',
                 ])
                 ->leftJoinSub($session_video, 'session_videos', function ($join) {
-                    $join->on('charts.session_video_id', '=', 'session_videos.id');
+                    $join->on('carts.session_video_id', '=', 'session_videos.id');
                 })
-                ->whereNotNull('charts.session_video_id');
+                ->whereNotNull('carts.session_video_id');
 
             $transaction_detail = DB::table('transaction_details')
                 ->select([
                     'transaction_details.transaction_id',
-                    'charts.session_video_id',
-                    'charts.sub_classroom_category_id',
-                    'charts.name',
-                    'charts.datetime',
-                    'charts.description',
-                    'charts.price',
-                    'charts.coach_id',
-                    'charts.expertise_id',
-                    'charts.image_url',
-                    'charts.coach_name',
-                    'charts.expertise_name',
+                    'carts.session_video_id',
+                    'carts.sub_classroom_category_id',
+                    'carts.name',
+                    'carts.datetime',
+                    'carts.description',
+                    'carts.price',
+                    'carts.coach_id',
+                    'carts.expertise_id',
+                    'carts.image_url',
+                    'carts.coach_name',
+                    'carts.expertise_name',
                 ])
-                ->leftJoinSub($cart, 'charts', function ($join) {
-                    $join->on('transaction_details.chart_id', '=', 'charts.id');
+                ->leftJoinSub($cart, 'carts', function ($join) {
+                    $join->on('transaction_details.chart_id', '=', 'carts.id');
                 });
 
             $result = DB::table('transactions')

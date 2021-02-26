@@ -166,20 +166,20 @@ class TheoryController extends BaseMenu
 
             foreach ($result as $key => $value) {
                 // cek transaction
-                $chart = DB::table('charts')
+                $chart = DB::table('carts')
                     ->select([
-                        'charts.id',
-                        'charts.theory_id'
+                        'carts.id',
+                        'carts.theory_id'
                     ]);
 
                 $transaction_detail = DB::table('transaction_details')
                     ->select([
                         'transaction_details.transaction_id',
                         'transaction_details.chart_id',
-                        'charts.theory_id'
+                        'carts.theory_id'
                     ])
-                    ->joinSub($chart, 'charts', function ($join) {
-                        $join->on('transaction_details.chart_id', '=', 'charts.id');
+                    ->joinSub($chart, 'carts', function ($join) {
+                        $join->on('transaction_details.chart_id', '=', 'carts.id');
                     });
 
                 $transaction = DB::table('transactions')
