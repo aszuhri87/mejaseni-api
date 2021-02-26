@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\MediaController;
+use App\Http\Controllers\Transaction\DokuController;
+use App\Http\Controllers\Transaction\CartController;
+use App\Http\Controllers\Transaction\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -94,9 +97,6 @@ use App\Http\Controllers\Cms\FaqController as FaqController;
 use App\Http\Controllers\Cms\CareerController as CareerController;
 use App\Http\Controllers\Cms\CareerDetailController as CareerDetailController;
 
-
-
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -107,6 +107,29 @@ use App\Http\Controllers\Cms\CareerDetailController as CareerDetailController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+/*
+|--------------------------------------------------------------------------
+| CMS
+|--------------------------------------------------------------------------
+*/
+Route::get('/', [HomePageController::class, 'index']);
+Route::get('/class', [ClassController::class, 'index']);
+Route::get('/store', [StoreController::class, 'index']);
+Route::get('/news-event', [NewsEventController::class, 'index']);
+Route::get('/about', [AboutController::class, 'index']);
+Route::get('/privacy-policy', [PrivacyPolicyController::class, 'index']);
+Route::get('/tos', [TosController::class, 'index']);
+Route::get('/faq', [FaqController::class, 'index']);
+Route::get('/career', [CareerController::class, 'index']);
+Route::get('/career-detail', [CareerDetailController::class, 'index']);
+
+Route::get('/cart', [CartController::class, 'index']);
+Route::post('/cart-store', [CartController::class, 'store']);
+Route::post('/cart-payment', [CartController::class, 'payment']);
+Route::get('/student-cart', [CartController::class, 'data']);
+
+Route::get('doku-test', [DokuController::class, 'generate_payment_code']);
 
 Route::group(['middleware' => ['guest-handling']], function () {
     Route::get('login', [LoginController::class, 'index_login']);
@@ -207,9 +230,10 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::post('media-conference/update/{id}', [PlatformController::class, 'update']);
             Route::resource('media-conference', PlatformController::class);
 
+            Route::get('theory', [TheoryController::class, 'index']);
+            Route::delete('theory/{id}', [TheoryController::class, 'destroy']);
             Route::post('theory/dt', [TheoryController::class, 'dt']);
             Route::post('theory/update/{id}', [TheoryController::class, 'update']);
-            Route::resource('theory', TheoryController::class);
 
             Route::post('expertise/dt', [ExpertiseController::class, 'dt']);
             Route::resource('expertise', ExpertiseController::class);
@@ -274,7 +298,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::delete('theory/file/{id}', [CoachTheoryController::class, 'theory_file_delete']);
         Route::get('theory/list/{classroom_id}/{session_id}', [CoachTheoryController::class, 'theory_list']);
         Route::get('theory/download/{id}', [CoachTheoryController::class, 'theory_download']);
-        // Route::resource('theory', CoachTheoryController::class);
+        Route::resource('theory', CoachTheoryController::class);
 
         Route::group(['prefix' => 'exercise'], function () {
 
@@ -308,8 +332,18 @@ Route::group(['middleware' => ['auth-handling']], function () {
 
         Route::group(['prefix' => 'schedule'], function () {
             Route::get('/', [StudentScheduleController::class, 'index']);
+            Route::get('get-total-class/{student_id}', [StudentScheduleController::class, 'get_total_class']);
+
+            // regular class
             Route::get('regular-class', [StudentScheduleController::class, 'regular_class']);
-            Route::get('special-class', [StudentScheduleController::class, 'special_class']);
+
+            // special class
+            Route::group(['prefix' => 'special-class'], function () {
+                Route::get('/', [StudentScheduleController::class, 'special_class']);
+                Route::get('{coach_schedule_id}', [StudentScheduleController::class, 'coach_schedule']);
+                Route::post('booking', [StudentScheduleController::class, 'special_class_booking']);
+                Route::post('reschedule', [StudentScheduleController::class, 'special_class_reschedule']);
+            });
         });
 
         Route::get('my-class',[StudentMyClassController::class, 'index']);
