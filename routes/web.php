@@ -335,18 +335,37 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::get('get-total-class/{student_id}', [StudentScheduleController::class, 'get_total_class']);
 
             // regular class
-            Route::get('regular-class', [StudentScheduleController::class, 'regular_class']);
+            Route::group(['prefix' => 'regular-class'], function () {
+                Route::get('/', [StudentScheduleController::class, 'regular_class']);
+                Route::get('{coach_schedule_id}', [StudentScheduleController::class, 'coach_schedule']);
+                Route::post('booking', [StudentScheduleController::class, 'booking']);
+                Route::post('reschedule', [StudentScheduleController::class, 'reschedule']);
+            });
 
             // special class
             Route::group(['prefix' => 'special-class'], function () {
                 Route::get('/', [StudentScheduleController::class, 'special_class']);
                 Route::get('{coach_schedule_id}', [StudentScheduleController::class, 'coach_schedule']);
-                Route::post('booking', [StudentScheduleController::class, 'special_class_booking']);
-                Route::post('reschedule', [StudentScheduleController::class, 'special_class_reschedule']);
+                Route::post('booking', [StudentScheduleController::class, 'booking']);
+                Route::post('reschedule', [StudentScheduleController::class, 'reschedule']);
+            });
+
+            // master lesson
+            Route::group(['prefix' => 'master-lesson'], function () {
+                Route::get('/', [StudentScheduleController::class, 'master_lesson']);
+            });
+
+            // coach list
+            Route::group(['prefix' => 'coach-list'], function () {
+                Route::get('/', [StudentScheduleController::class, 'coach_list']);
             });
         });
 
-        Route::get('my-class',[StudentMyClassController::class, 'index']);
+        Route::group(['prefix' => 'my-class'], function () {
+            Route::get('/',[StudentMyClassController::class, 'index']);
+            Route::post('booking/dt',[StudentMyClassController::class, 'booking_dt']);
+            Route::put('reschedule/{id}',[StudentMyClassController::class, 'reschedule']);
+        });
 
         Route::group(['prefix' => 'new-package'], function () {
             Route::get('/',[StudentNewPackageController::class, 'index']);

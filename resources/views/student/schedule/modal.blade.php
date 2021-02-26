@@ -132,3 +132,37 @@
         </div>
     </div>
 </div>
+
+<div class="modal" id="modal-booking-master-lesson" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <form id="form-booking-master-lesson" autocomplete="off">
+                <div class="modal-body">
+                    <input type="hidden" name="master_lesson_id" id="master-lesson-id">
+                    <input type="hidden" name="student_id" value="{{Auth::guard('student')->user()->id}}" id="reschedule_student_id">
+                    <div class="row">
+                        <div class="col-12">
+                            <div>
+                                <img src="" id="poster" alt="" width="100%" height="300px" class="rounded">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-8 text-left">
+                            <h4 id="master-lesson-title"></h4>
+                        </div>
+                        <div class="col-4 text-right">
+                            <h2 class="text-primary" id="price"></h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <div id="btn-reschedule">
+                        <button type="submit" class="btn btn-primary btn-loading-basic">Reschedule</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

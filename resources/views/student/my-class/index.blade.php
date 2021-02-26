@@ -115,11 +115,11 @@
                 <tr>
                     <th>No</th>
                     <th width="20%">Tanggal</th>
+                    <th width="15%">Waktu</th>
                     <th width="20%">Kelas</th>
-                    <th width="20%">Tipe Kelas</th>
                     <th width="20%">Coach</th>
                     <th width="10%">Status</th>
-                    <th width="10%">Actions</th>
+                    <th width="15%">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -127,4 +127,9 @@
         </table>
     </div>
 </div>
+@include('student.my-class.modal')
 @endsection
+
+@push('script')
+    @include('student.my-class.script')
+@endpush

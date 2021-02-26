@@ -1,14 +1,16 @@
 <script type="text/javascript">
     var Page = function() {
         var _componentPage = function(){
-            var init_table, calendar, calendar_regular, calendar_special;
+            var init_table, calendar, calendar_regular, calendar_special, calendar_master_lesson;
 
             $(document).ready(function() {
                 formSubmit();
                 initAction();
                 initCalendarReguler();
                 initCalendarSpecial();
+                initCalendarMasterLesson();
                 totalClassStudent();
+                initCoachList();
             });
 
             const initAction = () => {
@@ -24,7 +26,7 @@
 
                 $(document).on('click','.tab-master-lesson',function(event){
                     event.preventDefault();
-
+                    calendar_master_lesson.render();
                 });
             },
             formSubmit = () => {
@@ -186,35 +188,6 @@
                 renderSpecial();
                 calendar_special.render();
             },
-            initCalendarReguler = () => {
-                var element = document.getElementById('calendar-regular');
-                $.ajax({
-                    url: `{{ url('student/schedule/regular-class') }}`,
-                    type: `GET`,
-                })
-                .done(function(res, xhr, meta) {
-                    if(res.status == 200){
-                        calendar_regular = new FullCalendar.Calendar(element, {
-                            initialView: 'dayGridMonth',
-                            headerToolbar: {
-                                left: 'prev,next today',
-                                center: 'title',
-                                right: 'dayGridMonth,timeGridWeek,timeGridDay,list'
-                            },
-                            locale: 'ind',
-                            timeZone: 'Asia/Jakarta',
-                            events: res.data
-                        });
-                        calendar_regular.render();
-                    }
-                })
-                .fail(function(res, error) {
-                    toastr.error(res.responseJSON.message, 'Failed')
-                })
-                .always(function() {
-
-                });
-            },
             renderSpecial = () => {
                 if(calendar_special){
                     calendar_special.removeAllEvents();
@@ -246,7 +219,240 @@
                 .always(function() {
 
                 });
+            },
+            initCalendarReguler = () => {
+                var element = document.getElementById('calendar-regular');
+                calendar_regular = new FullCalendar.Calendar(element, {
+                    headerToolbar: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'dayGridMonth,timeGridWeek,timeGridDay,list'
+                    },
+                    locale: 'ind',
+                    timeZone: 'local',
+                    initialView: 'dayGridMonth',
+                    eventColor: '#fff',
+                    editable: true,
+                    selectable: true,
+                    eventClick: function(info) {
+                        if(info.event.extendedProps.status == 3){
+                            let coach_schedule_id = info.event.extendedProps.coach_schedule_id
+                            showModal('modal-booking');
+                            $.ajax({
+                                url: `{{ url('student/schedule/regular-class') }}/${coach_schedule_id}`,
+                                type: `GET`,
+                            })
+                            .done(function(res, xhr, meta) {
+                                if(res.status == 200){
+                                    let data = res.data;
+                                    if(data.remaining > 0){
+                                        $('#booking-classroom-name').html(data.title);
+                                        $('#booking-date').html(`${moment(data.start).format('DD MMMM YYYY')}`);
+                                        $('#booking-time').html(`${moment(data.start).format('H:mm')}`);
+                                        $('#booking-coach').html(data.coach_name);
+                                        $('#booking-remaining').html(data.remaining);
+
+                                        $('#coach_schedule_id').val(data.id);
+                                        $('#classroom_id').val(data.classroom_id);
+
+                                        $('#form-booking').trigger('reset');
+                                        $('#form-booking').attr('action',`{{ url('student/schedule/regular-class/booking') }}`)
+                                        $('#form-booking').attr('method',`POST`);
+                                    }
+                                    else{
+                                        toastr.error('Batas Pesanan Sudah Maksimal', 'Failed')
+                                    }
+                                }
+                            })
+                            .fail(function(res, error) {
+                                toastr.error(res.responseJSON.message, 'Failed')
+                            })
+                            .always(function() {
+
+                            });
+                        }
+                        else if(info.event.extendedProps.status == 2){
+                            if(moment(moment(info.event.extendedProps.tanggal).format('YYYY-MM-DD')).isAfter(moment().format('YYYY-MM-DD'))){
+                                let coach_schedule_id = info.event.extendedProps.coach_schedule_id
+                                $('#btn-reschedule').show();
+                                showModal('modal-reschedule');
+                                $.ajax({
+                                    url: `{{ url('student/schedule/regular-class') }}/${coach_schedule_id}`,
+                                    type: `GET`,
+                                })
+                                .done(function(res, xhr, meta) {
+                                    if(res.status == 200){
+                                        let data = res.data;
+                                        $('#reschedule-classroom-name').html(data.title);
+                                        $('#reschedule-date').html(`${moment(data.start).format('DD MMMM YYYY')}`);
+                                        $('#reschedule-time').html(`${moment(data.start).format('H:mm')}`);
+                                        $('#reschedule-coach').html(data.coach_name);
+                                        $('#media-conference').html(data.platform_name);
+
+                                        $('#reschedule_coach_schedule_id').val(data.id);
+                                        $('#reschedule_classroom_id').val(data.classroom_id);
+
+                                        $('#form-reschedule').trigger('reset');
+                                        $('#form-reschedule').attr('action',`{{ url('student/schedule/regular-class/reschedule') }}`)
+                                        $('#form-reschedule').attr('method',`POST`);
+                                    }
+                                })
+                                .fail(function(res, error) {
+                                    toastr.error(res.responseJSON.message, 'Failed')
+                                })
+                                .always(function() {
+
+                                });
+                            }else{
+                                $('#btn-reschedule').hide();
+                            }
+                        }
+                    }
+                });
+
+                renderRegular();
+                calendar_regular.render();
+            },
+            renderRegular = () => {
+                if(calendar_regular){
+                    calendar_regular.removeAllEvents();
+                }
+
+                $.ajax({
+                    url: `{{ url('student/schedule/regular-class') }}`,
+                    type: `GET`,
+                })
+                .done(function(res, xhr, meta) {
+                    if(res.status == 200){
+                        $.each(res.data, function(index, data){
+                            calendar_regular.addEvent({
+                                "coach_schedule_id": data.id,
+                                "classroom_id": data.classroom_id,
+                                "title": data.title,
+                                "start": data.start,
+                                "className": `bg-${data.color} border-${data.color} p-1 ${data.color == 'primary' ? 'text-white' : ''}`,
+                                "allDay": false,
+                                "status": data.status,
+                                "tanggal" : data.start
+                            });
+                        })
+                    }
+                })
+                .fail(function(res, error) {
+                    toastr.error(res.responseJSON.message, 'Failed')
+                })
+                .always(function() {
+
+                });
             }
+            initCalendarMasterLesson = () => {
+                var element = document.getElementById('calendar-master-lesson');
+                calendar_master_lesson = new FullCalendar.Calendar(element, {
+                    headerToolbar: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'dayGridMonth,timeGridWeek,timeGridDay,list'
+                    },
+                    locale: 'ind',
+                    timeZone: 'local',
+                    initialView: 'dayGridMonth',
+                    eventColor: '#fff',
+                    editable: true,
+                    selectable: true,
+                    eventClick: function(info) {
+                        let slot = info.event.extendedProps.slot;
+                        let total_booking = info.event.extendedProps.total_booking;
+                        let name = info.event.extendedProps.name;
+                        let poster = info.event.extendedProps.poster;
+                        let price = info.event.extendedProps.price;
+                        let datetime = info.event.extendedProps.tanggal;
+                        let id = info.event.extendedProps.master_lesson_id;
+
+                        if(total_booking < slot){
+                            $('#master-lesson-title').html(name);
+                            $('#poster').attr('src',`${poster}`);
+                            $('#price').html(`Rp. ${numeral(price).format('0,0')}`);
+
+                            showModal('modal-booking-master-lesson');
+                        }
+                        else{
+                            Swal.fire({
+                                title: 'Master lesson class is full!',
+                                text: "Participant quota has been fulfilled!",
+                                icon: 'warning',
+                                showCancelButton: false,
+                                confirmButtonColor: '#7F16A7',
+                                confirmButtonText: 'Close',
+                            }).then(function (result) {
+                                if (result.value) {
+
+                                }
+                            })
+                            $('.swal2-title').addClass('justify-content-center')
+                        }
+                    }
+                });
+
+                renderMasterLesson();
+                calendar_master_lesson.render();
+            },
+            renderMasterLesson = () => {
+                if(calendar_master_lesson){
+                    calendar_master_lesson.removeAllEvents();
+                }
+
+                $.ajax({
+                    url: `{{ url('student/schedule/master-lesson') }}`,
+                    type: `GET`,
+                })
+                .done(function(res, xhr, meta) {
+                    if(res.status == 200){
+                        $.each(res.data, function(index, data){
+                            calendar_master_lesson.addEvent({
+                                "id": data.id,
+                                "title": data.name,
+                                "start": data.datetime,
+                                "className": `bg-${data.color} border-${data.color} p-1 ${data.color == 'primary' ? 'text-white' : ''}`,
+                                "allDay": false,
+                                "status": data.status,
+                                "tanggal" : data.datetime,
+                                "slot" : data.slot,
+                                "total_booking" : data.total_booking,
+                                "poster" : data.poster,
+                                "name" : data.name,
+                                "price" : data.price,
+                                "master_lesson_id" : data.id,
+                            });
+                        })
+                    }
+                })
+                .fail(function(res, error) {
+                    toastr.error(res.responseJSON.message, 'Failed')
+                })
+                .always(function() {
+
+                });
+            },
+            initCoachList = () => {
+                $.ajax({
+                    url: `{{ url('student/schedule/coach-list') }}`,
+                    type: `GET`,
+                })
+                .done(function(res, xhr, meta) {
+                    if(res.status == 200){
+                        $.each(res.data, function(index, data){
+
+                        })
+                    }
+                })
+                .fail(function(res, error) {
+                    toastr.error(res.responseJSON.message, 'Failed')
+                })
+                .always(function() {
+
+                });
+            }
+
         };
 
         return {
