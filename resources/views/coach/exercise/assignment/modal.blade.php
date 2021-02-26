@@ -4,40 +4,20 @@
         <div class="modal-content">
             <form id="form-assignment" autocomplete="off">
                 <div class="modal-header">
-                    <h5 class="modal-title">Materi</h5>
+                    <h5 class="modal-title">Exercise</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <i aria-hidden="true" class="ki ki-close"></i>
                     </button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-sm-12 parent-sub-category">
-                            <div class="form-group">
-                                <label>
-                                    Category Class
-                                    <span class="text-danger">*</span>
-                                </label>
-                                <select name="classroom_category_id" id="classroom-category"></select>
-                                <span class="text-small ml-1 text-danger required-classroom-category"
-                                    style="display: none">&#8226; Harus diisi</span>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-sm-12 select-sub-category" style="display: none;">
-                            <div class="form-group">
-                                <label>
-                                    Sub Category Class
-                                    <span class="text-danger">*</span>
-                                </label>
-                                <select name="sub_classroom_category_id" id="sub-classroom-category"></select>
-                            </div>
-                        </div>
                         <div class="col-md-6 col-sm-12 select-classroom">
                             <div class="form-group">
                                 <label>
                                     Class
                                     <span class="text-danger">*</span>
                                 </label>
-                                <select name="classroom_id" id="classroom"></select>
+                                <select name="classroom_id" id="classroom_coach"></select>
                             </div>
                         </div>
                         <div class="col-md-6 col-sm-12 select-session">
@@ -46,7 +26,7 @@
                                     Session
                                     <span class="text-danger">*</span>
                                 </label>
-                                <select name="session_id" class="form-control" id="session"></select>
+                                <select name="session_id" class="form-control" id="session_coach"></select>
                             </div>
                         </div>
                     </div>

@@ -1,7 +1,7 @@
 <script type="text/javascript">
     var Page = function() {
         var _componentPage = function() {
-            var init_table, init_classroom_category, init_sub_classroom_category, init_classroom, docsDropzone;
+            var init_table, init_classroom, docsDropzone;
             var arr_path = [];
 
             $(document).ready(function() {
@@ -9,11 +9,11 @@
                 get_session();
                 formSubmit();
 
-                init_classroom_coach = new SlimSelect({
-                    select: '#classroom_coach'
+                init_classroom = new SlimSelect({
+                    select: '#classroom'
                 })
 
-                get_classroom_coach();
+                get_classroom();
 
                 $('#filter_date').datepicker({
                     rtl: KTUtil.isRTL(),
@@ -85,8 +85,7 @@
                                                     <div>
                                                         <span class="card-icon">
                                                             <div class="symbol symbol-circle symbol-60 mr-3">
-                                                                <img alt="Pic"
-                                                                    src="${res.data.detail.image_url}" />
+                                                                <img alt="Pic" src="{{ asset('assets/images/pdf-file-extension.png') }}" />
                                                             </div>
                                                         </span>
                                                         <div class="card-label my-3 h5">PDF</div>
@@ -176,7 +175,7 @@
                                 $.each(res.data.collection_feedback, function(index, data) {
                                     let rate = ``;
 
-                                    for (i = 1; i < 5; i++) {
+                                    for (i = 1; i <= 5; i++) {
                                         if (i <= data.star) {
                                             rate += `<span class="svg-icon svg-icon-warning svg-icon-2x">
                                                         <svg
@@ -252,8 +251,7 @@
                                                     <div>
                                                         <span class="card-icon">
                                                             <div class="symbol symbol-circle symbol-60 mr-3">
-                                                                <img alt="Pic"
-                                                                    src="${data.image_url}" />
+                                                                <img alt="Pic" src="{{ asset('assets/images/pdf-file-extension.png') }}" />
                                                             </div>
                                                         </span>
                                                         <div class="card-label my-3 h5">PDF</div>
@@ -308,31 +306,27 @@
                             })
                     });
 
-                    $(document).on('change', '#classroom-category', function() {
-                        if ($('#classroom-category').val() == "") {
-                            $('.required-classroom-category').show();
-                            $('.select-sub-category').hide();
-                            $('.parent-sub-category').removeClass('col-md-6');
-                            get_session()
-                            get_classroom()
-                        } else {
-                            $('.required-classroom-category').hide();
-                            get_sub_classroom_category($('#classroom-category').val())
-                        }
-                    })
-
-                    $(document).on('change', '#sub-classroom-category', function() {
-                        get_classroom($('#classroom-category').val(), $('#sub-classroom-category')
-                            .val())
-                    })
-
                     $(document).on('change', '#classroom', function() {
                         get_session($('#classroom').val())
                     })
 
-                    $(document).on('change', '#classroom_coach', function() {
-                        get_session_coach($('#classroom_coach').val())
-                    })
+                    $(document).on('change','#start_date',function(event){
+                        event.preventDefault();
+                        let date_end = $(this).val();
+                        let date_start = $('#end_date').val();
+
+                        initTable();
+                        
+                    });
+
+                    $(document).on('change','#end_date',function(event){
+                        event.preventDefault();
+                        let date_end = $(this).val();
+                        let date_start = $('#start_date').val();
+
+                        initTable();
+                        
+                    });
                 },
                 formSubmit = () => {
                     $('#form-review-assignment').submit(function(event) {
@@ -361,78 +355,7 @@
                     });
                 }
 
-            const get_classroom_category = (id) => {
-                    if (init_classroom_category) {
-                        init_classroom_category.destroy();
-                    }
-
-                    init_classroom_category = new SlimSelect({
-                        select: '#classroom-category'
-                    })
-
-                    $.ajax({
-                            url: '{{ url('public/get-classroom-category') }}',
-                            type: 'GET',
-                            dataType: 'json',
-                        })
-                        .done(function(res, xhr, meta) {
-                            let element = `<option value="">Select Class Category</option>`
-                            $.each(res.data, function(index, data) {
-                                if (id == data.id) {
-                                    element +=
-                                        `<option value="${data.id}" selected>${data.name}</option>`;
-                                } else {
-                                    element += `<option value="${data.id}">${data.name}</option>`;
-                                }
-                            });
-
-                            $('#classroom-category').html(element);
-                        })
-                },
-                get_sub_classroom_category = (id, select_id, on = true) => {
-                    if (init_sub_classroom_category) {
-                        init_sub_classroom_category.destroy();
-                    }
-
-                    init_sub_classroom_category = new SlimSelect({
-                        select: '#sub-classroom-category'
-                    })
-
-                    $.ajax({
-                            url: '{{ url('public/get-sub-classroom-category-by-category') }}/' + id,
-                            type: 'GET',
-                            dataType: 'json',
-                        })
-                        .done(function(res, xhr, meta) {
-                            if (res.data.length > 0) {
-                                $('.select-sub-category').show();
-
-                                let element = `<option value="">Select Sub Class Category</option>`
-
-                                $.each(res.data, function(index, data) {
-                                    if (select_id == data.id) {
-                                        element +=
-                                            `<option value="${data.id}" selected>${data.name}</option>`;
-                                    } else {
-                                        element +=
-                                            `<option value="${data.id}">${data.name}</option>`;
-                                    }
-                                });
-
-                                $('#sub-classroom-category').html(element);
-                                $('.parent-sub-category').addClass('col-md-6');
-                                get_classroom()
-                            } else {
-                                $('.select-sub-category').hide();
-                                $('.parent-sub-category').removeClass('col-md-6');
-
-                                if (on) {
-                                    get_classroom($('#classroom-category').val())
-                                }
-                            }
-                        })
-                },
-                get_classroom = (category_id, sub_category_id, select_id) => {
+            const get_classroom = () => {
                     if (init_classroom) {
                         init_classroom.destroy();
                     }
@@ -441,13 +364,8 @@
                         select: '#classroom'
                     })
 
-                    if (category_id == '') {
-                        category_id = undefined;
-                    }
-
                     $.ajax({
-                            url: '{{ url('public/get-classroom') }}/' + category_id + '&' +
-                                sub_category_id,
+                            url: '{{ url('public/get-classroom-coach') }}',
                             type: 'GET',
                             dataType: 'json',
                         })
@@ -455,79 +373,57 @@
                             let element = `<option value="">Select Class</option>`
 
                             $.each(res.data, function(index, data) {
-                                if (select_id == data.id) {
-                                    element +=
-                                        `<option value="${data.id}" selected>${data.name}</option>`;
-                                } else {
-                                    element += `<option value="${data.id}">${data.name}</option>`;
-                                }
-                            });
-
-                            $('#classroom').html(element);
-                        })
-                },
-                get_classroom_edit = (category_id, sub_category_id, select_id) => {
-                    if (init_classroom) {
-                        init_classroom.destroy();
-                    }
-
-                    init_classroom = new SlimSelect({
-                        select: '#classroom'
-                    })
-
-                    if (category_id == '') {
-                        category_id = undefined;
-                    }
-
-                    $.ajax({
-                            url: '{{ url('public/get-classroom') }}/' + category_id + '&' +
-                                sub_category_id,
-                            type: 'GET',
-                            dataType: 'json',
-                        })
-                        .done(function(res, xhr, meta) {
-                            let element = `<option value="">Select Class</option>`
-
-                            $.each(res.data, function(index, data) {
-                                if (select_id == data.id) {
-                                    element +=
-                                        `<option value="${data.id}" selected>${data.name}</option>`;
-                                } else {
-                                    element += `<option value="${data.id}">${data.name}</option>`;
-                                }
+                                element += `<option value="${data.id}">${data.name}</option>`;
                             });
 
                             $('#classroom').html(element);
                         })
                 },
                 get_session = (id, select_id) => {
-                    $.ajax({
-                            url: '{{ url('public/get-session') }}/' + id,
-                            type: 'GET',
-                            dataType: 'json',
-                        })
-                        .done(function(res, xhr, meta) {
-                            let element = `<option value="">Select Session</option>`
+                    btn_loading_basic('start','Tampilkan')
+                    disable_action('session','start')
 
-                            if (res.data) {
-                                for (let index = 0; index < parseInt(res.data.session_total); index++) {
-                                    if (index + 1 == select_id) {
-                                        element +=
-                                            `<option value="${index + 1}" selected>Session ${index + 1}</option>`;
-                                    } else {
-                                        element +=
-                                            `<option value="${index + 1}">Session ${index + 1}</option>`;
-                                    }
+                    $.ajax({
+                        url: '{{ url('public/get-session-coach') }}/' + id,
+                        type: 'GET',
+                        dataType: 'json',
+                    })
+                    .done(function(res, xhr, meta) {
+                        let element = `<option value="">Select Session</option>`
+
+                        if (res.data) {
+                            for (let index = 0; index < parseInt(res.data.session_total); index++) {
+                                if (index + 1 == select_id) {
+                                    element +=
+                                        `<option value="${index + 1}" selected>Session ${index + 1}</option>`;
+                                } else {
+                                    element +=
+                                        `<option value="${index + 1}">Session ${index + 1}</option>`;
                                 }
                             }
+                        }
 
-                            $('#session').html(element);
-                        })
+                        disable_action('session','stop')
+                        btn_loading_basic('stop', 'Tampilkan')
+
+                        $('#session').html(element);
+                    })
                 },
                 initTable = () => {
 
-                    var classroom_coach = $('#classroom_coach').val();
-                    var session_coach = $('#session_coach').val();
+                    var classroom = $('#classroom').val();
+                    var session = $('#session').val();
+
+                    var start_date = $('#start_date').val();
+                    var end_date = $('#end_date').val();
+
+                    if(start_date == ''){
+                        start_date = undefined;
+                    }
+
+                    if(end_date == ''){
+                        end_date = undefined;
+                    }
 
                     init_table = $('#init-table').DataTable({
                         destroy: true,
@@ -538,8 +434,8 @@
                             .height() - 450,
                         ajax: {
                             type: 'POST',
-                            url: "{{ url('coach/exercise/review-assignment/dt') }}/" +
-                                classroom_coach + '/' + session_coach,
+                            url: "{{ url('coach/exercise/review-assignment/dt') }}/" + classroom + '/' + session,
+                            data:{start_date:start_date, end_date:end_date},
                         },
                         columns: [{
                                 data: 'DT_RowIndex'
@@ -562,6 +458,24 @@
                         ],
                         columnDefs: [{
                                 targets: 0,
+                                searchable: false,
+                                orderable: false,
+                                className: "text-center"
+                            },
+                            {
+                                targets: 1,
+                                searchable: false,
+                                orderable: false,
+                                className: "text-center"
+                            },
+                            {
+                                targets: 2,
+                                searchable: false,
+                                orderable: false,
+                                className: "text-center"
+                            },
+                            {
+                                targets: 3,
                                 searchable: false,
                                 orderable: false,
                                 className: "text-center"
@@ -604,7 +518,7 @@
                                         jenis +
                                         `" title="detail" href="{{ url('/coach/exercise/review-assignment') }}/${data}/` +
                                         edit + `">
-                                        <span class="svg-icon svg-icon-primary svg-icon-2x">
+                                        <span class="svg-icon svg-icon-2x">
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                                     <rect x="0" y="0" width="24" height="24"/>
@@ -643,58 +557,7 @@
                     });
                 }
 
-            const get_classroom_coach = () => {
-                    if (init_classroom_coach) {
-                        init_classroom_coach.destroy();
-                    }
-
-                    init_classroom_coach = new SlimSelect({
-                        select: '#classroom_coach'
-                    })
-
-                    $.ajax({
-                            url: '{{ url('public/get-classroom-coach') }}',
-                            type: 'GET',
-                            dataType: 'json',
-                        })
-                        .done(function(res, xhr, meta) {
-                            let element = `<option value="">Select Class</option>`
-
-                            $.each(res.data, function(index, data) {
-                                element += `<option value="${data.id}">${data.name}</option>`;
-                            });
-
-                            $('#classroom_coach').html(element);
-                        })
-                },
-                get_session_coach = (id, select_id) => {
-                    btn_loading_basic('start', 'Tampilkan')
-
-                    $.ajax({
-                            url: '{{ url('public/get-session-coach') }}/' + id,
-                            type: 'GET',
-                            dataType: 'json',
-                        })
-                        .done(function(res, xhr, meta) {
-                            let element = `<option value="">Select Session</option>`
-
-                            if (res.data) {
-                                for (let index = 0; index < parseInt(res.data.session_total); index++) {
-                                    if (index + 1 == select_id) {
-                                        element +=
-                                            `<option value="${index + 1}" selected>Session ${index + 1}</option>`;
-                                    } else {
-                                        element +=
-                                            `<option value="${index + 1}">Session ${index + 1}</option>`;
-                                    }
-                                }
-                            }
-                            btn_loading_basic('stop', 'Tampilkan')
-
-                            $('#session_coach').html(element);
-                        })
-                },
-                start_setup = (id, select_id) => {
+            const start_setup = (id, select_id) => {
                     const btn = document.querySelector("button");
                     const post = document.querySelector(".post");
                     const widget = document.querySelector(".star-widget");

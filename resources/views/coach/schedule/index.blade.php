@@ -6,7 +6,7 @@
 
 @section('content')
 
-<div class="card">
+<div class="card d-none">
     <div class="card-body">
         <div class="d-flex justify-content-between align-items-center">
             <div class="my-title">
@@ -16,7 +16,7 @@
     </div>
 </div>
 
-<div class="card mt-5">
+<div class="card">
     <div class="card-body">
         <div class="d-flex justify-content-between align-items-center">
             <div style="width: 45%">
@@ -31,10 +31,10 @@
     </div>
 </div>
 
-@include('admin.schedule.modal')
+@include('coach.schedule.modal')
 @endsection
 
 @push('script')
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.5.1/main.min.js"></script>
-    @include('admin.schedule.script')
+    @include('coach.schedule.script')
 @endpush

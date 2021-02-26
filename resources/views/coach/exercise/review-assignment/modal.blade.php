@@ -76,10 +76,7 @@
                     <hr>
                     <div class="row mt-5 pt-5">
                         <div class="col-xl-12 row collection"></div>
-
-                        <div class="col-xl-12">
-                            <p class="description" id="description"></p>
-                        </div>
+                        <div class="col-xl-12 row description"></div>
                     </div>
                     <hr>
                     <div class="row mt-5 pt-5">
@@ -87,19 +84,19 @@
                             style="display: grid;justify-content: center;">
                             <div class="container">
                                 <div class="star-widget text-center">
-                                    <input type="radio" name="rate[5]" id="rate-5">
+                                    <input type="radio" value="5" name="rate" id="rate-5">
                                     <label for="rate-5" class="fas fa-star"></label>
 
-                                    <input type="radio" name="rate[4]" id="rate-4">
+                                    <input type="radio" value="4" name="rate" id="rate-4">
                                     <label for="rate-4" class="fas fa-star"></label>
 
-                                    <input type="radio" name="rate[3]" id="rate-3">
+                                    <input type="radio" value="3" name="rate" id="rate-3">
                                     <label for="rate-3" class="fas fa-star"></label>
 
-                                    <input type="radio" name="rate[2]" id="rate-2">
+                                    <input type="radio" value="2" name="rate" id="rate-2">
                                     <label for="rate-2" class="fas fa-star"></label>
 
-                                    <input type="radio" name="rate[1]" id="rate-1">
+                                    <input type="radio" value="1" name="rate" id="rate-1">
                                     <label for="rate-1" class="fas fa-star"></label>
                                 </div>
                             </div>
