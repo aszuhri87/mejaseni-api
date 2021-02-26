@@ -86,11 +86,11 @@
                     <label class="col-form-label text-right col-lg-3 col-sm-12">Filter Tanggal</label>
                     <div class="col-lg-9 col-md-9 col-sm-12">
                         <div class="input-daterange input-group" id="filter_date">
-                            <input type="text" class="form-control" name="start" id="start" />
+                            <input type="text" class="form-control" name="start" id="start_date" />
                             <div class="input-group-append">
                                 <span class="input-group-text"><i class="la la-ellipsis-h"></i></span>
                             </div>
-                            <input type="text" class="form-control" name="end" id="end" />
+                            <input type="text" class="form-control" name="end" id="end_date" />
                         </div>
                     </div>
                 </div>

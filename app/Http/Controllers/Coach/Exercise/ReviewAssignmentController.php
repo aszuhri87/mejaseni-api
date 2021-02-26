@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Coach\Exercise;
 
 use App\Http\Controllers\BaseMenu;
 use App\Models\CollectionFeedback;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -52,16 +53,29 @@ class ReviewAssignmentController extends BaseMenu
             ->join('student_classrooms', 'student_classrooms.student_id', 'students.id')
             ->join('classrooms', 'classrooms.id', 'student_classrooms.classroom_id')
             ->join('coach_classrooms', 'coach_classrooms.classroom_id', 'classrooms.id')
-            ->join('coaches', 'coaches.id', 'coach_classrooms.coach_id')
-            ->where([
-                ['classrooms.id', $classroom_id],
-                ['sessions.name', $session_id],
-                ['coaches.id', Auth::guard('coach')->id()],
-            ])
+            ->join('coaches', 'coaches.id', 'coach_classrooms.coach_id');
+
+        if (!empty($request->start_date) || !empty($request->end_date)) {
+            $data->where([
+                ['collections.upload_date', '>=', Carbon::parse($request->start_date)->format('Y-m-d H:i:s')],
+                ['collections.upload_date', '<=', Carbon::parse($request->end_date)->format('Y-m-d H:i:s')],
+            ]);
+        }else{
+            $data->where([
+                ['collections.upload_date', '>=', Carbon::now()->format('Y-m-d H:i:s')],
+                ['collections.upload_date', '<=', Carbon::now()->format('Y-m-d H:i:s')],
+            ]);
+        }
+
+        $data->where([
+            ['classrooms.id', $classroom_id],
+            ['sessions.name', $session_id],
+            ['coaches.id', Auth::guard('coach')->id()],
+        ])
             ->orderBy('collections.created_at', 'desc')
             ->whereNull([
                 'students.deleted_at'
-            ])  
+            ])
             ->groupBy('collections.id', 'assignments.due_date', 'students.name')
             ->get();
 

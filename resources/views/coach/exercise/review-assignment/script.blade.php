@@ -309,6 +309,24 @@
                     $(document).on('change', '#classroom', function() {
                         get_session($('#classroom').val())
                     })
+
+                    $(document).on('change','#start_date',function(event){
+                        event.preventDefault();
+                        let date_end = $(this).val();
+                        let date_start = $('#end_date').val();
+
+                        initTable();
+                        
+                    });
+
+                    $(document).on('change','#end_date',function(event){
+                        event.preventDefault();
+                        let date_end = $(this).val();
+                        let date_start = $('#start_date').val();
+
+                        initTable();
+                        
+                    });
                 },
                 formSubmit = () => {
                     $('#form-review-assignment').submit(function(event) {
@@ -396,6 +414,17 @@
                     var classroom = $('#classroom').val();
                     var session = $('#session').val();
 
+                    var start_date = $('#start_date').val();
+                    var end_date = $('#end_date').val();
+
+                    if(start_date == ''){
+                        start_date = undefined;
+                    }
+
+                    if(end_date == ''){
+                        end_date = undefined;
+                    }
+
                     init_table = $('#init-table').DataTable({
                         destroy: true,
                         processing: true,
@@ -406,6 +435,7 @@
                         ajax: {
                             type: 'POST',
                             url: "{{ url('coach/exercise/review-assignment/dt') }}/" + classroom + '/' + session,
+                            data:{start_date:start_date, end_date:end_date},
                         },
                         columns: [{
                                 data: 'DT_RowIndex'
@@ -428,6 +458,24 @@
                         ],
                         columnDefs: [{
                                 targets: 0,
+                                searchable: false,
+                                orderable: false,
+                                className: "text-center"
+                            },
+                            {
+                                targets: 1,
+                                searchable: false,
+                                orderable: false,
+                                className: "text-center"
+                            },
+                            {
+                                targets: 2,
+                                searchable: false,
+                                orderable: false,
+                                className: "text-center"
+                            },
+                            {
+                                targets: 3,
                                 searchable: false,
                                 orderable: false,
                                 className: "text-center"
