@@ -44,6 +44,7 @@ use App\Http\Controllers\Admin\Schedule\ScheduleController;
 */
 use App\Http\Controllers\Coach\DashboardController;
 use App\Http\Controllers\Coach\TheoryController as CoachTheoryController;
+use App\Http\Controllers\Coach\Schedule\ScheduleController as CoachScheduleController;
 use App\Http\Controllers\Coach\Exercise\AssignmentController;
 use App\Http\Controllers\Coach\Exercise\ReviewAssignmentController;
 /*
@@ -70,15 +71,15 @@ use App\Http\Controllers\Student\ReviewController as StudentReviewController;
 | CMS Admin Controller
 |--------------------------------------------------------------------------
 */
-use App\Http\Controllers\Admin\Cms\CompanyController as CompanyController;
-use App\Http\Controllers\Admin\Cms\BranchController as BranchController;
-use App\Http\Controllers\Admin\Cms\ProgramController as ProgramController;
-use App\Http\Controllers\Admin\Cms\EventController as EventController;
-use App\Http\Controllers\Admin\Cms\NewsController as NewsController;
-use App\Http\Controllers\Admin\Cms\PrivacyPolicyController as PrivacyPolicyAdminController;
-use App\Http\Controllers\Admin\Cms\FaqController as FaqAdminController;
-use App\Http\Controllers\Admin\Cms\TeamController as TeamController;
-use App\Http\Controllers\Admin\Cms\CareerController as CareerAdminController;
+// use App\Http\Controllers\Admin\Cms\CompanyController as CompanyController;
+// use App\Http\Controllers\Admin\Cms\BranchController as BranchController;
+// use App\Http\Controllers\Admin\Cms\ProgramController as ProgramController;
+// use App\Http\Controllers\Admin\Cms\EventController as EventController;
+// use App\Http\Controllers\Admin\Cms\NewsController as NewsController;
+// use App\Http\Controllers\Admin\Cms\PrivacyPolicyController as PrivacyPolicyAdminController;
+// use App\Http\Controllers\Admin\Cms\FaqController as FaqAdminController;
+// use App\Http\Controllers\Admin\Cms\TeamController as TeamController;
+// use App\Http\Controllers\Admin\Cms\CareerController as CareerAdminController;
 
 
 /*
@@ -86,16 +87,16 @@ use App\Http\Controllers\Admin\Cms\CareerController as CareerAdminController;
 | CMS Controller
 |--------------------------------------------------------------------------
 */
-use App\Http\Controllers\Cms\HomePageController as HomePageController;
-use App\Http\Controllers\Cms\ClassController as ClassController;
-use App\Http\Controllers\Cms\StoreController as StoreController;
-use App\Http\Controllers\Cms\NewsEventController as NewsEventController;
-use App\Http\Controllers\Cms\AboutController as AboutController;
-use App\Http\Controllers\Cms\PrivacyPolicyController as PrivacyPolicyController;
-use App\Http\Controllers\Cms\TosController as TosController;
-use App\Http\Controllers\Cms\FaqController as FaqController;
-use App\Http\Controllers\Cms\CareerController as CareerController;
-use App\Http\Controllers\Cms\CareerDetailController as CareerDetailController;
+// use App\Http\Controllers\Cms\HomePageController as HomePageController;
+// use App\Http\Controllers\Cms\ClassController as ClassController;
+// use App\Http\Controllers\Cms\StoreController as StoreController;
+// use App\Http\Controllers\Cms\NewsEventController as NewsEventController;
+// use App\Http\Controllers\Cms\AboutController as AboutController;
+// use App\Http\Controllers\Cms\PrivacyPolicyController as PrivacyPolicyController;
+// use App\Http\Controllers\Cms\TosController as TosController;
+// use App\Http\Controllers\Cms\FaqController as FaqController;
+// use App\Http\Controllers\Cms\CareerController as CareerController;
+// use App\Http\Controllers\Cms\CareerDetailController as CareerDetailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -317,6 +318,19 @@ Route::group(['middleware' => ['auth-handling']], function () {
 
         });
 
+        Route::get('schedule/master-lesson/{id}', [CoachScheduleController::class, 'show_master_lesson']);
+        Route::post('schedule/master-lesson/update/{id}', [CoachScheduleController::class, 'update_time_master_lesson']);
+
+        Route::get('schedule', [CoachScheduleController::class, 'index']);
+        Route::get('schedule/all', [CoachScheduleController::class, 'all']);
+        Route::get('schedule/{id}', [CoachScheduleController::class, 'show']);
+        Route::get('schedule-show/{id}', [CoachScheduleController::class, 'show_edit']);
+        Route::post('schedule', [CoachScheduleController::class, 'store']);
+        Route::post('schedule/{id}', [CoachScheduleController::class, 'update']);
+        Route::post('schedule/update/{id}', [CoachScheduleController::class, 'update_time']);
+        Route::post('schedule/confirm/{id}', [CoachScheduleController::class, 'confirm']);
+        Route::post('schedule/delete/{id}', [CoachScheduleController::class, 'delete']);
+
     });
 
     /*
@@ -429,13 +443,13 @@ Route::group(['middleware' => ['auth-handling']], function () {
 | CMS
 |--------------------------------------------------------------------------
 */
-Route::get('/', [HomePageController::class, 'index']);
-Route::get('/class', [ClassController::class, 'index']);
-Route::get('/store', [StoreController::class, 'index']);
-Route::get('/news-event', [NewsEventController::class, 'index']);
-Route::get('/about', [AboutController::class, 'index']);
-Route::get('/privacy-policy', [PrivacyPolicyController::class, 'index']);
-Route::get('/tos', [TosController::class, 'index']);
-Route::get('/faq', [FaqController::class, 'index']);
-Route::get('/career', [CareerController::class, 'index']);
-Route::get('/career-detail', [CareerDetailController::class, 'index']);
+// Route::get('/', [HomePageController::class, 'index']);
+// Route::get('/class', [ClassController::class, 'index']);
+// Route::get('/store', [StoreController::class, 'index']);
+// Route::get('/news-event', [NewsEventController::class, 'index']);
+// Route::get('/about', [AboutController::class, 'index']);
+// Route::get('/privacy-policy', [PrivacyPolicyController::class, 'index']);
+// Route::get('/tos', [TosController::class, 'index']);
+// Route::get('/faq', [FaqController::class, 'index']);
+// Route::get('/career', [CareerController::class, 'index']);
+// Route::get('/career-detail', [CareerDetailController::class, 'index']);

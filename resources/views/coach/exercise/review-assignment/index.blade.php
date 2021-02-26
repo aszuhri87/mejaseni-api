@@ -49,12 +49,12 @@
                         </div>
                         <div class="col-md-4 col-sm-12 select-classroom-coach">
                             <div class="form-group">
-                                <select name="classroom_coach_id" id="classroom_coach"></select>
+                                <select name="classroom_coach_id" id="classroom"></select>
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-12 select-session-coach">
                             <div class="form-group">
-                                <select name="session_coach_id" class="form-control" id="session_coach"></select>
+                                <select name="session_coach_id" class="form-control" id="session"></select>
                             </div>
                         </div>
                     </div>
@@ -79,7 +79,7 @@
         <!--begin::Header-->
         <div class="card-header border-0 py-5">
             <h3 class="card-title align-items-start flex-column">
-                <span class="card-label font-weight-bolder text-dark">Review Assignment</span>
+                <span class="card-label font-weight-bolder text-dark">Review</span>
             </h3>
             <div class="card-toolbar">
                 <div class="form-group row pr-5">

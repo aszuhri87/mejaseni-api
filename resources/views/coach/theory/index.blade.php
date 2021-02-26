@@ -18,12 +18,12 @@
                         </div>
                         <div class="col-md-4 col-sm-12 select-classroom-coach">
                             <div class="form-group">
-                                <select name="classroom_coach_id" id="classroom_coach"></select>
+                                <select name="classroom_coach_id" id="classroom"></select>
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-12 select-session-coach">
                             <div class="form-group">
-                                <select name="session_coach_id" class="form-control" id="session_coach"></select>
+                                <select name="session_coach_id" class="form-control" id="session"></select>
                             </div>
                         </div>
                     </div>
@@ -50,7 +50,7 @@
                 <div class="my-title"></div>
                     <button type="button" id="add-btn"
                         class="btn btn-primary btn-icon w-auto px-2 waves-effect width-md waves-light ml-1">
-                        <span class="svg-icon svg-icon-white svg-icon-2x">
+                        <span class="svg-icon svg-icon-2x">
                             <!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-02-01-052524/theme/html/demo1/dist/../src/media/svg/icons/Files/Upload.svg--><svg
                                 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px"
                                 height="24px" viewBox="0 0 24 24" version="1.1">

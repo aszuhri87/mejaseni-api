@@ -264,11 +264,10 @@ class ReviewAssignmentController extends BaseMenu
     public function update(Request $request, $id)
     {
         try {
-
             $result = CollectionFeedback::create([
                 'coach_id' => Auth::guard('coach')->id(),
                 'collection_id' => $id,
-                'star' => count($request->rate),
+                'star' => $request->rate,
                 'description' => $request->feedback,
             ]);
 
