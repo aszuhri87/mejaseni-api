@@ -56,7 +56,7 @@
                             </div>
                             <div>
                                 <p class="text-muted" style="margin-bottom: 0 !important">Rating</p>
-                                <p class="h2" id="total-rating" style="margin-bottom: 0 !important">4.7</p>
+                                <p class="h2" id="total-rating" style="margin-bottom: 0 !important"></p>
                             </div>
                         </div>
                     </div>

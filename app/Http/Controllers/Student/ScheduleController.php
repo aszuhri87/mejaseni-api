@@ -575,4 +575,28 @@ class ScheduleController extends BaseMenu
             ]);
         }
     }
+
+    public function student_rating()
+    {
+        try {
+            $result = DB::table('student_feedback')
+                ->select([
+                    DB::raw('round(AVG(star),1) as star')
+                ])
+                ->where('student_feedback.student_id',Auth::guard('student')->user()->id)
+                ->whereNull('deleted_at')
+                ->get();
+
+            return response([
+                "status" => 200,
+                "data"      => $result,
+                "message"   => 'OK!'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
 }

@@ -114,8 +114,8 @@ class VideoController extends BaseMenu
                     'carts.coach_name',
                     'carts.expertise_name',
                 ])
-                ->leftJoinSub($cart, 'carts', function ($join) {
-                    $join->on('transaction_details.chart_id', '=', 'carts.id');
+                ->joinSub($cart, 'carts', function ($join) {
+                    $join->on('transaction_details.cart_id', '=', 'carts.id');
                 });
 
             $result = DB::table('transactions')
@@ -132,7 +132,7 @@ class VideoController extends BaseMenu
                     'transaction_details.coach_name',
                     'transaction_details.expertise_name',
                 ])
-                ->leftJoinSub($transaction_detail, 'transaction_details', function ($join) {
+                ->joinSub($transaction_detail, 'transaction_details', function ($join) {
                     $join->on('transactions.id', '=', 'transaction_details.transaction_id');
                 })
                 ->where(function($query) use($request){

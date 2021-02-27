@@ -347,8 +347,8 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::group(['prefix' => 'schedule'], function () {
             Route::get('/', [StudentScheduleController::class, 'index']);
             Route::get('get-total-class/{student_id}', [StudentScheduleController::class, 'get_total_class']);
+            Route::get('student-rating', [StudentScheduleController::class, 'student_rating']);
 
-            // regular class
             Route::group(['prefix' => 'regular-class'], function () {
                 Route::get('/', [StudentScheduleController::class, 'regular_class']);
                 Route::get('{coach_schedule_id}', [StudentScheduleController::class, 'coach_schedule']);
@@ -356,7 +356,6 @@ Route::group(['middleware' => ['auth-handling']], function () {
                 Route::post('reschedule', [StudentScheduleController::class, 'reschedule']);
             });
 
-            // special class
             Route::group(['prefix' => 'special-class'], function () {
                 Route::get('/', [StudentScheduleController::class, 'special_class']);
                 Route::get('{coach_schedule_id}', [StudentScheduleController::class, 'coach_schedule']);
@@ -364,12 +363,10 @@ Route::group(['middleware' => ['auth-handling']], function () {
                 Route::post('reschedule', [StudentScheduleController::class, 'reschedule']);
             });
 
-            // master lesson
             Route::group(['prefix' => 'master-lesson'], function () {
                 Route::get('/', [StudentScheduleController::class, 'master_lesson']);
             });
 
-            // coach list
             Route::group(['prefix' => 'coach-list'], function () {
                 Route::get('/', [StudentScheduleController::class, 'coach_list']);
             });
@@ -386,6 +383,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::get('get-package',[StudentNewPackageController::class, 'get_package']);
             Route::get('sub-classroom-category/{sub_classroom_category_id}',[StudentNewPackageController::class, 'get_classroom_by_sub_category_id']);
             Route::get('get-session-video', [StudentNewPackageController::class, 'get_session_video']);
+            Route::get('get-sub-classroom-category', [StudentNewPackageController::class, 'get_sub_classroom_category']);
         });
 
         Route::group(['prefix' => 'theory'], function () {

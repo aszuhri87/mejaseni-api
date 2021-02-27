@@ -3,6 +3,7 @@
         var _componentPage = function(){
 
             $(document).ready(function() {
+                getClassroomCategory();
                 formSubmit();
                 initAction();
                 getSubCategory();
@@ -10,7 +11,43 @@
                 initPackage();
             });
 
-            const initAction = () => {
+            const initSplide = () => {
+                new Splide('#category-splide', {
+                    type: 'loop',
+                    arrow: false,
+                    perPage: 5,
+                    perMove: 2,
+                    pagination: false,
+                    padding: {
+                        right: '0rem',
+                        left: '0rem',
+                    },
+                    breakpoints: {
+                        1025: {
+                            perPage: 3,
+                            padding: {
+                                right: '0rem',
+                                left: '0rem',
+                            },
+                        },
+                        991: {
+                            perPage: 2,
+                            padding: {
+                                right: '0rem',
+                                left: '0rem',
+                            },
+                        },
+                        640: {
+                            perPage: 1,
+                            padding: {
+                                right: '3rem',
+                                left: '3rem',
+                            },
+                        },
+                    }
+                }).mount();
+            },
+            initAction = () => {
                 $(document).on('click', '#add-btn', function(event){
                     event.preventDefault();
 
@@ -94,11 +131,17 @@
                     getPackageBySubCategory(id);
                     getSessionVideo(id);
                 });
+
+                $(document).on('click','.class-category-filter__wrapper',function(event){
+                    $('.class-category-filter__wrapper').removeClass('class-category-selected');
+                    $(this).addClass('class-category-selected');
+                    let classroom_category_id = $(this).data('id');
+                    getSubCategory(classroom_category_id);
+                })
             },
             formSubmit = () => {
                 $('#form-new-package').submit(function(event){
                     event.preventDefault();
-                    // return true;
                     btn_loading('start')
                     $.ajax({
                         url: `{{url('student/add-to-cart')}}`,
@@ -120,10 +163,13 @@
                     });
                 });
             },
-            getSubCategory = () => {
+            getSubCategory = (classroom_category_id) => {
                 $.ajax({
-                    url: `{{ url('public/get-sub-classroom-category') }}`,
+                    url: `{{ url('student/new-package/get-sub-classroom-category') }}`,
                     type: `GET`,
+                    data:{
+                        classroom_category_id:classroom_category_id
+                    }
                 })
                 .done(function(res, xhr, meta) {
                     let element = ``;
@@ -135,6 +181,35 @@
                         `;
                     });
                     $('#category').html(element);
+                })
+                .fail(function(res, error) {
+                    toastr.error(res.responseJSON.message, 'Failed')
+                })
+                .always(function() {
+
+                });
+            },
+            getClassroomCategory = () => {
+                $.ajax({
+                    url: `{{ url('public/get-classroom-category') }}`,
+                    type: `GET`,
+                })
+                .done(function(res, xhr, meta) {
+                    let element = ``;
+                    $.each(res.data, function(index, data) {
+                        element += `
+                        <li class="splide__slide px-2">
+                            <div class="class-category-filter__wrapper" data-id=${data.id}>
+                                <div class="class-category-filter-overlay row-center">
+                                    <h4>${data.name}</h4>
+                                </div>
+                                <img src="././assets/images/category-placeholder.png" alt="">
+                            </div>
+                        </li>
+                        `;
+                    });
+                    $('.splide__list').html(element);
+                    initSplide();
                 })
                 .fail(function(res, error) {
                     toastr.error(res.responseJSON.message, 'Failed')

@@ -11,6 +11,7 @@
                 initCalendarMasterLesson();
                 totalClassStudent();
                 initCoachList();
+                studentRating();
             });
 
             const initAction = () => {
@@ -67,6 +68,7 @@
                         if(res.status == 200){
                             toastr.success(res.message, 'Success');
                             initCalendarSpecial();
+                            initCalendarRegular();
                             hideModal('modal-reschedule');
                         }
                     })
@@ -235,47 +237,11 @@
                     editable: true,
                     selectable: true,
                     eventClick: function(info) {
-                        if(info.event.extendedProps.status == 3){
-                            let coach_schedule_id = info.event.extendedProps.coach_schedule_id
-                            showModal('modal-booking');
-                            $.ajax({
-                                url: `{{ url('student/schedule/regular-class') }}/${coach_schedule_id}`,
-                                type: `GET`,
-                            })
-                            .done(function(res, xhr, meta) {
-                                if(res.status == 200){
-                                    let data = res.data;
-                                    if(data.remaining > 0){
-                                        $('#booking-classroom-name').html(data.title);
-                                        $('#booking-date').html(`${moment(data.start).format('DD MMMM YYYY')}`);
-                                        $('#booking-time').html(`${moment(data.start).format('H:mm')}`);
-                                        $('#booking-coach').html(data.coach_name);
-                                        $('#booking-remaining').html(data.remaining);
-
-                                        $('#coach_schedule_id').val(data.id);
-                                        $('#classroom_id').val(data.classroom_id);
-
-                                        $('#form-booking').trigger('reset');
-                                        $('#form-booking').attr('action',`{{ url('student/schedule/regular-class/booking') }}`)
-                                        $('#form-booking').attr('method',`POST`);
-                                    }
-                                    else{
-                                        toastr.error('Batas Pesanan Sudah Maksimal', 'Failed')
-                                    }
-                                }
-                            })
-                            .fail(function(res, error) {
-                                toastr.error(res.responseJSON.message, 'Failed')
-                            })
-                            .always(function() {
-
-                            });
-                        }
-                        else if(info.event.extendedProps.status == 2){
-                            if(moment(moment(info.event.extendedProps.tanggal).format('YYYY-MM-DD')).isAfter(moment().format('YYYY-MM-DD'))){
+                        let check_date = moment(moment(info.event.extendedProps.tanggal).format('YYYY-MM-DD')).isAfter(moment().format('YYYY-MM-DD'));
+                        if(check_date){
+                            if(info.event.extendedProps.status == 3){
                                 let coach_schedule_id = info.event.extendedProps.coach_schedule_id
-                                $('#btn-reschedule').show();
-                                showModal('modal-reschedule');
+                                showModal('modal-booking');
                                 $.ajax({
                                     url: `{{ url('student/schedule/regular-class') }}/${coach_schedule_id}`,
                                     type: `GET`,
@@ -283,18 +249,24 @@
                                 .done(function(res, xhr, meta) {
                                     if(res.status == 200){
                                         let data = res.data;
-                                        $('#reschedule-classroom-name').html(data.title);
-                                        $('#reschedule-date').html(`${moment(data.start).format('DD MMMM YYYY')}`);
-                                        $('#reschedule-time').html(`${moment(data.start).format('H:mm')}`);
-                                        $('#reschedule-coach').html(data.coach_name);
-                                        $('#media-conference').html(data.platform_name);
+                                        if(data.remaining > 0){
+                                            $('#booking-classroom-name').html(data.title);
+                                            $('#booking-date').html(`${moment(data.start).format('DD MMMM YYYY')}`);
+                                            $('#booking-time').html(`${moment(data.start).format('H:mm')}`);
+                                            $('#booking-coach').html(data.coach_name);
+                                            $('#booking-remaining').html(data.remaining);
 
-                                        $('#reschedule_coach_schedule_id').val(data.id);
-                                        $('#reschedule_classroom_id').val(data.classroom_id);
+                                            $('#coach_schedule_id').val(data.id);
+                                            $('#classroom_id').val(data.classroom_id);
 
-                                        $('#form-reschedule').trigger('reset');
-                                        $('#form-reschedule').attr('action',`{{ url('student/schedule/regular-class/reschedule') }}`)
-                                        $('#form-reschedule').attr('method',`POST`);
+                                            $('#form-booking').trigger('reset');
+                                            $('#form-booking').attr('action',`{{ url('student/schedule/regular-class/booking') }}`)
+                                            $('#form-booking').attr('method',`POST`);
+                                        }
+                                        else{
+                                            toastr.error('Batas Pesanan Sudah Maksimal', 'Failed')
+                                        }
+
                                     }
                                 })
                                 .fail(function(res, error) {
@@ -303,8 +275,42 @@
                                 .always(function() {
 
                                 });
-                            }else{
-                                $('#btn-reschedule').hide();
+                            }
+                            else if(info.event.extendedProps.status == 2){
+                                if(moment(moment(info.event.extendedProps.tanggal).format('YYYY-MM-DD')).isAfter(moment().format('YYYY-MM-DD'))){
+                                    let coach_schedule_id = info.event.extendedProps.coach_schedule_id
+                                    $('#btn-reschedule').show();
+                                    showModal('modal-reschedule');
+                                    $.ajax({
+                                        url: `{{ url('student/schedule/regular-class') }}/${coach_schedule_id}`,
+                                        type: `GET`,
+                                    })
+                                    .done(function(res, xhr, meta) {
+                                        if(res.status == 200){
+                                            let data = res.data;
+                                            $('#reschedule-classroom-name').html(data.title);
+                                            $('#reschedule-date').html(`${moment(data.start).format('DD MMMM YYYY')}`);
+                                            $('#reschedule-time').html(`${moment(data.start).format('H:mm')}`);
+                                            $('#reschedule-coach').html(data.coach_name);
+                                            $('#media-conference').html(data.platform_name);
+
+                                            $('#reschedule_coach_schedule_id').val(data.id);
+                                            $('#reschedule_classroom_id').val(data.classroom_id);
+
+                                            $('#form-reschedule').trigger('reset');
+                                            $('#form-reschedule').attr('action',`{{ url('student/schedule/regular-class/reschedule') }}`)
+                                            $('#form-reschedule').attr('method',`POST`);
+                                        }
+                                    })
+                                    .fail(function(res, error) {
+                                        toastr.error(res.responseJSON.message, 'Failed')
+                                    })
+                                    .always(function() {
+
+                                    });
+                                }else{
+                                    $('#btn-reschedule').hide();
+                                }
                             }
                         }
                     }
@@ -372,7 +378,9 @@
                             $('#master-lesson-title').html(name);
                             $('#poster').attr('src',`${poster}`);
                             $('#price').html(`Rp. ${numeral(price).format('0,0')}`);
-
+                            $('#date').html(`<h5 class="text-muted">${moment(datetime).format('DD MMMM YYYY')}</h5>`);
+                            $('#time').html(`<h5 class="text-muted">${moment(datetime).format('HH:mm')}</h5>`);
+                            $('#total-booking').html(`<h5 class="text-muted">${total_booking}/${slot} booking</h5>`);
                             showModal('modal-booking-master-lesson');
                         }
                         else{
@@ -443,6 +451,28 @@
                         $.each(res.data, function(index, data){
 
                         })
+                    }
+                })
+                .fail(function(res, error) {
+                    toastr.error(res.responseJSON.message, 'Failed')
+                })
+                .always(function() {
+
+                });
+            },
+            studentRating = () => {
+                $.ajax({
+                    url: `{{ url('student/schedule/student-rating') }}`,
+                    type: `GET`,
+                })
+                .done(function(res, xhr, meta) {
+                    if(res.status == 200){
+                        if(res.data.star == null){
+                            $('#total-rating').html(0);
+                        }
+                        else{
+                            $('#total-rating').html(res.data.star);
+                        }
                     }
                 })
                 .fail(function(res, error) {
