@@ -6,10 +6,10 @@
     <base href="{{ asset('cms/assets') }}">
     <meta charset="utf-8">
 
-     <!-- CSRF Token -->
-     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-     <title>{{ isset($title) ? 'Mejaseni - '.$title : 'Mejaseni'}}</title>
+    <title>{{ isset($title) ? 'Mejaseni - '.$title : 'Mejaseni'}}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="assets/css/style.css">
     <title>Hello, world!</title>
@@ -25,7 +25,7 @@
                             <img class="logo mr-1" src="assets/img/logo.png" alt="">
                             mejaseni
                         </a>
-                        <a href="javascript::void(0);">
+                        <a href="javascript:void(0);">
                             <div class="circle-wrap">
                                 <div class="circle">
                                     <div class="mask full">
@@ -43,7 +43,7 @@
                         <div class="profile-dismiss__overlay"></div>
                         <div class="profile__wrapper animate__animated animate__fadeIn animate__faster">
                             <ul>
-                                <a href="cart.html">
+                                <a href="{{url('cart')}}">
                                     <li>
                                         <img class="mr-2" src="assets/img/svg/Cart3.svg" alt="">
                                         Keranjang

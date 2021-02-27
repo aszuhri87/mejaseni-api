@@ -13,9 +13,7 @@
             }, 1000);
         }
     });
-</script>
 
-<script>
     function copyPaymentNumber() {
         var copyText = document.getElementById("paymentNumber");
         copyText.select();
@@ -31,6 +29,10 @@
             $(document).ready(function () {
                 AOS.init();
             });
+
+            const initAction = () => {
+
+            }
         };
         return {
             init: function () {

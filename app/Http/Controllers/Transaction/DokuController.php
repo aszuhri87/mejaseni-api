@@ -11,7 +11,7 @@ use Redirect;
 
 class DokuController extends Controller
 {
-    public function generate_payment_code($type, $request, $chanel = null)
+    public function generate_payment_code($type, $amount, $invoice, $chanel = null)
     {
         date_default_timezone_set('UTC');
 
@@ -25,8 +25,8 @@ class DokuController extends Controller
         if($type == 'va'){
             $data = array(
                 "order" => array(
-                    "invoice_number" => rand(0,20),
-                    "amount" => 2000
+                    "invoice_number" => $invoice,
+                    "amount" => $amount
                 ),
                 "virtual_account_info" => array(
                     "expired_time" => $expired_time,
@@ -42,9 +42,9 @@ class DokuController extends Controller
         }else if($type == 'cc'){
             $data = [
                 "order" => [
-                    "amount" => 90000,
-                    "invoice_number" => "INV-".date('YmdHis')."-".rand(0,20),
-                    "callback_url" => "https://merchant.com/callback-url",
+                    "amount" => $amount,
+                    "invoice_number" => $invoice,
+                    "callback_url" => url('/payment-success'),
                     "auto_redirect" => true
                 ],
                 "customer" => [

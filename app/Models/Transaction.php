@@ -15,10 +15,23 @@ class Transaction extends Model
 
     public $keyType = 'string';
 
+    // Status Description
+    // 0, Cancel
+    // 1, Waiting
+    // 2, Success
+
     protected $fillable = [
+        'number',
         'student_id',
+        'status',
         'total',
         'datetime',
+        'confirmed',
+        'json_transaction',
+        'payment_type',
+        'payment_chanel',
+        'payment_url',
+        'confirmed_at'
     ];
 
     protected $dates = ['deleted_at'];

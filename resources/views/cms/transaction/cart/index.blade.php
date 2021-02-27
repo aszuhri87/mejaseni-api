@@ -1,6 +1,12 @@
 @extends('cms.transaction.layouts.app')
 
 @section('content')
+<style>
+    .btn-disabled:hover{
+        background-color: #6c757d;
+    }
+</style>
+
 <h2 class="pb-4 text-md-left text-center">Keranjang</h2>
 <form action="{{url('cart-store')}}" method="POST">
     @csrf
@@ -28,7 +34,7 @@
                                 <span>Total Bayar</span>
                                 <h5 class="grand-total">Rp. -</h5>
                             </div>
-                            <button type="submit" class="btn btn-primary w-100 row-center">
+                            <button type="submit" class="btn btn-secondary btn-disabled w-100 row-center btn-payment" disabled>
                                 Bayar Sekarang
                                 <img class="ml-2" src="assets/img/svg/Sign-in.svg" alt="">
                             </button>
@@ -39,6 +45,7 @@
         </div>
     </div>
 </form>
+<iframe src="https://sandbox.doku.com/wt-frontend-transaction/dynamic-payment-page?signature=HMACSHA256%3DiyVhX4GyKmhKCpyjvveDX7it7ybmScEhMGrNGQMYffQ%3D&clientId=MCH-0043-1376322085194&invoiceNumber=MJSN202116&requestId=74139" frameborder="1" width="800" height="500"></iframe>
 @endsection
 
 @push('additional')

@@ -16,13 +16,11 @@ class CreateTransactionDetailsTable extends Migration
         Schema::create('transaction_details', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('transaction_id');
-            $table->uuid('chart_id');
             $table->double('price');
             $table->timestamps();
             $table->softDeletes();
 
             $table->foreign('transaction_id')->references('id')->on('transactions');
-            $table->foreign('chart_id')->references('id')->on('charts');
         });
     }
 

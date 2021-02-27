@@ -129,8 +129,9 @@ Route::get('/cart', [CartController::class, 'index']);
 Route::post('/cart-store', [CartController::class, 'store']);
 Route::post('/cart-payment', [CartController::class, 'payment']);
 Route::get('/student-cart', [CartController::class, 'data']);
-
-Route::get('doku-test', [DokuController::class, 'generate_payment_code']);
+Route::get('/waiting-payment/{id}', [PaymentController::class, 'waiting']);
+Route::get('/payment-success', [PaymentController::class, 'success']);
+Route::post('/notifications/payments', [PaymentController::class, 'notification']);
 
 Route::group(['middleware' => ['guest-handling']], function () {
     Route::get('login', [LoginController::class, 'index_login']);
