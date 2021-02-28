@@ -20,64 +20,20 @@
         <div class="splide pb-md-5 pb-3 mb-5" id="splide1">
           <div class="splide__track">
             <ul class="splide__list">
-              <li class="splide__slide pb-md-0 pb-5">
-                <div class="content-embed__wrapper">
-                  <img src="{{ asset('cms/assets/img/master-lesson__banner2.jpg') }}" data-splide-lazy="path-to-the-image" alt="">
-                  <div class="px-5 px-md-0 pt-4 pt-md-0">
-                    <div class="badge-left">
-                      <h3 class="mt-3 ml-2">Master Class Seni Lukis Dewa</h3>
+              @foreach($galeries as $galery)
+                <li class="splide__slide pb-md-0 pb-5">
+                  <div class="content-embed__wrapper">
+                    <img src="{{ $galery->image_url ? $galery->image_url:'' }}" data-splide-lazy="path-to-the-image" alt="">
+                    <div class="px-5 px-md-0 pt-4 pt-md-0">
+                      <div class="badge-left">
+                        <h3 class="mt-3 ml-2">{{ $galery->title ? $galery->title:'' }}</h3>
+                      </div>
+                      <p class="my-3 desc__slider-content">{{ $galery->description ? $galery->description:'' }}</p>
+                      <a href="#">Selengkapnya ></a>
                     </div>
-                    <p class="my-3 desc__slider-content">Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet
-                      maiores saepe dolore
-                      molestias,
-                      molestiae sapiente aperiam odio in dicta reiciendis quaerat eligendi facere culpa nemo
-                      consequuntur delectus
-                      porro tempore aut possimus cum quidem dolores quis. Laborum ad corporis eaque quia commodi ab
-                      nisi!
-                      Accusamus maxime nulla quod a rerum, sequi aperiam voluptatem excepturi officiis expedita,
-                      repellendus,
-                      aspernatur velit asperiores. Reiciendis nostrum quam optio dolore, fugit vero obcaecati
-                      explicabo.
-                      Quis
-                      tempore nemo commodi culpa deleniti molestiae iste recusandae labore ipsa illo provident tempora
-                      vero,
-                      necessitatibus excepturi libero minima aspernatur eius similique ipsum ex? Velit et maxime
-                      numquam
-                      quidem,
-                      beatae veritatis iusto.</p>
-                    <a href="#">Selengkapnya ></a>
                   </div>
-                </div>
-              </li>
-              <li class="splide__slide pb-md-0 pb-5">
-                <div class="content-embed__wrapper">
-                  <img src="{{ asset('cms/assets/img/master-lesson__banner.jpg') }}" data-splide-lazy="path-to-the-image" alt="">
-                  <div class="px-5 px-md-0 pt-4 pt-md-0">
-                    <div class="badge-left">
-                      <h3 class="mt-3 ml-2">Master Class Guitar Classic</h3>
-                    </div>
-                    <p class="my-3 desc__slider-content">Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet
-                      maiores saepe dolore
-                      molestias,
-                      molestiae sapiente aperiam odio in dicta reiciendis quaerat eligendi facere culpa nemo
-                      consequuntur delectus
-                      porro tempore aut possimus cum quidem dolores quis. Laborum ad corporis eaque quia commodi ab
-                      nisi!
-                      Accusamus maxime nulla quod a rerum, sequi aperiam voluptatem excepturi officiis expedita,
-                      repellendus,
-                      aspernatur velit asperiores. Reiciendis nostrum quam optio dolore, fugit vero obcaecati
-                      explicabo.
-                      Quis
-                      tempore nemo commodi culpa deleniti molestiae iste recusandae labore ipsa illo provident tempora
-                      vero,
-                      necessitatibus excepturi libero minima aspernatur eius similique ipsum ex? Velit et maxime
-                      numquam
-                      quidem,
-                      beatae veritatis iusto.</p>
-                    <a href="#">Selengkapnya ></a>
-                  </div>
-                </div>
-              </li>
+                </li>
+              @endforeach
             </ul>
           </div>
         </div>
@@ -162,7 +118,7 @@
       <div class="col-lg-6 pr-3 pr-md-4">
         <div class="maps-wrapper">
           <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3952.8018226799804!2d110.34651611507147!3d-7.810792094371522!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a59c22d47ba47%3A0xec06230e9a594cbb!2sVARX%20-%20PT%20Semua%20Aplikasi%20Indonesia!5e0!3m2!1sid!2sid!4v1613457803720!5m2!1sid!2sid"
+            src="{{ $company->maps_url ? $company->maps_url:'' }}"
             width="100%" height="100%" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false"
             tabindex="0"></iframe>
         </div>
@@ -185,27 +141,6 @@
             @endif
           </div>
         @endforeach
-        
-{{--         <div class="row mt-4">
-          <div class="col-6">Tuesday</div>
-          <div class="col-6">8AM - 5PM</div>
-        </div>
-        <div class="row mt-4">
-          <div class="col-6">Wednesday</div>
-          <div class="col-6">8AM - 5PM</div>
-        </div>
-        <div class="row mt-4">
-          <div class="col-6">Thursday</div>
-          <div class="col-6">8AM - 5PM</div>
-        </div>
-        <div class="row mt-4">
-          <div class="col-6">Friday</div>
-          <div class="col-6">8AM - 5PM</div>
-        </div>
-        <div class="row mt-4">
-          <div class="col-6">Saturday & Sunday</div>
-          <div class="col-6">Closed</div>
-        </div> --}}
       </div>
     </div>
   </section>

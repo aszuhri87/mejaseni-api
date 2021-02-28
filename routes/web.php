@@ -83,6 +83,7 @@ use App\Http\Controllers\Admin\Cms\CareerController as CareerAdminController;
 use App\Http\Controllers\Admin\Cms\JobDescriptionController as JobDescriptionController;
 use App\Http\Controllers\Admin\Cms\JobRequirementController as JobRequirementController;
 use App\Http\Controllers\Admin\Cms\WorkingHourController as WorkingHourController;
+use App\Http\Controllers\Admin\Cms\GaleryController as GaleryController;
 /*
 |--------------------------------------------------------------------------
 | CMS Controller
@@ -125,7 +126,7 @@ Route::get('/privacy-policy', [PrivacyPolicyController::class, 'index']);
 Route::get('/tos', [TosController::class, 'index']);
 Route::get('/faq', [FaqController::class, 'index']);
 Route::get('/career', [CareerController::class, 'index']);
-Route::get('/career-detail', [CareerDetailController::class, 'index']);
+Route::get('/career/{id}/detail', [CareerDetailController::class, 'index']);
 Route::get('/cart', [CartController::class, 'index']);
 Route::post('/cart-store', [CartController::class, 'store']);
 Route::post('/cart-payment', [CartController::class, 'payment']);
@@ -293,11 +294,12 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::post('career/{career_id}/job-description/dt', [JobDescriptionController::class, 'dt']);
             Route::resource('job-description', JobDescriptionController::class);
 
-            Route::post('career/{career_id}/job-requirement/dt', [JobRequirementController::class, 'dt']);
-            Route::resource('job-requirement', JobRequirementController::class);
-
             Route::post('working-hour/dt', [WorkingHourController::class, 'dt']);
             Route::resource('working-hour', WorkingHourController::class);
+
+            Route::post('galery/dt', [GaleryController::class, 'dt']);
+            Route::post('galery/update/{id}', [GaleryController::class, 'update']);
+            Route::resource('galery', GaleryController::class);
 
         });
     });

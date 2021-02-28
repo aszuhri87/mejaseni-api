@@ -58,7 +58,7 @@
                                             alt="">{{ $internal_team_career->placement ? $internal_team_career->placement:'-'}}</p>
                                     <div class="border-line mt-5 mb-4"></div>
                                     <div class="row">
-                                        <a href="{{ url('career-detail') }}" class="btn btn-primary shadow ml-auto">Detail</a>
+                                        <a href="{{ url('career') }}/{{$internal_team_career->id}}/detail" class="btn btn-primary shadow ml-auto">Detail</a>
                                     </div>
                                 </div>
                             </div>
@@ -88,7 +88,7 @@
                                             alt="">{{ $professional_coach_career->placement ? $professional_coach_career->placement:'-'}}</p>
                                     <div class="border-line mt-5 mb-4"></div>
                                     <div class="row">
-                                        <a href="{{ url('career-detail') }}" class="btn btn-primary shadow ml-auto">Detail</a>
+                                        <a href="{{ url('career-detail') }}?id={{$professional_coach_career->id}}" class="btn btn-primary shadow ml-auto">Detail</a>
                                     </div>
                                 </div>
                             </div>

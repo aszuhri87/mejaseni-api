@@ -4,15 +4,16 @@ namespace App\Http\Controllers\Admin\Cms;
 
 use App\Http\Controllers\BaseMenu;
 use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
-use App\Models\Company;
+use App\Models\Galery;
 
+use DB;
 use DataTables;
+use Storage;
 
-class CompanyController extends BaseMenu
+
+class GaleryController extends BaseMenu
 {
     /**
      * Display a listing of the resource.
@@ -26,12 +27,12 @@ class CompanyController extends BaseMenu
                 'title' => 'CMS'
             ],
             [
-                'title' => 'Company'
+                'title' => 'Galery'
             ],
         ];
 
-        return view('admin.cms.company.index', [
-            'title' => 'Company',
+        return view('admin.cms.galery.index', [
+            'title' => 'Galery',
             'navigation' => $navigation,
             'list_menu' => $this->menu_admin(),
         ]);
@@ -39,12 +40,14 @@ class CompanyController extends BaseMenu
 
     public function dt()
     {
-        $data = DB::table('companies')
+        $path = Storage::disk('s3')->url('/');
+        $data = DB::table('galeries')
             ->select([
-                'companies.*',
+                'galeries.*',
+                DB::raw("CONCAT('{$path}',image) as image_url"),
             ])
             ->whereNull([
-                'companies.deleted_at'
+                'galeries.deleted_at'
             ])
             ->get();
 
@@ -71,7 +74,39 @@ class CompanyController extends BaseMenu
      */
     public function store(Request $request)
     {
-        //
+        try {
+
+            if(!isset($request->image)){
+                return response([
+                    "message"   => 'Gambar harus diisi!'
+                ], 400);
+            }
+
+            $result = DB::transaction(function () use($request){
+                if(isset($request->image)){
+                    $file = $request->file('image');
+                    $path = Storage::disk('s3')->put('media', $file);
+                }
+
+                $result = Galery::create([
+                    'title' => $request->title,
+                    'description' => $request->description,
+                    'image' => $path
+                ]);
+
+                return $result;
+            });
+
+            return response([
+                "data"      => $result,
+                "message"   => 'Successfully saved!'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
     }
 
     /**
@@ -107,12 +142,18 @@ class CompanyController extends BaseMenu
     {
         try {
             $result = DB::transaction(function () use($request, $id){
-                $result = Company::find($id)->update([
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'telephone' => $request->telephone,
-                    'address' => $request->address,
-                    'maps_url' => $request->maps_url
+                $result = Galery::find($id);
+                $path = null;
+
+                if(isset($request->image)){
+                    $file = $request->file('image');
+                    $path = Storage::disk('s3')->put('media', $file);
+                }
+
+                $result->update([
+                    'title' => $request->title,
+                    'description' => $request->description,
+                    'image' => $path ? $path:$result->image
                 ]);
 
                 return $result;
@@ -138,6 +179,23 @@ class CompanyController extends BaseMenu
      */
     public function destroy($id)
     {
-        //
+        try {
+            $result = Galery::find($id);
+
+            DB::transaction(function () use($result){
+                $result->delete();
+            });
+
+            if ($result->trashed()) {
+                return response([
+                    "message"   => 'Successfully deleted!'
+                ], 200);
+            }
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
     }
 }

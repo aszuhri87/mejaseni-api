@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\Uuid;
 
-class Company extends Model
+class Galery extends Model
 {
     use HasFactory, Uuid, SoftDeletes;
 
@@ -16,14 +16,9 @@ class Company extends Model
     public $keyType = 'string';
 
     protected $fillable = [
-        'name',
-        'telephone',
-        'email',
-        'address',
-        'maps_url',
+        'title',
         'description',
-        'vision',
-        'mission',
+        'image'
     ];
 
     protected $dates = ['deleted_at'];

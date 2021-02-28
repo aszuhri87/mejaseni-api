@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Branch;
 use App\Models\Company;
+use App\Models\Galery;
 
 
 use DB;
@@ -18,6 +19,8 @@ class AboutController extends Controller
     {
     	$company = Company::first();
     	$branchs = Branch::all();
+
+        $galeries = Galery::all();
 
 
 
@@ -54,12 +57,23 @@ class AboutController extends Controller
             ->orderBy('number','asc')
             ->get();
 
+        $galeries = DB::table('galeries')
+            ->select([
+                'galeries.*',
+                DB::raw("CONCAT('{$path}',image) as image_url"),
+            ])
+            ->whereNull([
+                'galeries.deleted_at'
+            ])
+            ->get();
+
     	return view('cms.about.index', [
     		"company" => $company, 
     		"branchs" => $branchs,
     		"teams" => $teams,
     		"programs" => $programs,
-            "working_hours" => $working_hours
+            "working_hours" => $working_hours,
+            "galeries" => $galeries
     	]);
     }
 }

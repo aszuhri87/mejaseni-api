@@ -92,6 +92,7 @@
                     $('#form-company').find('input[name="name"]').val(data.name);
                     $('#form-company').find('input[name="email"]').val(data.email);
                     $('#form-company').find('input[name="telephone"]').val(data.telephone);
+                    $('#form-company').find('textarea[name="maps_url"]').val(data.maps_url);
                     $('#form-company').find('textarea[name="address"]').val(data.address);
 
                     showModal('modal-company');
