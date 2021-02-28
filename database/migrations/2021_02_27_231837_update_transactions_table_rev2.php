@@ -16,7 +16,7 @@ class UpdateTransactionsTableRev2 extends Migration
         Schema::table('transactions', function (Blueprint $table) {
             $table->string('payment_type')->nullable();
             $table->string('payment_chanel')->nullable();
-            $table->string('payment_url')->nullable();
+            $table->text('payment_url')->nullable();
             $table->dateTime('confirmed_at')->nullable();
         });
     }

@@ -53,6 +53,15 @@ class DokuController extends Controller
                     "email" => Auth::guard('student')->user()->email,
                     "phone" => Auth::guard('student')->user()->phone,
                     "country" => "ID"
+                ],
+                "override_configuration" => [
+                    "themes" => [
+                        "language" => "ID",
+                        "background_color" => "FFFFFF",
+                        "font_color" => "000000",
+                        "button_background_color" => "#9f54b9",
+                        "button_font_color" => "fff"
+                    ]
                 ]
             ];
 

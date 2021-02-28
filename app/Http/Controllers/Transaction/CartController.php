@@ -183,7 +183,7 @@ class CartController extends Controller
                     $number = sprintf("%04d", (int)$str[1] + 1);
                     $number = "MJSN".date('Y').$number;
                 }else{
-                    $number = "MJSN".date('Y').'0019';
+                    $number = "MJSN".date('Y').'0023';
                 }
 
                 $trans = Transaction::create([
@@ -240,11 +240,16 @@ class CartController extends Controller
                 });
 
                 return response([
-                    "data"      => $doku,
+                    "data"      => $transaction,
                     "redirect_url" => url("waiting-payment/".$transaction->id),
                     "message"   => 'OK'
                 ], 200);
             }else{
+
+                DB::transaction(function () use($transaction){
+                    $transaction->delete();
+                });
+
                 return response([
                     "message"   => 'Failed'
                 ], 400);

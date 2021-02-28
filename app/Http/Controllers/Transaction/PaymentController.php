@@ -19,19 +19,19 @@ class PaymentController extends Controller
     {
         $transaction = Transaction::find($id);
 
-        if($transaction->confirmed && $transaction->status == 2){
-            return redirect('/payment-success');
-        }
-
         if(!$transaction){
             return redirect('/cart');
+        }
+
+        if($transaction->confirmed && $transaction->status == 2){
+            return redirect('/payment-success');
         }
 
         if ($transaction->payment_type == 'va') {
             $response = Http::get($transaction->payment_url);
             $response = json_decode($response->body());
         }else{
-            return redirect('/cart');
+            $response = null;
         }
 
         return view('cms.transaction.waiting-payment.index', [

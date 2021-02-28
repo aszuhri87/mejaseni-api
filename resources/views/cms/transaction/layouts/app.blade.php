@@ -47,24 +47,31 @@
                                     <li>
                                         <img class="mr-2" src="assets/img/svg/Cart3.svg" alt="">
                                         Keranjang
-                                        <div class="nav-badge">4 </div>
+                                        {{-- <div class="nav-badge">4 </div> --}}
                                     </li>
                                 </a>
                                 <div class="border-line"></div>
-                                <a href="#">
-                                    <li><img class="mr-2" src="assets/img/svg/dashboard.svg" alt="">Dashboard</li>
+                                <a href="{{url('student/dashboard')}}">
+                                    <li>
+                                        <img class="mr-2" src="assets/img/svg/dashboard.svg" alt="">
+                                        Dashboard
+                                    </li>
+                                </a>
+                                <a href="{{url('student/schedule')}}">
+                                    <li>
+                                        <img class="mr-2" src="assets/img/svg/schedule.svg" alt="">
+                                        Jadwal
+                                    </li>
                                 </a>
                                 <a href="#">
-                                    <li><img class="mr-2" src="assets/img/svg/schedule.svg" alt="">Jadwal</li>
-                                </a>
-                                <a href="#">
-                                    <li><img class="mr-2" src="assets/img/svg/Wallet.svg" alt="">Pembayaran<div
-                                            class="nav-badge">1
-                                        </div>
+                                    <li>
+                                        <img class="mr-2" src="assets/img/svg/Wallet.svg" alt="">
+                                        Pembayaran
+                                        {{-- <div class="nav-badge">1 </div> --}}
                                     </li>
                                 </a>
                                 <div class="border-line"></div>
-                                <a href="#">
+                                <a href="{{url('logout')}}">
                                     <li>Keluar</li>
                                 </a>
                             </ul>

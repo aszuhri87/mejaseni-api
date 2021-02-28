@@ -126,13 +126,8 @@ Route::get('/privacy-policy', [PrivacyPolicyController::class, 'index']);
 Route::get('/tos', [TosController::class, 'index']);
 Route::get('/faq', [FaqController::class, 'index']);
 Route::get('/career', [CareerController::class, 'index']);
-Route::get('/career/{id}/detail', [CareerDetailController::class, 'index']);
-Route::get('/cart', [CartController::class, 'index']);
-Route::post('/cart-store', [CartController::class, 'store']);
-Route::post('/cart-payment', [CartController::class, 'payment']);
-Route::get('/student-cart', [CartController::class, 'data']);
-Route::get('/waiting-payment/{id}', [PaymentController::class, 'waiting']);
-Route::get('/payment-success', [PaymentController::class, 'success']);
+Route::get('/career-detail', [CareerDetailController::class, 'index']);
+
 Route::post('/notifications/payments', [PaymentController::class, 'notification']);
 
 
@@ -146,6 +141,21 @@ Route::group(['middleware' => ['auth-handling']], function () {
     Route::get('logout', [LoginController::class, 'logout']);
     Route::post('media/file', [MediaController::class, 'file_upload']);
     Route::delete('media/file/{id}', [MediaController::class, 'file_delete']);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Payment Route
+    |--------------------------------------------------------------------------
+    */
+
+    Route::group(['middleware' => ['student-handling']], function () {
+        Route::get('/cart', [CartController::class, 'index']);
+        Route::post('/cart-store', [CartController::class, 'store']);
+        Route::post('/cart-payment', [CartController::class, 'payment']);
+        Route::get('/student-cart', [CartController::class, 'data']);
+        Route::get('/waiting-payment/{id}', [PaymentController::class, 'waiting']);
+        Route::get('/payment-success', [PaymentController::class, 'success']);
+    });
 
     /*
     |--------------------------------------------------------------------------
@@ -360,6 +370,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
     */
 
     Route::group(['prefix' => 'student', 'middleware' => 'student-handling'], function () {
+
         Route::get('/dashboard', [StudentDashboardController::class, 'index']);
 
         Route::group(['prefix' => 'invoice'], function () {
@@ -480,3 +491,25 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::get('get-guest-star', [PublicController::class, 'get_guest_star']);
     });
 });
+
+
+Route::get('fire', function () {
+    event(new \App\Events\PaymentNotification('haiiii'));
+    return 'oke';
+});
+
+
+Route::get('fire-2', function () {
+    $actionId = 'score_update';
+    $actionData = array('team1_score' => 46);
+
+    event(new \App\Events\ActionEvent($actionId, $actionData));
+    return 'oke';
+});
+
+
+Route::get('welcome', function () {
+    return view('welcome');
+});
+
+
