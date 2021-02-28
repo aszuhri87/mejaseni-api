@@ -5,6 +5,9 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Ramsey\Uuid\Uuid;
 
+use App\Models\Sosmed;
+use DB;
+
 class SosmedSeeder extends Seeder
 {
     /**
@@ -14,40 +17,32 @@ class SosmedSeeder extends Seeder
      */
     public function run()
     {
-        $result = DB::transaction(function (){
-            $seeders = [
-                [
-                    'name' => 'instagram',
-                    'url' => '#',
-                    'image' => "media/img/instagram-logo.png",
-                    
-                ],
-                [
-                    'name' => 'linkedin',
-                    'url' => '#',
-                    'image' => "media/img/logo-linkedin.png",
-                ],
-                [
-                    'name' => 'facebook',
-                    'url' => '#',
-                    'image' => "media/svg/logo-facebook.svg",
-                ],
-                [
-                    'name' => 'twitter',
-                    'url' => '#',
-                    'image' => "media/svg/logo-twitter.svg",
-                ],
-            ];
 
-            foreach ($seeders as $key => $seeder) {
-                if ($seeder != null) {
-                    \App\Models\SocialMedia::firstOrCreate([
-                        'name' => $seeder['name'],
-                        'url' => $seeder['url'],
-                        'image' => $seeder['image'],
-                    ]);
-                }
+        $sosmeds = [
+            [
+                'name' => 'Instagram',
+                'slug' => 'instagram'
+            ],
+            [
+                'name' => 'Facebook',
+                'slug' => 'facebook'
+            ],
+            [
+                'name' => 'Twitter',
+                'slug' => 'twitter'
+            ],
+        ];
+
+        foreach ($sosmeds as $key => $sosmed) {
+            if ($sosmed != null) {
+                Sosmed::firstOrCreate([
+                    'name' => $sosmed['name'],
+                    'slug' => $sosmed['slug']
+                ],[
+                    'id' => Uuid::uuid4()->toString()
+                ]);
             }
-        });
+        }
+
     }
 }
