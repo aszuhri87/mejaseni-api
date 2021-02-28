@@ -247,12 +247,14 @@
                                             }
                                         element += `
                                             <div class="row">
-                                                <div class="col-3">
-                                                    <img src="{{asset('assets/images/play.png')}}" width="50px" height="50px">
-                                                </div>
-                                                <div class="col-8">
-                                                    <p style="margin-bottom: 0 !important"><strong>${data.name}</strong></p>
-                                                    <span class="text-muted">${data.classroom_name}</span>
+                                                <div class="col-12 d-flex">
+                                                    <div>
+                                                        <img src="{{asset('assets/images/play.png')}}" width="50px" height="50px">
+                                                    </div>
+                                                    <div class="ml-5">
+                                                        <p style="margin-bottom: 0 !important"><strong>${data.name}</strong></p>
+                                                        <span class="text-muted">${data.classroom_name}</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -273,18 +275,33 @@
                                                             <td width="100px"><span class="text-muted">Upload At</span></td>
                                                             <td>${moment(data.upload_date).format('DD MMMM YYYY')}</td>
                                                         </tr>
+                                                        <tr>
+                                                            <td width="100px"><span class="text-muted">Due Date</span></td>
+                                                            <td>${moment(data.due_date).format('DD MMMM YYYY')}</td>
+                                                        </tr>
                                                     </table>
                                                 </div>
                                             </div>
                                             `;
                                             if(data.status_collection == 0){
-                                                element += `
-                                                    <div class="row">
-                                                        <div class="col-12 d-flex justify-content-end">
-                                                            <button type="button" class="btn btn-primary btn-submit" data-assignment_id="${data.assignment_id}" data-name="${data.name}">Submit</button>
+                                                if(moment(moment().format('YYYY-MM-DD')).isAfter(moment(data.due_date).format('YYYY-MM-DD'))){
+                                                    element += `
+                                                        <div class="row">
+                                                            <div class="col-12 d-flex justify-content-end">
+                                                                <button type="button" class="btn btn-danger">Not Submited</button>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                `;
+                                                    `;
+                                                }
+                                                else{
+                                                    element += `
+                                                        <div class="row">
+                                                            <div class="col-12 d-flex justify-content-end">
+                                                                <button type="button" class="btn btn-primary btn-submit" data-assignment_id="${data.assignment_id}" data-name="${data.name}">Submit</button>
+                                                            </div>
+                                                        </div>
+                                                    `;
+                                                }
                                             }else{
                                                 if(data.status_collection_feedback == 0){
                                                     element += `

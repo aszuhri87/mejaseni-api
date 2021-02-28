@@ -373,6 +373,7 @@
                         let price = info.event.extendedProps.price;
                         let datetime = info.event.extendedProps.tanggal;
                         let id = info.event.extendedProps.master_lesson_id;
+                        let description = info.event.extendedProps.description;
 
                         if(total_booking < slot){
                             $('#master-lesson-title').html(name);
@@ -381,6 +382,7 @@
                             $('#date').html(`<h5 class="text-muted">${moment(datetime).format('DD MMMM YYYY')}</h5>`);
                             $('#time').html(`<h5 class="text-muted">${moment(datetime).format('HH:mm')}</h5>`);
                             $('#total-booking').html(`<h5 class="text-muted">${total_booking}/${slot} booking</h5>`);
+                            $('#description').html(description);
                             showModal('modal-booking-master-lesson');
                         }
                         else{
@@ -430,6 +432,7 @@
                                 "name" : data.name,
                                 "price" : data.price,
                                 "master_lesson_id" : data.id,
+                                "description" : data.description,
                             });
                         })
                     }

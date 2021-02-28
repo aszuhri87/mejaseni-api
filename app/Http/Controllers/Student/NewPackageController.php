@@ -241,4 +241,65 @@ class NewPackageController extends BaseMenu
             ]);
         }
     }
+
+    public function get_classroom_by_category_id($id)
+    {
+        try {
+            $path = Storage::disk('s3')->url('/');
+            $result = DB::table('classrooms')
+                ->select([
+                    'classrooms.id as classroom_id',
+                    'classrooms.name as classroom_name',
+                    'classrooms.description',
+                    'classrooms.classroom_category_id',
+                    'classrooms.image',
+                    'classrooms.price',
+                    'classrooms.sub_classroom_category_id',
+                    'classrooms.session_total',
+                    'classrooms.session_duration',
+                    DB::raw("CONCAT('{$path}',classrooms.image) as image_url"),
+                ])
+                ->where('classrooms.deleted_at')
+                ->where('classrooms.classroom_category_id',$id)
+                ->get();
+
+            foreach ($result as $key => $value) {
+                $tools = DB::table('classroom_tools')
+                    ->select([
+                        'tools.text as tool_name'
+                    ])
+                    ->where('classroom_id',$value->classroom_id)
+                    ->leftJoin('tools','classroom_tools.tool_id','=','tools.id')
+                    ->get();
+
+                $coach = DB::table('coach_classrooms')
+                    ->select([
+                        'coaches.name as coach_name',
+                        'coaches.id as coach_id',
+                        DB::raw("CONCAT('{$path}',coaches.image) as coach_image_url"),
+                    ])
+                    ->leftJoin('coaches','coach_classrooms.coach_id','=','coaches.id')
+                    ->where('classroom_id',$value->classroom_id)
+                    ->whereNull([
+                        'coach_classrooms.deleted_at',
+                        'coaches.deleted_at',
+                    ])
+                    ->get();
+
+                $value->tools = $tools;
+                $value->coach = $coach;
+            }
+
+            return response([
+                "status"    => 200,
+                "data"      => $result,
+                "message"   => 'OK!'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
 }

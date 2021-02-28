@@ -495,6 +495,7 @@ class ScheduleController extends BaseMenu
                     'master_lessons.platform_link',
                     'master_lessons.price',
                     'master_lessons.datetime',
+                    'master_lessons.description',
                     'sub_master_lesson.total_booking',
                     DB::raw("(
                         CASE

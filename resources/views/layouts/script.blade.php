@@ -262,6 +262,16 @@
         }
     }
 
+    function btn_loading_rating(action) {
+        if (action == 'start') {
+            $('.btn-loading-rating').html('<div id="loading" class="mr-1"></div> Loading...');
+            $('.btn-loading-rating').attr('disabled', true);
+        } else {
+            $('.btn-loading-rating').html('Kirim Review');
+            $('.btn-loading-rating').attr('disabled', false);
+        }
+    }
+
     function disable_action(class_name, action) {
         if (action == 'start') {
             $('#' + class_name).attr('disabled', true);
