@@ -34,7 +34,7 @@
                     <div class="form-group">
                         <label>
                             Address
-                            <span class="text-danger d-none">*</span>
+                            <span class="text-danger">*</span>
                         </label>
                         <textarea required name="address" class="form-control" placeholder="Address" rows="4"></textarea>
                     </div>

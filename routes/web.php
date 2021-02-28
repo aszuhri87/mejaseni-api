@@ -80,8 +80,9 @@ use App\Http\Controllers\Admin\Cms\PrivacyPolicyController as PrivacyPolicyAdmin
 use App\Http\Controllers\Admin\Cms\FaqController as FaqAdminController;
 use App\Http\Controllers\Admin\Cms\TeamController as TeamController;
 use App\Http\Controllers\Admin\Cms\CareerController as CareerAdminController;
-
-
+use App\Http\Controllers\Admin\Cms\JobDescriptionController as JobDescriptionController;
+use App\Http\Controllers\Admin\Cms\JobRequirementController as JobRequirementController;
+use App\Http\Controllers\Admin\Cms\WorkingHourController as WorkingHourController;
 /*
 |--------------------------------------------------------------------------
 | CMS Controller
@@ -109,6 +110,7 @@ use App\Http\Controllers\Cms\CareerDetailController as CareerDetailController;
 |
 */
 
+
 /*
 |--------------------------------------------------------------------------
 | CMS
@@ -124,7 +126,6 @@ Route::get('/tos', [TosController::class, 'index']);
 Route::get('/faq', [FaqController::class, 'index']);
 Route::get('/career', [CareerController::class, 'index']);
 Route::get('/career-detail', [CareerDetailController::class, 'index']);
-
 Route::get('/cart', [CartController::class, 'index']);
 Route::post('/cart-store', [CartController::class, 'store']);
 Route::post('/cart-payment', [CartController::class, 'payment']);
@@ -132,6 +133,7 @@ Route::get('/student-cart', [CartController::class, 'data']);
 Route::get('/waiting-payment/{id}', [PaymentController::class, 'waiting']);
 Route::get('/payment-success', [PaymentController::class, 'success']);
 Route::post('/notifications/payments', [PaymentController::class, 'notification']);
+
 
 Route::group(['middleware' => ['guest-handling']], function () {
     Route::get('login', [LoginController::class, 'index_login']);
@@ -262,25 +264,40 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::resource('branch', BranchController::class);
 
             Route::post('program/dt', [ProgramController::class, 'dt']);
+            Route::post('program/update/{id}', [ProgramController::class, 'update']);
             Route::resource('program', ProgramController::class);
 
             Route::post('event/dt', [EventController::class, 'dt']);
+            Route::post('event/update/{id}', [EventController::class, 'update']);
             Route::resource('event', EventController::class);
 
             Route::post('news/dt', [NewsController::class, 'dt']);
+            Route::post('news/update/{id}', [NewsController::class, 'update']);
             Route::resource('news', NewsController::class);
 
             Route::post('privacy-policy/dt', [PrivacyPolicyAdminController::class, 'dt']);
+            Route::post('privacy-policy-item/dt', [PrivacyPolicyAdminController::class, 'dt_item']);
+            Route::put('privacy-policy-item/{id}', [PrivacyPolicyAdminController::class, 'update_item']);
             Route::resource('privacy-policy', PrivacyPolicyAdminController::class);
 
             Route::post('faq/dt', [FaqAdminController::class, 'dt']);
             Route::resource('faq', FaqAdminController::class);
 
             Route::post('team/dt', [TeamController::class, 'dt']);
+            Route::post('team/update/{id}', [TeamController::class, 'update']);
             Route::resource('team', TeamController::class);
 
             Route::post('career/dt', [CareerAdminController::class, 'dt']);
             Route::resource('career', CareerAdminController::class);
+
+            Route::post('career/{career_id}/job-description/dt', [JobDescriptionController::class, 'dt']);
+            Route::resource('job-description', JobDescriptionController::class);
+
+            Route::post('career/{career_id}/job-requirement/dt', [JobRequirementController::class, 'dt']);
+            Route::resource('job-requirement', JobRequirementController::class);
+
+            Route::post('working-hour/dt', [WorkingHourController::class, 'dt']);
+            Route::resource('working-hour', WorkingHourController::class);
 
         });
     });

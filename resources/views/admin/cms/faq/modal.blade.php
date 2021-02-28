@@ -13,14 +13,14 @@
                     <div class="form-group">
                         <label>
                             Title
-                            <span class="text-danger d-none">*</span>
+                            <span class="text-danger">*</span>
                         </label>
                         <input required type="text" name="title" class="form-control" placeholder="Title"/>
                     </div>
                     <div class="form-group">
                         <label>
                             Description
-                            <span class="text-danger d-none">*</span>
+                            <span class="text-danger">*</span>
                         </label>
                         <textarea required name="description" class="form-control" placeholder="Description" rows="4"></textarea>
                     </div>

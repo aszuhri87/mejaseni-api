@@ -395,6 +395,12 @@ class BaseMenu extends Controller
                         'url' => 'admin/cms/team',
                         'permission' => 'team'
                     ],
+                    [
+                        'key' => 'working-hour',
+                        'title' => 'Working Hour',
+                        'url' => 'admin/cms/working-hour',
+                        'permission' => 'working-hour'
+                    ],
 
                 ],
             ],

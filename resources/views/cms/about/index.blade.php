@@ -171,11 +171,22 @@
         <div class="badge-left pl-2">
           <h3>Working Hours</h3>
         </div>
-        <div class="row mt-4">
-          <div class="col-6">Monday</div>
-          <div class="col-6">8AM - 5PM</div>
-        </div>
-        <div class="row mt-4">
+
+        @foreach($working_hours as $working_hour)
+          <div class="row mt-4">
+            <div class="col-6">{{ $working_hour->day ? $working_hour->day:''}}</div>
+            @if($working_hour->is_closed)
+              <div class="col-6">Closed</div>
+            @else
+              <div class="col-6">
+                {{ $working_hour->open ? date('h:i A', strtotime($working_hour->open)):''}} - 
+                {{ $working_hour->close ? date('h:i A', strtotime($working_hour->close)):''}}
+              </div>
+            @endif
+          </div>
+        @endforeach
+        
+{{--         <div class="row mt-4">
           <div class="col-6">Tuesday</div>
           <div class="col-6">8AM - 5PM</div>
         </div>
@@ -194,7 +205,7 @@
         <div class="row mt-4">
           <div class="col-6">Saturday & Sunday</div>
           <div class="col-6">Closed</div>
-        </div>
+        </div> --}}
       </div>
     </div>
   </section>
