@@ -150,9 +150,11 @@ Route::group(['middleware' => ['auth-handling']], function () {
 
     Route::group(['middleware' => ['student-handling']], function () {
         Route::get('/cart', [CartController::class, 'index']);
+        Route::delete('/cart/{id}', [CartController::class, 'destroy']);
         Route::post('/cart-store', [CartController::class, 'store']);
         Route::post('/cart-payment', [CartController::class, 'payment']);
         Route::get('/student-cart', [CartController::class, 'data']);
+        Route::get('/cancel-payment/{id}', [PaymentController::class, 'cancel_payment']);
         Route::get('/waiting-payment/{id}', [PaymentController::class, 'waiting']);
         Route::get('/payment-success', [PaymentController::class, 'success']);
     });
@@ -511,5 +513,3 @@ Route::get('fire-2', function () {
 Route::get('welcome', function () {
     return view('welcome');
 });
-
-

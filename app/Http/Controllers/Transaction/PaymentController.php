@@ -19,7 +19,7 @@ class PaymentController extends Controller
     {
         $transaction = Transaction::find($id);
 
-        if(!$transaction){
+        if(!$transaction || $transaction->status == 0){
             return redirect('/cart');
         }
 
@@ -31,7 +31,7 @@ class PaymentController extends Controller
             $response = Http::get($transaction->payment_url);
             $response = json_decode($response->body());
         }else{
-            $response = null;
+            $response = json_decode($transaction->json_transaction);
         }
 
         return view('cms.transaction.waiting-payment.index', [
@@ -59,26 +59,37 @@ class PaymentController extends Controller
 
         if($transaction && $request['transaction']['status'] == 'SUCCESS'){
             if($request['service']['id'] == 'VIRTUAL_ACCOUNT'){
-                DB::transaction(function () use($request, $transaction){
-                    $transaction->confirmed = true;
-                    $transaction->confirmed_at = date('Y-m-d H:i:s');
-                    $transaction->status = 2;
-                    $transaction->total = $request['order']['amount'];
-                    $transaction->json_doku_notification = json_encode($request->all());
-                    $transaction->update();
-                });
+                $transaction->confirmed = true;
+                $transaction->confirmed_at = date('Y-m-d H:i:s');
+                $transaction->status = 2;
+                $transaction->total = $request['order']['amount'];
             }else if($request['service']['id'] == 'CREDIT_CARD'){
-                DB::transaction(function () use($request, $transaction){
-                    $transaction->confirmed = true;
-                    $transaction->confirmed_at = date('Y-m-d H:i:s');
-                    $transaction->status = 2;
-                    $transaction->total = $request['order']['amount'];
-                    $transaction->json_doku_notification = json_encode($request->all());
-                    $transaction->update();
-                });
+                $transaction->confirmed = true;
+                $transaction->confirmed_at = date('Y-m-d H:i:s');
+                $transaction->status = 2;
+                $transaction->total = $request['order']['amount'];
             }
+
+            DB::transaction(function () use($request, $transaction){
+                $transaction->json_doku_notification = json_encode($request->all());
+                $transaction->update();
+            });
         }
 
         return true;
+    }
+
+    public function cancel_payment($id)
+    {
+        $transaction = Transaction::find($id);
+
+        if(!$transaction){
+            return Redirect::back()->withErrors(['message' => 'Pembayaran tidak ditemukan.']);
+        }
+
+        $transaction->status = 0;
+        $transaction->update();
+
+        return redirect('cart');
     }
 }

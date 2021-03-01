@@ -7,6 +7,7 @@ use App\Http\Controllers\Transaction\DokuController as Doku;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
+use App\Models\Cart;
 use App\Models\Transaction;
 use App\Models\TransactionDetail;
 
@@ -183,13 +184,13 @@ class CartController extends Controller
                     $number = sprintf("%04d", (int)$str[1] + 1);
                     $number = "MJSN".date('Y').$number;
                 }else{
-                    $number = "MJSN".date('Y').'0023';
+                    $number = "MJSN".date('Y').'0030';
                 }
 
                 $trans = Transaction::create([
                     'number' => $number,
                     'student_id' => Auth::guard('student')->user()->id,
-                    'total' => 0,
+                    'total' => $amount->grand_total,
                     'status' => 1,
                     'datetime' => date('Y-m-d H:i:s'),
                     'confirmed' => false,
@@ -254,6 +255,33 @@ class CartController extends Controller
                     "message"   => 'Failed'
                 ], 400);
             }
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function destroy($id)
+    {
+        try {
+
+            $cart = Cart::find($id);
+
+            if(!$cart){
+                return response([
+                    "message"   => 'Data tidak ditemukan.'
+                ], 200);
+            }
+
+            DB::transaction(function () use($cart){
+                $cart->delete();
+            });
+
+            return response([
+                "message"   => 'OK'
+            ], 200);
         } catch (Exception $e) {
             throw new Exception($e);
             return response([
