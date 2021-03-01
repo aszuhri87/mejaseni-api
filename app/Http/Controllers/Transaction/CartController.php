@@ -29,6 +29,10 @@ class CartController extends Controller
     public function data()
     {
         try {
+
+            $transaction_details = DB::table('transaction_details')
+                ->whereNull('deleted_at');
+
             $data = DB::table('carts')
                 ->select([
                     'carts.id',
@@ -55,7 +59,9 @@ class CartController extends Controller
                 ->leftJoin('master_lessons','master_lessons.id','carts.master_lesson_id')
                 ->leftJoin('session_videos','session_videos.id','carts.session_video_id')
                 ->leftJoin('classrooms','classrooms.id','carts.classroom_id')
-                ->leftJoin('transaction_details','transaction_details.cart_id','carts.id')
+                ->leftJoinSub($transaction_details, 'transaction_details', function($join){
+                    $join->on('transaction_details.cart_id','carts.id');
+                })
                 ->where('carts.student_id', Auth::guard('student')->user()->id)
                 ->whereNull('transaction_details.id')
                 ->whereNull([
