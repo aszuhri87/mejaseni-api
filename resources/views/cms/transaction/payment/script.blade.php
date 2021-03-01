@@ -22,9 +22,7 @@
                             va_chanel:  $("input[name=payment_chanel]:checked").val()
                         }
                     }).done(function(res, xhr, meta){
-                        if(res.data.status){
-                            window.location('{{url('/')}}');
-                        }
+                        window.location = res.redirect_url;
                     })
                 })
             });

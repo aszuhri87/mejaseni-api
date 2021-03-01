@@ -175,11 +175,11 @@ class TheoryController extends BaseMenu
                 $transaction_detail = DB::table('transaction_details')
                     ->select([
                         'transaction_details.transaction_id',
-                        'transaction_details.chart_id',
+                        'transaction_details.cart_id',
                         'carts.theory_id'
                     ])
                     ->joinSub($chart, 'carts', function ($join) {
-                        $join->on('transaction_details.chart_id', '=', 'carts.id');
+                        $join->on('transaction_details.cart_id', '=', 'carts.id');
                     });
 
                 $transaction = DB::table('transactions')

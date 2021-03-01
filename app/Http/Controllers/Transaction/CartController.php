@@ -7,6 +7,9 @@ use App\Http\Controllers\Transaction\DokuController as Doku;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
+use App\Models\Transaction;
+use App\Models\TransactionDetail;
+
 use Auth;
 use Redirect;
 use Http;
@@ -51,7 +54,9 @@ class CartController extends Controller
                 ->leftJoin('master_lessons','master_lessons.id','carts.master_lesson_id')
                 ->leftJoin('session_videos','session_videos.id','carts.session_video_id')
                 ->leftJoin('classrooms','classrooms.id','carts.classroom_id')
+                ->leftJoin('transaction_details','transaction_details.cart_id','carts.id')
                 ->where('carts.student_id', Auth::guard('student')->user()->id)
+                ->whereNull('transaction_details.id')
                 ->whereNull([
                     'carts.deleted_at'
                 ])
@@ -87,9 +92,12 @@ class CartController extends Controller
             ->leftJoin('master_lessons','master_lessons.id','carts.master_lesson_id')
             ->leftJoin('session_videos','session_videos.id','carts.session_video_id')
             ->leftJoin('classrooms','classrooms.id','carts.classroom_id')
+            ->leftJoin('transaction_details','transaction_details.cart_id','carts.id')
+            ->where('carts.student_id', Auth::guard('student')->user()->id)
             ->whereIn('carts.id', $request->data)
             ->whereNull([
-                'carts.deleted_at'
+                'carts.deleted_at',
+                'transaction_details.id'
             ]);
 
         $result = DB::table('carts')
@@ -105,6 +113,11 @@ class CartController extends Controller
             return Redirect::back()->withErrors(['message' => 'Transaksi tidak ditemukan']);
         }
 
+        if($result->grand_total == 0){
+            session()->forget('arr_id');
+            return redirect('/cart');
+        }
+
         return view('cms.transaction.payment.index', [
             'grand_total' => $result->grand_total,
             'step' => 2
@@ -114,7 +127,7 @@ class CartController extends Controller
     public function payment(Request $request, Doku $doku)
     {
         try {
-            $data = DB::table('carts')
+            $carts = DB::table('carts')
                 ->select([
                     'carts.id',
                     DB::raw("CASE
@@ -140,26 +153,107 @@ class CartController extends Controller
                 ->leftJoin('master_lessons','master_lessons.id','carts.master_lesson_id')
                 ->leftJoin('session_videos','session_videos.id','carts.session_video_id')
                 ->leftJoin('classrooms','classrooms.id','carts.classroom_id')
-                ->whereIn('carts.id', session()->get('arr_id', null))
+                ->whereIn('carts.id', session()->get('arr_id', []))
                 ->whereNull([
                     'carts.deleted_at'
-                ])
-                ->get();
+                ]);
 
-            $doku = $doku->generate_payment_code($request->type, null, $request->type == 'va' ? $request->va_chanel : null);
+            $amount = DB::table('carts')
+                ->select([
+                    DB::raw('SUM(sub_carts.price) as grand_total')
+                ])
+                ->joinSub($carts,'sub_carts',function($join){
+                    $join->on('sub_carts.id', 'carts.id');
+                })
+                ->first();
+
+            if(!$amount || $amount->grand_total == 0){
+                return response([
+                    "message"   => 'Amount id zero'
+                ], 400);
+            }
+
+            $carts =  $carts->get();
+
+            $transaction = DB::transaction(function () use($carts, $request, $amount){
+                $tran_number = Transaction::orderBy(DB::raw("SUBSTRING(number, 9, 4)::INTEGER"),'desc')->first();
+
+                if($tran_number){
+                    $str = explode("MJSN".date('Y'), $tran_number->number);
+                    $number = sprintf("%04d", (int)$str[1] + 1);
+                    $number = "MJSN".date('Y').$number;
+                }else{
+                    $number = "MJSN".date('Y').'0023';
+                }
+
+                $trans = Transaction::create([
+                    'number' => $number,
+                    'student_id' => Auth::guard('student')->user()->id,
+                    'total' => 0,
+                    'status' => 1,
+                    'datetime' => date('Y-m-d H:i:s'),
+                    'confirmed' => false,
+                ]);
+
+                foreach ($carts as $key => $cart) {
+                    TransactionDetail::create([
+                        'transaction_id' => $trans->id,
+                        'cart_id' => $cart->id,
+                        'price' => $cart->price,
+                    ]);
+                }
+
+                session()->forget('arr_id');
+
+                return $trans;
+            });
+
+            $doku = $doku->generate_payment_code($request->type, $amount->grand_total, $transaction->number, $request->type == 'va' ? $request->va_chanel : null);
 
             if($doku){
-                session()->put('doku', $doku);
+                if(isset($doku['virtual_account_info'])){
+                    $transaction->payment_type = 'va';
+
+                    if($request->type == 'va'){
+                        if($request->va_chanel == 'bca-virtual-account'){
+                            $transaction->payment_chanel = 'Bank BCA';
+                        }else if($request->va_chanel == 'mandiri-virtual-account'){
+                            $transaction->payment_chanel = 'Bank Mandiri';
+                        }else if($request->va_chanel == 'bsm-virtual-account'){
+                            $transaction->payment_chanel = 'Bank Syariah Indonesia (BSI)';
+                        }else{
+                            $transaction->payment_chanel = 'Bank Lainya';
+                        }
+                    }
+
+                    $transaction->payment_url = $doku['virtual_account_info']['how_to_pay_api'];
+                }else{
+                    $transaction->payment_type = 'cc';
+                    $transaction->payment_chanel = 'Credit Card';
+                    $transaction->payment_url = $doku['credit_card_payment_page']['url'];
+                }
+
+                $transaction->json_transaction = json_encode($doku);
+
+                DB::transaction(function () use($transaction){
+                    $transaction->update();
+                });
+
+                return response([
+                    "data"      => $transaction,
+                    "redirect_url" => url("waiting-payment/".$transaction->id),
+                    "message"   => 'OK'
+                ], 200);
             }else{
+
+                DB::transaction(function () use($transaction){
+                    $transaction->delete();
+                });
+
                 return response([
                     "message"   => 'Failed'
                 ], 400);
             }
-
-            return response([
-                "data"      => $doku,
-                "message"   => 'OK'
-            ], 200);
         } catch (Exception $e) {
             throw new Exception($e);
             return response([

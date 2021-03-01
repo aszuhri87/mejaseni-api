@@ -372,6 +372,12 @@ class BaseMenu extends Controller
                         'permission' => 'faq'
                     ],
                     [
+                        'key' => 'galery',
+                        'title' => 'Galery',
+                        'url' => 'admin/cms/galery',
+                        'permission' => 'galery'
+                    ],
+                    [
                         'key' => 'news',
                         'title' => 'News',
                         'url' => 'admin/cms/news',
@@ -394,6 +400,12 @@ class BaseMenu extends Controller
                         'title' => 'Team',
                         'url' => 'admin/cms/team',
                         'permission' => 'team'
+                    ],
+                    [
+                        'key' => 'working-hour',
+                        'title' => 'Working Hour',
+                        'url' => 'admin/cms/working-hour',
+                        'permission' => 'working-hour'
                     ],
 
                 ],

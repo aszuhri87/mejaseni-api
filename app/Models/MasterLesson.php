@@ -24,7 +24,8 @@ class MasterLesson extends Model
         'name',
         'poster',
         'slot',
-        'platform_link'
+        'platform_link',
+        'description',
     ];
 
     protected $dates = ['deleted_at'];

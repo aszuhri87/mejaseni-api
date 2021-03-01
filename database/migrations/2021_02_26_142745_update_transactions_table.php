@@ -14,8 +14,11 @@ class UpdateTransactionsTable extends Migration
     public function up()
     {
         Schema::table('transactions', function (Blueprint $table) {
+            $table->integer('status');
+            $table->string('number')->unique();
             $table->boolean('confirmed')->default(false);
             $table->mediumText('json_transaction')->nullable();
+            $table->longText('json_doku_notification')->nullable();
         });
     }
 
@@ -27,8 +30,11 @@ class UpdateTransactionsTable extends Migration
     public function down()
     {
         Schema::table('transactions', function (Blueprint $table) {
+            $table->dropColumn('status');
+            $table->dropColumn('number');
             $table->dropColumn('confirmed');
             $table->dropColumn('json_transaction');
+            $table->dropColumn('json_doku_notification');
         });
     }
 }

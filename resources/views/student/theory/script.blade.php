@@ -138,12 +138,14 @@
                                             }
                                         element += `
                                             <div class="row">
-                                                <div class="col-3">
-                                                    <img src="{{asset('assets/images/pdf-file-extension.png')}}" width="50px" height="50px">
-                                                </div>
-                                                <div class="col-8">
-                                                    <p style="margin-bottom: 0 !important"><strong>${data.theory_name}</strong></p>
-                                                    <span class="text-muted">${data.classroom_name}</span>
+                                                <div class="col-12 d-flex">
+                                                    <div>
+                                                        <img src="{{asset('assets/images/pdf-file-extension.png')}}" width="50px" height="50px">
+                                                    </div>
+                                                    <div class="ml-5">
+                                                        <p style="margin-bottom: 0 !important"><strong>${data.theory_name}</strong></p>
+                                                        <span class="text-muted">${data.classroom_name}</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use Ramsey\Uuid\Uuid;
 
 use App\Models\Sosmed;
+use DB;
 
 class SosmedSeeder extends Seeder
 {
@@ -16,6 +17,7 @@ class SosmedSeeder extends Seeder
      */
     public function run()
     {
+
         $sosmeds = [
             [
                 'name' => 'Instagram',
@@ -41,5 +43,6 @@ class SosmedSeeder extends Seeder
                 ]);
             }
         }
+
     }
 }
