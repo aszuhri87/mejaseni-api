@@ -496,19 +496,9 @@ Route::group(['middleware' => ['auth-handling']], function () {
 
 
 Route::get('fire', function () {
-    event(new \App\Events\PaymentNotification('haiiii'));
+    event(new \App\Events\PaymentNotification(true));
     return 'oke';
 });
-
-
-Route::get('fire-2', function () {
-    $actionId = 'score_update';
-    $actionData = array('team1_score' => 46);
-
-    event(new \App\Events\ActionEvent($actionId, $actionData));
-    return 'oke';
-});
-
 
 Route::get('welcome', function () {
     return view('welcome');

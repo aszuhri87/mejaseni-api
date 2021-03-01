@@ -1,9 +1,7 @@
 @extends('cms.transaction.layouts.app')
 
 @section('content')
-@php
-    // dd($data);
-@endphp
+
 @if ($transaction->payment_type == 'va')
     <div class="border-line stepper-line"></div>
     <div class="row column-center">
@@ -23,7 +21,7 @@
             <h5 class="my-5 mt-md-0 text-center">{{$transaction->payment_chanel}}</h5>
             <p class="mb-2">Total Bayar</p>
             <h3 class="mb-5">Rp. {{number_format($data->order->amount)}}</h3>
-            <a href="javascript:void(0);" class="btn btn-danger mb-4 row-center shadow">Batalkan Pembayaran</a>
+            <a href="{{url('cancel-payment/'.$transaction->id)}}" class="btn btn-danger mb-4 row-center shadow">Batalkan Pembayaran</a>
         </div>
         <div class="col-12 col-xl-8 mb-5">
             <h3 class="mt-2 py-3 text-center">Cara Pembayaran</h3>

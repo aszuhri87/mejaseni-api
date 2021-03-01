@@ -17,6 +17,7 @@ class StudentClassroom extends Model
 
     protected $fillable = [
         'classroom_id',
+        'transaction_id',
         'student_id'
     ];
 

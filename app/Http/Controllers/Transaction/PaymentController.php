@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 use App\Models\Transaction;
+use App\Models\StudentClassroom;
 
 use Auth;
 use Redirect;
@@ -73,6 +74,27 @@ class PaymentController extends Controller
             DB::transaction(function () use($request, $transaction){
                 $transaction->json_doku_notification = json_encode($request->all());
                 $transaction->update();
+
+                $classrooms = DB::table('transaction_details')
+                    ->select([
+                        'carts.classroom_id'
+                    ])
+                    ->leftJoin('carts','carts.id','=','transaction_details.cart_id')
+                    ->where('transaction_id', $transaction->id)
+                    ->whereNotNull([
+                        'carts.classroom_id'
+                    ])
+                    ->get();
+
+                foreach ($classrooms as $key => $classroom) {
+                    StudentClassroom::create([
+                        'transaction_id' => $transaction->id,
+                        'classroom_id' => $classroom->classroom_id,
+                        'student_id' => $transaction->student_id,
+                    ]);
+                }
+
+                event(new \App\Events\PaymentNotification(true));
             });
         }
 
@@ -85,6 +107,10 @@ class PaymentController extends Controller
 
         if(!$transaction){
             return Redirect::back()->withErrors(['message' => 'Pembayaran tidak ditemukan.']);
+        }
+
+        if ($transaction->status != 1) {
+            return Redirect::back()->withErrors(['message' => 'Permintaan ditolak.']);
         }
 
         $transaction->status = 0;
