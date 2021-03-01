@@ -139,7 +139,7 @@
             <form id="form-booking-master-lesson" autocomplete="off">
                 <div class="modal-body">
                     <input type="hidden" name="master_lesson_id" id="master-lesson-id">
-                    <input type="hidden" name="student_id" value="{{Auth::guard('student')->user()->id}}" id="reschedule_student_id">
+                    <input type="hidden" name="student_id" value="{{Auth::guard('student')->user()->id}}">
                     <div class="row">
                         <div class="col-12">
                             <div>
@@ -190,7 +190,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                     <div id="btn-booking-master-lesson">
-                        <button type="submit" class="btn btn-primary btn-loading-basic">
+                        <button type="submit" class="btn btn-primary btn-loading-master-lesson">
                             Daftar Sekarang
                             <span class="svg-icon svg-icon-md"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-02-01-052524/theme/html/demo1/dist/../src/media/svg/icons/Navigation/Right-2.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">

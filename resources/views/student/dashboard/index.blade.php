@@ -8,7 +8,7 @@
                 <div class="row">
                     <div class="col-8">
                         <div>
-                            <h3>Summary Course</h3><br>
+                            <h3 style="margin-bottom:0 !important">Summary Course</h3>
                             <span class="text-muted" id="text-summary">Lebih dari 2000 siswa melakukan booking untuk minggu ini</span>
                         </div>
                     </div>
@@ -42,7 +42,7 @@
                                         <!--end::Symbol-->
                                         <!--begin::Text-->
                                         <div class="d-flex flex-column font-weight-bold">
-                                            <a href="#" class="text-dark text-hover-primary mb-1 font-size-lg">7</a>
+                                            <a href="javascript:void(0)" class="text-dark text-hover-primary mb-1 font-size-lg" id="total-class"></a>
                                             <span class="text-muted">Total Kelas</span>
                                         </div>
                                         <!--end::Text-->
@@ -65,7 +65,7 @@
                                         <!--end::Symbol-->
                                         <!--begin::Text-->
                                         <div class="d-flex flex-column font-weight-bold">
-                                            <a href="#" class="text-dark-75 text-hover-primary mb-1 font-size-lg">8</a>
+                                            <a href="javascript:void(0)" class="text-dark-75 text-hover-primary mb-1 font-size-lg" id="total-video"></a>
                                             <span class="text-muted">Video Tutorial</span>
                                         </div>
                                         <!--end::Text-->
@@ -87,7 +87,7 @@
                                         <!--end::Symbol-->
                                         <!--begin::Text-->
                                         <div class="d-flex flex-column font-weight-bold">
-                                            <a href="#" class="text-dark text-hover-primary mb-1 font-size-lg">4</a>
+                                            <a href="javascript:void(0)" class="text-dark text-hover-primary mb-1 font-size-lg" id="total-booking"></a>
                                             <span class="text-muted">Booking Saat Ini</span>
                                         </div>
                                         <!--end::Text-->
@@ -110,7 +110,7 @@
                                         <!--end::Symbol-->
                                         <!--begin::Text-->
                                         <div class="d-flex flex-column font-weight-bold">
-                                            <a href="#" class="text-dark text-hover-primary mb-1 font-size-lg">12</a>
+                                            <a href="javascript:void(0)" class="text-dark text-hover-primary mb-1 font-size-lg" id="history-booking"></a>
                                             <span class="text-muted">Riwayat Booking</span>
                                         </div>
                                         <!--end::Text-->
@@ -135,7 +135,7 @@
                                         <!--end::Symbol-->
                                         <!--begin::Text-->
                                         <div class="d-flex flex-column font-weight-bold">
-                                            <a href="#" class="text-dark text-hover-primary mb-1 font-size-lg">3</a>
+                                            <a href="javascript:void(0)" class="text-dark text-hover-primary mb-1 font-size-lg">3</a>
                                             <span class="text-muted">Tidak Hadir</span>
                                         </div>
                                         <!--end::Text-->
@@ -146,8 +146,10 @@
                             </div>
                             <!--end::List Widget 1-->
                     </div>
-                    <div class="col-9">
-
+                    <div class="col-8">
+                        <div id="chart">
+                            
+                        </div>
                     </div>
                 </div>
             </div>
@@ -168,7 +170,7 @@
                 <div class="resize-triggers"><div class="expand-trigger"><div style="width: 321px; height: 252px;"></div></div><div class="contract-trigger"></div></div></div>
                 <div class="pt-5">
                     <p class="text-center">46% sesi dari 2 kelas reguler aktif yang Anda miliki telah Anda hadiri.</p>
-                    <a href="#" class="btn btn-success btn-shadow-hover font-weight-bolder w-100 py-3">Generate Report</a>
+                    <a href="javascript:void(0)" class="btn btn-success btn-shadow-hover font-weight-bolder w-100 py-3">Generate Report</a>
                 </div>
             </div>
             <!--end::Body-->

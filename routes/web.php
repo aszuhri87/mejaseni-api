@@ -373,11 +373,18 @@ Route::group(['middleware' => ['auth-handling']], function () {
 
     Route::group(['prefix' => 'student', 'middleware' => 'student-handling'], function () {
 
-        Route::get('/dashboard', [StudentDashboardController::class, 'index']);
+        Route::group(['prefix' => 'dashboard'], function () {
+            Route::get('/', [StudentDashboardController::class, 'index']);
+            Route::get('total-class', [StudentDashboardController::class, 'total_class']);
+            Route::get('total-video', [StudentDashboardController::class, 'total_video']);
+            Route::get('total-booking', [StudentDashboardController::class, 'total_booking']);
+            Route::get('history-booking', [StudentDashboardController::class, 'history_booking']);
+        });
 
         Route::group(['prefix' => 'invoice'], function () {
             Route::get('/', [StudentInvoiceController::class, 'index']);
             Route::get('dt', [StudentInvoiceController::class, 'dt']);
+            Route::get('detail/{id}', [StudentInvoiceController::class, 'detail']);
         });
 
         Route::group(['prefix' => 'schedule'], function () {
@@ -401,6 +408,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
 
             Route::group(['prefix' => 'master-lesson'], function () {
                 Route::get('/', [StudentScheduleController::class, 'master_lesson']);
+                Route::post('booking/{id}', [StudentScheduleController::class, 'booking_master_lesson']);
             });
 
             Route::group(['prefix' => 'coach-list'], function () {
@@ -429,6 +437,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::get('/', [StudentTheoryController::class, 'index']);
             Route::get('get-theory', [StudentTheoryController::class, 'get_theory']);
             Route::get('get-class/{student_id}', [StudentTheoryController::class, 'get_class']);
+            Route::get('filter_theory', [StudentTheoryController::class, 'filter_theory']);
         });
 
         Route::group(['prefix' => 'video'], function () {

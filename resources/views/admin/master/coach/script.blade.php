@@ -457,12 +457,12 @@
                         if(data1.length>0){
                             selectdisplay1.set(data1);
                         }else{
-                            selectdisplay1.setData([]);
+                            selectdisplay1.set([]);
                         }
                         if(data2.length>0){
                             selectdisplay2.set(data2);
                         }else{
-                            selectdisplay2.setData([]);
+                            selectdisplay2.set([]);
                         }
 
                     })

@@ -79,6 +79,31 @@
                         btn_loading_basic('stop')
                     });
                 });
+
+                $('#form-booking-master-lesson').submit(function(event){
+                    event.preventDefault();
+                    let text = $('.btn-loading-master-lesson').html();
+
+                    btn_loading_master_lesson('start',text)
+                    $.ajax({
+                        url: $(this).attr('action'),
+                        type: $(this).attr('method'),
+                        data: $(this).serialize(),
+                    })
+                    .done(function(res, xhr, meta) {
+                        if(res.status == 200){
+                            toastr.success(res.message, 'Success');
+                            initCalendarMasterLesson();
+                            hideModal('modal-booking-master-lesson');
+                        }
+                    })
+                    .fail(function(res, error) {
+                        toastr.error(res.responseJSON.message, 'Failed')
+                    })
+                    .always(function() {
+                        btn_loading_master_lesson('stop',text)
+                    });
+                });
             },
             totalClassStudent = () => {
                 $.ajax({
@@ -376,6 +401,7 @@
                         let description = info.event.extendedProps.description;
 
                         if(total_booking < slot){
+                            $('#master-lesson-id').val(id);
                             $('#master-lesson-title').html(name);
                             $('#poster').attr('src',`${poster}`);
                             $('#price').html(`Rp. ${numeral(price).format('0,0')}`);
@@ -383,6 +409,11 @@
                             $('#time').html(`<h5 class="text-muted">${moment(datetime).format('HH:mm')}</h5>`);
                             $('#total-booking').html(`<h5 class="text-muted">${total_booking}/${slot} booking</h5>`);
                             $('#description').html(description);
+
+                            $('#form-booking-master-lesson').trigger('reset');
+                            $('#form-booking-master-lesson').attr('action',`{{ url('student/schedule/master-lesson/booking') }}/${id}`);
+                            $('#form-booking-master-lesson').attr('method',`POST`);
+
                             showModal('modal-booking-master-lesson');
                         }
                         else{

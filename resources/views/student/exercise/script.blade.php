@@ -132,7 +132,7 @@
                     let collection_id = $(this).data('collection_id');
                     getResult(collection_id);
                     showModal('modal-result');
-                })
+                });
             },
             formSubmit = () => {
                 $('#form-exercise').submit(function(event){

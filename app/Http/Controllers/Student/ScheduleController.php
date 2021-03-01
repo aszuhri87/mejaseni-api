@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Session;
 use App\Models\StudentSchedule;
+use App\Models\Cart;
 
 use Storage;
 use Auth;
@@ -594,6 +595,30 @@ class ScheduleController extends BaseMenu
                 "message"   => 'OK!'
             ], 200);
         } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function booking_master_lesson(Request $request,$id)
+    {
+        try{
+            $result = DB::transaction(function () use($request, $id){
+                $cart = Cart::create([
+                        'master_lesson_id' => $id,
+                        'student_id' => $request->student_id
+                    ]);
+
+                return $cart;
+            });
+            return response([
+                "status" => 200,
+                "data"      => $result,
+                "message"   => 'Successfully booking. Please check your cart!'
+            ], 200);
+        }catch (Exception $e) {
             throw new Exception($e);
             return response([
                 "message"=> $e->getMessage(),

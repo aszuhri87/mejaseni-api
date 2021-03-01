@@ -9,7 +9,6 @@
                 <h3 class="mt-5">{{$data->name}}</h3>
                 <p class="mt-5">Mentored by {{$data->coach_name}}</p>
                 <p class="mt-5"><h2 class="text-primary">Rp. {{number_format($data->price)}}</h2></p>
-                <button class="btn btn-primary mt-3 btn-buy">Buy Course</button>
                 <button class="btn btn-outline-primary mt-3 btn-cart" data-id="{{$data->id}}">
                     <span class="svg-icon"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                         <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">

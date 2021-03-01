@@ -262,6 +262,16 @@
         }
     }
 
+    function btn_loading_master_lesson(action, text) {
+        if (action == 'start') {
+            $('.btn-loading-master-lesson').html('<div id="loading" class="mr-1"></div> Loading...');
+            $('.btn-loading-master-lesson').attr('disabled', true);
+        } else {
+            $('.btn-loading-master-lesson').html(text);
+            $('.btn-loading-master-lesson').attr('disabled', false);
+        }
+    }
+
     function btn_loading_rating(action) {
         if (action == 'start') {
             $('.btn-loading-rating').html('<div id="loading" class="mr-1"></div> Loading...');

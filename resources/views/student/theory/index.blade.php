@@ -31,8 +31,10 @@
                 </div>
             </div>
             <div>
-                <select name="filter_class" id="" class="form-control">
-                    <option value="">Semua Materi   </option>
+                <select name="filter_theory" id="filter_theory" class="form-control">
+                    <option value="">Semua Materi</option>
+                    <option value="1">Berbayar</option>
+                    <option value="0">Tidak Berbayar</option>
                 </select>
             </div>
         </div>

@@ -30,11 +30,6 @@
                     </div>
                 </div>
             </div>
-            <div>
-                <select name="filter_class" id="" class="form-control">
-                    <option value="">Semua Materi</option>
-                </select>
-            </div>
         </div>
     </div>
 
