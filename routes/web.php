@@ -436,6 +436,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::post('last-class/dt',[StudentMyClassController::class, 'last_class_dt']);
             Route::post('review/{id}',[StudentMyClassController::class, 'review']);
             Route::put('reschedule/{id}',[StudentMyClassController::class, 'reschedule']);
+            Route::get('class-active/{id}',[StudentMyClassController::class, 'class_active']);
         });
 
         Route::group(['prefix' => 'new-package'], function () {
@@ -448,17 +449,20 @@ Route::group(['middleware' => ['auth-handling']], function () {
         });
 
         Route::group(['prefix' => 'theory'], function () {
-            Route::get('/', [StudentTheoryController::class, 'index']);
-            Route::get('get-theory', [StudentTheoryController::class, 'get_theory']);
-            Route::get('get-class/{student_id}', [StudentTheoryController::class, 'get_class']);
-            Route::get('filter_theory', [StudentTheoryController::class, 'filter_theory']);
+            Route::group(['prefix' => 'theory-class'], function () {
+                Route::get('/', [StudentTheoryController::class, 'index']);
+                Route::get('get-theory', [StudentTheoryController::class, 'get_theory']);
+                Route::get('get-class/{student_id}', [StudentTheoryController::class, 'get_class']);
+                Route::get('filter_theory', [StudentTheoryController::class, 'filter_theory']);
+            });
+
+            Route::group(['prefix' => 'video-class'], function () {
+                Route::get('/', [StudentVideoController::class, 'index']);
+                Route::get('get-video', [StudentVideoController::class, 'get_video']);
+                Route::get('video-detail/{session_video_id}', [StudentVideoController::class, 'video_detail']);
+            });
         });
 
-        Route::group(['prefix' => 'video'], function () {
-            Route::get('/', [StudentVideoController::class, 'index']);
-            Route::get('get-video', [StudentVideoController::class, 'get_video']);
-            Route::get('video-detail/{session_video_id}', [StudentVideoController::class, 'video_detail']);
-        });
 
         Route::group(['prefix' => 'exercise'], function () {
             Route::get('/', [StudentExerciseController::class, 'index']);

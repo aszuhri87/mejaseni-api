@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 use Storage;
+use Auth;
 
 class NewPackageController extends BaseMenu
 {
@@ -29,6 +30,28 @@ class NewPackageController extends BaseMenu
     {
         try {
             $path = Storage::disk('s3')->url('/');
+
+            $transaction_detail = DB::table('transaction_details')
+                ->select([
+                    'transaction_details.cart_id',
+                    'transaction_details.id',
+                ])
+                ->whereNull('transaction_details.deleted_at');
+
+            $cart = DB::table('carts')
+                ->select([
+                    'carts.classroom_id',
+                    'transaction_details.id as transaction_detail_id',
+                ])
+                ->leftJoinSub($transaction_detail, 'transaction_details', function ($join) {
+                    $join->on('carts.id', '=', 'transaction_details.cart_id');
+                })
+                ->where([
+                    'carts.student_id' => Auth::guard('student')->user()->id
+                ])
+                ->whereNull('carts.deleted_at')
+                ->whereNotNull('transaction_details.id');
+
             $result = DB::table('classrooms')
                 ->select([
                     'classrooms.id as classroom_id',
@@ -39,7 +62,18 @@ class NewPackageController extends BaseMenu
                     'classrooms.session_total',
                     'classrooms.session_duration',
                     DB::raw("CONCAT('{$path}',classrooms.image) as image_url"),
+                    DB::raw("(
+                        CASE
+                            WHEN carts.transaction_detail_id IS NOT NULL THEN
+                                1
+                            ELSE
+                                0
+                        END
+                    )AS is_buy")
                 ])
+                ->leftJoinSub($cart, 'carts', function ($join) {
+                    $join->on('classrooms.id', '=', 'carts.classroom_id');
+                })
                 ->where('classrooms.deleted_at')
                 ->limit(6)
                 ->get();
@@ -88,6 +122,28 @@ class NewPackageController extends BaseMenu
     {
         try {
             $path = Storage::disk('s3')->url('/');
+
+            $transaction_detail = DB::table('transaction_details')
+                ->select([
+                    'transaction_details.cart_id',
+                    'transaction_details.id',
+                ])
+                ->whereNull('transaction_details.deleted_at');
+
+            $cart = DB::table('carts')
+                ->select([
+                    'carts.classroom_id',
+                    'transaction_details.id as transaction_detail_id',
+                ])
+                ->leftJoinSub($transaction_detail, 'transaction_details', function ($join) {
+                    $join->on('carts.id', '=', 'transaction_details.cart_id');
+                })
+                ->where([
+                    'carts.student_id' => Auth::guard('student')->user()->id
+                ])
+                ->whereNull('carts.deleted_at')
+                ->whereNotNull('transaction_details.id');
+
             $result = DB::table('classrooms')
                 ->select([
                     'classrooms.id as classroom_id',
@@ -99,7 +155,18 @@ class NewPackageController extends BaseMenu
                     'classrooms.session_total',
                     'classrooms.session_duration',
                     DB::raw("CONCAT('{$path}',classrooms.image) as image_url"),
+                    DB::raw("(
+                        CASE
+                            WHEN carts.transaction_detail_id IS NOT NULL THEN
+                                1
+                            ELSE
+                                0
+                        END
+                    )AS is_buy")
                 ])
+                ->leftJoinSub($cart, 'carts', function ($join) {
+                    $join->on('classrooms.id', '=', 'carts.classroom_id');
+                })
                 ->where('classrooms.deleted_at')
                 ->where('classrooms.sub_classroom_category_id',$sub_classroom_category_id)
                 ->get();

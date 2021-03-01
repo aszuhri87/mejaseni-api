@@ -33,7 +33,7 @@
             initAction = () => {
                 $(document).on('change','#filter-class',function(event){
                     event.preventDefault();
-                    KTApp.block('#kt_body', {
+                    KTApp.blockPage({
                         overlayColor: '#000000',
                         state: 'primary',
                         opacity: 0.5,
@@ -51,7 +51,7 @@
                         if(moment(date_end).isBefore(date_start)){
                             return toastr.error('Filter date invalid', 'Failed')
                         }else{
-                            KTApp.block('#kt_body', {
+                            KTApp.blockPage({
                                 overlayColor: '#000000',
                                 state: 'primary',
                                 opacity: 0.5,
@@ -82,7 +82,7 @@
                     event.preventDefault();
                     let filter_theory = $(this).val();
                     $.ajax({
-                        url: `{{ url('student/theory/filter_theory') }}`,
+                        url: `{{ url('student/theory/theory-class/filter_theory') }}`,
                         type: 'GET',
                         data: {
                             filter_theory:filter_theory
@@ -250,7 +250,7 @@
             },
             getTheory = (classroom_id,date_start,date_end) =>{
                 $.ajax({
-                    url: `{{ url('student/theory/get-theory') }}`,
+                    url: `{{ url('student/theory/theory-class/get-theory') }}`,
                     type: `GET`,
                     data:{
                         classroom_id:classroom_id,
@@ -376,7 +376,7 @@
                                     </div>
                             `
                         }
-                        KTApp.unblock('#kt_body');
+                        KTApp.unblockPage();
                         $('.theory').html(element);
                     }
                 })
@@ -389,7 +389,7 @@
             },
             getClass = () => {
                 $.ajax({
-                    url: `{{ url('student/theory/get-class') }}/{{Auth::guard('student')->user()->id}}`,
+                    url: `{{ url('student/theory/theory-class/get-class') }}/{{Auth::guard('student')->user()->id}}`,
                     type: 'GET',
                 })
                 .done(function(res, xhr, meta) {

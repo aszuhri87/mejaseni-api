@@ -437,7 +437,7 @@ class BaseMenu extends Controller
                 'icon' => $this->icon('schedule'),
             ],
             [
-                'key' => 'class',
+                'key' => 'my-class',
                 'title' => 'My Class',
                 'url' => 'student/my-class',
                 'permission' => 'student_class',
@@ -451,15 +451,15 @@ class BaseMenu extends Controller
                 'icon' => $this->icon('theory'),
                 'children' => [
                     [
-                        'key' => 'class_theory',
+                        'key' => 'theory-class',
                         'title' => 'Materi Kelas',
-                        'url' => 'student/theory',
+                        'url' => 'student/theory/theory-class',
                         'permission' => 'student_theory',
                     ],
                     [
-                        'key' => 'class_video',
+                        'key' => 'video-class',
                         'title' => 'Video Kelas',
-                        'url' => 'student/video',
+                        'url' => 'student/theory/video-class',
                         'permission' => 'student_theory',
                     ],
                 ]
@@ -479,7 +479,7 @@ class BaseMenu extends Controller
                 'icon' => $this->icon('review'),
             ],
             [
-                'key' => 'new_package',
+                'key' => 'new-package',
                 'title' => 'Buy New Package',
                 'url' => 'student/new-package',
                 'permission' => 'student_new_package',

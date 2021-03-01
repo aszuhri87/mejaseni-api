@@ -10,6 +10,7 @@
                 initAction();
                 studentRating();
                 totalClassStudent();
+                getClass();
                 $('#input-id').rating({
                     hoverOnClear: false,
                     theme: 'krajee-svg',
@@ -378,6 +379,23 @@
                         else{
                             $('#total-rating').html(res.data.star);
                         }
+                    }
+                })
+                .fail(function(res, error) {
+                    toastr.error(res.responseJSON.message, 'Failed')
+                })
+                .always(function() {
+
+                });
+            },
+            getClass = () => {
+                $.ajax({
+                    url: `{{ url('student/my-class/class-active') }}/{{Auth::guard('student')->user()->id}}`,
+                    type: `GET`,
+                })
+                .done(function(res, xhr, meta) {
+                    if(res.status == 200){
+                        console.log(res.data);
                     }
                 })
                 .fail(function(res, error) {

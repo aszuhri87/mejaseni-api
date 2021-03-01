@@ -95,8 +95,8 @@
                             render : function(data, type, full, meta) {
                                 if(full.status == 1){
                                     return `
-                                        <a href="{{ url('/waiting-payment') }}/${data}" title="Lanjutkan Pembayaran" data-toogle="tooltip" class="btn btn-detail btn-primary btn-sm mr-2">
-                                            Lanjut Pembayaran
+                                        <a href="{{ url('/waiting-payment') }}/${data}" title="Lanjutkan Pembayaran" data-toogle="tooltip" class="btn btn-primary btn-sm mr-2">
+                                            Pembayaran
                                         </a>
                                         `;
                                 }else{
