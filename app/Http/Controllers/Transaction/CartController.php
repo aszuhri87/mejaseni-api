@@ -85,6 +85,9 @@ class CartController extends Controller
     {
         session()->put('arr_id', $request->data);
 
+        $transaction_details = DB::table('transaction_details')
+                ->whereNull('deleted_at');
+
         $data = DB::table('carts')
             ->select([
                 'carts.id',
@@ -99,7 +102,9 @@ class CartController extends Controller
             ->leftJoin('master_lessons','master_lessons.id','carts.master_lesson_id')
             ->leftJoin('session_videos','session_videos.id','carts.session_video_id')
             ->leftJoin('classrooms','classrooms.id','carts.classroom_id')
-            ->leftJoin('transaction_details','transaction_details.cart_id','carts.id')
+            ->leftJoinSub($transaction_details, 'transaction_details', function($join){
+                $join->on('transaction_details.cart_id','carts.id');
+            })
             ->where('carts.student_id', Auth::guard('student')->user()->id)
             ->whereIn('carts.id', $request->data)
             ->whereNull([
@@ -183,14 +188,14 @@ class CartController extends Controller
             $carts =  $carts->get();
 
             $transaction = DB::transaction(function () use($carts, $request, $amount){
-                $tran_number = Transaction::orderBy(DB::raw("SUBSTRING(number, 9, 4)::INTEGER"),'desc')->first();
+                $tran_number = Transaction::orderBy(DB::raw("SUBSTRING(number, 9, 4)::INTEGER"),'desc')->withTrashed()->first();
 
                 if($tran_number){
                     $str = explode("MJSN".date('Y'), $tran_number->number);
                     $number = sprintf("%04d", (int)$str[1] + 1);
                     $number = "MJSN".date('Y').$number;
                 }else{
-                    $number = "MJSN".date('Y').'0030';
+                    $number = "MJSN".date('Y').'0036';
                 }
 
                 $trans = Transaction::create([
