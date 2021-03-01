@@ -402,6 +402,12 @@ class BaseMenu extends Controller
                         'permission' => 'team'
                     ],
                     [
+                        'key' => 'social-media',
+                        'title' => 'Social Media',
+                        'url' => 'admin/cms/social-media',
+                        'permission' => 'social-media'
+                    ],
+                    [
                         'key' => 'working-hour',
                         'title' => 'Working Hour',
                         'url' => 'admin/cms/working-hour',

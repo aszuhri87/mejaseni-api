@@ -19,38 +19,79 @@
         <div class="splide pb-4" id="class-splide">
           <div class="splide__track">
             <ul class="splide__list">
-              @foreach($classrooms as $classroom)
+              @foreach($regular_classrooms as $regular_classroom)
                 <li class="splide__slide px-2 pb-5">
-                  <img class="w-100 rounded" src="{{ $classroom->image_url ? $classroom->image_url : '' }}" alt="">
+                  <img class="w-100 rounded" src="{{ $regular_classroom->image_url ? $regular_classroom->image_url : '' }}" alt="">
                   <div class="badge-left">
-                    <h3 class="mt-4 ml-2">{{ $classroom->name ? $classroom->name : '' }}</h3>
+                    <h3 class="mt-4 ml-2">{{ $regular_classroom->name ? $regular_classroom->name : '' }}</h3>
                   </div>
                   <ul class="row-center-start class-tab mt-5 mt-md-4">
-                    <li class="active">Deskripsi</li>
-                    <li>Coach</li>
-                    <li>Tools</li>
+                    <li class="active tab-detail" href="tab-description">Deskripsi</li>
+                    <li class="tab-detail" href="tab-coach">Coach</li>
+                    <li class="tab-detail" href="tab-tools">Tools</li>
                   </ul>
-                  <div class="desc__class-tab my-4">
-                    <p>
-                      {{ $classroom->description ? $classroom->description : '' }}
-                    </p>
-                  </div>
-                  <div class="coach__class-tab my-4">
-                    <div class="row-center-start">
-                      <div class="coach-img__class-tab mr-3">
-                        <img src="{{ asset('cms/assets/img/coach.png') }}" class="w-100 rounded-circle" alt="">
-                      </div>
-                      <div class="d-flex flex-column">
-                        <h3>Rista Amelia Baskoro</h3>
-                        <span class="mt-1">Pianist / Keyboardist</span>
+                  <div id="tab-description" class="content-tab-detail" style="">
+                    <div class="desc__class-tab my-4">
+                      <p>
+                        {{ $regular_classroom->description ? $regular_classroom->description : '' }}
+                      </p>
+                    </div>
+                    <div class="coach__class-tab my-4">
+                      <div class="row-center-start">
+                        <div class="coach-img__class-tab mr-3">
+                          <img src="{{ asset('cms/assets/img/coach.png') }}" class="w-100 rounded-circle" alt="">
+                        </div>
+                        <div class="d-flex flex-column">
+                          <h3>Rista Amelia Baskoro</h3>
+                          <span class="mt-1">Pianist / Keyboardist</span>
+                        </div>
                       </div>
                     </div>
                   </div>
+
+                  <div id="tab-coach" class="content-tab-detail" style="display: none;">
+                    <div class="desc__class-tab my-4">
+                      <p>
+                        {{ $regular_classroom->description ? $regular_classroom->description : '' }}
+                      </p>
+                    </div>
+                    <div class="coach__class-tab my-4">
+                      <div class="row-center-start">
+                        <div class="coach-img__class-tab mr-3">
+                          <img src="{{ asset('cms/assets/img/coach.png') }}" class="w-100 rounded-circle" alt="">
+                        </div>
+                        <div class="d-flex flex-column">
+                          <h3>coach</h3>
+                          <span class="mt-1">Pianist / Keyboardist</span>
+                        </di  v>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div id="tab-tools" class="content-tab-detail" style="display: none;">
+                    <div class="desc__class-tab my-4">
+                      <p>
+                        {{ $regular_classroom->description ? $regular_classroom->description : '' }}
+                      </p>
+                    </div>
+                    <div class="coach__class-tab my-4">
+                      <div class="row-center-start">
+                        <div class="coach-img__class-tab mr-3">
+                          <img src="{{ asset('cms/assets/img/coach.png') }}" class="w-100 rounded-circle" alt="">
+                        </div>
+                        <div class="d-flex flex-column">
+                          <h3>tools</h3>
+                          <span class="mt-1">Pianist / Keyboardist</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                   <div
                   class="class-tab-summary d-flex justify-content-between flex-md-row flex-column mb-4">
                   <div class="d-flex flex-column">
-                    <p>{{ $classroom->session_total ? $classroom->session_total : '' }} Sesi | @ {{ $classroom->session_duration ? $classroom->session_duration : '' }}menit</p>
-                    <span class="mt-2">Rp. {{ $classroom->price ? $classroom->price : '' }},-</span>
+                    <p>{{ $regular_classroom->session_total ? $regular_classroom->session_total : '' }} Sesi | @ {{ $regular_classroom->session_duration ? $regular_classroom->session_duration : '' }}menit</p>
+                    <span class="mt-2">Rp. {{ $regular_classroom->price ? $regular_classroom->price : '' }},-</span>
                   </div>
                   <div class="mt-5 mt-md-0">
                     <a href="#" class="btn btn-primary shadow registerNow">Daftar
@@ -84,112 +125,56 @@
         <div class="splide__track">
           <ul class="splide__list">
             @foreach($classroom_categories as $classroom_category)
-              <li class="splide__slide px-2">
-                <div class="class-category-filter__wrapper">
-                  <div class="class-category-filter-overlay row-center">
-                    <h4>{{ $classroom_category->name ? $classroom_category->name:'' }}</h4>
+              @if($classroom_category->id == $selected_category->id)
+                <li class="splide__slide px-2">
+                  <div class="class-category-filter__wrapper class-category-selected">
+                    <div class="class-category-filter-overlay row-center ">
+                      <h4>{{ $classroom_category->name ? $classroom_category->name:'' }}</h4>
+                    </div>
+                    <img src="{{ asset('cms/assets/img/category-placeholder.png') }}" alt="">
                   </div>
-                  <img src="{{ asset('cms/assets/img/category-placeholder.png') }}" alt="">
-                </div>
-              </li>
+                </li>
+              @else
+                <li class="splide__slide px-2">
+                  <div class="class-category-filter__wrapper">
+                    <div class="class-category-filter-overlay row-center">
+                      <h4>{{ $classroom_category->name ? $classroom_category->name:'' }}</h4>
+                    </div>
+                    <img src="{{ asset('cms/assets/img/category-placeholder.png') }}" alt="">
+                  </div>
+                </li>
+              @endif
             @endforeach
           </div>
         </div>
         <div class="sub-category">
-          <button class="btn btn-tertiary mr-2 mb-2">Piano</button>
-          <button class="btn btn-tertiary mr-2 mb-2">Saxophone</button>
-          <button class="btn btn-tertiary active mr-2 mb-2">Guitar</button>
-          <button class="btn btn-tertiary mr-2 mb-2">Saxophone</button>
-          <button class="btn btn-tertiary mr-2 mb-2">Piano</button>
-          <button class="btn btn-tertiary mr-2 mb-2">Saxophone</button>
-          <button class="btn btn-tertiary mr-2 mb-2">Guitar</button>
-          <button class="btn btn-tertiary mr-2 mb-2">Saxophone</button>
-          <button class="btn btn-tertiary mr-2 mb-2">Piano</button>
-          <button class="btn btn-tertiary mr-2 mb-2">Saxophone</button>
-          <button class="btn btn-tertiary mr-2 mb-2">Guitar</button>
-          <button class="btn btn-tertiary mr-2 mb-2">Saxophone</button>
-          <button class="btn btn-tertiary mr-2 mb-2">Piano</button>
-          <button class="btn btn-tertiary mr-2 mb-2">Saxophone</button>
-          <button class="btn btn-tertiary mr-2 mb-2">Guitar</button>
-          <button class="btn btn-tertiary mr-2 mb-2">Saxophone</button>
-          <button class="btn btn-tertiary mr-2 mb-2">Piano</button>
-          <button class="btn btn-tertiary mr-2 mb-2">Saxophone</button>
-          <button class="btn btn-tertiary mr-2 mb-2">Guitar</button>
-          <button class="btn btn-tertiary mr-2 mb-2">Saxophone</button>
+          @foreach($sub_categories as $sub_category)
+            @if($sub_category->id == $selected_sub_category->id)
+              <button class="btn btn-tertiary mr-2 mb-2 active">{{ $sub_category->name ? $sub_category->name:''}}</button>
+            @else
+              <button class="btn btn-tertiary mr-2 mb-2">{{ $sub_category->name ? $sub_category->name:''}}</button>
+            @endif
+          @endforeach
         </div>
         <div class="splide mt-5" id="class-category-splide">
           <div class="splide__track">
             <ul class="splide__list">
-              <li class="splide__slide pb-md-0 pb-3 pb-md-5">
-                <div class="content-embed__wrapper">
-                  <img src="{{ asset('cms/assets/img/master-lesson__banner.jpg') }}"
-                  data-splide-lazy="path-to-the-image" alt="">
-                  <div class="px-4 px-md-0 px-md-0 pt-4 pt-md-0">
-                    <div class="badge-left">
-                      <h3 class="mt-3 ml-2">Mejaseni : Profil Coach Piano bersama Erik Chandra
-                      Kesuma</h3>
+
+              @foreach($classrooms as $classroom)
+                <li class="splide__slide pb-md-0 pb-3 pb-md-5">
+                  <div class="content-embed__wrapper">
+                    <img src="{{ $classroom->image_url ? $classroom->image_url :'' }}"
+                    data-splide-lazy="path-to-the-image" alt="">
+                    <div class="px-4 px-md-0 px-md-0 pt-4 pt-md-0">
+                      <div class="badge-left">
+                        <h3 class="mt-3 ml-2">{{ $classroom->name ? $classroom->name:''}}</h3>
+                      </div>
+                      <p class="my-3 desc__slider-content">{{ $classroom->description ? $classroom->description:''}}</p>
                     </div>
-                    <p class="my-3 desc__slider-content">Lorem ipsum dolor sit amet consectetur
-                      adipisicing elit. Amet
-                      maiores saepe dolore
-                      molestias,
-                      molestiae sapiente aperiam odio in dicta reiciendis quaerat eligendi facere
-                      culpa nemo
-                      consequuntur delectus
-                      porro tempore aut possimus cum quidem dolores quis. Laborum ad corporis
-                      eaque quia commodi ab
-                      nisi!
-                      Accusamus maxime nulla quod a rerum, sequi aperiam voluptatem excepturi
-                      officiis expedita,
-                      repellendus,
-                      aspernatur velit asperiores. Reiciendis nostrum quam optio dolore, fugit
-                      vero obcaecati explicabo.
-                      Quis
-                      tempore nemo commodi culpa deleniti molestiae iste recusandae labore ipsa
-                      illo provident tempora
-                      vero,
-                      necessitatibus excepturi libero minima aspernatur eius similique ipsum ex?
-                      Velit et maxime numquam
-                      quidem,
-                    beatae veritatis iusto.</p>
                   </div>
-                </div>
-              </li>
-              <li class="splide__slide pb-md-0 pb-3 pb-md-5">
-                <div class="content-embed__wrapper">
-                  <img src="{{ asset('cms/assets/img/master-lesson__banner.jpg') }}"
-                  data-splide-lazy="path-to-the-image" alt="">
-                  <div class="px-5 px-md-0 pt-4 pt-md-0">
-                    <div class="badge-left">
-                      <h3 class="mt-3 ml-2">Mejaseni : Profil Coach Piano bersama Erik Chandra
-                      Kesuma</h3>
-                    </div>
-                    <p class="my-3 desc__slider-content">Lorem ipsum dolor sit amet consectetur
-                      adipisicing elit. Amet
-                      maiores saepe dolore
-                      molestias,
-                      molestiae sapiente aperiam odio in dicta reiciendis quaerat eligendi facere
-                      culpa nemo
-                      consequuntur delectus
-                      porro tempore aut possimus cum quidem dolores quis. Laborum ad corporis
-                      eaque quia commodi ab
-                      nisi!
-                      Accusamus maxime nulla quod a rerum, sequi aperiam voluptatem excepturi
-                      officiis expedita,
-                      repellendus,
-                      aspernatur velit asperiores. Reiciendis nostrum quam optio dolore, fugit
-                      vero obcaecati explicabo.
-                      Quis
-                      tempore nemo commodi culpa deleniti molestiae iste recusandae labore ipsa
-                      illo provident tempora
-                      vero,
-                      necessitatibus excepturi libero minima aspernatur eius similique ipsum ex?
-                      Velit et maxime numquam
-                      quidem,
-                    beatae veritatis iusto.</p>
-                  </div>
-                </div>
-              </li>
+                </li>
+              @endforeach
+
             </ul>
           </div>
         </div>
