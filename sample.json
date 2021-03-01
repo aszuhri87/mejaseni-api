@@ -1,0 +1,26 @@
+{
+    "order": {
+        "invoice_number": "MJSN202117",
+        "amount": 20000
+    },
+    "transaction": {
+        "status": "SUCCESS",
+        "date": "2021-02-28T01:29:16Z",
+        "original_request_id": "29593"
+    },
+    "service": {
+        "id": "CREDIT_CARD"
+    },
+    "acquirer": {
+        "id": "BANK_MANDIRI"
+    },
+    "channel": {
+        "id": "CREDIT_CARD"
+    },
+    "card_payment": {
+        "masked_card_number": "411111*******111",
+        "approval_code": "904328",
+        "response_code": "00",
+        "response_message": "PAYMENT APPROVED"
+    }
+}

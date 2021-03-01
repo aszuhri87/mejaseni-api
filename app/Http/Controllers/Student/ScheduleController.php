@@ -43,73 +43,13 @@ class ScheduleController extends BaseMenu
     public function regular_class()
     {
         try {
-            $classroom = DB::table('classrooms')
-                ->select([
-                    'classrooms.id',
-                    'classrooms.name',
-                    'classrooms.price',
-                ])
-                ->where('package_type',1)
-                ->whereNull('deleted_at');
-
-            $coach_classroom = DB::table('coach_classrooms')
-                ->select([
-                    'coach_classrooms.id',
-                    'coach_classrooms.classroom_id',
-                    'coach_classrooms.coach_id',
-                    'classrooms.name as classroom_name',
-                    'classrooms.price',
-                ])
-                ->joinSub($classroom, 'classrooms', function ($join) {
-                    $join->on('coach_classrooms.classroom_id', '=', 'classrooms.id');
-                })
-                ->whereNull('coach_classrooms.deleted_at');
-
-            $student_schedule = DB::table('student_schedules')
-                ->select([
-                    'student_schedules.id',
-                    'student_schedules.coach_schedule_id',
-                ]);
-
-            $regular = DB::table('coach_schedules')
-                ->select([
-                    'coach_schedules.id',
-                    'coach_schedules.datetime as start',
-                    'coach_classrooms.classroom_name as title',
-                ])
-                ->joinSub($coach_classroom, 'coach_classrooms', function ($join) {
-                    $join->on('coach_schedules.coach_classroom_id', '=', 'coach_classrooms.id');
-                })
-                ->leftJoinSub($student_schedule, 'student_schedules', function ($join) {
-                    $join->on('coach_schedules.id', '=', 'student_schedules.coach_schedule_id');
-                })
-                ->where('coach_schedules.accepted',true)
-                ->whereNull('coach_schedules.deleted_at')
-                ->whereNull('student_schedules.coach_schedule_id')
-                ->get();
-
-            return response([
-                "status" => 200,
-                "data"      => $regular,
-                "message"   => 'OK!'
-            ], 200);
-        } catch (Exception $e) {
-            throw new Exception($e);
-            return response([
-                "message"=> $e->getMessage(),
-            ]);
-        }
-    }
-
-    public function special_class()
-    {
-        try {
             /*
                 status
                 1 => Terlewat Tanggal
                 2 => Booking
                 3 => Tersedia
             */
+            // dd(Auth::guard('student')->user()->id);
             $date = date('Y-m-d H:i:s');
 
             $classroom = DB::table('classrooms')
@@ -140,13 +80,13 @@ class ScheduleController extends BaseMenu
                     'student_classrooms.classroom_id',
                     'student_classrooms.student_id',
                 ])
-                ->where('student_classrooms.student_id',Auth::guard('student')->user()->id)
                 ->whereNull('student_classrooms.deleted_at');
 
             $student_schedule = DB::table('student_schedules')
                 ->select([
                     'student_schedules.id',
                     'student_schedules.coach_schedule_id',
+                    'student_schedules.student_classroom_id',
                 ])
                 ->whereNull('student_schedules.deleted_at');
 
@@ -156,6 +96,8 @@ class ScheduleController extends BaseMenu
                     'coach_schedules.datetime as start',
                     'coach_classrooms.classroom_name as title',
                     'coach_classrooms.classroom_id',
+                    'student_classrooms.id as student_classroom_id',
+                    'student_classrooms.student_id',
                     DB::raw("CASE
                         WHEN coach_schedules.datetime::timestamp < now()::timestamp THEN 'secondary'
                         WHEN
@@ -172,17 +114,127 @@ class ScheduleController extends BaseMenu
                         ELSE 3
                     END status")
                 ])
-                ->joinSub($coach_classroom, 'coach_classrooms', function ($join) {
+                ->leftJoinSub($coach_classroom, 'coach_classrooms', function ($join) {
                     $join->on('coach_schedules.coach_classroom_id', '=', 'coach_classrooms.id');
                 })
-                ->joinSub($student_classroom, 'student_classrooms', function ($join) {
+                ->leftJoinSub($student_classroom, 'student_classrooms', function ($join) {
                     $join->on('coach_classrooms.classroom_id', '=', 'student_classrooms.classroom_id');
                 })
                 ->leftJoinSub($student_schedule, 'student_schedules', function ($join) {
                     $join->on('coach_schedules.id', '=', 'student_schedules.coach_schedule_id');
                 })
+                ->where('student_classrooms.student_id',Auth::guard('student')->user()->id)
                 ->where('coach_schedules.accepted',true)
                 ->whereNull('coach_schedules.deleted_at')
+                ->where(function($query){
+                    $query->whereNull('student_schedules.coach_schedule_id')
+                        ->orWhereRaw('student_schedules.student_classroom_id = student_classrooms.id');
+                })
+                ->get();
+
+            return response([
+                "status" => 200,
+                "data"      => $result,
+                "message"   => 'OK!'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function special_class()
+    {
+        try {
+            /*
+                status
+                1 => Terlewat Tanggal
+                2 => Booking
+                3 => Tersedia
+            */
+            // dd(Auth::guard('student')->user()->id);
+            $date = date('Y-m-d H:i:s');
+
+            $classroom = DB::table('classrooms')
+                ->select([
+                    'classrooms.id',
+                    'classrooms.name',
+                    'classrooms.price',
+                ])
+                ->where('package_type',1)
+                ->whereNull('deleted_at');
+
+            $coach_classroom = DB::table('coach_classrooms')
+                ->select([
+                    'coach_classrooms.id',
+                    'coach_classrooms.classroom_id',
+                    'coach_classrooms.coach_id',
+                    'classrooms.name as classroom_name',
+                    'classrooms.price',
+                ])
+                ->joinSub($classroom, 'classrooms', function ($join) {
+                    $join->on('coach_classrooms.classroom_id', '=', 'classrooms.id');
+                })
+                ->whereNull('coach_classrooms.deleted_at');
+
+            $student_classroom = DB::table('student_classrooms')
+                ->select([
+                    'student_classrooms.id',
+                    'student_classrooms.classroom_id',
+                    'student_classrooms.student_id',
+                ])
+                ->whereNull('student_classrooms.deleted_at');
+
+            $student_schedule = DB::table('student_schedules')
+                ->select([
+                    'student_schedules.id',
+                    'student_schedules.coach_schedule_id',
+                    'student_schedules.student_classroom_id',
+                ])
+                ->whereNull('student_schedules.deleted_at');
+
+            $result = DB::table('coach_schedules')
+                ->select([
+                    'coach_schedules.id',
+                    'coach_schedules.datetime as start',
+                    'coach_classrooms.classroom_name as title',
+                    'coach_classrooms.classroom_id',
+                    'student_classrooms.id as student_classroom_id',
+                    'student_classrooms.student_id',
+                    DB::raw("CASE
+                        WHEN coach_schedules.datetime::timestamp < now()::timestamp THEN 'secondary'
+                        WHEN
+                            student_schedules.coach_schedule_id IS NOT NULL AND
+                            '$date'::timestamp < coach_schedules.datetime
+                            THEN 'primary'
+                        ELSE 'success'
+                    END color"),
+                    DB::raw("CASE
+                        WHEN coach_schedules.datetime::timestamp < now()::timestamp AND
+                            '$date'::timestamp < coach_schedules.datetime
+                            THEN 1
+                        WHEN student_schedules.coach_schedule_id IS NOT NULL THEN 2
+                        ELSE 3
+                    END status")
+                ])
+                ->leftJoinSub($coach_classroom, 'coach_classrooms', function ($join) {
+                    $join->on('coach_schedules.coach_classroom_id', '=', 'coach_classrooms.id');
+                })
+                ->leftJoinSub($student_classroom, 'student_classrooms', function ($join) {
+                    $join->on('coach_classrooms.classroom_id', '=', 'student_classrooms.classroom_id');
+                })
+                ->leftJoinSub($student_schedule, 'student_schedules', function ($join) {
+                    $join->on('coach_schedules.id', '=', 'student_schedules.coach_schedule_id');
+                })
+                ->where('student_classrooms.student_id',Auth::guard('student')->user()->id)
+                ->where('coach_schedules.accepted',true)
+                ->whereNull('coach_schedules.deleted_at')
+                ->where(function($query){
+                    $query->whereNull('student_schedules.coach_schedule_id')
+                        ->orWhereRaw('student_schedules.student_classroom_id = student_classrooms.id');
+                })
                 ->get();
 
             return response([
@@ -249,16 +301,26 @@ class ScheduleController extends BaseMenu
                 ->whereNull('coach_schedules.deleted_at')
                 ->first();
 
+            $student_schedule = DB::table('student_schedules')
+                ->select([
+                    'student_schedules.id',
+                    'student_schedules.student_classroom_id',
+                ])
+                ->whereNull('deleted_at');
+
             $student_schedule = DB::table('student_classrooms')
                 ->select([
                     'student_classrooms.id',
                 ])
-                ->rightJoin('student_schedules','student_classrooms.id','=','student_schedules.student_classroom_id')
+                ->joinSub($student_schedule, 'student_schedules', function ($join) {
+                    $join->on('student_classrooms.id', '=', 'student_schedules.student_classroom_id');
+                })
                 ->where([
                     'student_classrooms.classroom_id' => $result->classroom_id,
                     'student_classrooms.student_id' => Auth::guard('student')->user()->id,
                 ])
                 ->whereNull('student_classrooms.deleted_at')
+                ->whereNotNull('student_schedules.id')
                 ->count();
 
             $remaining = $result->session_total - $student_schedule;
@@ -278,7 +340,7 @@ class ScheduleController extends BaseMenu
         }
     }
 
-    public function special_class_booking(Request $request)
+    public function booking(Request $request)
     {
         try {
             $result = DB::transaction(function () use($request) {
@@ -335,7 +397,7 @@ class ScheduleController extends BaseMenu
         }
     }
 
-    public function special_class_reschedule(Request $request)
+    public function reschedule(Request $request)
     {
         try {
             $result = DB::transaction(function () use($request) {
@@ -382,6 +444,154 @@ class ScheduleController extends BaseMenu
                 "status" => 200,
                 "data"      => $result,
                 "message"   => 'Successfully Reschedule!'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function master_lesson()
+    {
+        try {
+            /*
+                status
+                1 => Terlewat Tanggal
+                2 => Tersedia
+                3 => Penuh
+            */
+
+            $path = Storage::disk('s3')->url('/');
+
+            $cart = DB::table('carts')
+                ->select([
+                    'carts.id',
+                    'carts.master_lesson_id',
+                ])
+                ->join('transaction_details','carts.id','=','transaction_details.cart_id')
+                ->whereNull([
+                    'carts.deleted_at',
+                    'transaction_details.deleted_at',
+                ]);
+
+            $sub_master_lesson = DB::table('master_lessons')
+                ->select([
+                    'master_lessons.id',
+                    DB::raw("COUNT(carts.master_lesson_id) as total_booking")
+                ])
+                ->leftJoinSub($cart, 'carts', function ($join) {
+                    $join->on('master_lessons.id', '=', 'carts.master_lesson_id');
+                })
+                ->groupBy('master_lessons.id');
+
+            $master_lesson = DB::table('master_lessons')
+                ->select([
+                    'master_lessons.id',
+                    'master_lessons.name',
+                    DB::raw("CONCAT('{$path}',master_lessons.poster) as poster"),
+                    'master_lessons.slot',
+                    'master_lessons.platform_link',
+                    'master_lessons.price',
+                    'master_lessons.datetime',
+                    'master_lessons.description',
+                    'sub_master_lesson.total_booking',
+                    DB::raw("(
+                        CASE
+                            WHEN master_lessons.datetime::timestamp < now()::timestamp THEN
+                                1
+                            WHEN (master_lessons.slot::numeric - sub_master_lesson.total_booking::numeric) = 0 THEN
+                                3
+                            ELSE
+                                2
+                        END
+                    ) as status"),
+                    DB::raw("(
+                        CASE
+                            WHEN master_lessons.datetime::timestamp < now()::timestamp THEN
+                                'secondary'
+                            WHEN (master_lessons.slot::numeric - sub_master_lesson.total_booking::numeric) = 0 THEN
+                                'danger'
+                            ELSE
+                                'success'
+                        END
+                    ) as color"),
+                ])
+                ->leftJoinSub($sub_master_lesson, 'sub_master_lesson', function ($join) {
+                    $join->on('master_lessons.id', '=', 'sub_master_lesson.id');
+                })
+                ->whereNull('master_lessons.deleted_at')
+                ->get();
+
+            return response([
+                "status" => 200,
+                "data"      => $master_lesson,
+                "message"   => 'OK!'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function coach_list()
+    {
+        try {
+            $coach_schedule = DB::table('coach_schedules')
+                ->select([
+                    'coach_schedules.id',
+                ])
+                ->whereNull('deleted_at');
+
+            $student_schedule = DB::table('student_schedules')
+                ->select([
+                    'student_schedules.coach_schedule_id',
+                    'student_schedules.student_classroom_id',
+                ])
+                ->rightJoinSub($coach_schedule, 'coach_schedules', function ($join) {
+                    $join->on('student_schedules.coach_schedule_id', '=', 'coach_schedules.id');
+                })
+                ->whereNull('student_schedules.deleted_at');
+
+            $result = DB::table('student_classrooms')
+                ->where('student_classrooms.student_id',Auth::guard('student')->user()->id)
+                ->whereNull('deleted_at')
+                ->rightJoinSub($student_schedule, 'student_schedules', function ($join) {
+                    $join->on('student_classrooms.id', '=', 'student_schedules.student_classroom_id');
+                })
+                ->get();
+
+            return response([
+                "status" => 200,
+                "data"      => $result,
+                "message"   => 'OK!'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function student_rating()
+    {
+        try {
+            $result = DB::table('student_feedback')
+                ->select([
+                    DB::raw('round(AVG(star),1) as star')
+                ])
+                ->where('student_feedback.student_id',Auth::guard('student')->user()->id)
+                ->whereNull('deleted_at')
+                ->get();
+
+            return response([
+                "status" => 200,
+                "data"      => $result,
+                "message"   => 'OK!'
             ], 200);
         } catch (Exception $e) {
             throw new Exception($e);

@@ -200,3 +200,50 @@ ul.ui-autocomplete {
       border: 3px solid #ffffff;
       -webkit-box-shadow: 0 0.5rem 1.5rem 0.5rem rgba(0, 0, 0, 0.075);
       box-shadow: 0 0.5rem 1.5rem 0.5rem rgba(0, 0, 0, 0.075); }
+
+.class-category-filter__wrapper {
+    border-radius: 8px;
+    z-index: 1;
+    overflow: hidden;
+    border: 3px solid transparent;
+    cursor: pointer;
+    position: relative;
+}
+.class-category-selected {
+    border: 3px solid #C41CD4;;
+}
+.class-category-selected .class-category-filter-overlay {
+        background-color: #0000001e !important;
+        color: #ffffff;
+        font-weight: 500;
+        font-size: 20px;
+        transition: 0.3s;
+}
+.class-category-filter__wrapper .class-category-filter-overlay {
+    width: 100%;
+    height: 100%;
+    background-color: #00000069;
+    position: absolute;
+    top: 0;
+    color: #ffffff;
+    transition: 0.3s;
+}
+
+.class-category-filter__wrapper img {
+    min-width: 100%;
+    height: 82px;
+    object-fit: cover;
+}
+
+.class-category-filter__wrapper iframe {
+    z-index: -1;
+}
+
+.row-center {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}

@@ -1,5 +1,3 @@
-<script src="assets/js/script.js"></script>
-
 <script type="text/javascript">
     var Page = function () {
         var _componentPage = function () {
@@ -52,6 +50,13 @@
 
                         total += parseInt(data.price)
                     })
+
+                    if(total > 0){
+                        $('.btn-payment').removeClass('btn-disabled');
+                        $('.btn-payment').removeClass('btn-secondary');
+                        $('.btn-payment').addClass('btn-primary');
+                        $('.btn-payment').prop('disabled', false);
+                    }
 
                     $('#list-place').html(element);
                     $('.grand-total').html('Rp. '+total);

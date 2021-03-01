@@ -15,22 +15,6 @@
         }
     });
 
-    var Layout = function () {
-        var _componentLayout = function () {
-
-            $(document).ready(function () {
-                AOS.init();
-            });
-        };
-
-        return {
-            init: function () {
-                _componentLayout();
-            }
-        }
-    }();
-    document.addEventListener('DOMContentLoaded', function () {
-        Layout.init();
-    });
+    AOS.init();
 
 </script>

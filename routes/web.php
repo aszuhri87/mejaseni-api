@@ -71,17 +71,19 @@ use App\Http\Controllers\Student\ReviewController as StudentReviewController;
 | CMS Admin Controller
 |--------------------------------------------------------------------------
 */
-// use App\Http\Controllers\Admin\Cms\CompanyController as CompanyController;
-// use App\Http\Controllers\Admin\Cms\BranchController as BranchController;
-// use App\Http\Controllers\Admin\Cms\ProgramController as ProgramController;
-// use App\Http\Controllers\Admin\Cms\EventController as EventController;
-// use App\Http\Controllers\Admin\Cms\NewsController as NewsController;
-// use App\Http\Controllers\Admin\Cms\PrivacyPolicyController as PrivacyPolicyAdminController;
-// use App\Http\Controllers\Admin\Cms\FaqController as FaqAdminController;
-// use App\Http\Controllers\Admin\Cms\TeamController as TeamController;
-// use App\Http\Controllers\Admin\Cms\CareerController as CareerAdminController;
-
-
+use App\Http\Controllers\Admin\Cms\CompanyController as CompanyController;
+use App\Http\Controllers\Admin\Cms\BranchController as BranchController;
+use App\Http\Controllers\Admin\Cms\ProgramController as ProgramController;
+use App\Http\Controllers\Admin\Cms\EventController as EventController;
+use App\Http\Controllers\Admin\Cms\NewsController as NewsController;
+use App\Http\Controllers\Admin\Cms\PrivacyPolicyController as PrivacyPolicyAdminController;
+use App\Http\Controllers\Admin\Cms\FaqController as FaqAdminController;
+use App\Http\Controllers\Admin\Cms\TeamController as TeamController;
+use App\Http\Controllers\Admin\Cms\CareerController as CareerAdminController;
+use App\Http\Controllers\Admin\Cms\JobDescriptionController as JobDescriptionController;
+use App\Http\Controllers\Admin\Cms\JobRequirementController as JobRequirementController;
+use App\Http\Controllers\Admin\Cms\WorkingHourController as WorkingHourController;
+use App\Http\Controllers\Admin\Cms\GaleryController as GaleryController;
 /*
 |--------------------------------------------------------------------------
 | CMS Controller
@@ -109,6 +111,7 @@ use App\Http\Controllers\Student\ReviewController as StudentReviewController;
 |
 */
 
+
 /*
 |--------------------------------------------------------------------------
 | CMS
@@ -125,12 +128,8 @@ Route::get('/faq', [FaqController::class, 'index']);
 Route::get('/career', [CareerController::class, 'index']);
 Route::get('/career-detail', [CareerDetailController::class, 'index']);
 
-Route::get('/cart', [CartController::class, 'index']);
-Route::post('/cart-store', [CartController::class, 'store']);
-Route::post('/cart-payment', [CartController::class, 'payment']);
-Route::get('/student-cart', [CartController::class, 'data']);
+Route::post('/notifications/payments', [PaymentController::class, 'notification']);
 
-Route::get('doku-test', [DokuController::class, 'generate_payment_code']);
 
 Route::group(['middleware' => ['guest-handling']], function () {
     Route::get('login', [LoginController::class, 'index_login']);
@@ -142,6 +141,21 @@ Route::group(['middleware' => ['auth-handling']], function () {
     Route::get('logout', [LoginController::class, 'logout']);
     Route::post('media/file', [MediaController::class, 'file_upload']);
     Route::delete('media/file/{id}', [MediaController::class, 'file_delete']);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Payment Route
+    |--------------------------------------------------------------------------
+    */
+
+    Route::group(['middleware' => ['student-handling']], function () {
+        Route::get('/cart', [CartController::class, 'index']);
+        Route::post('/cart-store', [CartController::class, 'store']);
+        Route::post('/cart-payment', [CartController::class, 'payment']);
+        Route::get('/student-cart', [CartController::class, 'data']);
+        Route::get('/waiting-payment/{id}', [PaymentController::class, 'waiting']);
+        Route::get('/payment-success', [PaymentController::class, 'success']);
+    });
 
     /*
     |--------------------------------------------------------------------------
@@ -261,25 +275,41 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::resource('branch', BranchController::class);
 
             Route::post('program/dt', [ProgramController::class, 'dt']);
+            Route::post('program/update/{id}', [ProgramController::class, 'update']);
             Route::resource('program', ProgramController::class);
 
             Route::post('event/dt', [EventController::class, 'dt']);
+            Route::post('event/update/{id}', [EventController::class, 'update']);
             Route::resource('event', EventController::class);
 
             Route::post('news/dt', [NewsController::class, 'dt']);
+            Route::post('news/update/{id}', [NewsController::class, 'update']);
             Route::resource('news', NewsController::class);
 
             Route::post('privacy-policy/dt', [PrivacyPolicyAdminController::class, 'dt']);
+            Route::post('privacy-policy-item/dt', [PrivacyPolicyAdminController::class, 'dt_item']);
+            Route::put('privacy-policy-item/{id}', [PrivacyPolicyAdminController::class, 'update_item']);
             Route::resource('privacy-policy', PrivacyPolicyAdminController::class);
 
             Route::post('faq/dt', [FaqAdminController::class, 'dt']);
             Route::resource('faq', FaqAdminController::class);
 
             Route::post('team/dt', [TeamController::class, 'dt']);
+            Route::post('team/update/{id}', [TeamController::class, 'update']);
             Route::resource('team', TeamController::class);
 
             Route::post('career/dt', [CareerAdminController::class, 'dt']);
             Route::resource('career', CareerAdminController::class);
+
+            Route::post('career/{career_id}/job-description/dt', [JobDescriptionController::class, 'dt']);
+            Route::resource('job-description', JobDescriptionController::class);
+
+            Route::post('working-hour/dt', [WorkingHourController::class, 'dt']);
+            Route::resource('working-hour', WorkingHourController::class);
+
+            Route::post('galery/dt', [GaleryController::class, 'dt']);
+            Route::post('galery/update/{id}', [GaleryController::class, 'update']);
+            Route::resource('galery', GaleryController::class);
 
         });
     });
@@ -340,33 +370,57 @@ Route::group(['middleware' => ['auth-handling']], function () {
     */
 
     Route::group(['prefix' => 'student', 'middleware' => 'student-handling'], function () {
+
         Route::get('/dashboard', [StudentDashboardController::class, 'index']);
 
-        Route::get('invoice', [StudentInvoiceController::class, 'index']);
+        Route::group(['prefix' => 'invoice'], function () {
+            Route::get('/', [StudentInvoiceController::class, 'index']);
+            Route::get('dt', [StudentInvoiceController::class, 'dt']);
+        });
 
         Route::group(['prefix' => 'schedule'], function () {
             Route::get('/', [StudentScheduleController::class, 'index']);
             Route::get('get-total-class/{student_id}', [StudentScheduleController::class, 'get_total_class']);
+            Route::get('student-rating', [StudentScheduleController::class, 'student_rating']);
 
-            // regular class
-            Route::get('regular-class', [StudentScheduleController::class, 'regular_class']);
+            Route::group(['prefix' => 'regular-class'], function () {
+                Route::get('/', [StudentScheduleController::class, 'regular_class']);
+                Route::get('{coach_schedule_id}', [StudentScheduleController::class, 'coach_schedule']);
+                Route::post('booking', [StudentScheduleController::class, 'booking']);
+                Route::post('reschedule', [StudentScheduleController::class, 'reschedule']);
+            });
 
-            // special class
             Route::group(['prefix' => 'special-class'], function () {
                 Route::get('/', [StudentScheduleController::class, 'special_class']);
                 Route::get('{coach_schedule_id}', [StudentScheduleController::class, 'coach_schedule']);
-                Route::post('booking', [StudentScheduleController::class, 'special_class_booking']);
-                Route::post('reschedule', [StudentScheduleController::class, 'special_class_reschedule']);
+                Route::post('booking', [StudentScheduleController::class, 'booking']);
+                Route::post('reschedule', [StudentScheduleController::class, 'reschedule']);
+            });
+
+            Route::group(['prefix' => 'master-lesson'], function () {
+                Route::get('/', [StudentScheduleController::class, 'master_lesson']);
+            });
+
+            Route::group(['prefix' => 'coach-list'], function () {
+                Route::get('/', [StudentScheduleController::class, 'coach_list']);
             });
         });
 
-        Route::get('my-class',[StudentMyClassController::class, 'index']);
+        Route::group(['prefix' => 'my-class'], function () {
+            Route::get('/',[StudentMyClassController::class, 'index']);
+            Route::post('booking/dt',[StudentMyClassController::class, 'booking_dt']);
+            Route::post('last-class/dt',[StudentMyClassController::class, 'last_class_dt']);
+            Route::post('review/{id}',[StudentMyClassController::class, 'review']);
+            Route::put('reschedule/{id}',[StudentMyClassController::class, 'reschedule']);
+        });
 
         Route::group(['prefix' => 'new-package'], function () {
             Route::get('/',[StudentNewPackageController::class, 'index']);
             Route::get('get-package',[StudentNewPackageController::class, 'get_package']);
+            Route::get('get-sub-classroom-category', [StudentNewPackageController::class, 'get_sub_classroom_category']);
             Route::get('sub-classroom-category/{sub_classroom_category_id}',[StudentNewPackageController::class, 'get_classroom_by_sub_category_id']);
             Route::get('get-session-video', [StudentNewPackageController::class, 'get_session_video']);
+            Route::get('classroom-category/{classroom_category_id}',[StudentNewPackageController::class, 'get_classroom_by_category_id']);
         });
 
         Route::group(['prefix' => 'theory'], function () {
@@ -438,18 +492,24 @@ Route::group(['middleware' => ['auth-handling']], function () {
     });
 });
 
-/*
-|--------------------------------------------------------------------------
-| CMS
-|--------------------------------------------------------------------------
-*/
-// Route::get('/', [HomePageController::class, 'index']);
-// Route::get('/class', [ClassController::class, 'index']);
-// Route::get('/store', [StoreController::class, 'index']);
-// Route::get('/news-event', [NewsEventController::class, 'index']);
-// Route::get('/about', [AboutController::class, 'index']);
-// Route::get('/privacy-policy', [PrivacyPolicyController::class, 'index']);
-// Route::get('/tos', [TosController::class, 'index']);
-// Route::get('/faq', [FaqController::class, 'index']);
-// Route::get('/career', [CareerController::class, 'index']);
-// Route::get('/career-detail', [CareerDetailController::class, 'index']);
+
+Route::get('fire', function () {
+    event(new \App\Events\PaymentNotification('haiiii'));
+    return 'oke';
+});
+
+
+Route::get('fire-2', function () {
+    $actionId = 'score_update';
+    $actionData = array('team1_score' => 46);
+
+    event(new \App\Events\ActionEvent($actionId, $actionData));
+    return 'oke';
+});
+
+
+Route::get('welcome', function () {
+    return view('welcome');
+});
+
+

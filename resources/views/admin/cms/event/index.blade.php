@@ -63,10 +63,11 @@
             <thead>
                 <tr>
                     <th>No</th>
+                    <th width="15%">Image</th>
                     <th width="25%">Title</th>
                     <th width="15%">Date</th>
-                    <th width="55%">Description</th>
-                    <th width="10%">Actions</th>
+                    <th width="30%">Description</th>
+                    <th width="15%">Actions</th>
                 </tr>
             </thead>
             <tbody>

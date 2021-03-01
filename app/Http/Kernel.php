@@ -67,5 +67,6 @@ class Kernel extends HttpKernel
         'admin-handling' => \App\Http\Middleware\AdminHandling::class,
         'coach-handling' => \App\Http\Middleware\CoachHandling::class,
         'student-handling' => \App\Http\Middleware\StudentHandling::class,
+        'x-frame-handling' => \App\Http\Middleware\FrameHeadersMiddleware::class,
     ];
 }

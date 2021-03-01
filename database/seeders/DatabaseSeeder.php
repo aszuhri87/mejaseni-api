@@ -14,15 +14,15 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-            // ExpertiseSeeder::class,
-            // AdminSeeder::class,
-            // SuperAdminSeeder::class,
-            // PermissionAdminSeeder::class,
-            // CoachSeeder::class,
-            // SuperCoachSeeder::class,
-            // PermissionCoachSeeder::class,
-            // SosmedSeeder::class
-            CollectionSeed::class
+            ExpertiseSeeder::class,
+            AdminSeeder::class,
+            SuperAdminSeeder::class,
+            PermissionAdminSeeder::class,
+            CoachSeeder::class,
+            SuperCoachSeeder::class,
+            PermissionCoachSeeder::class,
+            SosmedSeeder::class
+            // CollectionSeed::class
         ]);
     }
 }

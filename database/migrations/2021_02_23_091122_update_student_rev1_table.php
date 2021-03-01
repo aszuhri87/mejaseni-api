@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 class UpdateStudentRev1Table extends Migration
 {
-    /**
+    /*
      * Run the migrations.
      *
      * @return void
@@ -14,12 +14,12 @@ class UpdateStudentRev1Table extends Migration
     public function up()
     {
         Schema::table('students', function (Blueprint $table) {
-            $table->boolean('actived')->nullable()->default(true)->change();
-            $table->boolean('verified')->nullable()->default(true)->change();
+            $table->boolean('active')->default(false);
+            $table->boolean('verified')->default(false);
         });
     }
 
-    /**
+    /*
      * Reverse the migrations.
      *
      * @return void
@@ -27,7 +27,7 @@ class UpdateStudentRev1Table extends Migration
     public function down()
     {
         Schema::table('students', function (Blueprint $table) {
-            $table->dropColumn('actived');
+            $table->dropColumn('active');
             $table->dropColumn('verified');
         });
     }

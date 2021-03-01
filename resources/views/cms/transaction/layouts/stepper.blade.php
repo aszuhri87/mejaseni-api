@@ -23,7 +23,7 @@
     <div class="border-line stepper-border mt-4 {{$step > 2 ? 'stepper-border-active' : ''}}"></div>
     <div class="mx-4 column-center text-center {{$step > 2 ? 'active' : ''}}">
         <div class="stepper-badge mb-2">
-            @if ($step > 3)
+            @if ($step > 2)
             <img src="assets/img/svg/Check.svg" alt="">
             @else
             3

@@ -52,9 +52,8 @@
                 <tr>
                     <th>No</th>
                     <th width="20%">Tanggal</th>
-                    <th width="20%">Kelas</th>
+                    <th width="40%">Kelas/Materi/Video</th>
                     <th width="20%">Tipe Kelas</th>
-                    <th width="20%">Coach</th>
                     <th width="10%">Status</th>
                     <th width="10%">Actions</th>
                 </tr>
