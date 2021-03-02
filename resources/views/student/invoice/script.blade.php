@@ -152,7 +152,7 @@
                             $('#total').empty();
                             let total = 0;
                             $.each(res.data, function(index, data){
-                                total+=data.price;
+                                total+=parseInt(data.price);
 
                                 element += `
                                     <div class="row">
@@ -173,7 +173,7 @@
 
                                         </div>
                                         <div class="col-6 text-right">
-                                            <h5>Rp. 500,000</h5>
+                                            <h5>Rp. ${numeral(data.price).format('0,0')}</h5>
                                         </div>
                                     </div>
                                     <hr>

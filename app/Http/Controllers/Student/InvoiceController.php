@@ -108,7 +108,9 @@ class InvoiceController extends BaseMenu
                 })
                 ->leftJoinSub($theory, 'theories', function ($join) {
                     $join->on('carts.theory_id', '=', 'theories.id');
-                });
+                })
+                ->where('carts.student_id', Auth::guard('student')->user()->id)
+                ->whereNull('carts.deleted_at');
 
             $data = DB::table('transaction_details')
                 ->select([
