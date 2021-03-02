@@ -27,6 +27,7 @@ class CreateCartsTable extends Migration
             $table->foreign('session_video_id')->references('id')->on('session_videos');
             $table->foreign('classroom_id')->references('id')->on('classrooms');
             $table->foreign('theory_id')->references('id')->on('theories');
+            $table->foreign('student_id')->references('id')->on('students');
         });
     }
 

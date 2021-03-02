@@ -20,6 +20,9 @@ class CreateIncomesTable extends Migration
             $table->uuid('classroom_id')->nullable();
             $table->uuid('coach_id')->nullable();
             $table->uuid('theory_id')->nullable();
+            $table->uuid('guest_star_id')->nullable();
+            $table->uuid('student_schedule_id')->nullable();
+            $table->uuid('transaction_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
@@ -28,6 +31,9 @@ class CreateIncomesTable extends Migration
             $table->foreign('classroom_id')->references('id')->on('classrooms');
             $table->foreign('theory_id')->references('id')->on('theories');
             $table->foreign('coach_id')->references('id')->on('coaches');
+            $table->foreign('guest_star_id')->references('id')->on('guest_stars');
+            $table->foreign('student_schedule_id')->references('id')->on('student_schedules');
+            $table->foreign('transaction_id')->references('id')->on('transactions');
         });
     }
 
