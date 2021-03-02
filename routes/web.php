@@ -433,6 +433,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::group(['prefix' => 'my-class'], function () {
             Route::get('/',[StudentMyClassController::class, 'index']);
             Route::post('booking/dt',[StudentMyClassController::class, 'booking_dt']);
+            Route::post('rating',[StudentMyClassController::class, 'rating']);
             Route::post('last-class/dt',[StudentMyClassController::class, 'last_class_dt']);
             Route::post('review/{id}',[StudentMyClassController::class, 'review']);
             Route::put('reschedule/{id}',[StudentMyClassController::class, 'reschedule']);

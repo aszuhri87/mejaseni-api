@@ -6,6 +6,8 @@ use App\Http\Controllers\BaseMenu;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
+use App\Models\ClassroomFeedback;
+
 use Auth;
 use Storage;
 use DataTables;
@@ -268,7 +270,7 @@ class MyClassController extends BaseMenu
                 ->where('coach_schedules.accepted',true)
                 ->whereDate('coach_schedules.datetime','<=',date('Y-m-d'))
                 ->groupBy('coach_schedules.id');
-            
+
             $student_schedule = DB::table('student_schedules')
                 ->select([
                     'student_schedules.student_classroom_id',
@@ -295,6 +297,13 @@ class MyClassController extends BaseMenu
 
             // end
 
+            $classroom_feedback = DB::table('classroom_feedback')
+                ->select([
+                    'classroom_feedback.classroom_id'
+                ])
+                ->where('classroom_feedback.student_id',Auth::guard('student')->user()->id)
+                ->whereNull('classroom_feedback.deleted_at');
+
             $classroom = DB::table('classrooms')
                 ->select([
                     'classrooms.id',
@@ -310,13 +319,24 @@ class MyClassController extends BaseMenu
                     'classrooms.name as classroom_name',
                     'classrooms.image',
                     'sub_student_classroom.last_meeting',
-                    DB::raw('(classrooms.session_total::integer - sub_student_classroom.last_meeting::integer)::integer as subtraction')
+                    DB::raw('(classrooms.session_total::integer - sub_student_classroom.last_meeting::integer)::integer as subtraction'),
+                    DB::raw('(
+                        CASE
+                            WHEN classroom_feedback.classroom_id IS NOT NULL THEN
+                                1
+                            ELSE
+                                0
+                        END
+                    )as is_rating')
                 ])
                 ->leftJoinSub($classroom, 'classrooms', function ($join) {
                     $join->on('student_classrooms.classroom_id', '=', 'classrooms.id');
                 })
                 ->leftJoinSub($sub_student_classroom, 'sub_student_classroom', function ($join) {
                     $join->on('student_classrooms.id', '=', 'sub_student_classroom.id');
+                })
+                ->leftJoinSub($classroom_feedback, 'classroom_feedback', function ($join) {
+                    $join->on('student_classrooms.classroom_id', '=', 'classroom_feedback.classroom_id');
                 })
                 ->where('student_classrooms.student_id', $id)
                 ->whereNull('student_classrooms.deleted_at')
@@ -326,6 +346,30 @@ class MyClassController extends BaseMenu
                 "status"    => 200,
                 "data"      => $result,
                 "message"   => 'OK!'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function rating(Request $request)
+    {
+        try {
+            $result = DB::transaction(function () use($request) {
+                $rating = ClassroomFeedback::create([
+                    'student_id' => Auth::guard('student')->user()->id,
+                    'classroom_id' => $request->classroom_id,
+                    'star' => $request->rating_class,
+                    'description' => $request->description,
+                ]);
+            });
+            return response([
+                "status"    => 200,
+                "data"      => $result,
+                "message"   => 'Successfully Rate!'
             ], 200);
         } catch (Exception $e) {
             throw new Exception($e);

@@ -11,7 +11,17 @@
                 studentRating();
                 totalClassStudent();
                 getClass();
+
                 $('#input-id').rating({
+                    hoverOnClear: false,
+                    theme: 'krajee-svg',
+                    showCaption: false,
+                    showClear:false,
+                    showCaptionAsTitle:false,
+                    step:1
+                });
+
+                $('#input-rating-class').rating({
                     hoverOnClear: false,
                     theme: 'krajee-svg',
                     showCaption: false,
@@ -64,7 +74,7 @@
                             className: "text-center",
                             data:"datetime",
                             render:function(data, type, full, meta){
-                                return `${moment(data).format('hh:mm')}`;
+                                return `${moment(data).format('HH:mm')}`;
                             }
                         },
                         {
@@ -78,8 +88,8 @@
                                     return `<span class="text-primary">On Going</span>`;
                                 }
                                 else{
-                                    var now = moment().format('YYYY-MM-DD H:mm:ss');
-                                    var date = moment(data).format('YYYY-MM-DD H:mm:ss');
+                                    var now = moment().format('YYYY-MM-DD HH:mm:ss');
+                                    var date = moment(data).format('YYYY-MM-DD HH:mm:ss');
                                     let minute, hour, day, time;
 
                                     minute = moment(date).diff(now, 'minutes')
@@ -148,7 +158,7 @@
                 });
             },
             initTable2 = () => {
-                init_table = $('#init-table2').DataTable({
+                init_table2 = $('#init-table2').DataTable({
                     destroy: true,
                     processing: true,
                     serverSide: true,
@@ -300,6 +310,49 @@
                     $('#review-time').html(moment(data.datetime).format('HH:mm'));
 
                     showModal('modal-review');
+                });
+
+                $(document).on('click','.see-all',function(event){
+                    $(".class-owned").removeClass("fade-out-up");
+                    $(".class-owned").addClass("fade-in-down");
+                    $(".class-owned").toggle();
+                });
+
+                $(document).on('click','.class-owned__item',function(event){
+                    event.preventDefault();
+                    let image = $(this).find('.class-image').attr('src');
+                    let name = $(this).find('.class-name').text();
+                    let subtraction = $(this).data('subtraction');
+                    let is_rating = $(this).data('is_rating');
+                    let classroom_id = $(this).data('classroom_id');
+
+                    $('.class-owned').removeClass('fade-in-down');
+                    $('.class-owned').addClass('fade-out-up');
+                    $('.class-owned').css('display', 'none');
+                    $('#class-name-selected').html(name);
+                    $('#class-image-selected').attr('src', image);
+                    $('#last-meeting').html(subtraction);
+                    $('#rating-classroom-id').val(classroom_id);
+
+                    if(subtraction == 0){
+                        if(is_rating){
+                            $('#rating-class').hide();
+                        }
+                        else{
+                            $('#rating-class').show();
+                        }
+                    }
+                });
+
+                $(document).on('click','.btn-rating-class',function(event){
+                    event.preventDefault();
+
+                    $('#form-rating-class').attr('action',`{{url('student/my-class/rating')}}`);
+                    $('#form-rating-class').attr('method',`POST`);
+                    $('#form-rating-class').find('input[name="rating_class"]').trigger('reset');
+                    $('#form-rating-class').find('textarea[name="commentar"]').trigger('reset');
+
+                    showModal('modal-rating-class');
                 })
             },
             formSubmit = () => {
@@ -339,6 +392,30 @@
                             toastr.success(res.message, 'Success')
                             init_table2.draw(false);
                             hideModal('modal-review');
+                        }
+                    })
+                    .fail(function(res, error) {
+                        toastr.error(res.responseJSON.message, 'Failed')
+                    })
+                    .always(function() {
+                        btn_loading_rating('stop');
+                    });
+                });
+
+                $('#form-rating-class').submit(function(event){
+                    event.preventDefault();
+
+                    btn_loading_rating('start')
+                    $.ajax({
+                        url: $(this).attr('action'),
+                        type: $(this).attr('method'),
+                        data: $(this).serialize()
+                    })
+                    .done(function(res, xhr, meta) {
+                        if(res.status == 200){
+                            console.log(res.data);
+                            return;
+                            hideModal('modal-rating-class');
                         }
                     })
                     .fail(function(res, error) {
@@ -395,7 +472,40 @@
                 })
                 .done(function(res, xhr, meta) {
                     if(res.status == 200){
-                        console.log(res.data);
+                        let element = ``;
+                        let selected = ``;
+                        $.each(res.data, function(index, data){
+                            if(index == 0){
+                                selected = `
+                                <img id="class-image-selected" class="w-100" src="${data.image}" alt="">
+                                <div class="h-100 class-owned-overlay">
+                                    <h5 id="class-name-selected">${data.classroom_name}</h5>
+                                </div>
+                                `;
+
+                                $('.class-owned-selected').html(selected);
+                                $('#last-meeting').html(data.subtraction);
+                                $('#rating-classroom-id').val(data.classroom_id);
+                                if(data.subtraction == 0){
+                                    if(data.is_rating){
+                                        $('#rating-class').hide();
+                                    }
+                                    else{
+                                        $('#rating-class').show();
+                                    }
+                                }
+                            }
+                            element += `
+                                <li class="class-owned__item" data-subtraction="${data.subtraction}" data-classroom_id="${data.classroom_id}" data-is_rating="${data.is_rating}">
+                                    <img class="w-100 class-image" src="${data.image}"
+                                        alt="">
+                                    <div class="class-owned-overlay h-100">
+                                        <h5 class="class-name">${data.classroom_name}</h5>
+                                    </div>
+                                </li>
+                            `;
+                        });
+                        $('#list-class-active').html(element)
                     }
                 })
                 .fail(function(res, error) {

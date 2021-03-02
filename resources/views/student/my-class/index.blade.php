@@ -78,20 +78,8 @@
                             </div>
                         </div>
                         <div class="class-owned vov  fastest f-30">
-                            <ul style="padding-left:0 !important">
-                                <li class="class-owned__item" id="class-owned1">
-                                    <img id="class-image1" class="w-100" src="{{asset('cms/assets/img/master-lesson__banner2.jpg')}}"
-                                        alt="">
-                                    <div class="class-owned-overlay h-100">
-                                        <h5 id="class-name1">Basic Piano</h5>
-                                    </div>
-                                </li>
-                                <li class="class-owned__item" id="class-owned2">
-                                    <img class="w-100" src="{{asset('cms/assets/img/master-lesson__banner.jpg')}}" alt="">
-                                    <div class="class-owned-overlay h-100">
-                                        <h5>Intermediate Guitar</h5>
-                                    </div>
-                                </li>
+                            <ul style="padding-left:0 !important" id="list-class-active">
+
                             </ul>
                         </div>
                         <div class="see-all shadow row-center"><img src="{{asset('cms/assets/img/svg/layers.svg')}}" class="mr-2"
@@ -104,7 +92,10 @@
             <div class="col-lg-2 text-center">
                 <p>Sisa Pertemuan</p>
                 <div>
-                    <span class="display-3">3</span>
+                    <span class="display-3" id="last-meeting">0</span>
+                </div>
+                <div id="rating-class" class="mt-5" style="display: none">
+                    <button type="button" class="btn btn-sm btn-primary btn-rating-class">Beri Rating</button>
                 </div>
             </div>
         </div>
@@ -260,19 +251,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-star-rating/4.0.6/js/star-rating.min.js" type="text/javascript"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-star-rating/4.0.6/themes/krajee-svg/theme.js"></script>
 <script>
-    $(".see-all").click(function () {
-      $(".class-owned").removeClass("fade-out-up");
-      $(".class-owned").addClass("fade-in-down");
-      $(".class-owned").toggle();
-    });
-
-    $("#class-owned1").click(function () {
-      $(".class-owned").removeClass("fade-in-down");
-      $(".class-owned").addClass("fade-out-up");
-      $(".class-owned").css("display", "none");
-      $("#class-name-selected").html("Basic Piano");
-      $("#class-image-selected").attr("src", "././assets/img/master-lesson__banner2.jpg");
-    });
+    // $("#class-owned1").click(function () {
+    //     $(".class-owned").removeClass("fade-in-down");
+    //     $(".class-owned").addClass("fade-out-up");
+    //     $(".class-owned").css("display", "none");
+    //     $("#class-name-selected").html("Basic Piano");
+    //     $("#class-image-selected").attr("src", "././assets/img/master-lesson__banner2.jpg");
+    // });
   </script>
 @include('student.my-class.script')
 @endpush
