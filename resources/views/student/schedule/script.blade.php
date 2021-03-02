@@ -134,7 +134,7 @@
                     timeZone: 'local',
                     initialView: 'dayGridMonth',
                     eventColor: '#fff',
-                    editable: true,
+                    editable: false,
                     selectable: true,
                     eventClick: function(info) {
                         if(info.event.extendedProps.status == 3){
@@ -259,7 +259,7 @@
                     timeZone: 'local',
                     initialView: 'dayGridMonth',
                     eventColor: '#fff',
-                    editable: true,
+                    editable: false,
                     selectable: true,
                     eventClick: function(info) {
                         let check_date = moment(moment(info.event.extendedProps.tanggal).format('YYYY-MM-DD')).isAfter(moment().format('YYYY-MM-DD'));
@@ -388,7 +388,7 @@
                     timeZone: 'local',
                     initialView: 'dayGridMonth',
                     eventColor: '#fff',
-                    editable: true,
+                    editable: false,
                     selectable: true,
                     eventClick: function(info) {
                         let slot = info.event.extendedProps.slot;
@@ -399,6 +399,7 @@
                         let datetime = info.event.extendedProps.tanggal;
                         let id = info.event.extendedProps.master_lesson_id;
                         let description = info.event.extendedProps.description;
+                        let is_buy = info.event.extendedProps.is_buy;
 
                         if(total_booking < slot){
                             $('#master-lesson-id').val(id);
@@ -413,6 +414,12 @@
                             $('#form-booking-master-lesson').trigger('reset');
                             $('#form-booking-master-lesson').attr('action',`{{ url('student/schedule/master-lesson/booking') }}/${id}`);
                             $('#form-booking-master-lesson').attr('method',`POST`);
+
+                            if(is_buy){
+                                $('#btn-booking-master-lesson').hide();
+                            }else{
+                                $('#btn-booking-master-lesson').show();
+                            }
 
                             showModal('modal-booking-master-lesson');
                         }
@@ -464,6 +471,7 @@
                                 "price" : data.price,
                                 "master_lesson_id" : data.id,
                                 "description" : data.description,
+                                "is_buy" : data.is_buy,
                             });
                         })
                     }

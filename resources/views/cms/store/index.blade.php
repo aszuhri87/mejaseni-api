@@ -72,144 +72,65 @@
                   <div class="splide__track">
                     <ul class="splide__list">
                       @foreach($classroom_categories as $classroom_category)
-                      <li class="splide__slide px-2">
-                        <div class="class-category-filter__wrapper">
-                          <div class="class-category-filter-overlay row-center">
-                            <h4>{{ $classroom_category->name ? $classroom_category->name:'' }}</h4>
-                          </div>
-                          <img src="{{ asset('cms/assets/img/category-placeholder.png') }}" alt="">
-                        </div>
-                      </li>
+                          @if($classroom_category->id == $selected_category->id)
+                            <li class="splide__slide px-2">
+                              <div class="class-category-filter__wrapper class-category-selected">
+                                <div class="class-category-filter-overlay row-center ">
+                                  <h4>{{ $classroom_category->name ? $classroom_category->name:'' }}</h4>
+                                </div>
+                                <img src="{{ asset('cms/assets/img/category-placeholder.png') }}" alt="">
+                              </div>
+                            </li>
+                          @else
+                            <li class="splide__slide px-2">
+                              <div class="class-category-filter__wrapper">
+                                <div class="class-category-filter-overlay row-center">
+                                  <h4>{{ $classroom_category->name ? $classroom_category->name:'' }}</h4>
+                                </div>
+                                <img src="{{ asset('cms/assets/img/category-placeholder.png') }}" alt="">
+                              </div>
+                            </li>
+                          @endif
                       @endforeach
                     </ul>
                   </div>
                 </div>
                 <div class="sub-category py-4">
-                  <button class="btn btn-tertiary mr-2 mb-2">Piano</button>
-                  <button class="btn btn-tertiary mr-2 mb-2">Saxophone</button>
-                  <button class="btn btn-tertiary mr-2 mb-2">Guitar</button>
-                  <button class="btn btn-tertiary mr-2 mb-2">Saxophone</button>
-                  <button class="btn btn-tertiary mr-2 mb-2">Piano</button>
-                  <button class="btn btn-tertiary mr-2 mb-2">Saxophone</button>
-                  <button class="btn btn-tertiary mr-2 mb-2">Guitar</button>
-                  <button class="btn btn-tertiary mr-2 mb-2">Saxophone</button>
-                  <button class="btn btn-tertiary mr-2 mb-2">Piano</button>
-                  <button class="btn btn-tertiary mr-2 mb-2">Saxophone</button>
-                  <button class="btn btn-tertiary mr-2 mb-2">Guitar</button>
-                  <button class="btn btn-tertiary mr-2 mb-2">Saxophone</button>
-                  <button class="btn btn-tertiary mr-2 mb-2">Piano</button>
-                  <button class="btn btn-tertiary mr-2 mb-2">Saxophone</button>
-                  <button class="btn btn-tertiary mr-2 mb-2">Guitar</button>
-                  <button class="btn btn-tertiary mr-2 mb-2">Saxophone</button>
-                  <button class="btn btn-tertiary mr-2 mb-2">Piano</button>
-                  <button class="btn btn-tertiary mr-2 mb-2">Saxophone</button>
-                  <button class="btn btn-tertiary mr-2 mb-2">Guitar</button>
-                  <button class="btn btn-tertiary mr-2 mb-2">Saxophone</button>
+                  @foreach($sub_categories as $sub_category)
+                    @if($loop->index == 0)
+                      <button class="btn btn-tertiary mr-2 mb-2 active">{{ $sub_category->name ? $sub_category->name:''}}</button>
+                    @else
+                      <button class="btn btn-tertiary mr-2 mb-2">{{ $sub_category->name ? $sub_category->name:''}}</button>
+                    @endif
+                  @endforeach
+                  
                 </div>
                 <div class="store-content__wrapper mt-4">
                   <div class="shine-hover">
                     
-                    <div class="row mb-5 pb-2">
-                      <div class="col-xl-3 mb-3 mb-md-0">
-                        <a href="#">
-                          <figure><img src="{{ asset('cms/assets/img/master-lesson__banner.jpg') }}" /></figure>
-                        </a>
-                      </div>
-                      <div class="col-xl-9 px-4">
-                        <div class="badge-left">
-                          <a href="store-detail.html" target="_blank">
-                            <h3 class="ml-2 mt-2 mt-md-4 mt-lg-0">Lorem ipsum, dolor sit amet consectetur
-                              adipisicing elit. Lorem
-                            ipsum, dolor sit amet consectetur adipisicing elit. Enim, consequatur.</h3>
+                    @foreach($video_courses as $video_course)
+                      <div class="row mb-5 pb-2">
+                        <div class="col-xl-3 mb-3 mb-md-0">
+                          <a href="#">
+                            <figure><img src="{{ asset('cms/assets/img/master-lesson__banner.jpg') }}" /></figure>
                           </a>
                         </div>
-                        <p class="mt-3 ml-3 desc__store-content">Lorem ipsum dolor sit amet consectetur
-                          adipisicing elit. Quaerat cum,
-                          laboriosam
-                          saepe libero, eaque laborum natus similique iure totam illo placeat ipsa nostrum
-                          doloremque eligendi dolore aliquam modi temporibus enim sed dicta accusamus?
-                          Deserunt quos accusantium voluptatem distinctio dolor ex excepturi ullam officia,
-                          nobis tempore eveniet, incidunt cum recusandae vitae inventore unde laboriosam
-                          mollitia, illo reprehenderit. Laboriosam quos odio perferendis excepturi voluptas.
-                        Ipsa aspernatur nulla at distinctio facilis vel,!</p>
-                        <div class="detail__store-content ml-3 mt-3">
-                          <div class="coach-name__store-content row-center mr-4">
-                            <img src="{{ asset('cms/assets/img/svg/User.svg') }}" class="mr-2" alt="">Rista Amelia Baskoro
+                        <div class="col-xl-9 px-4">
+                          <div class="badge-left">
+                            <a href="{{ url('store-detail') }}" target="_blank">
+                              <h3 class="ml-2 mt-2 mt-md-4 mt-lg-0">{{ $video_course->name ? $video_course->name:''}}</h3>
+                            </a>
                           </div>
-                          <div class="class__store-content row-center mt-md-0 mt-3">
-                            <img src="{{ asset('cms/assets/img/svg/Crown.svg') }}" class="mr-2" alt="">Intermediate Piano
+                          <p class="mt-3 ml-3 desc__store-content">{{ $video_course->description ? $video_course->description:''}}</p>
+                          <div class="detail__store-content ml-3 mt-3">
+                            <div class="coach-name__store-content row-center mr-4">
+                              <img src="{{ asset('cms/assets/img/svg/User.svg') }}" class="mr-2" alt="">{{ $video_course->coach ? $video_course->coach:''}}
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
+                    @endforeach
 
-                    <div class="row mb-5 pb-2">
-                      <div class="col-xl-3 mb-3 mb-md-0">
-                        <a href="#">
-                          <figure><img src="{{ asset('cms/assets/img/master-lesson__banner.jpg') }}" /></figure>
-                        </a>
-                      </div>
-                      <div class="col-xl-9 px-4">
-                        <div class="badge-left">
-                          <a href="store-detail.html" target="_blank">
-                            <h3 class="ml-2 mt-2 mt-md-4 mt-lg-0">Lorem ipsum, dolor sit amet consectetur
-                              adipisicing elit. Lorem
-                            ipsum, dolor sit amet consectetur adipisicing elit. Enim, consequatur.</h3>
-                          </a>
-                        </div>
-                        <p class="mt-3 ml-3 desc__store-content">Lorem ipsum dolor sit amet consectetur
-                          adipisicing elit. Quaerat cum,
-                          laboriosam
-                          saepe libero, eaque laborum natus similique iure totam illo placeat ipsa nostrum
-                          doloremque eligendi dolore aliquam modi temporibus enim sed dicta accusamus?
-                          Deserunt quos accusantium voluptatem distinctio dolor ex excepturi ullam officia,
-                          nobis tempore eveniet, incidunt cum recusandae vitae inventore unde laboriosam
-                          mollitia, illo reprehenderit. Laboriosam quos odio perferendis excepturi voluptas.
-                        Ipsa aspernatur nulla at distinctio facilis vel,!</p>
-                        <div class="detail__store-content ml-3 mt-3">
-                          <div class="coach-name__store-content row-center mr-4">
-                            <img src="{{ asset('cms/assets/img/svg/User.svg') }}" class="mr-2" alt="">Rista Amelia Baskoro
-                          </div>
-                          <div class="class__store-content row-center mt-md-0 mt-3">
-                            <img src="{{ asset('cms/assets/img/svg/Crown.svg') }}" class="mr-2" alt="">Intermediate Piano
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="row mb-5 pb-2">
-                      <div class="col-xl-3 mb-3 mb-md-0">
-                        <a href="#">
-                          <figure><img src="{{ asset('cms/assets/img/master-lesson__banner.jpg') }}" /></figure>
-                        </a>
-                      </div>
-                      <div class="col-xl-9 px-4">
-                        <div class="badge-left">
-                          <a href="store-detail.html" target="_blank">
-                            <h3 class="ml-2 mt-2 mt-md-4 mt-lg-0">Lorem ipsum, dolor sit amet consectetur
-                              adipisicing elit. Lorem
-                            ipsum, dolor sit amet consectetur adipisicing elit. Enim, consequatur.</h3>
-                          </a>
-                        </div>
-                        <p class="mt-3 ml-3 desc__store-content">Lorem ipsum dolor sit amet consectetur
-                          adipisicing elit. Quaerat cum,
-                          laboriosam
-                          saepe libero, eaque laborum natus similique iure totam illo placeat ipsa nostrum
-                          doloremque eligendi dolore aliquam modi temporibus enim sed dicta accusamus?
-                          Deserunt quos accusantium voluptatem distinctio dolor ex excepturi ullam officia,
-                          nobis tempore eveniet, incidunt cum recusandae vitae inventore unde laboriosam
-                          mollitia, illo reprehenderit. Laboriosam quos odio perferendis excepturi voluptas.
-                        Ipsa aspernatur nulla at distinctio facilis vel,!</p>
-                        <div class="detail__store-content ml-3 mt-3">
-                          <div class="coach-name__store-content row-center mr-4">
-                            <img src="{{ asset('cms/assets/img/svg/User.svg') }}" class="mr-2" alt="">Rista Amelia Baskoro
-                          </div>
-                          <div class="class__store-content row-center mt-md-0 mt-3">
-                            <img src="{{ asset('cms/assets/img/svg/Crown.svg') }}" class="mr-2" alt="">Intermediate Piano
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>

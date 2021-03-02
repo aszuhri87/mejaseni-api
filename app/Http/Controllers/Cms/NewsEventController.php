@@ -31,7 +31,7 @@ class NewsEventController extends Controller
     				])
     				->whereNull('deleted_at')
     				->orderBy('date','desc')
-                    ->take(4)
+                    ->take(3)
     				->get();
 
         $news = DB::table('news')

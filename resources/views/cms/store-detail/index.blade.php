@@ -11,7 +11,7 @@
                 <div class="mb-5 row-center">
                     <a href="#">
                         <div class="rounded-circle back-wrapper row-center shadow">
-                            <img src="././assets/img/svg/Arrow-left 1.svg" alt="">
+                            <img src="{{ asset('cms/assets/img/svg/Arrow-left1.svg') }}" alt="">
                     </a>
                 </div>
                 <input class="form-control ml-3" list="datalistOptions" id="exampleDataList"
@@ -147,7 +147,7 @@
                                     </a>
                                 </ul>
                                 <a href="#" class="btn btn-primary shadow row-center"><img class="mr-2"
-                                        src="././assets/img/svg/cart-white.svg" alt=""> Beli Paket</a>
+                                        src="{{ asset('cms/assets/img/svg/cart-white.svg') }}" alt=""> Beli Paket</a>
                             </div>
                         </div>
                     </div>
@@ -168,7 +168,6 @@
                     </div>
                     <ul class="row-center-start class-tab mt-5 mt-md-4">
                         <li id="class-tab-1" class="class-tab active">Deskripsi</li>
-                        <li id="class-tab-2" class="class-tab">Diskusi</li>
                     </ul>
                     <div class="desc__class-tab my-4" id="class-tab-detail-1">
                         <p>

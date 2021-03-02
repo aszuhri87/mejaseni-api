@@ -95,8 +95,8 @@
                             render : function(data, type, full, meta) {
                                 if(full.status == 1){
                                     return `
-                                        <a href="{{ url('/waiting-payment') }}/${data}" title="Lanjutkan Pembayaran" data-toogle="tooltip" class="btn btn-detail btn-primary btn-sm mr-2">
-                                            Lanjut Pembayaran
+                                        <a href="{{ url('/waiting-payment') }}/${data}" title="Lanjutkan Pembayaran" data-toogle="tooltip" class="btn btn-primary btn-sm mr-2">
+                                            Pembayaran
                                         </a>
                                         `;
                                 }else{
@@ -152,7 +152,7 @@
                             $('#total').empty();
                             let total = 0;
                             $.each(res.data, function(index, data){
-                                total+=data.price;
+                                total+=parseInt(data.price);
 
                                 element += `
                                     <div class="row">
@@ -173,7 +173,7 @@
 
                                         </div>
                                         <div class="col-6 text-right">
-                                            <h5>Rp. 500,000</h5>
+                                            <h5>Rp. ${numeral(data.price).format('0,0')}</h5>
                                         </div>
                                     </div>
                                     <hr>

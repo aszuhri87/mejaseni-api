@@ -84,6 +84,8 @@ use App\Http\Controllers\Admin\Cms\JobDescriptionController as JobDescriptionCon
 use App\Http\Controllers\Admin\Cms\JobRequirementController as JobRequirementController;
 use App\Http\Controllers\Admin\Cms\WorkingHourController as WorkingHourController;
 use App\Http\Controllers\Admin\Cms\GaleryController as GaleryController;
+use App\Http\Controllers\Admin\Cms\SocialMediaController as SocialMediaController;
+
 /*
 |--------------------------------------------------------------------------
 | CMS Controller
@@ -99,6 +101,11 @@ use App\Http\Controllers\Cms\TosController as TosController;
 use App\Http\Controllers\Cms\FaqController as FaqController;
 use App\Http\Controllers\Cms\CareerController as CareerController;
 use App\Http\Controllers\Cms\CareerDetailController as CareerDetailController;
+use App\Http\Controllers\Cms\StoreDetailController as StoreDetailController;
+use App\Http\Controllers\Cms\EventListController as EventListController;
+use App\Http\Controllers\Cms\EventDetailController as EventDetailController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -120,7 +127,10 @@ use App\Http\Controllers\Cms\CareerDetailController as CareerDetailController;
 Route::get('/', [HomePageController::class, 'index']);
 Route::get('/class', [ClassController::class, 'index']);
 Route::get('/store', [StoreController::class, 'index']);
+Route::get('/store-detail', [StoreDetailController::class, 'index']);
 Route::get('/news-event', [NewsEventController::class, 'index']);
+Route::get('/event-list', [EventListController::class, 'index']);
+Route::get('/event-detail', [EventDetailController::class, 'index']);
 Route::get('/about', [AboutController::class, 'index']);
 Route::get('/privacy-policy', [PrivacyPolicyController::class, 'index']);
 Route::get('/tos', [TosController::class, 'index']);
@@ -313,6 +323,10 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::post('galery/update/{id}', [GaleryController::class, 'update']);
             Route::resource('galery', GaleryController::class);
 
+            Route::post('social-media/dt', [SocialMediaController::class, 'dt']);
+            Route::post('social-media/update/{id}', [SocialMediaController::class, 'update']);
+            Route::resource('social-media', SocialMediaController::class);
+
         });
     });
 
@@ -422,6 +436,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::post('last-class/dt',[StudentMyClassController::class, 'last_class_dt']);
             Route::post('review/{id}',[StudentMyClassController::class, 'review']);
             Route::put('reschedule/{id}',[StudentMyClassController::class, 'reschedule']);
+            Route::get('class-active/{id}',[StudentMyClassController::class, 'class_active']);
         });
 
         Route::group(['prefix' => 'new-package'], function () {
@@ -434,17 +449,20 @@ Route::group(['middleware' => ['auth-handling']], function () {
         });
 
         Route::group(['prefix' => 'theory'], function () {
-            Route::get('/', [StudentTheoryController::class, 'index']);
-            Route::get('get-theory', [StudentTheoryController::class, 'get_theory']);
-            Route::get('get-class/{student_id}', [StudentTheoryController::class, 'get_class']);
-            Route::get('filter_theory', [StudentTheoryController::class, 'filter_theory']);
+            Route::group(['prefix' => 'theory-class'], function () {
+                Route::get('/', [StudentTheoryController::class, 'index']);
+                Route::get('get-theory', [StudentTheoryController::class, 'get_theory']);
+                Route::get('get-class/{student_id}', [StudentTheoryController::class, 'get_class']);
+                Route::get('filter_theory', [StudentTheoryController::class, 'filter_theory']);
+            });
+
+            Route::group(['prefix' => 'video-class'], function () {
+                Route::get('/', [StudentVideoController::class, 'index']);
+                Route::get('get-video', [StudentVideoController::class, 'get_video']);
+                Route::get('video-detail/{session_video_id}', [StudentVideoController::class, 'video_detail']);
+            });
         });
 
-        Route::group(['prefix' => 'video'], function () {
-            Route::get('/', [StudentVideoController::class, 'index']);
-            Route::get('get-video', [StudentVideoController::class, 'get_video']);
-            Route::get('video-detail/{session_video_id}', [StudentVideoController::class, 'video_detail']);
-        });
 
         Route::group(['prefix' => 'exercise'], function () {
             Route::get('/', [StudentExerciseController::class, 'index']);

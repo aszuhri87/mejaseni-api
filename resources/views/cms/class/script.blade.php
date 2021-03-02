@@ -1,3 +1,5 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.min.js"></script>
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 <script type="text/javascript">
     $('.registerNow').click(function () {
         $('#modalLoginNeeded').modal('show')
@@ -17,7 +19,46 @@
                 splide();
                 AOS.init();
                 selectPackage();
+                TabDetailListener()
             });
+
+
+
+            var TabDetailListener = ()=>{
+                $('.tab-detail').click(function(event){
+                    event.preventDefault()
+                    let selected_tab = $(this).attr('href')
+                    $(".tab-detail").removeClass("active" );
+                    $("#tab-coach").find('content-tab-detail').replaceWith('content-tab-detail-selected')
+                    $.blockUI({
+                        css: { 
+                            padding:        0, 
+                            margin:         0, 
+                            width:          '30%', 
+                            top:            '25%', 
+                            left:           '40%', 
+                            textAlign:      'center', 
+                            color:          '#000', 
+                            border:         null, 
+                            backgroundColor:null, 
+                            cursor:         'wait' 
+                        },
+                        overlayCSS:  { 
+                            backgroundColor: '#000', 
+                            opacity:         0.7, 
+                            cursor:          'wait' 
+                        },
+                        message: '<lottie-player src="https://assets3.lottiefiles.com/packages/lf20_o3kcs3sk.json" background="transparent" speed="1" style="width: 500px; height: 500px;" loop autoplay></lottie-player>' 
+                    }); 
+            // test();
+                    // $("#tab-coach").removeClass("content-tab-detail");
+                    // $("#tab-coach").addClass("content-tab-detail-selected")
+                    // $(".content-tab-detail").css("display","none");
+                    // $("#tab-coach .content-tab-detail").css('display','block');
+                    // $(this).addClass( "active" )
+                    
+                })
+            }
 
             var selectPackage = ()=>{
                 $('.package').click(function(e){
