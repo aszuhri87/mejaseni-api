@@ -378,6 +378,12 @@ class BaseMenu extends Controller
                         'permission' => 'galery'
                     ],
                     [
+                        'key' => 'marketplace',
+                        'title' => 'Market Place',
+                        'url' => 'admin/cms/marketplace',
+                        'permission' => 'marketplace'
+                    ],
+                    [
                         'key' => 'news',
                         'title' => 'News',
                         'url' => 'admin/cms/news',

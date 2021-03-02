@@ -20,7 +20,7 @@ function FunctionName($date)
             <div class="row">
                 <div class="col-12 col-lg-8 px-0">
                     <div class="event-image__wrapper">
-                        <img class="w-100" src="{{ asset('cms/assets/img/master-lesson__banner2.jpg') }}" alt="">
+                        <img class="w-100" src="{{ $event->image_url ? $event->image_url:'' }}" alt="">
                     </div>
                 </div>
                 <div class="col-12 col-lg-4 px-0">
@@ -28,8 +28,7 @@ function FunctionName($date)
                         <div class="d-flex flex-column justify-content-between p-4 h-100"
                         style="background-color: #ffffff3a; backdrop-filter: blur(50px);">
                         <div>
-                            <h4>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos, placeat.
-                            </h4>
+                            <h4>{{ $event->title ? $event->title:'' }}</h4>
                             <div class="mt-3">
                                 <div class="mb-3">
                                     <p class="label">Lokasi</p>
@@ -45,8 +44,7 @@ function FunctionName($date)
                                 </div>
                             </div>
                         </div>
-                        <a href="#" class="btn btn-primary w-100" data-toggle="modal"
-                        data-target="#eventRegisterModal">Daftar Event</a>
+                        <a href="{{ url('login') }}" class="btn btn-primary w-100" data-toggle="@if (Auth::guard('student')->user()){{'modal'}}@endif" data-target="#eventRegisterModal">Daftar Event</a>
                                 <!-- <a href="#" class="btn btn-primary w-100" data-toggle="modal"
                                     data-target="#loginRequiredModal">Daftar Event</a> -->
                                 </div>
@@ -54,33 +52,8 @@ function FunctionName($date)
                         </div>
                         <div class="col-12 px-0">
                             <div class="event-desc__wrapper p-5">
-                                <h4>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa, qui?</h4>
-                                <p class="mt-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis veritatis
-                                    vitae a
-                                    debitis architecto eaque? Debitis quas, enim consequuntur quam nesciunt nam, quae
-                                    voluptatum aspernatur corporis iste modi, asperiores dolore laudantium. Reiciendis sequi
-                                    quam nulla autem quidem ullam corporis laborum praesentium quibusdam quis repellendus,
-                                    labore, veniam nihil animi officia hic voluptate. Cumque, beatae doloremque! Quod
-                                    laudantium et similique nisi esse? Iste, provident. A corrupti doloremque expedita,
-                                    commodi deleniti facere aliquid cumque placeat exercitationem tempore esse blanditiis
-                                    veniam dignissimos voluptates dicta ullam incidunt delectus sit ex facilis laboriosam.
-                                    Omnis eum magni temporibus quos suscipit ducimus, quidem cum non officia, maiores dolor.
-                                </p>
-                                <p class="mt-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis veritatis
-                                    vitae a
-                                    debitis architecto eaque? Debitis quas, enim consequuntur quam nesciunt nam, quae
-                                    voluptatum aspernatur corporis iste modi, asperiores dolore laudantium. Reiciendis sequi
-                                    quam nulla au facilis laboriosam.
-                                    Omnis eum magni temporibus quos suscipit ducimus, quidem cum non officia, maiores dolor.
-                                </p>
-                                <p class="mt-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis veritatis
-                                    vitae a
-                                    debitis architecto eaque? Debitis quas, enim consequuntur quam nesciunt nam, quae
-                                    voluptatum aspernatur corporis iste modi, asperiores dolore laudantium. Reiciendis sequi
-                                    quam nullae, beatae doloremque! Quodprovident. A corrupti doloremque expedita,
-                                    commodi deleniti facere aliquid cumque placeat exercitationem tempore esse blanditiis
-                                    veniam dignissimos voluptates dicta ullam incidunt delectus sit ex facilis laboriosam.
-                                    Omnis eum magni temporibus quos suscipit ducimus, quidem cum non officia, maiores dolor.
+                                <h4>{{ $event->title ? $event->title:'' }}</h4>
+                                <p class="mt-3">{{ $event->description ? $event->description:''  }}
                                 </p>
                             </div>
                         </div>

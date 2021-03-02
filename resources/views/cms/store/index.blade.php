@@ -29,30 +29,16 @@
           </ul>
         </div>
         <div class="online-shop row-center">
-          <div class="online-shop__item-wrapper">
-            <div class="online-shop__item mb-2">
-              <a href="#" target="_blank">
-                <img src="{{ asset('cms/assets/img/svg/tokopedia-logo.svg') }}" alt="">
-              </a>
-            </div>
-            <span>Tokopedia</span>
-          </div>
-          <div class="online-shop__item-wrapper">
-            <a href="#" target="_blank">
+          @foreach($market_places as $market_place)
+            <div class="online-shop__item-wrapper">
               <div class="online-shop__item mb-2">
-                <img src="{{ asset('cms/assets/img/svg/shopee-logo.svg') }}" alt="">
+                <a href="{{ $market_place->url ? $market_place->url:''}}" target="_blank">
+                  <img src="{{ $market_place->image_url ? $market_place->image_url:''}}" alt="">
+                </a>
               </div>
-            </a>
-            <span>Shopee</span>
-          </div>
-          <div class="online-shop__item-wrapper">
-            <div class="online-shop__item mb-2">
-              <a href="#" target="_blank">
-                <img src="{{ asset('cms/assets/img/svg/blibli-logo.svg') }}" alt="">
-              </a>
+              <span>{{ $market_place->name ? $market_place->name:''}}</span>
             </div>
-            <span>Blibli</span>
-          </div>
+          @endforeach 
         </div>
       </div>
     </div>
@@ -74,7 +60,7 @@
                       @foreach($classroom_categories as $classroom_category)
                           @if($classroom_category->id == $selected_category->id)
                             <li class="splide__slide px-2">
-                              <div class="class-category-filter__wrapper class-category-selected">
+                              <div class="class-category-filter__wrapper class-category-selected" data-id="{{$classroom_category->id}}">
                                 <div class="class-category-filter-overlay row-center ">
                                   <h4>{{ $classroom_category->name ? $classroom_category->name:'' }}</h4>
                                 </div>
@@ -83,8 +69,8 @@
                             </li>
                           @else
                             <li class="splide__slide px-2">
-                              <div class="class-category-filter__wrapper">
-                                <div class="class-category-filter-overlay row-center">
+                              <div class="class-category-filter__wrapper" data-id="{{$classroom_category->id}}">
+                                <div class="class-category-filter-overlay row-center" >
                                   <h4>{{ $classroom_category->name ? $classroom_category->name:'' }}</h4>
                                 </div>
                                 <img src="{{ asset('cms/assets/img/category-placeholder.png') }}" alt="">
@@ -95,18 +81,21 @@
                     </ul>
                   </div>
                 </div>
-                <div class="sub-category py-4">
+                <div class="sub-category py-4" id="sub-category">
                   @foreach($sub_categories as $sub_category)
                     @if($loop->index == 0)
-                      <button class="btn btn-tertiary mr-2 mb-2 active">{{ $sub_category->name ? $sub_category->name:''}}</button>
+                      <button class="btn btn-tertiary mr-2 mb-2 active" data-id="{{$sub_category->id}}">{{ $sub_category->name ? $sub_category->name:''}}</button>
                     @else
-                      <button class="btn btn-tertiary mr-2 mb-2">{{ $sub_category->name ? $sub_category->name:''}}</button>
+                      <button class="btn btn-tertiary mr-2 mb-2" data-id="{{$sub_category->id}}">{{ $sub_category->name ? $sub_category->name:''}}</button>
                     @endif
                   @endforeach
                   
                 </div>
+
+                <div id="empty-video-course"></div>
+                
                 <div class="store-content__wrapper mt-4">
-                  <div class="shine-hover">
+                  <div class="shine-hover" id="video_courses">
                     
                     @foreach($video_courses as $video_course)
                       <div class="row mb-5 pb-2">
@@ -117,7 +106,7 @@
                         </div>
                         <div class="col-xl-9 px-4">
                           <div class="badge-left">
-                            <a href="{{ url('store-detail') }}" target="_blank">
+                            <a href="{{ url('video-course') }}/{{$video_course->id}}/detail" target="_blank">
                               <h3 class="ml-2 mt-2 mt-md-4 mt-lg-0">{{ $video_course->name ? $video_course->name:''}}</h3>
                             </a>
                           </div>

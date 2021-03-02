@@ -85,6 +85,7 @@ use App\Http\Controllers\Admin\Cms\JobRequirementController as JobRequirementCon
 use App\Http\Controllers\Admin\Cms\WorkingHourController as WorkingHourController;
 use App\Http\Controllers\Admin\Cms\GaleryController as GaleryController;
 use App\Http\Controllers\Admin\Cms\SocialMediaController as SocialMediaController;
+use App\Http\Controllers\Admin\Cms\MarketPlaceController as MarketPlaceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -119,6 +120,8 @@ use App\Http\Controllers\Cms\EventDetailController as EventDetailController;
 */
 
 
+
+
 /*
 |--------------------------------------------------------------------------
 | CMS
@@ -126,22 +129,29 @@ use App\Http\Controllers\Cms\EventDetailController as EventDetailController;
 */
 Route::get('/', [HomePageController::class, 'index']);
 Route::get('/class', [ClassController::class, 'index']);
+Route::get('/class/classroom_category/{category_id}/sub_classroom_category', [ClassController::class, 'get_sub_category']);
+Route::get('/classroom_category/sub_classroom_category/{sub_category_id}/classroom', [ClassController::class, 'get_classroom']);
+Route::get('/class/{classroom_category_id}/sub_classroom_category/{sub_classroom_category_id}/package/{package}', [ClassController::class, 'get_package']);
+
+
 Route::get('/store', [StoreController::class, 'index']);
-Route::get('/store-detail', [StoreDetailController::class, 'index']);
+Route::get('/video-course/{video_course_id}/detail', [StoreDetailController::class, 'index']);
+Route::get('/classroom_category/{category_id}/sub_classroom_category', [StoreController::class, 'get_sub_category']);
+Route::get('/classroom_category/sub_classroom_category/{sub_category_id}/video-course', [StoreController::class, 'get_video_courses']);
 Route::get('/news-event', [NewsEventController::class, 'index']);
 Route::get('/event-list', [EventListController::class, 'index']);
-Route::get('/event-detail', [EventDetailController::class, 'index']);
+Route::get('/event/{event_id}/detail', [EventDetailController::class, 'index']);
+
 Route::get('/about', [AboutController::class, 'index']);
 Route::get('/privacy-policy', [PrivacyPolicyController::class, 'index']);
 Route::get('/tos', [TosController::class, 'index']);
 Route::get('/faq', [FaqController::class, 'index']);
 Route::get('/career', [CareerController::class, 'index']);
 Route::get('/career-detail', [CareerDetailController::class, 'index']);
-
 Route::post('/notifications/payments', [PaymentController::class, 'notification']);
 
-
 Route::group(['middleware' => ['guest-handling']], function () {
+
     Route::get('login', [LoginController::class, 'index_login']);
     Route::post('login', [LoginController::class, 'login']);
 });
@@ -326,6 +336,10 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::post('social-media/dt', [SocialMediaController::class, 'dt']);
             Route::post('social-media/update/{id}', [SocialMediaController::class, 'update']);
             Route::resource('social-media', SocialMediaController::class);
+
+            Route::post('marketplace/dt', [MarketPlaceController::class, 'dt']);
+            Route::post('marketplace/update/{id}', [MarketPlaceController::class, 'update']);
+            Route::resource('marketplace', MarketPlaceController::class);
 
         });
     });

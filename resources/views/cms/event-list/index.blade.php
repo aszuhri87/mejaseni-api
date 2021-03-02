@@ -19,7 +19,7 @@
                 <div class="row my-5 w-100">
                     <div class="col-12 col-lg-3 pl-lg-0 pr-lg-3">
                         <button class="btn btn-white w-100 row-center-spacebetween filter-btn">Semua Event <img
-                                src="././assets/img/svg/chevron-down.svg" alt=""></button>
+                                src="{{ asset('cms/assets/img/svg/chevron-down.svg') }}" alt=""></button>
                         <div class="filter__wrapper p-4">
                             <label>Pilih Kategori Seni</label>
                             <select class="mt-3 mb-4" name="select-subcategories" id="select-subcategories"></select>
@@ -58,10 +58,10 @@
                                     <p class="mt-3 ml-3 desc__store-content">{{ $event->description ? $event->description:'' }}/p>
                                     <div class="detail__store-content ml-3 mt-3">
                                         <div class="coach-name__store-content row-center mr-4">
-                                            <img src="././assets/img/svg/Crown.svg" class="mr-2" alt="">Piano
+                                            <img src="{{ asset('cms/assets/img/svg/Crown.svg') }}" class="mr-2" alt="">Piano
                                         </div>
                                         <div class="class__store-content row-center mt-md-0 mt-3">
-                                            <img src="././assets/img/svg/calendar.svg" class="mr-2" alt="">Jum, 26 Februari
+                                            <img src="{{ asset('cms/assets/img/svg/calendar.svg') }}" class="mr-2" alt="">Jum, 26 Februari
                                             | 09:00 AM
                                             2021
                                         </div>

@@ -32,7 +32,7 @@
                         </div>
                         <div class="pl-3 pt-3">
                             <p class="mb-3">{{ $event->description ? $event->description:''}}</p>
-                            <a class="link link--arrowed" href="#">Selengkapnya<svg class="arrow-icon ml-1"
+                            <a class="link link--arrowed" href="{{ url('event') }}/{{ $event->id}}/detail">Selengkapnya<svg class="arrow-icon ml-1"
                                     xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
                                     <g fill="none" stroke="#7F16A7" stroke-width="1.5" stroke-linejoin="round"
                                         stroke-miterlimit="10">
@@ -75,7 +75,7 @@
                         </div>
                         <div class="pl-3 pt-3">
                             <p class="mb-3">{{ $new->description ? $new->description:''}}</p>
-                            <a class="link link--arrowed" href="#">Selengkapnya<svg class="arrow-icon ml-1"
+                            <a class="link link--arrowed" href="{{ url('news') }}/{{$new->id}}/detail">Selengkapnya<svg class="arrow-icon ml-1"
                                     xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
                                     <g fill="none" stroke="#7F16A7" stroke-width="1.5" stroke-linejoin="round"
                                         stroke-miterlimit="10">
@@ -89,58 +89,18 @@
                     </div>
                 </div>
             @endforeach
-            {{-- <div class="col-lg-4 col-12 p-4">
-                <div class="news-item__wrapper">
-                    <img class="h-100" src="{{ asset('cms/assets/img/master-lesson__banner2.jpg') }}" alt="">
-                </div>
-                <div class="news-item-desc__wrapper mt-4 mb-5">
-                    <div class="badge-left">
-                        <h3 class="ml-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi, optio!</h3>
-                    </div>
-                    <div class="pl-3 pt-3">
-                        <p class="mb-3">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Vel veniam mollitia
-                            voluptas temporibus animi impedit harum laborum dolor soluta aliquam quae, culpa, adipisci,
-                            ad omnis ducimus! Laboriosam qui dolorem ex reiciendis nulla sunt reprehenderit ullam
-                            accusantium quae, non ad adipisci?</p>
-                        <a class="link link--arrowed" href="#">Selengkapnya<svg class="arrow-icon ml-1"
-                                xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-                                <g fill="none" stroke="#7F16A7" stroke-width="1.5" stroke-linejoin="round"
-                                    stroke-miterlimit="10">
-                                    <circle class="arrow-icon--circle" cx="16" cy="16" r="15.12"></circle>
-                                    <path class="arrow-icon--arrow" d="M16.14 9.93L22.21 16l-6.07 6.07M8.23 16h13.98">
-                                    </path>
-                                </g>
+            <div class="col-12">
+                <div class="more-info__btn">
+                    <div class="column-center buttons">
+                        <a href="news-list.html" class="btn btn-1">
+                            <svg>
+                                <rect x="0" y="0" fill="none" width="100%" height="100%" />
                             </svg>
+                            Lihat Semua
                         </a>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 col-12 p-4">
-                <div class="news-item__wrapper">
-                    <img class="h-100" src="{{ asset('cms/assets/img/master-lesson__banner2.jpg') }}" alt="">
-                </div>
-                <div class="news-item-desc__wrapper mt-4 mb-5">
-                    <div class="badge-left">
-                        <h3 class="ml-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi, optio!</h3>
-                    </div>
-                    <div class="pl-3 pt-3">
-                        <p class="mb-3">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Vel veniam mollitia
-                            voluptas temporibus animi impedit harum laborum dolor soluta aliquam quae, culpa, adipisci,
-                            ad omnis ducimus! Laboriosam qui dolorem ex reiciendis nulla sunt reprehenderit ullam
-                            accusantium quae, non ad adipisci?</p>
-                        <a class="link link--arrowed" href="#">Selengkapnya<svg class="arrow-icon ml-1"
-                                xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-                                <g fill="none" stroke="#7F16A7" stroke-width="1.5" stroke-linejoin="round"
-                                    stroke-miterlimit="10">
-                                    <circle class="arrow-icon--circle" cx="16" cy="16" r="15.12"></circle>
-                                    <path class="arrow-icon--arrow" d="M16.14 9.93L22.21 16l-6.07 6.07M8.23 16h13.98">
-                                    </path>
-                                </g>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-            </div> --}}
         </div>
     </section>
 @endsection

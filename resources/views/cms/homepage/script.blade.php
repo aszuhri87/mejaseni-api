@@ -1,4 +1,29 @@
-<script type="text/javascript">
+<script>
+    $(".see-all").click(function () {
+      $(".class-owned").removeClass("fade-out-up");
+      $(".class-owned").addClass("fade-in-down");
+      $(".class-owned").toggle();
+    });
+
+    $("#class-owned1").click(function () {
+      $(".class-owned").removeClass("fade-in-down");
+      $(".class-owned").addClass("fade-out-up");
+      $(".class-owned").css("display", "none");
+      $("#class-name-selected").html("Basic Piano");
+      $("#class-image-selected").attr("src", "././assets/img/master-lesson__banner2.jpg");
+    });
+
+  </script>
+  <script>
+    $("#profile-mobile").click(function () {
+      $(".menu-overlay").css("display", "block");
+    });
+    $(".menu-overlay__close").click(function () {
+      $(".menu-overlay").css("display", "none");
+    });
+  </script>
+
+  <script type="text/javascript">
     var Page = function () {
       var _componentPage = function () {
 
@@ -65,7 +90,7 @@
             perMove: 1,
           }).mount();
         }
-        
+
       };
       return {
         init: function () {

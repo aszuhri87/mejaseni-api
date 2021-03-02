@@ -13,14 +13,13 @@ use Storage;
 
 class EventDetailController extends Controller
 {
-    public function index()
+    public function index($event_id)
     {
     	$company = Company::first();
     	$branchs = Branch::all();
         $path = Storage::disk('s3')->url('/');
 
-
-    	$events = DB::table('events')
+    	$event = DB::table('events')
     				->select([
     					'id',
     					'title',
@@ -29,13 +28,12 @@ class EventDetailController extends Controller
     					 DB::raw("CONCAT('{$path}',image) as image_url"),
     				])
     				->whereNull('deleted_at')
-    				->orderBy('date','desc')
-                    ->take(3)
-    				->get();
+    				->where('id',$event_id)
+    				->first();
     	return view('cms.event-detail.index', [
     		"company" => $company, 
     		"branchs" => $branchs,
-    		"events" => $events
+    		"event" => $event
     	]);
     }
 }
