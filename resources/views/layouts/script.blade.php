@@ -282,6 +282,16 @@
         }
     }
 
+    function btn_loading_reschedule(action) {
+        if (action == 'start') {
+            $('.btn-loading-reschedule').html('<div id="loading" class="mr-1"></div> Loading...');
+            $('.btn-loading-reschedule').attr('disabled', true);
+        } else {
+            $('.btn-loading-reschedule').html('Reschedule');
+            $('.btn-loading-reschedule').attr('disabled', false);
+        }
+    }
+
     function disable_action(class_name, action) {
         if (action == 'start') {
             $('#' + class_name).attr('disabled', true);

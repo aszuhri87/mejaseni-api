@@ -19,6 +19,7 @@ class StudentSchedule extends Model
         'student_classroom_id',
         'session_id',
         'coach_schedule_id',
+        'check_in'
     ];
 
     protected $dates = ['deleted_at'];

@@ -3,11 +3,13 @@
 @section('content')
 <div class="card">
     <div class="card-body">
-        <div class="row">
-            <div class="col-lg-6">
-                <h5 class="text-primary">{{$data->sub_classroom_category_name}}</h5>
-                <h3 class="mt-5">{{$data->name}}</h3>
-                <p class="mt-5">Mentored by {{$data->coach_name}}</p>
+        <div class="row d-flex">
+            <div class="col-lg-6 align-self-center">
+                <div class="mx-auto">
+                    <h3 class="text-primary">{{$data->sub_classroom_category_name}}</h3>
+                    <h1 class="mt-5">{{$data->name}}</h1>
+                    <p class="mt-5">Mentored by {{$data->coach_name}}</p>
+                </div>
             </div>
             <div class="col-lg-6">
                 <img src="{{$data->image_url}}" class="rounded" style="height: 200px !important;box-shadow: 0 15px 20px -20px #7F16A7;" width="100%">

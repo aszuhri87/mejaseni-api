@@ -452,6 +452,8 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::post('review/{id}',[StudentMyClassController::class, 'review']);
             Route::put('reschedule/{id}',[StudentMyClassController::class, 'reschedule']);
             Route::get('class-active/{id}',[StudentMyClassController::class, 'class_active']);
+            Route::get('checkin/{id}',[StudentMyClassController::class, 'checkin']);
+            Route::get('get-review/{id}',[StudentMyClassController::class, 'get_review']);
         });
 
         Route::group(['prefix' => 'new-package'], function () {

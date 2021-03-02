@@ -12,6 +12,7 @@
                 totalClassStudent();
                 initCoachList();
                 studentRating();
+                getClass();
             });
 
             const initAction = () => {
@@ -29,6 +30,29 @@
                     event.preventDefault();
                     calendar_master_lesson.render();
                 });
+
+                $(document).on('click','.see-all',function(event){
+                    $(".class-owned").removeClass("fade-out-up");
+                    $(".class-owned").addClass("fade-in-down");
+                    $(".class-owned").toggle();
+                });
+
+                $(document).on('click','.class-owned__item',function(event){
+                    event.preventDefault();
+                    let image = $(this).find('.class-image').attr('src');
+                    let name = $(this).find('.class-name').text();
+                    let subtraction = $(this).data('subtraction');
+                    let is_rating = $(this).data('is_rating');
+                    let classroom_id = $(this).data('classroom_id');
+
+                    $('.class-owned').removeClass('fade-in-down');
+                    $('.class-owned').addClass('fade-out-up');
+                    $('.class-owned').css('display', 'none');
+                    $('#class-name-selected').html(name);
+                    $('#class-image-selected').attr('src', image);
+                    $('#last-meeting').html(subtraction);
+                    $('#rating-classroom-id').val(classroom_id);
+                });
             },
             formSubmit = () => {
                 $('#form-booking').submit(function(event){
@@ -44,6 +68,7 @@
                         if(res.status == 200){
                             toastr.success(res.message, 'Success');
                             initCalendarSpecial();
+                            initCalendarReguler();
                             hideModal('modal-booking');
                         }
                     })
@@ -58,7 +83,7 @@
                 $('#form-reschedule').submit(function(event){
                     event.preventDefault();
 
-                    btn_loading_basic('start')
+                    btn_loading_reschedule('start')
                     $.ajax({
                         url: $(this).attr('action'),
                         type: $(this).attr('method'),
@@ -68,7 +93,7 @@
                         if(res.status == 200){
                             toastr.success(res.message, 'Success');
                             initCalendarSpecial();
-                            initCalendarRegular();
+                            initCalendarReguler();
                             hideModal('modal-reschedule');
                         }
                     })
@@ -76,7 +101,7 @@
                         toastr.error(res.responseJSON.message, 'Failed')
                     })
                     .always(function() {
-                        btn_loading_basic('stop')
+                        btn_loading_reschedule('stop')
                     });
                 });
 
@@ -400,7 +425,18 @@
                         let id = info.event.extendedProps.master_lesson_id;
                         let description = info.event.extendedProps.description;
                         let is_buy = info.event.extendedProps.is_buy;
-
+                        let platform_link = info.event.extendedProps.platform_link;
+                        if(moment(moment(datetime).format('YYYY-MM-DD')).isSameOrBefore(moment().format('YYYY-MM-DD'))){
+                            if(is_buy){
+                                $('#to-class').show();
+                                $('#link').attr('href',platform_link);
+                                $('#link').attr('target','_blank');
+                            }else{
+                                $('#to-class').hide();
+                            }
+                        }else{
+                            $('#to-class').hide();
+                        }
                         if(total_booking < slot){
                             $('#master-lesson-id').val(id);
                             $('#master-lesson-title').html(name);
@@ -472,6 +508,7 @@
                                 "master_lesson_id" : data.id,
                                 "description" : data.description,
                                 "is_buy" : data.is_buy,
+                                "platform_link" : data.platform_link,
                             });
                         })
                     }
@@ -490,9 +527,41 @@
                 })
                 .done(function(res, xhr, meta) {
                     if(res.status == 200){
+                        let element = ``;
                         $.each(res.data, function(index, data){
+                            element +=`
+                                <tr>
+                                    <th>
+                                        <div class="d-flex">
+                                            <div>
+                                                <img src="${data.image}" class="rounded-circle" width="50px" height="50px">
+                                            </div>
+                                            <div class="ml-3">
+                                                <strong>${data.name}</strong><br>
+                                                <span class="text-muted">${data.email}</span>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <td>${data.phone}</td>
+                                    <td>${data.class_active} Schedule</td>
+                                    <td>`;
+                                    for(let i=0; i<parseInt(data.rating); i++){
+                                        element+=`
+                                        <span class="svg-icon svg-icon-warning svg-icon-sm"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-02-01-052524/theme/html/demo1/dist/../src/media/svg/icons/General/Star.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                <polygon points="0 0 24 0 24 24 0 24"/>
+                                                <path d="M12,18 L7.91561963,20.1472858 C7.42677504,20.4042866 6.82214789,20.2163401 6.56514708,19.7274955 C6.46280801,19.5328351 6.42749334,19.309867 6.46467018,19.0931094 L7.24471742,14.545085 L3.94038429,11.3241562 C3.54490071,10.938655 3.5368084,10.3055417 3.92230962,9.91005817 C4.07581822,9.75257453 4.27696063,9.65008735 4.49459766,9.61846284 L9.06107374,8.95491503 L11.1032639,4.81698575 C11.3476862,4.32173209 11.9473121,4.11839309 12.4425657,4.36281539 C12.6397783,4.46014562 12.7994058,4.61977315 12.8967361,4.81698575 L14.9389263,8.95491503 L19.5054023,9.61846284 C20.0519472,9.69788046 20.4306287,10.2053233 20.351211,10.7518682 C20.3195865,10.9695052 20.2170993,11.1706476 20.0596157,11.3241562 L16.7552826,14.545085 L17.5353298,19.0931094 C17.6286908,19.6374458 17.263103,20.1544017 16.7187666,20.2477627 C16.5020089,20.2849396 16.2790408,20.2496249 16.0843804,20.1472858 L12,18 Z" fill="#000000"/>
+                                            </g>
+                                        </svg><!--end::Svg Icon--></span>
+                                        `
+                                    }
+                                        element+=`
+                                    </td>
+                                </tr>
+                            `;
+                        });
 
-                        })
+                        $('#table-body').html(element);
                     }
                 })
                 .fail(function(res, error) {
@@ -514,6 +583,52 @@
                         }
                         else{
                             $('#total-rating').html(res.data.star);
+                        }
+                    }
+                })
+                .fail(function(res, error) {
+                    toastr.error(res.responseJSON.message, 'Failed')
+                })
+                .always(function() {
+
+                });
+            },
+            getClass = () => {
+                $.ajax({
+                    url: `{{ url('student/my-class/class-active') }}/{{Auth::guard('student')->user()->id}}`,
+                    type: `GET`,
+                })
+                .done(function(res, xhr, meta) {
+                    if(res.status == 200){
+                        if(res.data.length > 0){
+                            let element = ``;
+                            let selected = ``;
+                            $.each(res.data, function(index, data){
+                                if(index == 0){
+                                    selected = `
+                                    <img id="class-image-selected" class="w-100" src="${data.image}" alt="">
+                                    <div class="h-100 class-owned-overlay">
+                                        <h5 id="class-name-selected">${data.classroom_name}</h5>
+                                    </div>
+                                    `;
+
+                                    $('.class-owned-selected').html(selected);
+                                    $('#last-meeting').html(data.subtraction);
+                                    $('#rating-classroom-id').val(data.classroom_id);
+
+                                }
+                                element += `
+                                    <li class="class-owned__item" data-subtraction="${data.subtraction}" data-classroom_id="${data.classroom_id}" data-is_rating="${data.is_rating}">
+                                        <img class="w-100 class-image" src="${data.image}"
+                                            alt="">
+                                        <div class="class-owned-overlay h-100">
+                                            <h5 class="class-name">${data.classroom_name}</h5>
+                                        </div>
+                                    </li>
+                                `;
+                            });
+                            $('#list-class-active').html(element);
+                            $('.see-all').html(`<img src="{{asset('cms/assets/img/svg/layers.svg')}}" class="mr-2" alt=""> See All`);
                         }
                     }
                 })
