@@ -33,6 +33,7 @@ class NotificationController extends Controller
                     ->whereNull('deleted_at')
                     ->whereDate('datetime', date('Y-m-d'))
                     ->orderBy('datetime','desc')
+                    ->where('type', 1)
                     ->get()
                     ->toArray();
 

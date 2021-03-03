@@ -15,6 +15,11 @@ class StudentNotification extends Model
 
     public $keyType = 'string';
 
+    // Type Description
+    // 1 Transaction Success
+    // 2 Schedule COnfirmed
+    // 3 Reschedule
+
     protected $fillable = [
         'student_id',
         'transaction_id',
