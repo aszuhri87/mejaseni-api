@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\MediaController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Transaction\DokuController;
 use App\Http\Controllers\Transaction\CartController;
 use App\Http\Controllers\Transaction\PaymentController;
@@ -35,6 +36,7 @@ use App\Http\Controllers\Admin\Master\StudentController;
 use App\Http\Controllers\Admin\Master\ExpertiseController;
 use App\Http\Controllers\Admin\Master\GuestStarController;
 use App\Http\Controllers\Admin\Master\MasterLessonController;
+use App\Http\Controllers\Admin\Transaction\StudentController as TransactionStudentController;
 use App\Http\Controllers\Admin\Schedule\ScheduleController;
 
 /*
@@ -84,21 +86,29 @@ use App\Http\Controllers\Admin\Cms\JobDescriptionController as JobDescriptionCon
 use App\Http\Controllers\Admin\Cms\JobRequirementController as JobRequirementController;
 use App\Http\Controllers\Admin\Cms\WorkingHourController as WorkingHourController;
 use App\Http\Controllers\Admin\Cms\GaleryController as GaleryController;
+use App\Http\Controllers\Admin\Cms\SocialMediaController as SocialMediaController;
+use App\Http\Controllers\Admin\Cms\MarketPlaceController as MarketPlaceController;
+
 /*
 |--------------------------------------------------------------------------
 | CMS Controller
 |--------------------------------------------------------------------------
 */
-// use App\Http\Controllers\Cms\HomePageController as HomePageController;
-// use App\Http\Controllers\Cms\ClassController as ClassController;
-// use App\Http\Controllers\Cms\StoreController as StoreController;
-// use App\Http\Controllers\Cms\NewsEventController as NewsEventController;
-// use App\Http\Controllers\Cms\AboutController as AboutController;
-// use App\Http\Controllers\Cms\PrivacyPolicyController as PrivacyPolicyController;
-// use App\Http\Controllers\Cms\TosController as TosController;
-// use App\Http\Controllers\Cms\FaqController as FaqController;
-// use App\Http\Controllers\Cms\CareerController as CareerController;
-// use App\Http\Controllers\Cms\CareerDetailController as CareerDetailController;
+use App\Http\Controllers\Cms\HomePageController as HomePageController;
+use App\Http\Controllers\Cms\ClassController as ClassController;
+use App\Http\Controllers\Cms\StoreController as StoreController;
+use App\Http\Controllers\Cms\NewsEventController as NewsEventController;
+use App\Http\Controllers\Cms\AboutController as AboutController;
+use App\Http\Controllers\Cms\PrivacyPolicyController as PrivacyPolicyController;
+use App\Http\Controllers\Cms\TosController as TosController;
+use App\Http\Controllers\Cms\FaqController as FaqController;
+use App\Http\Controllers\Cms\CareerController as CareerController;
+use App\Http\Controllers\Cms\CareerDetailController as CareerDetailController;
+use App\Http\Controllers\Cms\StoreDetailController as StoreDetailController;
+use App\Http\Controllers\Cms\EventListController as EventListController;
+use App\Http\Controllers\Cms\EventDetailController as EventDetailController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -112,6 +122,8 @@ use App\Http\Controllers\Admin\Cms\GaleryController as GaleryController;
 */
 
 
+
+
 /*
 |--------------------------------------------------------------------------
 | CMS
@@ -119,19 +131,29 @@ use App\Http\Controllers\Admin\Cms\GaleryController as GaleryController;
 */
 Route::get('/', [HomePageController::class, 'index']);
 Route::get('/class', [ClassController::class, 'index']);
+Route::get('/class/classroom_category/{category_id}/sub_classroom_category', [ClassController::class, 'get_sub_category']);
+Route::get('/classroom_category/sub_classroom_category/{sub_category_id}/classroom', [ClassController::class, 'get_classroom']);
+Route::get('/class/{classroom_category_id}/sub_classroom_category/{sub_classroom_category_id}/package/{package}', [ClassController::class, 'get_package']);
+
+
 Route::get('/store', [StoreController::class, 'index']);
+Route::get('/video-course/{video_course_id}/detail', [StoreDetailController::class, 'index']);
+Route::get('/classroom_category/{category_id}/sub_classroom_category', [StoreController::class, 'get_sub_category']);
+Route::get('/classroom_category/sub_classroom_category/{sub_category_id}/video-course', [StoreController::class, 'get_video_courses']);
 Route::get('/news-event', [NewsEventController::class, 'index']);
+Route::get('/event-list', [EventListController::class, 'index']);
+Route::get('/event/{event_id}/detail', [EventDetailController::class, 'index']);
+
 Route::get('/about', [AboutController::class, 'index']);
 Route::get('/privacy-policy', [PrivacyPolicyController::class, 'index']);
 Route::get('/tos', [TosController::class, 'index']);
 Route::get('/faq', [FaqController::class, 'index']);
 Route::get('/career', [CareerController::class, 'index']);
 Route::get('/career-detail', [CareerDetailController::class, 'index']);
-
 Route::post('/notifications/payments', [PaymentController::class, 'notification']);
 
-
 Route::group(['middleware' => ['guest-handling']], function () {
+
     Route::get('login', [LoginController::class, 'index_login']);
     Route::post('login', [LoginController::class, 'login']);
 });
@@ -141,6 +163,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
     Route::get('logout', [LoginController::class, 'logout']);
     Route::post('media/file', [MediaController::class, 'file_upload']);
     Route::delete('media/file/{id}', [MediaController::class, 'file_delete']);
+    Route::get('/notification', [NotificationController::class, 'notification']);
 
     /*
     |--------------------------------------------------------------------------
@@ -150,11 +173,14 @@ Route::group(['middleware' => ['auth-handling']], function () {
 
     Route::group(['middleware' => ['student-handling']], function () {
         Route::get('/cart', [CartController::class, 'index']);
+        Route::delete('/cart/{id}', [CartController::class, 'destroy']);
         Route::post('/cart-store', [CartController::class, 'store']);
         Route::post('/cart-payment', [CartController::class, 'payment']);
         Route::get('/student-cart', [CartController::class, 'data']);
+        Route::get('/cancel-payment/{id}', [PaymentController::class, 'cancel_payment']);
         Route::get('/waiting-payment/{id}', [PaymentController::class, 'waiting']);
         Route::get('/payment-success', [PaymentController::class, 'success']);
+        Route::get('/redirect-payment-success', [PaymentController::class, 'redirect']);
     });
 
     /*
@@ -200,6 +226,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
 
                 Route::get('master-lesson/guest-star/{id}', [MasterLessonController::class, 'get_guest_star']);
                 Route::delete('master-lesson/guest-star/{id}', [MasterLessonController::class, 'destroy_guest_star']);
+                Route::post('master-lesson/update/{id}', [MasterLessonController::class, 'update']);
                 Route::post('master-lesson/dt', [MasterLessonController::class, 'dt']);
                 Route::resource('master-lesson', MasterLessonController::class);
             });
@@ -246,12 +273,19 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::resource('media-conference', PlatformController::class);
 
             Route::get('theory', [TheoryController::class, 'index']);
+            Route::post('theory', [TheoryController::class, 'store']);
             Route::delete('theory/{id}', [TheoryController::class, 'destroy']);
             Route::post('theory/dt', [TheoryController::class, 'dt']);
             Route::post('theory/update/{id}', [TheoryController::class, 'update']);
 
             Route::post('expertise/dt', [ExpertiseController::class, 'dt']);
             Route::resource('expertise', ExpertiseController::class);
+        });
+
+        Route::group(['prefix' => 'transaction'], function () {
+            Route::get('student', [TransactionStudentController::class, 'index']);
+            Route::post('student/dt', [TransactionStudentController::class, 'dt']);
+            Route::get('student/detail/{id}', [TransactionStudentController::class, 'detail']);
         });
 
         Route::get('schedule/master-lesson/{id}', [ScheduleController::class, 'show_master_lesson']);
@@ -310,6 +344,14 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::post('galery/dt', [GaleryController::class, 'dt']);
             Route::post('galery/update/{id}', [GaleryController::class, 'update']);
             Route::resource('galery', GaleryController::class);
+
+            Route::post('social-media/dt', [SocialMediaController::class, 'dt']);
+            Route::post('social-media/update/{id}', [SocialMediaController::class, 'update']);
+            Route::resource('social-media', SocialMediaController::class);
+
+            Route::post('marketplace/dt', [MarketPlaceController::class, 'dt']);
+            Route::post('marketplace/update/{id}', [MarketPlaceController::class, 'update']);
+            Route::resource('marketplace', MarketPlaceController::class);
 
         });
     });
@@ -371,11 +413,18 @@ Route::group(['middleware' => ['auth-handling']], function () {
 
     Route::group(['prefix' => 'student', 'middleware' => 'student-handling'], function () {
 
-        Route::get('/dashboard', [StudentDashboardController::class, 'index']);
+        Route::group(['prefix' => 'dashboard'], function () {
+            Route::get('/', [StudentDashboardController::class, 'index']);
+            Route::get('total-class', [StudentDashboardController::class, 'total_class']);
+            Route::get('total-video', [StudentDashboardController::class, 'total_video']);
+            Route::get('total-booking', [StudentDashboardController::class, 'total_booking']);
+            Route::get('history-booking', [StudentDashboardController::class, 'history_booking']);
+        });
 
         Route::group(['prefix' => 'invoice'], function () {
             Route::get('/', [StudentInvoiceController::class, 'index']);
             Route::get('dt', [StudentInvoiceController::class, 'dt']);
+            Route::get('detail/{id}', [StudentInvoiceController::class, 'detail']);
         });
 
         Route::group(['prefix' => 'schedule'], function () {
@@ -399,6 +448,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
 
             Route::group(['prefix' => 'master-lesson'], function () {
                 Route::get('/', [StudentScheduleController::class, 'master_lesson']);
+                Route::post('booking/{id}', [StudentScheduleController::class, 'booking_master_lesson']);
             });
 
             Route::group(['prefix' => 'coach-list'], function () {
@@ -409,9 +459,13 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::group(['prefix' => 'my-class'], function () {
             Route::get('/',[StudentMyClassController::class, 'index']);
             Route::post('booking/dt',[StudentMyClassController::class, 'booking_dt']);
+            Route::post('rating',[StudentMyClassController::class, 'rating']);
             Route::post('last-class/dt',[StudentMyClassController::class, 'last_class_dt']);
             Route::post('review/{id}',[StudentMyClassController::class, 'review']);
             Route::put('reschedule/{id}',[StudentMyClassController::class, 'reschedule']);
+            Route::get('class-active/{id}',[StudentMyClassController::class, 'class_active']);
+            Route::get('checkin/{id}',[StudentMyClassController::class, 'checkin']);
+            Route::get('get-review/{id}',[StudentMyClassController::class, 'get_review']);
         });
 
         Route::group(['prefix' => 'new-package'], function () {
@@ -424,16 +478,20 @@ Route::group(['middleware' => ['auth-handling']], function () {
         });
 
         Route::group(['prefix' => 'theory'], function () {
-            Route::get('/', [StudentTheoryController::class, 'index']);
-            Route::get('get-theory', [StudentTheoryController::class, 'get_theory']);
-            Route::get('get-class/{student_id}', [StudentTheoryController::class, 'get_class']);
+            Route::group(['prefix' => 'theory-class'], function () {
+                Route::get('/', [StudentTheoryController::class, 'index']);
+                Route::get('get-theory', [StudentTheoryController::class, 'get_theory']);
+                Route::get('get-class/{student_id}', [StudentTheoryController::class, 'get_class']);
+                Route::get('filter_theory', [StudentTheoryController::class, 'filter_theory']);
+            });
+
+            Route::group(['prefix' => 'video-class'], function () {
+                Route::get('/', [StudentVideoController::class, 'index']);
+                Route::get('get-video', [StudentVideoController::class, 'get_video']);
+                Route::get('video-detail/{session_video_id}', [StudentVideoController::class, 'video_detail']);
+            });
         });
 
-        Route::group(['prefix' => 'video'], function () {
-            Route::get('/', [StudentVideoController::class, 'index']);
-            Route::get('get-video', [StudentVideoController::class, 'get_video']);
-            Route::get('video-detail/{session_video_id}', [StudentVideoController::class, 'video_detail']);
-        });
 
         Route::group(['prefix' => 'exercise'], function () {
             Route::get('/', [StudentExerciseController::class, 'index']);
@@ -491,25 +549,3 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::get('get-guest-star', [PublicController::class, 'get_guest_star']);
     });
 });
-
-
-Route::get('fire', function () {
-    event(new \App\Events\PaymentNotification('haiiii'));
-    return 'oke';
-});
-
-
-Route::get('fire-2', function () {
-    $actionId = 'score_update';
-    $actionData = array('team1_score' => 46);
-
-    event(new \App\Events\ActionEvent($actionId, $actionData));
-    return 'oke';
-});
-
-
-Route::get('welcome', function () {
-    return view('welcome');
-});
-
-

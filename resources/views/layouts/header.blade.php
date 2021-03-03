@@ -31,8 +31,8 @@
 
         <!--begin::Topbar-->
         <div class="topbar">
-            <!--begin::Notifications-->
-            <div class="dropdown">
+             <!--begin::Notifications-->
+             <div class="dropdown">
                 <!--begin::Toggle-->
                 <div class="topbar-item" data-toggle="dropdown" data-offset="10px,0px">
                     <div class="btn btn-icon btn-clean btn-dropdown btn-lg mr-1 pulse pulse-primary">
@@ -55,11 +55,47 @@
                     </div>
                 </div>
                 <!--end::Toggle-->
-                @if (Auth::guard('student')->check())
-                    <div class="topbar-item">
-                        <div class="btn btn-icon btn-clean btn-dropdown btn-lg mr-1" id="kt_quick_cart_toggle">
+
+                <!--begin::Dropdown-->
+                <div class="dropdown-menu p-0 m-0 dropdown-menu-right dropdown-menu-anim-up dropdown-menu-lg">
+                    <form>
+                        <!--begin::Header-->
+                        <div class="d-flex flex-column pt-12 pb-10 bgi-size-cover bgi-no-repeat rounded-top"
+                            style="background-image: url(assets/media/misc/bg-1.jpg)">
+                            <!--begin::Title-->
+                            <h4 class="d-flex flex-center rounded-top">
+                                <span class="text-white">Notifications</span>
+                            </h4>
+                            <!--end::Title-->
+                        </div>
+                        <!--end::Header-->
+
+                        <!--begin::Content-->
+                        <div class="tab-content">
+
+                            <!--begin::Tabpane-->
+                            <div class="tab-pane active show" id="topbar_notifications_events" role="tabpanel">
+                                <!--begin::Nav-->
+                                <div class="navi navi-hover scroll my-4" id="item-notification" data-scroll="true" data-height="300" data-mobile-height="200">
+
+                                </div>
+                                <!--end::Nav-->
+                            </div>
+                            <!--end::Tabpane-->
+                        </div>
+                        <!--end::Content-->
+                    </form>
+                </div>
+                <!--end::Dropdown-->
+            </div>
+            <!--end::Notifications-->
+
+            @if (Auth::guard('student')->check())
+                <div class="topbar-item">
+                    <div class="btn btn-icon btn-clean btn-lg mr-1">
+                        <a href="{{ url('cart') }}" data-toggle="tooltip" title="Cart">
                             <span class="svg-icon svg-icon-xl svg-icon-primary">
-                                <!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Shopping/Cart3.svg-->
+                                <!-- id="kt_quick_cart_toggle" begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Shopping/Cart3.svg-->
                                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                     <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                         <rect x="0" y="0" width="24" height="24"></rect>
@@ -69,53 +105,17 @@
                                 </svg>
                                 <!--end::Svg Icon-->
                             </span>
-                        </div>
+                        </a>
                     </div>
-                @endif
-                <!--begin::Dropdown-->
-                <div
-                    class="dropdown-menu p-0 m-0 dropdown-menu-right dropdown-menu-anim-up dropdown-menu-lg">
-                    <form>
-                        <!--begin::Header-->
-                        <div class="d-flex flex-column pt-12 pb-10 bgi-size-cover bgi-no-repeat rounded-top"
-                            style="background-image: url(assets/media/misc/bg-1.jpg)">
-                            <!--begin::Title-->
-                            <h4 class="d-flex flex-center rounded-top">
-                                <span class="text-white">User Notifications</span>
-                            </h4>
-                            <!--end::Title-->
-                        </div>
-                        <!--end::Header-->
-
-                        <!--begin::Content-->
-                        <div class="tab-content">
-                            <!--begin::Tabpane-->
-                            <div class="tab-pane active" id="topbar_notifications_logs" role="tabpanel">
-                                <!--begin::Nav-->
-                                <div class="d-flex flex-center text-center text-muted min-h-200px">
-                                    All caught up!
-                                    <br />
-                                    No new notifications.
-                                </div>
-                                <!--end::Nav-->
-                            </div>
-                            <!--end::Tabpane-->
-
-                        </div>
-                        <!--end::Content-->
-                    </form>
                 </div>
-                <!--end::Dropdown-->
-            </div>
-            <!--end::Notifications-->
+            @endif
+
             <!--begin::User-->
             <div class="topbar-item">
                 <div class="btn btn-icon btn-icon-mobile w-auto btn-clean d-flex align-items-center btn-lg px-2"
                     id="kt_quick_user_toggle">
-                    <span
-                        class="text-muted font-weight-bold font-size-base d-none d-md-inline mr-1">Hi,</span>
-                    <span
-                        class="text-dark-50 font-weight-bolder font-size-base d-none d-md-inline mr-3">{{$name}}</span>
+                    <span class="text-muted font-weight-bold font-size-base d-none d-md-inline mr-1">Hi,</span>
+                    <span class="text-dark-50 font-weight-bolder font-size-base d-none d-md-inline mr-3">{{$name}}</span>
                     <span class="symbol symbol-lg-35 symbol-25 symbol-light-success">
                         <span class="symbol-label font-size-h5 font-weight-bold">{{$name[0]}}</span>
                     </span>

@@ -196,6 +196,7 @@
                     $('#form-master-lesson').find('input[name="slot"]').val(data.slot);
                     $('#form-master-lesson').find('input[name="price"]').val(data.price);
                     $('#form-master-lesson').find('input[name="platform_link"]').val(data.platform_link);
+                    $('#form-master-lesson').find('textarea[name="description"]').val(data.description);
 
                     arr_guest = [];
                     initDataGuest(global_id);

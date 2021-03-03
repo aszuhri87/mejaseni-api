@@ -87,7 +87,7 @@
                 </div>
             </div>
         </div>
-        <div class="separator separator-dashed mt-8 mb-5"></div>
+        {{-- <div class="separator separator-dashed mt-8 mb-5"></div>
         <div class="row">
             <div class="col">
                 <div class="d-flex align-items-center mt-5">
@@ -105,7 +105,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
         @endif
     </div>
     <!--end::Content-->

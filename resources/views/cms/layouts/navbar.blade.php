@@ -19,35 +19,39 @@
       <li class="nav-item @if($segment1 == 'class'){{'active'}}@endif">
         <a class="nav-link" href="{{ url('class') }}">Kelas</a>
       </li>
-      <li class="nav-item @if($segment1 == 'store'){{'active'}}@endif">
+      <li class="nav-item @if($segment1 == 'store' || $segment1 == 'video-course'){{'active'}}@endif">
         <a class="nav-link" href="{{ url('store') }}">E-Store</a>
       </li>
-      <li class="nav-item @if($segment1 == 'news-event'){{'active'}}@endif">
+      <li class="nav-item @if($segment1 == 'news-event' || $segment1 == 'event-list'){{'active'}}@endif">
         <a class="nav-link" href="{{ url('news-event') }}">News & Event</a>
       </li>
-      <a href="#">
-        <div class="circle-wrap">
-          <div class="circle">
+      @if(Auth::guard('student')->check())
+        <a href="#">
+          <div class="circle-wrap">
+            <div class="circle">
 
-            <div class="mask full">
-              <div class="progress-bar"></div>
+              <div class="mask full">
+                <div class="progress-bar"></div>
+              </div>
+
+              <div class="mask half">
+                <div class="progress-bar"></div>
+              </div>
+
+              <div class="inside-circle">
+                <img class="rounded-circle profile-img" id="profile-img" src="{{ asset('cms/assets/img/coach.png') }}"
+                alt="">
+              </div>
+
             </div>
-
-            <div class="mask half">
-              <div class="progress-bar"></div>
-            </div>
-
-            <div class="inside-circle">
-              <img class="rounded-circle profile-img" id="profile-img" src="{{ asset('cms/assets/img/coach.png') }}"
-              alt="">
-            </div>
-
           </div>
-        </div>
-      </a>
+        </a>
+      @endif
     </ul>
   </div>
 </nav>
+
+
 
 <div class="profile__wrapper animate__animated animate__fadeIn animate__faster">
   <ul>
@@ -65,7 +69,7 @@
       <li><img class="mr-2" src="{{ asset('cms/assets/img/svg/Wallet.svg') }}" alt="">Pembayaran<div class="nav-badge">1</div></li>
     </a>
     <div class="border-line"></div>
-    <a href="#">
+    <a href="{{ url('logout') }}">
       <li>Keluar</li>
     </a>
   </ul>

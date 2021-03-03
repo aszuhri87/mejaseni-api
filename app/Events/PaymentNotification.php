@@ -16,20 +16,22 @@ class PaymentNotification implements ShouldBroadcastNow
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $data;
+    public $id;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($data)
+    public function __construct($data, $id)
     {
         $this->data = $data;
+        $this->id = $id;
     }
 
     public function broadcastAs()
     {
-        return 'server.notification';
+        return 'payment.notification.'.$this->id;
     }
 
     /**

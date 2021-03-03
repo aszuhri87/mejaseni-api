@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 
 use App\Models\CoachSchedule;
 use App\Models\MasterLesson;
+use App\Models\CoachNotification;
+use App\Models\StudentNotification;
 
 use Storage;
 use Auth;
@@ -130,6 +132,8 @@ class ScheduleController extends BaseMenu
                 ], 400);
             }
 
+            $data_schedule = CoachSchedule::find($id);
+
             $result = DB::transaction(function () use($request, $id){
                 if($request->type_class == 1){
                     $coach_classroom = DB::table('coach_classrooms')
@@ -154,6 +158,63 @@ class ScheduleController extends BaseMenu
                 return $result;
             });
 
+            if($data_schedule->datetime != date('Y-m-d H:i:s', strtotime($request->date.' '.$request->time))){
+                $student_schedules = DB::table('student_schedules')
+                    ->select([
+                        'student_schedules.id',
+                        'student_schedules.coach_schedule_id',
+                        'student_classrooms.student_id'
+                    ])
+                    ->leftJoin('student_classrooms','student_classrooms.id','=','student_schedules.student_classroom_id')
+                    ->whereNull('student_schedules.deleted_at');
+
+                $data = CoachSchedule::select([
+                        'coach_schedules.*',
+                        'coach_classrooms.coach_id',
+                        'classrooms.name as classroom',
+                        'student_schedules.student_id',
+                        'student_schedules.id as student_schedule_id'
+                    ])
+                    ->leftJoin('coach_classrooms','coach_classrooms.id','=','coach_schedules.coach_classroom_id')
+                    ->leftJoin('classrooms','classrooms.id','=','coach_classrooms.classroom_id')
+                    ->leftJoinSub($student_schedules, 'student_schedules', function($join){
+                        $join->on('student_schedules.coach_schedule_id','coach_schedules.id');
+                    })
+                    ->where('coach_schedules.id', $id)
+                    ->first();
+
+                DB::transaction(function () use($data, $request){
+                    $datetime = $data->datetime;
+
+                    $data->update([
+                        'datetime' => date('Y-m-d H:i:s', strtotime($request->date.' '.$request->time)),
+                    ]);
+
+                    $notification = CoachNotification::create([
+                        'coach_id' => $data->coach_id,
+                        'coach_schedule_id' => $data->id,
+                        'type' => 3,
+                        'text' => 'Jadwal kelas '.$data->classroom.' pada '.date('d M Y, H:i:s', strtotime($datetime)).' telah diubah menjadi pada '.date('d M Y, H:i:s', strtotime($data->datetime)).'.',
+                        'datetime' => date('Y-m-d H:i:s')
+                    ]);
+
+                    if($data->student_id){
+                        $notification = StudentNotification::create([
+                            'student_id' => $data->student_id,
+                            'student_schedule_id' => $data->student_schedule_id,
+                            'type' => 3,
+                            'text' => 'Jadwal kelas '.$data->classroom.' pada '.date('d M Y, H:i:s', strtotime($datetime)).' telah diubah menjadi pada '.date('d M Y, H:i:s', strtotime($data->datetime)).'.',
+                            'datetime' => date('Y-m-d H:i:s')
+                        ]);
+
+                        event(new \App\Events\StudentNotification($notification, $data->student_id));
+                    }
+
+                    event(new \App\Events\CoachNotification($notification, $data->coach_id));
+                    event(new \App\Events\AdminNotification($notification));
+                });
+            }
+
             return response([
                 "data"      => $result,
                 "message"   => 'Successfully saved!'
@@ -169,6 +230,9 @@ class ScheduleController extends BaseMenu
     public function all()
     {
         try {
+            $student_schedules = DB::table('student_schedules')
+                ->whereNull('deleted_at');
+
             $coach_schedules = DB::table('coach_schedules')
                 ->select([
                     'coach_schedules.id',
@@ -185,7 +249,9 @@ class ScheduleController extends BaseMenu
                 ->leftJoin('coach_classrooms','coach_schedules.coach_classroom_id','=','coach_classrooms.id')
                 ->leftJoin('coaches','coach_classrooms.coach_id','=','coaches.id')
                 ->leftJoin('classrooms','coach_classrooms.classroom_id','=','classrooms.id')
-                ->leftJoin('student_schedules','student_schedules.coach_schedule_id','=','coach_schedules.id')
+                ->leftJoinSub($student_schedules, 'student_schedules', function($join){
+                    $join->on('student_schedules.coach_schedule_id','coach_schedules.id');
+                })
                 ->leftJoin('sessions','student_schedules.session_id','=','sessions.id')
                 ->leftJoin('student_classrooms','student_classrooms.id','=','student_schedules.student_classroom_id')
                 ->leftJoin('students','students.id','=','student_classrooms.student_id')
@@ -345,9 +411,60 @@ class ScheduleController extends BaseMenu
     public function update_time(Request $request, $id)
     {
         try {
-            $data = CoachSchedule::find($id)->update([
-                'datetime' => date('Y-m-d H:i:s', strtotime($request->date.' '.$request->time)),
-            ]);
+            $student_schedules = DB::table('student_schedules')
+                ->select([
+                    'student_schedules.id',
+                    'student_schedules.coach_schedule_id',
+                    'student_classrooms.student_id'
+                ])
+                ->leftJoin('student_classrooms','student_classrooms.id','=','student_schedules.student_classroom_id')
+                ->whereNull('student_schedules.deleted_at');
+
+            $data = CoachSchedule::select([
+                    'coach_schedules.*',
+                    'coach_classrooms.coach_id',
+                    'classrooms.name as classroom',
+                    'student_schedules.student_id',
+                    'student_schedules.id as student_schedule_id'
+                ])
+                ->leftJoin('coach_classrooms','coach_classrooms.id','=','coach_schedules.coach_classroom_id')
+                ->leftJoin('classrooms','classrooms.id','=','coach_classrooms.classroom_id')
+                ->leftJoinSub($student_schedules, 'student_schedules', function($join){
+                    $join->on('student_schedules.coach_schedule_id','coach_schedules.id');
+                })
+                ->where('coach_schedules.id', $id)
+                ->first();
+
+            DB::transaction(function () use($data, $request){
+                $datetime = $data->datetime;
+
+                $data->update([
+                    'datetime' => date('Y-m-d H:i:s', strtotime($request->date.' '.$request->time)),
+                ]);
+
+                $notification = CoachNotification::create([
+                    'coach_id' => $data->coach_id,
+                    'coach_schedule_id' => $data->id,
+                    'type' => 3,
+                    'text' => 'Jadwal kelas '.$data->classroom.' pada '.date('d M Y, H:i:s', strtotime($datetime)).' telah diubah menjadi pada '.date('d M Y, H:i:s', strtotime($data->datetime)).'.',
+                    'datetime' => date('Y-m-d H:i:s')
+                ]);
+
+                if($data->student_id){
+                    $notification = StudentNotification::create([
+                        'student_id' => $data->student_id,
+                        'student_schedule_id' => $data->student_schedule_id,
+                        'type' => 3,
+                        'text' => 'Jadwal kelas '.$data->classroom.' pada '.date('d M Y, H:i:s', strtotime($datetime)).' telah diubah menjadi pada '.date('d M Y, H:i:s', strtotime($data->datetime)).'.',
+                        'datetime' => date('Y-m-d H:i:s')
+                    ]);
+
+                    event(new \App\Events\StudentNotification($notification, $data->student_id));
+                }
+
+                event(new \App\Events\CoachNotification($notification, $data->coach_id));
+                event(new \App\Events\AdminNotification($notification));
+            });
 
             return response([
                 "data"      => $data,
@@ -364,10 +481,33 @@ class ScheduleController extends BaseMenu
     public function confirm($id)
     {
         try {
-            $data = CoachSchedule::find($id)->update([
-                'admin_id' => Auth::guard('admin')->user()->id,
-                'accepted' => true,
-            ]);
+            $data = CoachSchedule::select([
+                    'coach_schedules.*',
+                    'coach_classrooms.coach_id',
+                    'classrooms.name as classroom'
+                ])
+                ->leftJoin('coach_classrooms','coach_classrooms.id','=','coach_schedules.coach_classroom_id')
+                ->leftJoin('classrooms','classrooms.id','=','coach_classrooms.classroom_id')
+                ->where('coach_schedules.id', $id)
+                ->first();
+
+            DB::transaction(function () use($data){
+                $data->update([
+                    'admin_id' => Auth::guard('admin')->user()->id,
+                    'accepted' => true,
+                ]);
+
+                $notification = CoachNotification::create([
+                    'coach_id' => $data->coach_id,
+                    'coach_schedule_id' => $data->id,
+                    'type' => 2,
+                    'text' => 'Jadwal kelas '.$data->classroom.' pada '.date('d M', strtotime($data->datetime)).' telah disetujui.',
+                    'datetime' => date('Y-m-d H:i:s')
+                ]);
+
+                event(new \App\Events\CoachNotification($notification, $data->coach_id));
+                event(new \App\Events\AdminNotification($notification));
+            });
 
             return response([
                 "data"      => $data,

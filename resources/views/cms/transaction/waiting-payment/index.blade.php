@@ -21,7 +21,7 @@
             <h5 class="my-5 mt-md-0 text-center">{{$transaction->payment_chanel}}</h5>
             <p class="mb-2">Total Bayar</p>
             <h3 class="mb-5">Rp. {{number_format($data->order->amount)}}</h3>
-            <a href="javascript:void(0);" class="btn btn-danger mb-4 row-center shadow">Batalkan Pembayaran</a>
+            <a href="{{url('cancel-payment/'.$transaction->id)}}" class="btn btn-danger mb-4 row-center shadow">Batalkan Pembayaran</a>
         </div>
         <div class="col-12 col-xl-8 mb-5">
             <h3 class="mt-2 py-3 text-center">Cara Pembayaran</h3>
@@ -66,9 +66,14 @@
             <lottie-player src="{{asset('cms/assets/img/payment-waiting.json')}}" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></lottie-player>
             <h5 class="my-5 mt-md-0 text-center">{{$transaction->payment_chanel}}</h5>
             <p class="mb-2">Total Bayar</p>
-            <h3 class="mb-5">Rp. {{number_format($data->order->amount)}}</h3>
-            <a href="javascript:void(0);" class="btn btn-primary mb-4 row-center shadow">Lanjutkan Pembayaran</a>
-            <a href="javascript:void(0);" class="btn btn-danger mb-4 row-center shadow">Batalkan Pembayaran</a>
+            <h3 class="mb-5">Rp. {{number_format($transaction->total)}}</h3>
+            <div class="d-flex">
+                <a href="{{$transaction->payment_url}}"
+                    class="btn btn-primary mb-4 row-center shadow btn-payment">
+                    Lanjutkan Pembayaran
+                </a>
+                <a href="{{url('cancel-payment/'.$transaction->id)}}" class="btn btn-danger mb-4 row-center shadow ml-3">Batalkan Pembayaran</a>
+            </div>
         </div>
     </div>
 </div>

@@ -262,6 +262,16 @@
         }
     }
 
+    function btn_loading_master_lesson(action, text) {
+        if (action == 'start') {
+            $('.btn-loading-master-lesson').html('<div id="loading" class="mr-1"></div> Loading...');
+            $('.btn-loading-master-lesson').attr('disabled', true);
+        } else {
+            $('.btn-loading-master-lesson').html(text);
+            $('.btn-loading-master-lesson').attr('disabled', false);
+        }
+    }
+
     function btn_loading_rating(action) {
         if (action == 'start') {
             $('.btn-loading-rating').html('<div id="loading" class="mr-1"></div> Loading...');
@@ -269,6 +279,16 @@
         } else {
             $('.btn-loading-rating').html('Kirim Review');
             $('.btn-loading-rating').attr('disabled', false);
+        }
+    }
+
+    function btn_loading_reschedule(action) {
+        if (action == 'start') {
+            $('.btn-loading-reschedule').html('<div id="loading" class="mr-1"></div> Loading...');
+            $('.btn-loading-reschedule').attr('disabled', true);
+        } else {
+            $('.btn-loading-reschedule').html('Reschedule');
+            $('.btn-loading-reschedule').attr('disabled', false);
         }
     }
 

@@ -7,45 +7,48 @@
 @section('content')
 <section>
   <div class="row mx-0">
-    <div class="col-md-4 col-12 mx-0 pr-5 login-aside">
-      <div class="login-wrapper p-5">
-        <h1>Welcome to mejaseni</h1>
-        <div class="pt-3">
-          <a href="#" class="btn btn-blue row-center mt-5"><img class="img__btn-login mr-2"
-            src="{{ asset('cms/assets/img/logo-facebook.svg') }}" alt="">Lanjutkan dengan Facebook
-          </a>
-          <a href="#" class="btn btn-white row-center mt-3"><img class="img__btn-login mr-2"
-            src="{{ asset('cms/assets/img/logo-google.svg') }}" alt="">Lanjutkan dengan Google
-          </a>
-          <div class="row-center pt-5">
-            <span class="border-line"></span>
-            <span class="mx-3">Atau</span>
-            <span class="border-line"></span>
-          </div>
-          <div class="row-spacearound mt-5">
-            <a href="#" class="btn btn-primary w-75 row-center">Daftar Sekarang
-              <img class="ml-2"
-              src="././assets/img/svg/Sign-in.svg" alt="">
-            </a>
-            <a href="#" class="btn btn-white w-25 ml-3">Login</a>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    {{-- <div class="col-lg-5 col-xl-4 col-12 mx-0 pr-5 px-md-0 pr-lg-5 login-aside" data-aos="zoom-out">
-      <div class="login-wrapper p-5 p-lg-4 p-xl-5">
-        <img class="rounded-circle img-logged mb-3" src="{{ asset('cms/assets/img/coach.png') }}" alt="">
-        <h1>Halo, <br />Rista Amelia Baskoro!!!</h1>
-        <div class="pt-3">
-          <div class="row-spacearound mt-3">
-            <a href="#" class="btn btn-primary w-75 row-center">Lihat Kelas <img class="ml-2"
-              src="{{ asset('cms/assets/img/svg/Sign-in.svg') }}" alt=""></a>
-              <a href="#" class="btn btn-white w-25 mt-0 mt-xl-0 mt-lg-3 ml-3 ml-lg-0 ml-xl-3">Logout</a>
+    @if(!Auth::guard('student')->check())
+      <div class="col-md-4 col-12 mx-0 pr-5 login-aside">
+        <div class="login-wrapper p-5">
+          <h1>Welcome to mejaseni {{ Auth::guard('student')->user()}}</h1>
+          <div class="pt-3">
+            <a href="#" class="btn btn-blue row-center mt-5"><img class="img__btn-login mr-2"
+              src="{{ asset('cms/assets/img/logo-facebook.svg') }}" alt="">Lanjutkan dengan Facebook
+            </a>
+            <a href="#" class="btn btn-white row-center mt-3"><img class="img__btn-login mr-2"
+              src="{{ asset('cms/assets/img/logo-google.svg') }}" alt="">Lanjutkan dengan Google
+            </a>
+            <div class="row-center pt-5">
+              <span class="border-line"></span>
+              <span class="mx-3">Atau</span>
+              <span class="border-line"></span>
+            </div>
+            <div class="row-spacearound mt-5">
+              <a href="#" class="btn btn-primary w-75 row-center">Daftar Sekarang
+                <img class="ml-2"
+                src="{{ asset('cms/assets/img/svg/Sign-in.svg') }}" alt="">
+              </a>
+              <a href="{{ url('login') }}" class="btn btn-white w-25 ml-3">Login</a>
             </div>
           </div>
         </div>
-      </div> --}}
+      </div>
+    @else
+      <div class="col-lg-5 col-xl-4 col-12 mx-0 pr-5 px-md-0 pr-lg-5 login-aside" data-aos="zoom-out">
+        <div class="login-wrapper p-5 p-lg-4 p-xl-5">
+          <img class="rounded-circle img-logged mb-3" src="{{ asset('cms/assets/img/coach.png') }}" alt="">
+          <h1>Halo, <br />{{ Auth::guard('student')->user()->name }}!!!</h1>
+          <div class="pt-3">
+            <div class="row-spacearound mt-3">
+              <a href="{{ url('student/my-class') }}" class="btn btn-primary w-75 row-center">Lihat Kelas <img class="ml-2"
+                src="{{ asset('cms/assets/img/svg/Sign-in.svg') }}" alt=""></a>
+                <a href="{{ url('logout') }}" class="btn btn-white w-25 mt-0 mt-xl-0 mt-lg-3 ml-3 ml-lg-0 ml-xl-3">Logout</a>
+              </div>
+            </div>
+          </div>
+        </div>
+    @endif
 
 
     <div class="col-lg-7 col-xl-8 col-12 px-0 mt-0 mt-md-5 mt-lg-0">
@@ -88,7 +91,7 @@
           <div class="splide__track">
             <ul class="splide__list">
               <li class="splide__slide px-2 px-md-4 pb-5">
-                <div class="content-embed__wrapper">
+                <div class="content-embed__wrapper class-category__splide">
                   <img src="{{ asset('cms/assets/img/class-category.png') }}" alt="">
                 </div>
                 <div class="px-4">
@@ -111,11 +114,11 @@
                     vero,
                     necessitatibus excepturi libero minima aspernatur eius similique ipsum ex? Velit et maxime numquam
                     quidem,
-                  beatae veritatis iusto.</p>
+                    beatae veritatis iusto.</p>
                 </div>
               </li>
               <li class="splide__slide px-2 px-md-4 pb-5">
-                <div class="content-embed__wrapper">
+                <div class="content-embed__wrapper class-category__splide">
                   <img src="{{ asset('cms/assets/img/class-category.png') }}" alt="">
                 </div>
                 <div class="px-4">
@@ -138,11 +141,11 @@
                     vero,
                     necessitatibus excepturi libero minima aspernatur eius similique ipsum ex? Velit et maxime numquam
                     quidem,
-                  beatae veritatis iusto.</p>
+                    beatae veritatis iusto.</p>
                 </div>
               </li>
               <li class="splide__slide px-2 px-md-4 pb-5">
-                <div class="content-embed__wrapper">
+                <div class="content-embed__wrapper class-category__splide">
                   <img src="{{ asset('cms/assets/img/class-category.png') }}" alt="">
                 </div>
                 <div class="px-4">
@@ -165,11 +168,11 @@
                     vero,
                     necessitatibus excepturi libero minima aspernatur eius similique ipsum ex? Velit et maxime numquam
                     quidem,
-                  beatae veritatis iusto.</p>
+                    beatae veritatis iusto.</p>
                 </div>
               </li>
               <li class="splide__slide px-2 px-md-4 pb-5">
-                <div class="content-embed__wrapper">
+                <div class="content-embed__wrapper class-category__splide">
                   <img src="{{ asset('cms/assets/img/class-category.png') }}" alt="">
                 </div>
                 <div class="px-4">
@@ -192,7 +195,7 @@
                     vero,
                     necessitatibus excepturi libero minima aspernatur eius similique ipsum ex? Velit et maxime numquam
                     quidem,
-                  beatae veritatis iusto.</p>
+                    beatae veritatis iusto.</p>
                 </div>
               </li>
             </ul>

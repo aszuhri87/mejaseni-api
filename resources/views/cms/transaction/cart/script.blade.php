@@ -52,10 +52,11 @@
                     })
 
                     if(total > 0){
-                        $('.btn-payment').removeClass('btn-disabled');
-                        $('.btn-payment').removeClass('btn-secondary');
-                        $('.btn-payment').addClass('btn-primary');
-                        $('.btn-payment').prop('disabled', false);
+                        $('.cart-place').show();
+                        $('.empty-place').hide();
+                    }else{
+                        $('.empty-place').show();
+                        $('.cart-place').hide();
                     }
 
                     $('#list-place').html(element);
@@ -67,7 +68,7 @@
                     event.preventDefault();
 
                     let id = $(this).attr('data-id');
-                    console.log(id);
+
                     const swalWithBootstrapButtons = Swal.mixin({
                         customClass: {
                             confirmButton: 'btn btn-tertiary',
@@ -88,7 +89,7 @@
                     }).then((result) => {
                         if (result.isConfirmed) {
                             $.ajax({
-                                url: "{{url('student-cart')}}/"+id,
+                                url: "{{url('cart')}}/"+id,
                                 type: 'DELETE',
                                 dataType: 'json',
                             }).done(function(res, xhr, meta){
@@ -98,6 +99,7 @@
                                     icon: 'success',
                                     text: "File yang Anda pilih berhasil terhapus"
                                 })
+                                initCart();
                             })
                         }
                     })
@@ -105,6 +107,12 @@
                     $(".swal2-warning").addClass("orange");
 
                 });
+
+                $(document).on('click', '.btn-mobile-payment', function(e){
+                    e.preventDefault();
+
+                    $('#form-payment').submit();
+                })
             }
         };
 

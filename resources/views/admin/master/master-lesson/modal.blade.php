@@ -100,6 +100,14 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label>
+                                    Deskripsi
+                                </label>
+                                <textarea name="description" class="form-control" placeholder="Deskripsi" rows="4"></textarea>
+                            </div>
+                        </div>
                     </div>
                     <hr>
                     <div class="form-group">

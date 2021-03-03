@@ -7,6 +7,7 @@ use App\Http\Controllers\Transaction\DokuController as Doku;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
+use App\Models\Cart;
 use App\Models\Transaction;
 use App\Models\TransactionDetail;
 
@@ -28,6 +29,10 @@ class CartController extends Controller
     public function data()
     {
         try {
+
+            $transaction_details = DB::table('transaction_details')
+                ->whereNull('deleted_at');
+
             $data = DB::table('carts')
                 ->select([
                     'carts.id',
@@ -54,7 +59,9 @@ class CartController extends Controller
                 ->leftJoin('master_lessons','master_lessons.id','carts.master_lesson_id')
                 ->leftJoin('session_videos','session_videos.id','carts.session_video_id')
                 ->leftJoin('classrooms','classrooms.id','carts.classroom_id')
-                ->leftJoin('transaction_details','transaction_details.cart_id','carts.id')
+                ->leftJoinSub($transaction_details, 'transaction_details', function($join){
+                    $join->on('transaction_details.cart_id','carts.id');
+                })
                 ->where('carts.student_id', Auth::guard('student')->user()->id)
                 ->whereNull('transaction_details.id')
                 ->whereNull([
@@ -78,6 +85,9 @@ class CartController extends Controller
     {
         session()->put('arr_id', $request->data);
 
+        $transaction_details = DB::table('transaction_details')
+                ->whereNull('deleted_at');
+
         $data = DB::table('carts')
             ->select([
                 'carts.id',
@@ -92,7 +102,9 @@ class CartController extends Controller
             ->leftJoin('master_lessons','master_lessons.id','carts.master_lesson_id')
             ->leftJoin('session_videos','session_videos.id','carts.session_video_id')
             ->leftJoin('classrooms','classrooms.id','carts.classroom_id')
-            ->leftJoin('transaction_details','transaction_details.cart_id','carts.id')
+            ->leftJoinSub($transaction_details, 'transaction_details', function($join){
+                $join->on('transaction_details.cart_id','carts.id');
+            })
             ->where('carts.student_id', Auth::guard('student')->user()->id)
             ->whereIn('carts.id', $request->data)
             ->whereNull([
@@ -176,20 +188,20 @@ class CartController extends Controller
             $carts =  $carts->get();
 
             $transaction = DB::transaction(function () use($carts, $request, $amount){
-                $tran_number = Transaction::orderBy(DB::raw("SUBSTRING(number, 9, 4)::INTEGER"),'desc')->first();
+                $tran_number = Transaction::orderBy(DB::raw("SUBSTRING(number, 9, 4)::INTEGER"),'desc')->withTrashed()->first();
 
                 if($tran_number){
                     $str = explode("MJSN".date('Y'), $tran_number->number);
                     $number = sprintf("%04d", (int)$str[1] + 1);
                     $number = "MJSN".date('Y').$number;
                 }else{
-                    $number = "MJSN".date('Y').'0023';
+                    $number = "MJSN".date('Y').'0040';
                 }
 
                 $trans = Transaction::create([
                     'number' => $number,
                     'student_id' => Auth::guard('student')->user()->id,
-                    'total' => 0,
+                    'total' => $amount->grand_total,
                     'status' => 1,
                     'datetime' => date('Y-m-d H:i:s'),
                     'confirmed' => false,
@@ -254,6 +266,33 @@ class CartController extends Controller
                     "message"   => 'Failed'
                 ], 400);
             }
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function destroy($id)
+    {
+        try {
+
+            $cart = Cart::find($id);
+
+            if(!$cart){
+                return response([
+                    "message"   => 'Data tidak ditemukan.'
+                ], 200);
+            }
+
+            DB::transaction(function () use($cart){
+                $cart->delete();
+            });
+
+            return response([
+                "message"   => 'OK'
+            ], 200);
         } catch (Exception $e) {
             throw new Exception($e);
             return response([

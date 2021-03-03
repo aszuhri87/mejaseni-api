@@ -9,15 +9,9 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-6">
-                        <span id="class"></span>
-                    </div>
-                    <div class="col-6 text-right">
-                        <h5 id="sub-total"></h5>
-                    </div>
+                <div id="detail">
+
                 </div>
-                <hr>
                 <div class="row">
                     <div class="col-6">
                         Total Pembayaran

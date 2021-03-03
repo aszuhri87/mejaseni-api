@@ -5,7 +5,66 @@
             $(document).ready(function () {
                 splide();
                 AOS.init();
+                eventCategorySelectedListener()
+                eventSubCategoryChangeListener()
             });
+
+            var eventCategorySelectedListener = ()=>{
+                $('.class-category-filter__wrapper').click(function(event){
+                    $('.splide__slide div.class-category-selected').removeClass('class-category-selected');
+                    $(this).addClass('class-category-selected');
+                    let category_id = $(this).data("id")
+                    getSubCategory(category_id)
+                })
+            }
+
+            var eventSubCategoryChangeListener = ()=>{
+                $('.btn-tertiary').click(function(event){
+                    $('.btn-tertiary').removeClass('active');
+                    $(this).addClass('active');
+                    let sub_category_id = $(this).data("id")
+                    getVideoCourse(sub_category_id)
+                })
+            }
+
+
+            var getSubCategory = (category_id)=>{
+                $.ajax({
+                    url: `{{ url('/classroom_category') }}/${category_id}/sub_classroom_category`,
+                    type: 'GET',
+                })
+                .done(function(res, xhr, meta) {
+                    $("#sub-category").html(res.data.sub_category_html)
+                    $("#video_courses").html(res.data.video_courses_html)
+                    $("#empty-video-course").html('')
+
+                    if(!res.data.video_courses_html)
+                        $("#empty-video-course").html(res.data.default_html)
+                    eventSubCategoryChangeListener()
+                })
+                .fail(function(res, error) {
+                    toastr.error(res.responseJSON.message, 'Failed')
+                })
+                .always(function() {
+                   
+                });
+            }
+
+            var getVideoCourse = (sub_category_id)=>{
+                $.ajax({
+                    url: `{{ url('/classroom_category/sub_classroom_category') }}/${sub_category_id}/video-course`,
+                    type: 'GET',
+                })
+                .done(function(res, xhr, meta) {
+                    $("#video_courses").html(res.data.video_courses_html)
+                })
+                .fail(function(res, error) {
+                    toastr.error(res.responseJSON.message, 'Failed')
+                })
+                .always(function() {
+                   
+                });
+            }
 
             splide = () => {
                 new Splide('#category-splide', {
@@ -54,4 +113,10 @@
         Page.init();
     });
 
+</script>
+
+<script>
+function backPage() {
+  window.history.back();
+}
 </script>

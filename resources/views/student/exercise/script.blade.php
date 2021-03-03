@@ -36,7 +36,7 @@
             initAction = () => {
                 $(document).on('change','#filter-class',function(event){
                     event.preventDefault();
-                    KTApp.block('#kt_body', {
+                    KTApp.blockPage({
                         overlayColor: '#000000',
                         state: 'primary',
                         opacity: 0.5,
@@ -54,7 +54,7 @@
                         if(moment(date_end).isBefore(date_start)){
                             return toastr.error('Filter date invalid', 'Failed')
                         }else{
-                            KTApp.block('#kt_body', {
+                            KTApp.blockPage({
                                 overlayColor: '#000000',
                                 state: 'primary',
                                 opacity: 0.5,
@@ -132,7 +132,7 @@
                     let collection_id = $(this).data('collection_id');
                     getResult(collection_id);
                     showModal('modal-result');
-                })
+                });
             },
             formSubmit = () => {
                 $('#form-exercise').submit(function(event){
@@ -339,7 +339,7 @@
                                     </div>
                             `
                         }
-                        KTApp.unblock('#kt_body');
+                        KTApp.unblockPage();
                         $('.exercise').html(element);
                     }
                 })

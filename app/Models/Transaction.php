@@ -20,6 +20,7 @@ class Transaction extends Model
     // 0, Cancel
     // 1, Waiting
     // 2, Success
+    // 3, Refund
 
     protected $fillable = [
         'number',

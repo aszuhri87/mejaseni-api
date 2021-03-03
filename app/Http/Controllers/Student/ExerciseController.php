@@ -210,6 +210,7 @@ class ExerciseController extends BaseMenu
                     }
                 })
                 ->whereNull('student_classrooms.deleted_at')
+                ->whereNotNull('student_schedules.assignment_id')
                 ->get();
 
             return response([

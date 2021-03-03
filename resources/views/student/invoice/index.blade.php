@@ -51,10 +51,11 @@
             <thead>
                 <tr>
                     <th>No</th>
-                    <th width="20%">Tanggal</th>
-                    <th width="40%">Kelas/Materi/Video</th>
-                    <th width="20%">Tipe Kelas</th>
-                    <th width="10%">Status</th>
+                    <th width="15%">Tanggal</th>
+                    <th width="15%">Nomor Invoice</th>
+                    <th width="20%">Total Pembayaran</th>
+                    <th width="20%">Status Pembayaran</th>
+                    <th width="20%">konfirmasi Pembayaran</th>
                     <th width="10%">Actions</th>
                 </tr>
             </thead>
