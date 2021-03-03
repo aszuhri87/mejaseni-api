@@ -14,7 +14,7 @@ class UpdateIndexOnCartTable extends Migration
     public function up()
     {
         Schema::table('carts', function (Blueprint $table) {
-            $table->foreign('student_id')->references('id')->on('students');
+
         });
     }
 
