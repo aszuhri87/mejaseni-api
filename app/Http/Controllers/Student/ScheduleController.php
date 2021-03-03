@@ -677,9 +677,9 @@ class ScheduleController extends BaseMenu
                             WHEN coach_classrooms.rating_schedule IS NOT NULL AND coach_classrooms.rating_classroom IS NOT NULL THEN
                                 (coach_classrooms.rating_schedule::FLOAT + coach_classrooms.rating_classroom::FLOAT)/2
                             WHEN coach_classrooms.rating_schedule IS NOT NULL AND coach_classrooms.rating_classroom IS NULL THEN
-                                (coach_classrooms.rating_schedule::FLOAT + 0)/2
+                                coach_classrooms.rating_schedule::FLOAT
                             WHEN coach_classrooms.rating_schedule IS NULL AND coach_classrooms.rating_classroom IS NOT NULL THEN
-                                (0 + coach_classrooms.rating_classroom::FLOAT)/2
+                                coach_classrooms.rating_classroom::FLOAT
                             ELSE
                                 0
                         END

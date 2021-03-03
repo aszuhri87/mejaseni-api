@@ -64,7 +64,7 @@ class PackageDetailController extends BaseMenu
                 'theory_videos.id',
                 'theory_videos.name',
                 'theory_videos.is_youtube',
-                'theory_videos.url',
+                'theory_videos.youtube_url as url',
             ])
             ->where('theory_videos.session_video_id',$result->id)
             ->whereNull('theory_videos.deleted_at')

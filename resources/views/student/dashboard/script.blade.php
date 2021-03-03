@@ -13,21 +13,24 @@
                 totalVideo();
                 totalBooking();
                 historyBooking();
+                notPresent();
                 initChart();
+                upcoming();
+                myCourse()
             });
 
             const initChart = () => {
                 var options = {
                     series: [{
-                        name: 'Net Profit',
-                        data: [44, 55, 57, 56, 61]
+                        name: 'Kelas Dihadiri',
+                        data: [44, 55, 57, 56, 61, 76, 85, 101, 98, 87]
                     }, {
-                        name: 'Revenue',
-                        data: [76, 85, 101, 98, 87]
+                        name: 'Kelas Dibooking',
+                        data: [76, 85, 101, 98, 87, 76, 85, 101, 98, 87]
                     }],
                     chart: {
                         type: 'bar',
-                        height: 350
+                        height: 400
                     },
                     plotOptions: {
                         bar: {
@@ -44,7 +47,7 @@
                         colors: ['transparent']
                     },
                     xaxis: {
-                        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Des'],
                     },
                     yaxis: {
                         title: {
@@ -59,6 +62,20 @@
 
                 var chart = new ApexCharts(document.querySelector("#chart"), options);
                 chart.render();
+            },
+            notPresent = () => {
+                $.ajax({
+                    url: `{{ url('student/dashboard/not-present') }}`,
+                    type: 'GET',
+                    dataType: 'json',
+                })
+                .done(function(res, xhr, meta) {
+                    $('#not-present').html(res.data)
+                })
+                .fail(function(res, error) {
+                    toastr.error(res.responseJSON.message, 'Failed')
+                })
+                .always(function() { });
             },
             initAction = () => {
                 $(document).on('click', '#add-btn', function(event){
@@ -234,6 +251,146 @@
                 })
                 .done(function(res, xhr, meta) {
                     $('#history-booking').html(res.data)
+                })
+                .fail(function(res, error) {
+                    toastr.error(res.responseJSON.message, 'Failed')
+                })
+                .always(function() {
+
+                });
+            },
+            upcoming = () => {
+                $.ajax({
+                    url: `{{url('student/dashboard/upcoming')}}`,
+                    type: 'GET',
+                })
+                .done(function(res, xhr, meta) {
+                    let element = ``;
+                    $.each(res.data, function(index,data){
+                        if(index == 0){
+                            $('#img-upcoming').attr('src',data.image);
+                            $('#title-upcoming').html(data.name);
+                            $('#date-upcoming').html(moment(data.datetime).format('DD MMMM YYYY'));
+                            $('#time-upcoming').html(moment(data.datetime).format('HH:mm'));
+                        }
+                        else{
+                            element +=`
+                                <div class="separator separator-dashed mt-8 mb-5"></div>
+                                <div class="row">
+                                    <div class="col-5">
+                                        <img src="${data.image}" class="rounded" height="110px" width="100%">
+                                    </div>
+                                    <div class="col-7">
+                                        <h5>${data.name}</h5>
+                                        <div class="rounded" style="padding: 10px !important; background-color: rgba(0, 0, 0, 0.097);">
+                                            <span>${moment(data.datetime).format('DD MMMM YYYY')}</span><br>
+                                            <span>${moment(data.datetime).format('HH:mm')}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    });
+                    $('#list-upcoming').html(element)
+                })
+                .fail(function(res, error) {
+                    toastr.error(res.responseJSON.message, 'Failed')
+                })
+                .always(function() {
+
+                });
+            },
+            myCourse = () => {
+                $.ajax({
+                    url: `{{url('student/dashboard/my-course')}}`,
+                    type: 'GET',
+                })
+                .done(function(res, xhr, meta) {
+                    let element = ``;
+                    let total_course = 0;
+                    let total_completed = 0;
+                    $.each(res.data, function(index,data){
+                        total_course++;
+                        if(data.type == 1){
+                            element += `
+                            <div class="row mt-5">
+                                <div class="col-lg-3">
+                                    <img src="${data.image}" class="rounded" height="150px" width="100%">
+                                </div>
+                                <div class="col-lg-9 align-middle">
+                                    <div class="row">
+                                        <div class="col-9" style="padding-top: 40px !important">
+                                            <p><h4>${data.classroom_name}</h4></p>
+                                            `;
+                                            if(data.total < data.session_total){
+                                                let percent = Math.floor((data.total/data.session_total)*100);
+                                                element += `
+                                                <div class="row">
+                                                    <div class="col-8">
+                                                        <div class="progress">
+                                                            <div class="progress-bar" role="progressbar" style="width: ${percent}%" aria-valuenow="${percent}" aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <span class="text-muted">${data.total}/${data.session_total} Pertemuan</span>
+                                                    </div>
+                                                </div>`;
+                                            }
+                                            else{
+                                                total_completed++;
+                                                element += `
+                                                <span class="text-muted">Completed</span>
+                                                `
+                                            }
+                                            element +=`
+                                        </div>
+                                        <div class="col-3 text-right" style="padding-top: 50px !important">
+                                            `;
+                                            if(data.total < data.session_total){
+                                                element += `<a href="{{url('student/schedule')}}" class="btn btn-outline-primary">Lihat Jadwal</a>`;
+                                            }
+                                            element +=`
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-5">
+                                <div class="col-lg-9 offset-3">
+                                    <hr>
+                                </div>
+                            </div>
+                            `;
+                        }
+                        else if(data.type == 2){
+                            element += `
+                            <div class="row mt-5">
+                                <div class="col-lg-3">
+                                    <img src="${data.image}" class="rounded" height="150px" width="100%">
+                                </div>
+                                <div class="col-lg-9 align-middle">
+                                    <div class="row">
+                                        <div class="col-9" style="padding-top: 40px !important">
+                                            <p><h4>${data.name}</h4><span class="label label-inline label-primary mr-2">Video Course</span></p>
+
+                                        </div>
+                                        <div class="col-3 text-right" style="padding-top: 50px !important">
+                                           <a href="{{url('student/theory/video-class/video-detail')}}/${data.session_video_id}" class="btn btn-outline-primary">Lihat Video</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-5">
+                                <div class="col-lg-9 offset-3">
+                                    <hr>
+                                </div>
+                            </div>
+                            `;
+                        }
+                    });
+                    $('#my-course').html(element);
+                    $('#text-course').html(
+                        `Terdapat <strong>${total_course} kursus</strong> yang kamu miliki dan <strong>${total_completed} kursus</strong> telah kamu selesaikan`
+                    )
                 })
                 .fail(function(res, error) {
                     toastr.error(res.responseJSON.message, 'Failed')

@@ -419,6 +419,11 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::get('total-video', [StudentDashboardController::class, 'total_video']);
             Route::get('total-booking', [StudentDashboardController::class, 'total_booking']);
             Route::get('history-booking', [StudentDashboardController::class, 'history_booking']);
+            Route::get('history-booking', [StudentDashboardController::class, 'history_booking']);
+            Route::get('not-present', [StudentDashboardController::class, 'not_present']);
+            Route::get('upcoming', [StudentDashboardController::class, 'upcoming']);
+            Route::get('my-course', [StudentDashboardController::class, 'my_course']);
+            Route::get('summary-course', [StudentDashboardController::class, 'summary_course']);
         });
 
         Route::group(['prefix' => 'invoice'], function () {
