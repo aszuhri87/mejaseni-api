@@ -497,7 +497,7 @@ class DashboardController extends BaseMenu
         }
     }
 
-    public function my_course()
+    public function my_course(Request $request)
     {
         try {
             /*
@@ -627,11 +627,30 @@ class DashboardController extends BaseMenu
                 ->where('transactions.student_id',Auth::guard('student')->user()->id)
                 ->get();
 
-            foreach ($classroom as $key => $value) {
-                $data[] = $value;
-            }
-            foreach ($video as $key => $value) {
-                $data[] = $value;
+            if(!empty($request->filter_course)){
+                if($request->filter_course == 0){
+                    foreach ($classroom as $key => $value) {
+                        $data[] = $value;
+                    }
+                    foreach ($video as $key => $value) {
+                        $data[] = $value;
+                    }
+                }elseif($request->filter_course == 1){
+                    foreach ($classroom as $key => $value) {
+                        $data[] = $value;
+                    }
+                }elseif($request->filter_course == 2){
+                    foreach ($video as $key => $value) {
+                        $data[] = $value;
+                    }
+                }
+            }else{
+                foreach ($classroom as $key => $value) {
+                    $data[] = $value;
+                }
+                foreach ($video as $key => $value) {
+                    $data[] = $value;
+                }
             }
 
             return response([
@@ -650,19 +669,164 @@ class DashboardController extends BaseMenu
     public function summary_course()
     {
         try {
+            // present
+            $coach_schedule = DB::table('coach_schedules')
+                ->select([
+                    'coach_schedules.id',
+                    'coach_schedules.datetime',
+                ])
+                ->where('coach_schedules.accepted',true)
+                ->whereNull('coach_schedules.deleted_at');
 
+            $student_schedule = DB::table('student_schedules')
+                ->select([
+                    'student_schedules.id',
+                    'student_schedules.student_classroom_id',
+                    'student_schedules.coach_schedule_id',
+                    'coach_schedules.datetime',
+                ])
+                ->joinSub($coach_schedule, 'coach_schedules', function ($join) {
+                    $join->on('student_schedules.coach_schedule_id', '=', 'coach_schedules.id');
+                })
+                ->whereNotNull('student_schedules.check_in')
+                ->whereRaw('coach_schedules.datetime::timestamp < now()')
+                ->whereNull('student_schedules.deleted_at');
 
-            // $data = DB::table('student_classrooms')
-            //     ->select([
-            //         'student_schedules.coach_schedule_id'
-            //     ])
-            //     ->leftJoinSub($student_schedule, 'student_schedules', function ($join) {
-            //         $join->on('student_classrooms.id', '=', 'student_schedules.student_classroom_id');
-            //     })
-            //     ->where('student_classrooms.student_id', Auth::guard('student')->user()->id)
-            //     ->where('student_classrooms.deleted_at')
-            //     ->whereNotNull('student_schedules.coach_schedule_id')
-            //     ->count();
+            $present = DB::table('student_classrooms')
+                ->select([
+                    'student_classrooms.id',
+                    'student_schedules.datetime',
+                ])
+                ->leftJoinSub($student_schedule, 'student_schedules', function ($join) {
+                    $join->on('student_classrooms.id', '=', 'student_schedules.student_classroom_id');
+                })
+                ->where('student_classrooms.student_id', Auth::guard('student')->user()->id)
+                ->whereNull('student_classrooms.deleted_at')
+                ->whereNotNull('student_schedules.coach_schedule_id')
+                ->whereYear('student_schedules.datetime',date('Y'))
+                ->get();
+
+            // end present
+
+            // booking
+            $booking_coach_schedule = DB::table('coach_schedules')
+                ->select([
+                    'coach_schedules.id',
+                    'coach_schedules.datetime',
+                    'coach_schedules.accepted'
+                ])
+                ->where('coach_schedules.accepted',true)
+                ->whereNull('coach_schedules.deleted_at');
+
+            $booking_student_schedule = DB::table('student_schedules')
+                ->select([
+                    'student_schedules.student_classroom_id',
+                    'coach_schedules.id as coach_schedule_id',
+                    'coach_schedules.datetime',
+                    'coach_schedules.accepted',
+                ])
+                ->leftJoinSub($booking_coach_schedule, 'coach_schedules', function ($join) {
+                    $join->on('student_schedules.coach_schedule_id', '=', 'coach_schedules.id');
+                })
+                ->whereRaw('coach_schedules.datetime::timestamp > now()')
+                ->whereNull('student_schedules.deleted_at');
+
+            $booking = DB::table('student_classrooms')
+                ->select([
+                    'student_schedules.coach_schedule_id',
+                    'student_schedules.datetime',
+                ])
+                ->leftJoinSub($booking_student_schedule, 'student_schedules', function ($join) {
+                    $join->on('student_classrooms.id', '=', 'student_schedules.student_classroom_id');
+                })
+                ->where('student_classrooms.student_id', Auth::guard('student')->user()->id)
+                ->where('student_classrooms.deleted_at')
+                ->whereNotNull('student_schedules.coach_schedule_id')
+                ->whereYear('student_schedules.datetime',date('Y'))
+                ->get();
+
+            $cart_booking = [0,0,0,0,0,0,0,0,0,0,0,0];
+            $cart_present = [0,0,0,0,0,0,0,0,0,0,0,0];
+
+                foreach ($booking as $key => $value) {
+                    if(date('m',strtotime($value->datetime)) == '01'){
+                        $cart_booking[0]++;
+                    }
+                    elseif(date('m',strtotime($value->datetime)) == '02'){
+                        $cart_booking[1]++;
+                    }
+                    elseif(date('m',strtotime($value->datetime)) == '03'){
+                        $cart_booking[2]++;
+                    }
+                    elseif(date('m',strtotime($value->datetime)) == '04'){
+                        $cart_booking[3]++;
+                    }
+                    elseif(date('m',strtotime($value->datetime)) == '05'){
+                        $cart_booking[4]++;
+                    }
+                    elseif(date('m',strtotime($value->datetime)) == '06'){
+                        $cart_booking[5]++;
+                    }
+                    elseif(date('m',strtotime($value->datetime)) == '07'){
+                        $cart_booking[6]++;
+                    }
+                    elseif(date('m',strtotime($value->datetime)) == '08'){
+                        $cart_booking[7]++;
+                    }
+                    elseif(date('m',strtotime($value->datetime)) == '09'){
+                        $cart_booking[8]++;
+                    }
+                    elseif(date('m',strtotime($value->datetime)) == '10'){
+                        $cart_booking[9]++;
+                    }
+                    elseif(date('m',strtotime($value->datetime)) == '11'){
+                        $cart_booking[10]++;
+                    }else{
+                        $cart_booking[11]++;
+                    }
+                }
+
+                foreach ($present as $key => $value) {
+                    if(date('m',strtotime($value->datetime)) == '01'){
+                        $cart_present[0]++;
+                    }
+                    elseif(date('m',strtotime($value->datetime)) == '02'){
+                        $cart_present[1]++;
+                    }
+                    elseif(date('m',strtotime($value->datetime)) == '03'){
+                        $cart_present[2]++;
+                    }
+                    elseif(date('m',strtotime($value->datetime)) == '04'){
+                        $cart_present[3]++;
+                    }
+                    elseif(date('m',strtotime($value->datetime)) == '05'){
+                        $cart_present[4]++;
+                    }
+                    elseif(date('m',strtotime($value->datetime)) == '06'){
+                        $cart_present[5]++;
+                    }
+                    elseif(date('m',strtotime($value->datetime)) == '07'){
+                        $cart_present[6]++;
+                    }
+                    elseif(date('m',strtotime($value->datetime)) == '08'){
+                        $cart_present[7]++;
+                    }
+                    elseif(date('m',strtotime($value->datetime)) == '09'){
+                        $cart_present[8]++;
+                    }
+                    elseif(date('m',strtotime($value->datetime)) == '10'){
+                        $cart_present[9]++;
+                    }
+                    elseif(date('m',strtotime($value->datetime)) == '11'){
+                        $cart_present[10]++;
+                    }else{
+                        $cart_present[11]++;
+                    }
+                }
+            $data = [
+                'booking' =>$cart_booking,
+                'present' =>$cart_present,
+            ];
 
             return response([
                 "status"  => 200,

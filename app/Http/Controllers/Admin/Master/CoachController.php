@@ -39,12 +39,32 @@ class CoachController extends BaseMenu
     {
         $path = Storage::disk('s3')->url('/');
 
+        $coach_classroom = DB::table('coach_classrooms')
+            ->select([
+                'coach_classrooms.coach_id',
+                DB::raw("count(coach_classrooms.coach_id) as total_class"),
+            ])
+            ->whereNull('coach_classrooms.deleted_at')
+            ->groupBy('coach_classrooms.coach_id');
+
         $data = DB::table('coaches')
             ->select([
                 'coaches.*',
                 DB::raw("CONCAT('{$path}',coaches.image) as image_url"),
+                'coach_classrooms.total_class',
+                DB::raw("(
+                    CASE
+                        WHEN coach_classrooms.total_class IS NOT NULL THEN
+                            coach_classrooms.total_class
+                        ELSE
+                            0
+                    END
+                ) as total_class"),
                 'expertises.name as expertise_name',
             ])
+            ->leftJoinSub($coach_classroom, 'coach_classrooms', function ($join) {
+                $join->on('coaches.id', '=', 'coach_classrooms.coach_id');
+            })
             ->leftJoin('expertises','coaches.expertise_id','=','expertises.id')
             ->whereNull([
                 'coaches.deleted_at'

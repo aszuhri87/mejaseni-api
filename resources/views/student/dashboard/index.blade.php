@@ -12,11 +12,11 @@
                             <span class="text-muted" id="text-summary">Lebih dari 2000 siswa melakukan booking untuk minggu ini</span>
                         </div>
                     </div>
-                    <div class="col-4">
-                        <div>
-                            <span>Summary Course</span><br>
-                            <span class="text-muted" id="text-summary">Lebih dari 2000 siswa melakukan</span>
-                        </div>
+                    <div class="col-4 d-flex justify-content-end">
+                        <span class="mr-5 d-flex align-items-center font-weight-bold">
+                            <i class="label label-dot label-xl label-primary mr-2"></i>Kelas dihadiri</span>
+                        <span class="d-flex align-items-center font-weight-bold">
+                            <i class="label label-dot label-xl label-warning mr-2"></i>kelas dibooking</span>
                     </div>
                 </div>
                 <div class="row mt-5">
@@ -194,15 +194,17 @@
                         <p id="text-course"></p>
                     </div>
                     <div class="col-2">
-                        <select name="" id="" class="form-control">
-                            <option value="">All Course</option>
+                        <select name="filter_course" id="filter-course" class="form-control">
+                            <option value="0">All Course</option>
+                            <option value="1">Classroom</option>
+                            <option value="2">Video</option>
                         </select>
                     </div>
                 </div>
             </div>
             <div class="card-body">
                 <div class="overflow-auto p-5" id="my-course" style="height: 400px !important">
-                    
+
                 </div>
             </div>
         </div>

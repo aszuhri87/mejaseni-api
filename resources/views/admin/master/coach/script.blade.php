@@ -40,7 +40,7 @@
                     columns: [
                         { data: 'DT_RowIndex' },
                         { data: 'name' },
-                        { defaultContent: '' },
+                        { data: 'total_class' },
                         { data: 'expertise_name' },
                         { data: 'suspend' },
                         { defaultContent: '' }
@@ -57,8 +57,9 @@
                             searchable: false,
                             orderable: true,
                             className: "text-center",
-                            render : function(type, full, meta) {
-                                return `0`;
+                            data: "total_class",
+                            render : function(data, type, full, meta) {
+                                return data;
                             }
                         },
                         {
@@ -118,17 +119,6 @@
                             data: "id",
                             render : function(data, type, full, meta) {
                                 return `
-                                    <a class="btn btn-sm btn-permission mr-1 btn-clean btn-icon" title="Permission" href="{{url('/admin/master/coach/permission')}}/${data}">
-                                        <span class="svg-icon svg-icon-md">
-                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                <rect x="0" y="0" width="24" height="24"/>
-                                                <polygon fill="#000000" opacity="0.3" transform="translate(8.885842, 16.114158) rotate(-315.000000) translate(-8.885842, -16.114158) " points="6.89784488 10.6187476 6.76452164 19.4882481 8.88584198 21.6095684 11.0071623 19.4882481 9.59294876 18.0740345 10.9659914 16.7009919 9.55177787 15.2867783 11.0071623 13.8313939 10.8837471 10.6187476"/>
-                                                <path d="M15.9852814,14.9852814 C12.6715729,14.9852814 9.98528137,12.2989899 9.98528137,8.98528137 C9.98528137,5.67157288 12.6715729,2.98528137 15.9852814,2.98528137 C19.2989899,2.98528137 21.9852814,5.67157288 21.9852814,8.98528137 C21.9852814,12.2989899 19.2989899,14.9852814 15.9852814,14.9852814 Z M16.1776695,9.07106781 C17.0060967,9.07106781 17.6776695,8.39949494 17.6776695,7.57106781 C17.6776695,6.74264069 17.0060967,6.07106781 16.1776695,6.07106781 C15.3492424,6.07106781 14.6776695,6.74264069 14.6776695,7.57106781 C14.6776695,8.39949494 15.3492424,9.07106781 16.1776695,9.07106781 Z" fill="#000000" transform="translate(15.985281, 8.985281) rotate(-315.000000) translate(-15.985281, -8.985281) "/>
-                                                <rect fill="#000000" opacity="0.3" x="5" y="20" width="15" height="2" rx="1"/>
-                                            </g>
-                                        </svg><!--end::Svg Icon--></span>
-                                    </a>
                                     <a href="{{url('/admin/master/coach/update')}}/${data}" title="Edit" class="btn btn-edit btn-sm btn-clean btn-icon mr-1">
                                         <span class="svg-icon svg-icon-md">
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">

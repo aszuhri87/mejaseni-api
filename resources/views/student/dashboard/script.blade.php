@@ -16,52 +16,67 @@
                 notPresent();
                 initChart();
                 upcoming();
-                myCourse()
+                myCourse();
+                initAction();
             });
 
             const initChart = () => {
-                var options = {
-                    series: [{
-                        name: 'Kelas Dihadiri',
-                        data: [44, 55, 57, 56, 61, 76, 85, 101, 98, 87]
-                    }, {
-                        name: 'Kelas Dibooking',
-                        data: [76, 85, 101, 98, 87, 76, 85, 101, 98, 87]
-                    }],
-                    chart: {
-                        type: 'bar',
-                        height: 400
-                    },
-                    plotOptions: {
-                        bar: {
-                            horizontal: false,
-                            endingShape: 'rounded'
-                        },
-                    },
-                    dataLabels: {
-                        enabled: false
-                    },
-                    stroke: {
-                        show: true,
-                        width: 2,
-                        colors: ['transparent']
-                    },
-                    xaxis: {
-                        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Des'],
-                    },
-                    yaxis: {
-                        title: {
-                            text: 'Total'
-                        }
-                    },
-                    fill: {
-                        opacity: 1
-                    },
-                    colors: [primary, warning]
-                };
+                $.ajax({
+                    url: `{{ url('student/dashboard/summary-course') }}`,
+                    type: 'GET',
+                    dataType: 'json',
+                })
+                .done(function(res, xhr, meta) {
+                    if(res.status == 200){
+                        var options = {
+                            series: [{
+                                name: 'Kelas Dihadiri',
+                                data: res.data.booking
+                            }, {
+                                name: 'Kelas Dibooking',
+                                data: res.data.present
+                            }],
+                            chart: {
+                                type: 'bar',
+                                height: 400
+                            },
+                            plotOptions: {
+                                bar: {
+                                    horizontal: false,
+                                    endingShape: 'rounded',
+                                    columnWidth: '30px',
+                                },
+                            },
+                            dataLabels: {
+                                enabled: false
+                            },
+                            stroke: {
+                                show: true,
+                                width: 2,
+                                colors: ['transparent']
+                            },
+                            xaxis: {
+                                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Des'],
+                            },
+                            yaxis: {
+                                title: {
+                                    text: 'Total'
+                                }
+                            },
+                            fill: {
+                                opacity: 1
+                            },
+                            colors: [primary, warning]
+                        };
 
-                var chart = new ApexCharts(document.querySelector("#chart"), options);
-                chart.render();
+                        var chart = new ApexCharts(document.querySelector("#chart"), options);
+                        chart.render();
+                    }
+                })
+                .fail(function(res, error) {
+                    toastr.error(res.responseJSON.message, 'Failed')
+                })
+                .always(function() { });
             },
             notPresent = () => {
                 $.ajax({
@@ -78,60 +93,11 @@
                 .always(function() { });
             },
             initAction = () => {
-                $(document).on('click', '#add-btn', function(event){
+                $(document).on('click','#filter-course',function(event){
                     event.preventDefault();
-
-                    $('#form-invoice').trigger("reset");
-                    $('#form-invoice').attr('action','{{url('admin/master/courses/classroom-category')}}');
-                    $('#form-invoice').attr('method','POST');
-
-                    showModal('modal-invoice');
-                });
-
-                $(document).on('click', '.btn-edit', function(event){
-                    event.preventDefault();
-
-                    var data = init_table.row($(this).parents('tr')).data();
-
-                    $('#form-invoice').trigger("reset");
-                    $('#form-invoice').attr('action', $(this).attr('href'));
-                    $('#form-invoice').attr('method','PUT');
-
-                    $('#form-invoice').find('input[name="name"]').val(data.name);
-
-                    showModal('modal-invoice');
-                });
-
-                $(document).on('click', '.btn-delete', function(event){
-                    event.preventDefault();
-                    var url = $(this).attr('href');
-
-                    Swal.fire({
-                        title: 'Delete Classroom Category?',
-                        text: "Deleted Classroom Category will be permanently lost!",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#7F16A7',
-                        confirmButtonText: 'Yes, Delete',
-                    }).then(function (result) {
-                        if (result.value) {
-                            $.ajax({
-                                url: url,
-                                type: 'DELETE',
-                                dataType: 'json',
-                            })
-                            .done(function(res, xhr, meta) {
-                                toastr.success(res.message, 'Success')
-                                init_table.draw(false);
-                            })
-                            .fail(function(res, error) {
-                                toastr.error(res.responseJSON.message, 'Failed')
-                            })
-                            .always(function() { });
-                        }
-                    })
-                    $('.swal2-title').addClass('justify-content-center')
-                });
+                    let filter_course = $(this).val();
+                    myCourse(filter_course);
+                })
             },
             formSubmit = () => {
                 $('#form-invoice').submit(function(event){
@@ -300,10 +266,13 @@
 
                 });
             },
-            myCourse = () => {
+            myCourse = (filter_course) => {
                 $.ajax({
                     url: `{{url('student/dashboard/my-course')}}`,
                     type: 'GET',
+                    data :{
+                        filter_course:filter_course
+                    }
                 })
                 .done(function(res, xhr, meta) {
                     let element = ``;
