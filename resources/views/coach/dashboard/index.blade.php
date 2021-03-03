@@ -1,13 +1,45 @@
 @extends('layouts.app')
 
 @push('style')
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.fancytree/2.35.0/skin-win8/ui.fancytree.min.css">
+    <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/jquery.fancytree/2.35.0/skin-win8/ui.fancytree.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+
+
+        .star-widget input {
+            display: none;
+        }
+
+        .star-widget label {
+            font-size: 25px;
+            color: #d7d8df;
+            padding: 10px;
+            float: right;
+            transition: all 0.2s ease;
+        }
+
+        input:not(:checked)~label:hover,
+        input:not(:checked)~label:hover~label {
+            color: #FFA800;
+        }
+
+        input:checked~label {
+            color: #FFA800;
+        }
+
+        input#rate-5:checked~label {
+            color: #FFA800;
+            text-shadow: 0 0 20px #952;
+        }
+
+    </style>
 @endpush
 
 @section('content')
     <div class="row">
         <!--begin::Summary Course-->
-        <div class="col-xl-8">
+        <div class="col-xl-12">
             <div class="card card-custom card-stretch gutter-b">
                 <!--begin::Header-->
                 <div class="card-header h-auto border-0">
@@ -30,12 +62,37 @@
                 <!--begin::Body-->
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-4 d-flex flex-column">
-                            <!--begin::Block-->
-                            <div class="bg-light-warning p-8 rounded-xl flex-grow-1">
-                                <!--begin::Item-->
-                                <div class="d-flex align-items-center mb-5">
-                                    <div class="symbol symbol-circle symbol-white symbol-30 flex-shrink-0 mr-3">
+                        <div class="col-12">
+                            <div id="summary_course_chart">
+                                <div class="spinner spinner-primary spinner-lg spinner-center"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end::Body-->
+            </div>
+        </div>
+        <div class="col-xl-8">
+            <!--begin::Mixed Widget 17-->
+            <div class="card card-custom gutter-b card-stretch">
+                <!--begin::Header-->
+                <div class="card-header border-0 pt-5">
+                    <div class="card-title font-weight-bolder">
+                        <div class="card-label">Summary Course
+                        <div class="font-size-sm text-muted mt-2">Lebih dari 2000 siswa melakukan booking untuk minggu ini</div></div>
+                    </div>
+                </div>
+                <!--end::Header-->
+                <!--begin::Body-->
+                <div class="card-body p-0 d-flex flex-column">
+                    <!--begin::Items-->
+                    <div class="flex-grow-1 card-spacer">
+                        <div class="row row-paddingless mt-5 mb-10">
+                            <!--begin::Item-->
+                            <div class="col">
+                                <div class="d-flex align-items-center mr-2">
+                                    <!--begin::Symbol-->
+                                    <div class="symbol symbol-45 symbol-light-danger mr-4 flex-shrink-0">
                                         <div class="symbol-label">
                                             <span class="svg-icon svg-icon-md svg-icon-danger">
                                                 <!--begin::Svg Icon | path:assets/media/svg/icons/Shopping/Cart3.svg-->
@@ -56,15 +113,21 @@
                                             </span>
                                         </div>
                                     </div>
+                                    <!--end::Symbol-->
+                                    <!--begin::Title-->
                                     <div>
-                                        <div class="font-size-sm font-weight-bold total-kelas">0</div>
-                                        <div class="font-size-sm text-muted">Total Kelas</div>
+                                        <div class="font-size-h4 text-dark-75 font-weight-bolder total-kelas">0</div>
+                                        <div class="font-size-sm text-muted font-weight-bold mt-1">Total Kelas</div>
                                     </div>
+                                    <!--end::Title-->
                                 </div>
-                                <!--end::Item-->
-                                <!--begin::Item-->
-                                <div class="d-flex align-items-center mb-5">
-                                    <div class="symbol symbol-circle symbol-white symbol-30 flex-shrink-0 mr-3">
+                            </div>
+                            <!--end::Item-->
+                            <!--begin::Item-->
+                            <div class="col">
+                                <div class="d-flex align-items-center mr-2">
+                                    <!--begin::Symbol-->
+                                    <div class="symbol symbol-45 symbol-light-info mr-4 flex-shrink-0">
                                         <div class="symbol-label">
                                             <span class="svg-icon svg-icon-md svg-icon-info">
                                                 <!--begin::Svg Icon | path:assets/media/svg/icons/Home/Library.svg-->
@@ -85,15 +148,23 @@
                                             </span>
                                         </div>
                                     </div>
+                                    <!--end::Symbol-->
+                                    <!--begin::Title-->
                                     <div>
-                                        <div class="font-size-sm font-weight-bold video-tutorial">0</div>
-                                        <div class="font-size-sm text-muted">Video Tutorial</div>
+                                        <div class="font-size-h4 text-dark-75 font-weight-bolder video-tutorial">0</div>
+                                        <div class="font-size-sm text-muted font-weight-bold mt-1">Video Tutorial</div>
                                     </div>
+                                    <!--end::Title-->
                                 </div>
-                                <!--end::Item-->
-                                <!--begin::Item-->
-                                <div class="d-flex align-items-center mb-5">
-                                    <div class="symbol symbol-circle symbol-white symbol-30 flex-shrink-0 mr-3">
+                            </div>
+                            <!--end::Widget Item-->
+                        </div>
+                        <div class="row row-paddingless mt-5 mb-10">
+                            <!--begin::Item-->
+                            <div class="col">
+                                <div class="d-flex align-items-center mr-2">
+                                    <!--begin::Symbol-->
+                                    <div class="symbol symbol-45 symbol-light-warning mr-4 flex-shrink-0">
                                         <div class="symbol-label">
                                             <span class="svg-icon svg-icon-md svg-icon-warning">
                                                 <!--begin::Svg Icon | path:assets/media/svg/icons/Design/Flip-vertical.svg-->
@@ -119,15 +190,21 @@
                                             </span>
                                         </div>
                                     </div>
+                                    <!--end::Symbol-->
+                                    <!--begin::Title-->
                                     <div>
-                                        <div class="font-size-sm font-weight-bold booking-saat-ini">0</div>
-                                        <div class="font-size-sm text-muted">Booking Saat Ini</div>
+                                        <div class="font-size-h4 text-dark-75 font-weight-bolder booking-saat-ini">0</div>
+                                        <div class="font-size-sm text-muted font-weight-bold mt-1">Booking Saat Ini</div>
                                     </div>
+                                    <!--end::Title-->
                                 </div>
-                                <!--end::Item-->
-                                <!--begin::Item-->
-                                <div class="d-flex align-items-center mb-5">
-                                    <div class="symbol symbol-circle symbol-white symbol-30 flex-shrink-0 mr-3">
+                            </div>
+                            <!--end::Item-->
+                            <!--begin::Item-->
+                            <div class="col">
+                                <div class="d-flex align-items-center mr-2">
+                                    <!--begin::Symbol-->
+                                    <div class="symbol symbol-45 symbol-light-success mr-4 flex-shrink-0">
                                         <div class="symbol-label">
                                             <span class="svg-icon svg-icon-md svg-icon-success">
                                                 <!--begin::Svg Icon | path:assets/media/svg/icons/Home/Cupboard.svg-->
@@ -149,15 +226,23 @@
                                             </span>
                                         </div>
                                     </div>
+                                    <!--end::Symbol-->
+                                    <!--begin::Title-->
                                     <div>
-                                        <div class="font-size-sm font-weight-bold riwayat-booking">0</div>
-                                        <div class="font-size-sm text-muted">Riwayat Booking</div>
+                                        <div class="font-size-h4 text-dark-75 font-weight-bolder riwayat-booking">0</div>
+                                        <div class="font-size-sm text-muted font-weight-bold mt-1">Riwayat Booking</div>
                                     </div>
+                                    <!--end::Title-->
                                 </div>
-                                <!--end::Item-->
-                                <!--begin::Item-->
-                                <div class="d-flex align-items-center mb-5">
-                                    <div class="symbol symbol-circle symbol-white symbol-30 flex-shrink-0 mr-3">
+                            </div>
+                            <!--end::Item-->
+                        </div>
+                        <div class="row row-paddingless">
+                            <!--begin::Item-->
+                            <div class="col">
+                                <div class="d-flex align-items-center mr-2">
+                                    <!--begin::Symbol-->
+                                    <div class="symbol symbol-45 symbol-light-primary mr-4 flex-shrink-0">
                                         <div class="symbol-label">
                                             <span class="svg-icon svg-icon-md svg-icon-primary">
                                                 <!--begin::Svg Icon | path:assets/media/svg/icons/Media/Equalizer.svg-->
@@ -177,25 +262,24 @@
                                             </span>
                                         </div>
                                     </div>
+                                    <!--end::Symbol-->
+                                    <!--begin::Title-->
                                     <div>
-                                        <div class="font-size-sm font-weight-bold">$346,000</div>
-                                        <div class="font-size-sm text-muted">Tidak Hadir</div>
+                                        <div class="font-size-h4 text-dark-75 font-weight-bolder tidak-hadir">0</div>
+                                        <div class="font-size-sm text-muted font-weight-bold mt-1">Tidak Hadir</div>
                                     </div>
+                                    <!--end::Title-->
                                 </div>
-                                <!--end::Item-->
                             </div>
-                            <!--end::Block-->
-                        </div>
-                        <div class="col-8">
-                            <div id="summary_course_chart"></div>
+                            <!--end::Item-->
                         </div>
                     </div>
+                    <!--end::Items-->
                 </div>
                 <!--end::Body-->
             </div>
+            <!--end::Mixed Widget 17-->
         </div>
-        <!--end::Summary Course-->
-
         <!--begin::Salary-->
         <div class="col-xl-4">
             <!--begin::Tiles Widget 8-->
@@ -213,9 +297,9 @@
                                 aria-expanded="false">
                                 <i class="ki ki-bold-more-hor"></i>
                             </a>
-                            <div class="dropdown-menu dropdown-menu-md dropdown-menu-right">
+                            <div class="dropdown-menu dropdown-menu-right">
                                 <!--begin::Navigation-->
-                                <ul class="navi navi-hover py-5">
+                                <ul class="navi navi-hover">
                                     <li class="navi-item">
                                         <a href="#" class="navi-link">
                                             <span class="navi-text">Lihat Riwayat</span>
@@ -242,7 +326,18 @@
                                         12.000.000</div>
                                 </div>
                             </div>
-                            <a href="#" class="btn btn-light-primary font-weight-bold mr-2">Widthdraw</a>
+                            <a href="#" class="btn btn-light-info font-weight-bold mr-2">
+                                Widthdraw
+                                <span class="svg-icon svg-icon-md">
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                            <polygon points="0 0 24 0 24 24 0 24"/>
+                                            <rect fill="#000000" opacity="0.3" transform="translate(8.500000, 12.000000) rotate(-90.000000) translate(-8.500000, -12.000000) " x="7.5" y="7.5" width="2" height="9" rx="1"/>
+                                            <path d="M9.70710318,15.7071045 C9.31657888,16.0976288 8.68341391,16.0976288 8.29288961,15.7071045 C7.90236532,15.3165802 7.90236532,14.6834152 8.29288961,14.2928909 L14.2928896,8.29289093 C14.6714686,7.914312 15.281055,7.90106637 15.675721,8.26284357 L21.675721,13.7628436 C22.08284,14.136036 22.1103429,14.7686034 21.7371505,15.1757223 C21.3639581,15.5828413 20.7313908,15.6103443 20.3242718,15.2371519 L15.0300721,10.3841355 L9.70710318,15.7071045 Z" fill="#000000" fill-rule="nonzero" transform="translate(14.999999, 11.999997) scale(1, -1) rotate(90.000000) translate(-14.999999, -11.999997) "/>
+                                        </g>
+                                    </svg>
+                                </span>
+                            </a>
 
                             {{-- <div class="label label-primary label-inline font-weight-bold text-primary-50 py-4 px-3 font-size-base">
                                 Widthdraw
@@ -284,53 +379,8 @@
                 </div>
                 <!--end::Header-->
                 <!--begin::Body-->
-                <div class="card-body pt-2">
-                    <!--begin::Item-->
-
-                    <!--begin::Item-->
-                    <div class="d-flex align-items-center mb-2">
-                        <!--begin::Symbol-->
-                        <div class="symbol symbol-40 symbol-light-success mr-5">
-                            <span class="symbol-label">
-                                <img src="assets/media/svg/avatars/016-boy-7.svg" class="h-75 align-self-end" alt="" />
-                            </span>
-                        </div>
-                        <!--end::Symbol-->
-                        <!--begin::Text-->
-                        <div class="d-flex flex-column flex-grow-1 font-weight-bold">
-                            <a href="#" class="text-dark text-hover-primary mb-1 font-size-lg">Carles Puyol</a>
-                            <span class="text-muted">in 3 Hour 11 Min</span>
-                        </div>
-                        <!--end::Text-->
-                        <!--begin::Dropdown-->
-                        <div class="dropdown dropdown-inline ml-2" data-toggle="tooltip" title="Quick actions"
-                            data-placement="left">
-                            <span class="text-primary">PHP, SQLite, Artisan CLI</span>
-
-                            <a href="#" class="btn btn-hover-light-primary btn-sm btn-icon" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">
-                                <i class="ki ki-bold-more-hor"></i>
-                            </a>
-                            <div class="dropdown-menu p-0 m-0 dropdown-menu-md dropdown-menu-right">
-                                <!--begin::Navigation-->
-                                <ul class="navi navi-hover">
-                                    <li class="navi-item">
-                                        <a href="#" class="navi-link">
-                                            <span class="navi-text">
-                                                <span class="label label-xl label-inline label-light-danger">
-                                                    Cancle Kelas
-                                                </span>
-                                            </span>
-                                        </a>
-                                    </li>
-                                </ul>
-                                <!--end::Navigation-->
-                            </div>
-                        </div>
-                        <!--end::Dropdown-->
-                    </div>
-                    <!--end::Item-->
-                    <!--end::Item-->
+                <div class="card-body pt-2 closest-schedule">
+                    <div class="spinner spinner-primary spinner-lg spinner-center"></div>
                 </div>
                 <!--end::Body-->
             </div>
@@ -348,405 +398,8 @@
                 </div>
                 <!--end::Header-->
                 <!--begin::Body-->
-                <div class="card-body pt-2">
-                    <!--begin::Item-->
-                    <div class="d-flex align-items-center mb-10">
-                        <!--begin::Symbol-->
-                        <div class="symbol symbol-40 symbol-light-success mr-5">
-                            <span class="symbol-label">
-                                <img src="assets/media/svg/avatars/009-boy-4.svg" class="h-75 align-self-end" alt="" />
-                            </span>
-                        </div>
-                        <!--end::Symbol-->
-                        <!--begin::Text-->
-                        <div class="d-flex flex-column flex-grow-1 font-weight-bold">
-                            <a href="#" class="text-dark text-hover-primary mb-1 font-size-lg">Ricky Hunt</a>
-                            <span class="text-muted">PHP, SQLite, Artisan CLI</span>
-                        </div>
-                        <!--end::Text-->
-                        <!--begin::Dropdown-->
-                        <div class="dropdown dropdown-inline ml-2" data-toggle="tooltip" title="Quick actions"
-                            data-placement="left">
-                            <a href="#" class="btn btn-hover-light-primary btn-sm btn-icon" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">
-                                <i class="ki ki-bold-more-hor"></i>
-                            </a>
-                            <div class="dropdown-menu p-0 m-0 dropdown-menu-md dropdown-menu-right">
-                                <!--begin::Navigation-->
-                                <ul class="navi navi-hover">
-                                    <li class="navi-header font-weight-bold py-4">
-                                        <span class="font-size-lg">Choose Label:</span>
-                                        <i class="flaticon2-information icon-md text-muted" data-toggle="tooltip"
-                                            data-placement="right" title="Click to learn more..."></i>
-                                    </li>
-                                    <li class="navi-separator mb-3 opacity-70"></li>
-                                    <li class="navi-item">
-                                        <a href="#" class="navi-link">
-                                            <span class="navi-text">
-                                                <span
-                                                    class="label label-xl label-inline label-light-success">Customer</span>
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li class="navi-item">
-                                        <a href="#" class="navi-link">
-                                            <span class="navi-text">
-                                                <span class="label label-xl label-inline label-light-danger">Partner</span>
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li class="navi-item">
-                                        <a href="#" class="navi-link">
-                                            <span class="navi-text">
-                                                <span class="label label-xl label-inline label-light-warning">Suplier</span>
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li class="navi-item">
-                                        <a href="#" class="navi-link">
-                                            <span class="navi-text">
-                                                <span class="label label-xl label-inline label-light-primary">Member</span>
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li class="navi-item">
-                                        <a href="#" class="navi-link">
-                                            <span class="navi-text">
-                                                <span class="label label-xl label-inline label-light-dark">Staff</span>
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li class="navi-separator mt-3 opacity-70"></li>
-                                    <li class="navi-footer py-4">
-                                        <a class="btn btn-clean font-weight-bold btn-sm" href="#">
-                                            <i class="ki ki-plus icon-sm"></i>Add new</a>
-                                    </li>
-                                </ul>
-                                <!--end::Navigation-->
-                            </div>
-                        </div>
-                        <!--end::Dropdown-->
-                    </div>
-                    <!--end::Item-->
-                    <!--begin::Item-->
-                    <div class="d-flex align-items-center mb-10">
-                        <!--begin::Symbol-->
-                        <div class="symbol symbol-40 symbol-light-success mr-5">
-                            <span class="symbol-label">
-                                <img src="assets/media/svg/avatars/006-girl-3.svg" class="h-75 align-self-end" alt="" />
-                            </span>
-                        </div>
-                        <!--end::Symbol-->
-                        <!--begin::Text-->
-                        <div class="d-flex flex-column flex-grow-1 font-weight-bold">
-                            <a href="#" class="text-dark text-hover-primary mb-1 font-size-lg">Anne Clarc</a>
-                            <span class="text-muted">PHP, SQLite, Artisan CLI</span>
-                        </div>
-                        <!--end::Text-->
-                        <!--begin::Dropdown-->
-                        <div class="dropdown dropdown-inline ml-2" data-toggle="tooltip" title="Quick actions"
-                            data-placement="left">
-
-                            <span class="text-primary">PHP, SQLite, Artisan CLI</span>
-
-                            <a href="#" class="btn btn-hover-light-primary btn-sm btn-icon" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">
-                                <i class="ki ki-bold-more-hor"></i>
-                            </a>
-                            <div class="dropdown-menu p-0 m-0 dropdown-menu-md dropdown-menu-right">
-                                <!--begin::Navigation-->
-                                <ul class="navi navi-hover">
-                                    <li class="navi-header font-weight-bold py-4">
-                                        <span class="font-size-lg">Choose Label:</span>
-                                        <i class="flaticon2-information icon-md text-muted" data-toggle="tooltip"
-                                            data-placement="right" title="Click to learn more..."></i>
-                                    </li>
-                                    <li class="navi-separator mb-3 opacity-70"></li>
-                                    <li class="navi-item">
-                                        <a href="#" class="navi-link">
-                                            <span class="navi-text">
-                                                <span
-                                                    class="label label-xl label-inline label-light-success">Customer</span>
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li class="navi-item">
-                                        <a href="#" class="navi-link">
-                                            <span class="navi-text">
-                                                <span class="label label-xl label-inline label-light-danger">Partner</span>
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li class="navi-item">
-                                        <a href="#" class="navi-link">
-                                            <span class="navi-text">
-                                                <span class="label label-xl label-inline label-light-warning">Suplier</span>
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li class="navi-item">
-                                        <a href="#" class="navi-link">
-                                            <span class="navi-text">
-                                                <span class="label label-xl label-inline label-light-primary">Member</span>
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li class="navi-item">
-                                        <a href="#" class="navi-link">
-                                            <span class="navi-text">
-                                                <span class="label label-xl label-inline label-light-dark">Staff</span>
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li class="navi-separator mt-3 opacity-70"></li>
-                                    <li class="navi-footer py-4">
-                                        <a class="btn btn-clean font-weight-bold btn-sm" href="#">
-                                            <i class="ki ki-plus icon-sm"></i>Add new</a>
-                                    </li>
-                                </ul>
-                                <!--end::Navigation-->
-                            </div>
-                        </div>
-                        <!--end::Dropdown-->
-                    </div>
-                    <!--end::Item-->
-                    <!--begin::Item-->
-                    <div class="d-flex align-items-center mb-10">
-                        <!--begin::Symbol-->
-                        <div class="symbol symbol-40 symbol-light-success mr-5">
-                            <span class="symbol-label">
-                                <img src="assets/media/svg/avatars/011-boy-5.svg" class="h-75 align-self-end" alt="" />
-                            </span>
-                        </div>
-                        <!--end::Symbol-->
-                        <!--begin::Text-->
-                        <div class="d-flex flex-column flex-grow-1 font-weight-bold">
-                            <a href="#" class="text-dark text-hover-primary mb-1 font-size-lg">Kristaps Zumman</a>
-                            <span class="text-muted">PHP, SQLite, Artisan CLI</span>
-                        </div>
-                        <!--end::Text-->
-                        <!--begin::Dropdown-->
-                        <div class="dropdown dropdown-inline ml-2" data-toggle="tooltip" title="Quick actions"
-                            data-placement="left">
-                            <a href="#" class="btn btn-hover-light-primary btn-sm btn-icon" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">
-                                <i class="ki ki-bold-more-hor"></i>
-                            </a>
-                            <div class="dropdown-menu p-0 m-0 dropdown-menu-md dropdown-menu-right">
-                                <!--begin::Navigation-->
-                                <ul class="navi navi-hover">
-                                    <li class="navi-header font-weight-bold py-4">
-                                        <span class="font-size-lg">Choose Label:</span>
-                                        <i class="flaticon2-information icon-md text-muted" data-toggle="tooltip"
-                                            data-placement="right" title="Click to learn more..."></i>
-                                    </li>
-                                    <li class="navi-separator mb-3 opacity-70"></li>
-                                    <li class="navi-item">
-                                        <a href="#" class="navi-link">
-                                            <span class="navi-text">
-                                                <span
-                                                    class="label label-xl label-inline label-light-success">Customer</span>
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li class="navi-item">
-                                        <a href="#" class="navi-link">
-                                            <span class="navi-text">
-                                                <span class="label label-xl label-inline label-light-danger">Partner</span>
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li class="navi-item">
-                                        <a href="#" class="navi-link">
-                                            <span class="navi-text">
-                                                <span class="label label-xl label-inline label-light-warning">Suplier</span>
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li class="navi-item">
-                                        <a href="#" class="navi-link">
-                                            <span class="navi-text">
-                                                <span class="label label-xl label-inline label-light-primary">Member</span>
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li class="navi-item">
-                                        <a href="#" class="navi-link">
-                                            <span class="navi-text">
-                                                <span class="label label-xl label-inline label-light-dark">Staff</span>
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li class="navi-separator mt-3 opacity-70"></li>
-                                    <li class="navi-footer py-4">
-                                        <a class="btn btn-clean font-weight-bold btn-sm" href="#">
-                                            <i class="ki ki-plus icon-sm"></i>Add new</a>
-                                    </li>
-                                </ul>
-                                <!--end::Navigation-->
-                            </div>
-                        </div>
-                        <!--end:Dropdown-->
-                    </div>
-                    <!--end::Item-->
-                    <!--begin::Item-->
-                    <div class="d-flex align-items-center mb-10">
-                        <!--begin::Symbol-->
-                        <div class="symbol symbol-40 symbol-light-success mr-5">
-                            <span class="symbol-label">
-                                <img src="assets/media/svg/avatars/015-boy-6.svg" class="h-75 align-self-end" alt="" />
-                            </span>
-                        </div>
-                        <!--end::Symbol-->
-                        <!--begin::Text-->
-                        <div class="d-flex flex-column flex-grow-1 font-weight-bold">
-                            <a href="#" class="text-dark text-hover-primary mb-1 font-size-lg">Ricky Hunt</a>
-                            <span class="text-muted">PHP, SQLite, Artisan CLI</span>
-                        </div>
-                        <!--end::Text-->
-                        <!--begin::Dropdown-->
-                        <div class="dropdown dropdown-inline ml-2" data-toggle="tooltip" title="Quick actions"
-                            data-placement="left">
-                            <a href="#" class="btn btn-hover-light-primary btn-sm btn-icon" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">
-                                <i class="ki ki-bold-more-hor"></i>
-                            </a>
-                            <div class="dropdown-menu p-0 m-0 dropdown-menu-md dropdown-menu-right">
-                                <!--begin::Navigation-->
-                                <ul class="navi navi-hover">
-                                    <li class="navi-header font-weight-bold py-4">
-                                        <span class="font-size-lg">Choose Label:</span>
-                                        <i class="flaticon2-information icon-md text-muted" data-toggle="tooltip"
-                                            data-placement="right" title="Click to learn more..."></i>
-                                    </li>
-                                    <li class="navi-separator mb-3 opacity-70"></li>
-                                    <li class="navi-item">
-                                        <a href="#" class="navi-link">
-                                            <span class="navi-text">
-                                                <span
-                                                    class="label label-xl label-inline label-light-success">Customer</span>
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li class="navi-item">
-                                        <a href="#" class="navi-link">
-                                            <span class="navi-text">
-                                                <span class="label label-xl label-inline label-light-danger">Partner</span>
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li class="navi-item">
-                                        <a href="#" class="navi-link">
-                                            <span class="navi-text">
-                                                <span class="label label-xl label-inline label-light-warning">Suplier</span>
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li class="navi-item">
-                                        <a href="#" class="navi-link">
-                                            <span class="navi-text">
-                                                <span class="label label-xl label-inline label-light-primary">Member</span>
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li class="navi-item">
-                                        <a href="#" class="navi-link">
-                                            <span class="navi-text">
-                                                <span class="label label-xl label-inline label-light-dark">Staff</span>
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li class="navi-separator mt-3 opacity-70"></li>
-                                    <li class="navi-footer py-4">
-                                        <a class="btn btn-clean font-weight-bold btn-sm" href="#">
-                                            <i class="ki ki-plus icon-sm"></i>Add new</a>
-                                    </li>
-                                </ul>
-                                <!--end::Navigation-->
-                            </div>
-                        </div>
-                        <!--end::Dropdown-->
-                    </div>
-                    <!--end::Item-->
-                    <!--begin::Item-->
-                    <div class="d-flex align-items-center mb-2">
-                        <!--begin::Symbol-->
-                        <div class="symbol symbol-40 symbol-light-success mr-5">
-                            <span class="symbol-label">
-                                <img src="assets/media/svg/avatars/016-boy-7.svg" class="h-75 align-self-end" alt="" />
-                            </span>
-                        </div>
-                        <!--end::Symbol-->
-                        <!--begin::Text-->
-                        <div class="d-flex flex-column flex-grow-1 font-weight-bold">
-                            <a href="#" class="text-dark text-hover-primary mb-1 font-size-lg">Carles Puyol</a>
-                            <span class="text-muted">PHP, SQLite, Artisan CLI</span>
-                        </div>
-                        <!--end::Text-->
-                        <!--begin::Dropdown-->
-                        <div class="dropdown dropdown-inline ml-2" data-toggle="tooltip" title="Quick actions"
-                            data-placement="left">
-                            <a href="#" class="btn btn-hover-light-primary btn-sm btn-icon" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">
-                                <i class="ki ki-bold-more-hor"></i>
-                            </a>
-                            <div class="dropdown-menu p-0 m-0 dropdown-menu-md dropdown-menu-right">
-                                <!--begin::Navigation-->
-                                <ul class="navi navi-hover">
-                                    <li class="navi-header font-weight-bold py-4">
-                                        <span class="font-size-lg">Choose Label:</span>
-                                        <i class="flaticon2-information icon-md text-muted" data-toggle="tooltip"
-                                            data-placement="right" title="Click to learn more..."></i>
-                                    </li>
-                                    <li class="navi-separator mb-3 opacity-70"></li>
-                                    <li class="navi-item">
-                                        <a href="#" class="navi-link">
-                                            <span class="navi-text">
-                                                <span
-                                                    class="label label-xl label-inline label-light-success">Customer</span>
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li class="navi-item">
-                                        <a href="#" class="navi-link">
-                                            <span class="navi-text">
-                                                <span class="label label-xl label-inline label-light-danger">Partner</span>
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li class="navi-item">
-                                        <a href="#" class="navi-link">
-                                            <span class="navi-text">
-                                                <span class="label label-xl label-inline label-light-warning">Suplier</span>
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li class="navi-item">
-                                        <a href="#" class="navi-link">
-                                            <span class="navi-text">
-                                                <span class="label label-xl label-inline label-light-primary">Member</span>
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li class="navi-item">
-                                        <a href="#" class="navi-link">
-                                            <span class="navi-text">
-                                                <span class="label label-xl label-inline label-light-dark">Staff</span>
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li class="navi-separator mt-3 opacity-70"></li>
-                                    <li class="navi-footer py-4">
-                                        <a class="btn btn-clean font-weight-bold btn-sm" href="#">
-                                            <i class="ki ki-plus icon-sm"></i>Add new</a>
-                                    </li>
-                                </ul>
-                                <!--end::Navigation-->
-                            </div>
-                        </div>
-                        <!--end::Dropdown-->
-                    </div>
-                    <!--end::Item-->
+                <div class="card-body pt-2 latest-complete-class">
+                    <div class="spinner spinner-primary spinner-lg spinner-center"></div>
                 </div>
                 <!--end::Body-->
             </div>
@@ -760,29 +413,32 @@
             <!--begin::Las-->
             <div class="card card-custom gutter-b">
                 <!--begin::Header-->
-                <div class="card-header border-0 py-5">
+                <div class="card-header border-0 pt-5">
                     <h3 class="card-title align-items-start flex-column">
-                        <span class="card-label font-weight-bolder text-dark">New Arrivals</span>
-                        <span class="text-muted mt-3 font-weight-bold font-size-sm">More than 400+ new members</span>
+                        <span class="card-label font-weight-bolder text-dark">Last Class</span>
                     </h3>
                     <div class="card-toolbar">
-                        <a href="#" class="btn btn-success font-weight-bolder font-size-sm">
-                            <span class="svg-icon svg-icon-md svg-icon-white">
-                                <!--begin::Svg Icon | path:assets/media/svg/icons/Communication/Add-user.svg-->
-                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                                    width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                        <polygon points="0 0 24 0 24 24 0 24" />
-                                        <path
-                                            d="M18,8 L16,8 C15.4477153,8 15,7.55228475 15,7 C15,6.44771525 15.4477153,6 16,6 L18,6 L18,4 C18,3.44771525 18.4477153,3 19,3 C19.5522847,3 20,3.44771525 20,4 L20,6 L22,6 C22.5522847,6 23,6.44771525 23,7 C23,7.55228475 22.5522847,8 22,8 L20,8 L20,10 C20,10.5522847 19.5522847,11 19,11 C18.4477153,11 18,10.5522847 18,10 L18,8 Z M9,11 C6.790861,11 5,9.209139 5,7 C5,4.790861 6.790861,3 9,3 C11.209139,3 13,4.790861 13,7 C13,9.209139 11.209139,11 9,11 Z"
-                                            fill="#000000" fill-rule="nonzero" opacity="0.3" />
-                                        <path
-                                            d="M0.00065168429,20.1992055 C0.388258525,15.4265159 4.26191235,13 8.98334134,13 C13.7712164,13 17.7048837,15.2931929 17.9979143,20.2 C18.0095879,20.3954741 17.9979143,21 17.2466999,21 C13.541124,21 8.03472472,21 0.727502227,21 C0.476712155,21 -0.0204617505,20.45918 0.00065168429,20.1992055 Z"
-                                            fill="#000000" fill-rule="nonzero" />
-                                    </g>
-                                </svg>
-                                <!--end::Svg Icon-->
-                            </span>Add New Member</a>
+                        <div class="form-group row pr-5">
+                            <label class="col-form-label text-right col-lg-3 col-sm-12">Filter Tanggal</label>
+                            <div class="col-lg-9 col-md-9 col-sm-12">
+                                <div class="input-daterange input-group" id="filter_date">
+                                    <input type="text" class="form-control" name="start" id="start_date" />
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><i class="la la-ellipsis-h"></i></span>
+                                    </div>
+                                    <input type="text" class="form-control" name="end" id="end_date" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-icon">
+                                <input type="text" name="search" id="search" class="form-control"
+                                    placeholder="Masukan kata kunci" />
+                                <span>
+                                    <i class="flaticon2-search-1 icon-md"></i>
+                                </span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <!--end::Header-->
@@ -790,305 +446,20 @@
                 <div class="card-body pt-0 pb-3">
                     <!--begin::Table-->
                     <div class="table-responsive">
-                        <table class="table table-head-custom table-head-bg table-borderless table-vertical-center">
+                        <table class="table table-head-custom table-head-bg table-borderless table-vertical-center"
+                            id="last-class-table">
                             <thead>
                                 <tr class="text-uppercase">
-                                    <th style="min-width: 250px" class="pl-7">
-                                        <span class="text-dark-75">products</span>
-                                    </th>
-                                    <th style="min-width: 100px">pruce</th>
-                                    <th style="min-width: 100px">deposit</th>
-                                    <th style="min-width: 150px">agent</th>
-                                    <th style="min-width: 130px">status</th>
-                                    <th style="min-width: 120px"></th>
+                                    <th>No</th>
+                                    <th>Tanggal</th>
+                                    <th>Kelas</th>
+                                    <th>Tipe Kelas</th>
+                                    <th>Siswa</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="pl-0 py-8">
-                                        <div class="d-flex align-items-center">
-                                            <div class="symbol symbol-50 flex-shrink-0 mr-4">
-                                                <div class="symbol-label"
-                                                    style="background-image: url('assets/media/stock-600x400/img-26.jpg')">
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <a href="#"
-                                                    class="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg">Sant
-                                                    Extreanet Solution</a>
-                                                <span class="text-muted font-weight-bold d-block">HTML, JS, ReactJS</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span class="text-dark-75 font-weight-bolder d-block font-size-lg">$2,790</span>
-                                        <span class="text-muted font-weight-bold">Paid</span>
-                                    </td>
-                                    <td>
-                                        <span class="text-dark-75 font-weight-bolder d-block font-size-lg">$520</span>
-                                        <span class="text-muted font-weight-bold">Paid</span>
-                                    </td>
-                                    <td>
-                                        <span class="text-dark-75 font-weight-bolder d-block font-size-lg">Bradly
-                                            Beal</span>
-                                        <span class="text-muted font-weight-bold">Insurance</span>
-                                    </td>
-                                    <td>
-                                        <span class="label label-lg label-light-primary label-inline">Approved</span>
-                                    </td>
-                                    <td class="text-right pr-0">
-                                        <a href="#" class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3">
-                                            <span class="svg-icon svg-icon-md svg-icon-primary">
-                                                <!--begin::Svg Icon | path:assets/media/svg/icons/General/Bookmark.svg-->
-                                                <svg xmlns="http://www.w3.org/2000/svg"
-                                                    xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
-                                                    viewBox="0 0 24 24" version="1.1">
-                                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                        <rect x="0" y="0" width="24" height="24" />
-                                                        <path
-                                                            d="M8,4 L16,4 C17.1045695,4 18,4.8954305 18,6 L18,17.726765 C18,18.2790497 17.5522847,18.726765 17,18.726765 C16.7498083,18.726765 16.5087052,18.6329798 16.3242754,18.4639191 L12.6757246,15.1194142 C12.2934034,14.7689531 11.7065966,14.7689531 11.3242754,15.1194142 L7.67572463,18.4639191 C7.26860564,18.8371115 6.63603827,18.8096086 6.26284586,18.4024896 C6.09378519,18.2180598 6,17.9769566 6,17.726765 L6,6 C6,4.8954305 6.8954305,4 8,4 Z"
-                                                            fill="#000000" />
-                                                    </g>
-                                                </svg>
-                                                <!--end::Svg Icon-->
-                                            </span>
-                                        </a>
-                                        <a href="#" class="btn btn-icon btn-light btn-hover-primary btn-sm">
-                                            <span class="svg-icon svg-icon-md svg-icon-primary">
-                                                <!--begin::Svg Icon | path:assets/media/svg/icons/Navigation/Arrow-right.svg-->
-                                                <svg xmlns="http://www.w3.org/2000/svg"
-                                                    xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
-                                                    viewBox="0 0 24 24" version="1.1">
-                                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                        <polygon points="0 0 24 0 24 24 0 24" />
-                                                        <rect fill="#000000" opacity="0.3"
-                                                            transform="translate(12.000000, 12.000000) rotate(-90.000000) translate(-12.000000, -12.000000)"
-                                                            x="11" y="5" width="2" height="14" rx="1" />
-                                                        <path
-                                                            d="M9.70710318,15.7071045 C9.31657888,16.0976288 8.68341391,16.0976288 8.29288961,15.7071045 C7.90236532,15.3165802 7.90236532,14.6834152 8.29288961,14.2928909 L14.2928896,8.29289093 C14.6714686,7.914312 15.281055,7.90106637 15.675721,8.26284357 L21.675721,13.7628436 C22.08284,14.136036 22.1103429,14.7686034 21.7371505,15.1757223 C21.3639581,15.5828413 20.7313908,15.6103443 20.3242718,15.2371519 L15.0300721,10.3841355 L9.70710318,15.7071045 Z"
-                                                            fill="#000000" fill-rule="nonzero"
-                                                            transform="translate(14.999999, 11.999997) scale(1, -1) rotate(90.000000) translate(-14.999999, -11.999997)" />
-                                                    </g>
-                                                </svg>
-                                                <!--end::Svg Icon-->
-                                            </span>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="pl-0 py-0">
-                                        <div class="d-flex align-items-center">
-                                            <div class="symbol symbol-50 flex-shrink-0 mr-4">
-                                                <div class="symbol-label"
-                                                    style="background-image: url('assets/media/stock-600x400/img-3.jpg')">
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <a href="#"
-                                                    class="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg">Telegram
-                                                    Development</a>
-                                                <span class="text-muted font-weight-bold d-block">C#, ASP.NET, MS SQL</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span class="text-dark-75 font-weight-bolder d-block font-size-lg">$4,600</span>
-                                        <span class="text-muted font-weight-bold">Pending</span>
-                                    </td>
-                                    <td>
-                                        <span class="text-dark-75 font-weight-bolder d-block font-size-lg">$1,600</span>
-                                        <span class="text-muted font-weight-bold">Rejected</span>
-                                    </td>
-                                    <td>
-                                        <span class="text-dark-75 font-weight-bolder d-block font-size-lg">Chris
-                                            Thompson</span>
-                                        <span class="text-muted font-weight-bold">NBA Player</span>
-                                    </td>
-                                    <td>
-                                        <span class="label label-lg label-light-warning label-inline">In Progress</span>
-                                    </td>
-                                    <td class="text-right pr-0">
-                                        <a href="#" class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3">
-                                            <span class="svg-icon svg-icon-md svg-icon-primary">
-                                                <!--begin::Svg Icon | path:assets/media/svg/icons/General/Bookmark.svg-->
-                                                <svg xmlns="http://www.w3.org/2000/svg"
-                                                    xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
-                                                    viewBox="0 0 24 24" version="1.1">
-                                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                        <rect x="0" y="0" width="24" height="24" />
-                                                        <path
-                                                            d="M8,4 L16,4 C17.1045695,4 18,4.8954305 18,6 L18,17.726765 C18,18.2790497 17.5522847,18.726765 17,18.726765 C16.7498083,18.726765 16.5087052,18.6329798 16.3242754,18.4639191 L12.6757246,15.1194142 C12.2934034,14.7689531 11.7065966,14.7689531 11.3242754,15.1194142 L7.67572463,18.4639191 C7.26860564,18.8371115 6.63603827,18.8096086 6.26284586,18.4024896 C6.09378519,18.2180598 6,17.9769566 6,17.726765 L6,6 C6,4.8954305 6.8954305,4 8,4 Z"
-                                                            fill="#000000" />
-                                                    </g>
-                                                </svg>
-                                                <!--end::Svg Icon-->
-                                            </span>
-                                        </a>
-                                        <a href="#" class="btn btn-icon btn-light btn-hover-primary btn-sm">
-                                            <span class="svg-icon svg-icon-md svg-icon-primary">
-                                                <!--begin::Svg Icon | path:assets/media/svg/icons/Navigation/Arrow-right.svg-->
-                                                <svg xmlns="http://www.w3.org/2000/svg"
-                                                    xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
-                                                    viewBox="0 0 24 24" version="1.1">
-                                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                        <polygon points="0 0 24 0 24 24 0 24" />
-                                                        <rect fill="#000000" opacity="0.3"
-                                                            transform="translate(12.000000, 12.000000) rotate(-90.000000) translate(-12.000000, -12.000000)"
-                                                            x="11" y="5" width="2" height="14" rx="1" />
-                                                        <path
-                                                            d="M9.70710318,15.7071045 C9.31657888,16.0976288 8.68341391,16.0976288 8.29288961,15.7071045 C7.90236532,15.3165802 7.90236532,14.6834152 8.29288961,14.2928909 L14.2928896,8.29289093 C14.6714686,7.914312 15.281055,7.90106637 15.675721,8.26284357 L21.675721,13.7628436 C22.08284,14.136036 22.1103429,14.7686034 21.7371505,15.1757223 C21.3639581,15.5828413 20.7313908,15.6103443 20.3242718,15.2371519 L15.0300721,10.3841355 L9.70710318,15.7071045 Z"
-                                                            fill="#000000" fill-rule="nonzero"
-                                                            transform="translate(14.999999, 11.999997) scale(1, -1) rotate(90.000000) translate(-14.999999, -11.999997)" />
-                                                    </g>
-                                                </svg>
-                                                <!--end::Svg Icon-->
-                                            </span>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="pl-0 py-8">
-                                        <div class="d-flex align-items-center">
-                                            <div class="symbol symbol-50 flex-shrink-0 mr-4">
-                                                <div class="symbol-label"
-                                                    style="background-image: url('assets/media/stock-600x400/img-5.jpg')">
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <a href="#"
-                                                    class="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg">Payroll
-                                                    Application</a>
-                                                <span class="text-muted font-weight-bold d-block">PHP, Laravel, VueJS</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span class="text-dark-75 font-weight-bolder d-block font-size-lg">$23,800</span>
-                                        <span class="text-muted font-weight-bold">Paid</span>
-                                    </td>
-                                    <td>
-                                        <span class="text-dark-75 font-weight-bolder d-block font-size-lg">$6,700</span>
-                                        <span class="text-muted font-weight-bold">Paid</span>
-                                    </td>
-                                    <td>
-                                        <span class="text-dark-75 font-weight-bolder d-block font-size-lg">Zoey McGee</span>
-                                        <span class="text-muted font-weight-bold">Ruby Developer</span>
-                                    </td>
-                                    <td>
-                                        <span class="label label-lg label-light-success label-inline">Success</span>
-                                    </td>
-                                    <td class="text-right pr-0">
-                                        <a href="#" class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3">
-                                            <span class="svg-icon svg-icon-md svg-icon-primary">
-                                                <!--begin::Svg Icon | path:assets/media/svg/icons/General/Bookmark.svg-->
-                                                <svg xmlns="http://www.w3.org/2000/svg"
-                                                    xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
-                                                    viewBox="0 0 24 24" version="1.1">
-                                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                        <rect x="0" y="0" width="24" height="24" />
-                                                        <path
-                                                            d="M8,4 L16,4 C17.1045695,4 18,4.8954305 18,6 L18,17.726765 C18,18.2790497 17.5522847,18.726765 17,18.726765 C16.7498083,18.726765 16.5087052,18.6329798 16.3242754,18.4639191 L12.6757246,15.1194142 C12.2934034,14.7689531 11.7065966,14.7689531 11.3242754,15.1194142 L7.67572463,18.4639191 C7.26860564,18.8371115 6.63603827,18.8096086 6.26284586,18.4024896 C6.09378519,18.2180598 6,17.9769566 6,17.726765 L6,6 C6,4.8954305 6.8954305,4 8,4 Z"
-                                                            fill="#000000" />
-                                                    </g>
-                                                </svg>
-                                                <!--end::Svg Icon-->
-                                            </span>
-                                        </a>
-                                        <a href="#" class="btn btn-icon btn-light btn-hover-primary btn-sm">
-                                            <span class="svg-icon svg-icon-md svg-icon-primary">
-                                                <!--begin::Svg Icon | path:assets/media/svg/icons/Navigation/Arrow-right.svg-->
-                                                <svg xmlns="http://www.w3.org/2000/svg"
-                                                    xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
-                                                    viewBox="0 0 24 24" version="1.1">
-                                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                        <polygon points="0 0 24 0 24 24 0 24" />
-                                                        <rect fill="#000000" opacity="0.3"
-                                                            transform="translate(12.000000, 12.000000) rotate(-90.000000) translate(-12.000000, -12.000000)"
-                                                            x="11" y="5" width="2" height="14" rx="1" />
-                                                        <path
-                                                            d="M9.70710318,15.7071045 C9.31657888,16.0976288 8.68341391,16.0976288 8.29288961,15.7071045 C7.90236532,15.3165802 7.90236532,14.6834152 8.29288961,14.2928909 L14.2928896,8.29289093 C14.6714686,7.914312 15.281055,7.90106637 15.675721,8.26284357 L21.675721,13.7628436 C22.08284,14.136036 22.1103429,14.7686034 21.7371505,15.1757223 C21.3639581,15.5828413 20.7313908,15.6103443 20.3242718,15.2371519 L15.0300721,10.3841355 L9.70710318,15.7071045 Z"
-                                                            fill="#000000" fill-rule="nonzero"
-                                                            transform="translate(14.999999, 11.999997) scale(1, -1) rotate(90.000000) translate(-14.999999, -11.999997)" />
-                                                    </g>
-                                                </svg>
-                                                <!--end::Svg Icon-->
-                                            </span>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="pl-0 py-0">
-                                        <div class="d-flex align-items-center">
-                                            <div class="symbol symbol-50 flex-shrink-0 mr-4">
-                                                <div class="symbol-label"
-                                                    style="background-image: url('assets/media/stock-600x400/img-18.jpg')">
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <a href="#"
-                                                    class="text-dark font-weight-bolder text-hover-primary mb-1 font-size-lg">HR
-                                                    Management System</a>
-                                                <span class="text-muted font-weight-bold d-block">Python, PostgreSQL,
-                                                    ReactJS</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span class="text-dark-75 font-weight-bolder d-block font-size-lg">$57,000</span>
-                                        <span class="text-muted font-weight-bold">Paid</span>
-                                    </td>
-                                    <td>
-                                        <span class="text-dark-75 font-weight-bolder d-block font-size-lg">$14,000</span>
-                                        <span class="text-muted font-weight-bold">Paid</span>
-                                    </td>
-                                    <td>
-                                        <span class="text-dark-75 font-weight-bolder d-block font-size-lg">Brandon
-                                            Ingram</span>
-                                        <span class="text-muted font-weight-bold">NBA Player</span>
-                                    </td>
-                                    <td>
-                                        <span class="label label-lg label-light-danger label-inline">Rejected</span>
-                                    </td>
-                                    <td class="text-right pr-0">
-                                        <a href="#" class="btn btn-icon btn-light btn-hover-primary btn-sm mr-3">
-                                            <span class="svg-icon svg-icon-md svg-icon-primary">
-                                                <!--begin::Svg Icon | path:assets/media/svg/icons/General/Bookmark.svg-->
-                                                <svg xmlns="http://www.w3.org/2000/svg"
-                                                    xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
-                                                    viewBox="0 0 24 24" version="1.1">
-                                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                        <rect x="0" y="0" width="24" height="24" />
-                                                        <path
-                                                            d="M8,4 L16,4 C17.1045695,4 18,4.8954305 18,6 L18,17.726765 C18,18.2790497 17.5522847,18.726765 17,18.726765 C16.7498083,18.726765 16.5087052,18.6329798 16.3242754,18.4639191 L12.6757246,15.1194142 C12.2934034,14.7689531 11.7065966,14.7689531 11.3242754,15.1194142 L7.67572463,18.4639191 C7.26860564,18.8371115 6.63603827,18.8096086 6.26284586,18.4024896 C6.09378519,18.2180598 6,17.9769566 6,17.726765 L6,6 C6,4.8954305 6.8954305,4 8,4 Z"
-                                                            fill="#000000" />
-                                                    </g>
-                                                </svg>
-                                                <!--end::Svg Icon-->
-                                            </span>
-                                        </a>
-                                        <a href="#" class="btn btn-icon btn-light btn-hover-primary btn-sm">
-                                            <span class="svg-icon svg-icon-md svg-icon-primary">
-                                                <!--begin::Svg Icon | path:assets/media/svg/icons/Navigation/Arrow-right.svg-->
-                                                <svg xmlns="http://www.w3.org/2000/svg"
-                                                    xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
-                                                    viewBox="0 0 24 24" version="1.1">
-                                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                        <polygon points="0 0 24 0 24 24 0 24" />
-                                                        <rect fill="#000000" opacity="0.3"
-                                                            transform="translate(12.000000, 12.000000) rotate(-90.000000) translate(-12.000000, -12.000000)"
-                                                            x="11" y="5" width="2" height="14" rx="1" />
-                                                        <path
-                                                            d="M9.70710318,15.7071045 C9.31657888,16.0976288 8.68341391,16.0976288 8.29288961,15.7071045 C7.90236532,15.3165802 7.90236532,14.6834152 8.29288961,14.2928909 L14.2928896,8.29289093 C14.6714686,7.914312 15.281055,7.90106637 15.675721,8.26284357 L21.675721,13.7628436 C22.08284,14.136036 22.1103429,14.7686034 21.7371505,15.1757223 C21.3639581,15.5828413 20.7313908,15.6103443 20.3242718,15.2371519 L15.0300721,10.3841355 L9.70710318,15.7071045 Z"
-                                                            fill="#000000" fill-rule="nonzero"
-                                                            transform="translate(14.999999, 11.999997) scale(1, -1) rotate(90.000000) translate(-14.999999, -11.999997)" />
-                                                    </g>
-                                                </svg>
-                                                <!--end::Svg Icon-->
-                                            </span>
-                                        </a>
-                                    </td>
-                                </tr>
-                            </tbody>
+                            <tbody></tbody>
                         </table>
                     </div>
                     <!--end::Table-->
@@ -1101,6 +472,8 @@
 
 
     </div>
+    @include('coach.dashboard.modal')
+
 @endsection
 
 @push('script')

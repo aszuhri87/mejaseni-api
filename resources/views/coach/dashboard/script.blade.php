@@ -1,15 +1,15 @@
 <script type="text/javascript">
     var Page = function() {
         var _componentPage = function() {
-            var init_table;
 
             $(document).ready(function() {
+                initAction();
+                formSubmit();
                 summary_course_chart();
                 side_summary_course();
-                initTable();
-                formSubmit();
-                initAction();
-                initTreeTable();
+                closestScheduleTable();
+                latestComplateClassTable();
+                lastClassTable();
             });
 
             const summary_course_chart = () => {
@@ -71,7 +71,8 @@
                                         labels: {
                                             style: {
                                                 colors: KTApp.getSettings()['colors']['gray'][
-                                                    'gray-500'],
+                                                    'gray-500'
+                                                ],
                                                 fontSize: '12px',
                                                 fontFamily: KTApp.getSettings()['font-family']
                                             }
@@ -83,7 +84,8 @@
                                         labels: {
                                             style: {
                                                 colors: KTApp.getSettings()['colors']['gray'][
-                                                    'gray-500'],
+                                                    'gray-500'
+                                                ],
                                                 fontSize: '12px',
                                                 fontFamily: KTApp.getSettings()['font-family']
                                             }
@@ -120,7 +122,7 @@
                                         },
                                         y: {
                                             formatter: function(val) {
-                                                return "$" + val + " thousands"
+                                                return  val + " student"
                                             }
                                         }
                                     },
@@ -160,9 +162,10 @@
                         .done(function(res, xhr, meta) {
                             if (res.status == 200) {
                                 $('.total-kelas').text(res.data.total_kelas)
-                                $('.video-tutorial').text(res.data.video_tutorial)
-                                $('.booking-saat-ini').text(res.data.video_tutorial)
-                                $('.riwayat-booking').text(res.data.video_tutorial)
+                                $('.video-tutorial').text(res.data.total_video)
+                                $('.booking-saat-ini').text(res.data.total_booking)
+                                $('.riwayat-booking').text(res.data.total_riwayat_booking)
+                                $('.tidak-hadir').text(res.data.total_tidak_hadir)
                             }
                         })
                         .fail(function(res, error) {
@@ -172,8 +175,128 @@
 
                         });
                 },
-                initTable = () => {
-                    init_table = $('#init-table').DataTable({
+                closestScheduleTable = () => {
+
+                    $.ajax({
+                            url: "{{ url('coach/dashboard/closest-schedule') }}",
+                            type: 'POST',
+                            dataType: 'json',
+                        })
+                        .done(function(res, xhr, meta) {
+                            let element = '';
+                            $.each(res.data, function(index, data) {
+
+                                const start = moment(data.datetime);
+                                const end   = moment();
+
+                                element += `<!--begin::Item-->
+                                                <div class="d-flex align-items-center mb-10">
+                                                    <!--begin::Symbol-->
+                                                    <div class="symbol symbol-40 symbol-light-success mr-5">
+                                                        <span class="symbol-label">
+                                                            <img src="${data.image_url}" width="40" height="40" class="align-self-center rounded" alt=""/>
+                                                        </span>
+                                                    </div>
+                                                    <!--end::Symbol-->
+                                                    <!--begin::Text-->
+                                                    <div class="d-flex flex-column flex-grow-1 font-weight-bold">
+                                                        <a href="#" class="text-dark text-hover-primary mb-1 font-size-lg">${data.student_name}</a>
+                                                        <span class="text-muted">${data.class_name}</span>
+                                                    </div>
+                                                    <!--end::Text-->
+                                                    <!--begin::Dropdown-->
+                                                    <div class="dropdown dropdown-inline ml-2" data-toggle="tooltip" title="Quick actions"
+                                                        data-placement="left">
+                                                        <span class="text-primary">${end.to(start)}</span>
+
+                                                        <a href="#" class="btn btn-hover-light-primary btn-sm btn-icon" data-toggle="dropdown"
+                                                            aria-haspopup="true" aria-expanded="false">
+                                                            <i class="ki ki-bold-more-hor"></i>
+                                                        </a>
+                                                        <div class="dropdown-menu p-0 m-0 dropdown-menu-right">
+                                                            <!--begin::Navigation-->
+                                                            <ul class="navi navi-hover">
+                                                                <li class="navi-item">
+                                                                    <a href="#" class="navi-link text-danger">
+                                                                        Cancle Kelas
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                            <!--end::Navigation-->
+                                                        </div>
+                                                    </div>
+                                                    <!--end::Dropdown-->
+                                                </div>
+                                                <!--end::Item-->
+                                        `
+                            })
+
+                            $('.closest-schedule').html(element);
+
+                        });
+                },
+                latestComplateClassTable = () => {
+
+                    $.ajax({
+                            url: "{{ url('coach/dashboard/closest-schedule') }}",
+                            type: 'POST',
+                            dataType: 'json',
+                        })
+                        .done(function(res, xhr, meta) {
+
+                            let element = '';
+                            $.each(res.data, function(index, data) {
+
+                                const start = moment(data.datetime);
+                                const end   = moment();
+
+                                element += `<!--begin::Item-->
+                                                <div class="d-flex align-items-center mb-10">
+                                                    <!--begin::Symbol-->
+                                                    <div class="symbol symbol-40 symbol-light-success mr-5">
+                                                        <span class="symbol-label">
+                                                            <img src="${data.image_url}" width="40" height="40" class="align-self-center rounded" alt=""/>
+                                                        </span>
+                                                    </div>
+                                                    <!--end::Symbol-->
+                                                    <!--begin::Text-->
+                                                    <div class="d-flex flex-column flex-grow-1 font-weight-bold">
+                                                        <a href="#" class="text-dark text-hover-primary mb-1 font-size-lg">${data.student_name}</a>
+                                                        <span class="text-muted">${data.class_name}</span>
+                                                    </div>
+                                                    <!--end::Text-->
+                                                    <!--begin::Dropdown-->
+                                                    <div class="dropdown dropdown-inline ml-2" data-toggle="tooltip" title="Quick actions"
+                                                        data-placement="left">
+                                                        <span class="text-primary">${end.to(start)}</span>
+
+                                                        <a href="#" class="btn btn-hover-light-primary btn-sm btn-icon" data-toggle="dropdown"
+                                                            aria-haspopup="true" aria-expanded="false">
+                                                            <i class="ki ki-bold-more-hor"></i>
+                                                        </a>
+                                                        <div class="dropdown-menu p-0 m-0 dropdown-menu-right">
+                                                            <!--begin::Navigation-->
+                                                            <ul class="navi navi-hover">
+                                                                <li class="navi-item">
+                                                                    <a href="#" class="navi-link text-danger">
+                                                                        Cancle Kelas
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                            <!--end::Navigation-->
+                                                        </div>
+                                                    </div>
+                                                    <!--end::Dropdown-->
+                                                </div>
+                                                <!--end::Item-->
+                                        `
+                            })
+
+                            $('.latest-complete-class').html(element);
+                        });
+                },
+                lastClassTable = () => {
+                    init_table = $('#last-class-table').DataTable({
                         destroy: true,
                         processing: true,
                         serverSide: true,
@@ -181,22 +304,25 @@
                             .height() - 450,
                         ajax: {
                             type: 'POST',
-                            url: "{{ url('admin/master/admin/dt') }}",
+                            url: "{{ url('coach/dashboard/dt-last-class') }}",
                         },
                         columns: [{
                                 data: 'DT_RowIndex'
                             },
                             {
-                                data: 'name'
+                                data: 'date_class'
                             },
                             {
-                                data: 'tipe_admin'
+                                data: 'class_name'
                             },
                             {
-                                data: 'username'
+                                data: 'package_type'
                             },
                             {
-                                data: 'email'
+                                data: 'student_name'
+                            },
+                            {
+                                data: 'status'
                             },
                             {
                                 defaultContent: ''
@@ -206,50 +332,108 @@
                                 targets: 0,
                                 searchable: false,
                                 orderable: false,
+                                visible: false,
                                 className: "text-center"
+                            },
+                            {
+                                targets: 1,
+                                searchable: false,
+                                orderable: false,
+                                className: "text-center",
+                                render: function(data, typr, full, meta) {
+
+                                    return ` <div class="d-flex justify-content-md-center">
+                                                <div class="text-center">
+                                                    <a href="#"
+                                                        class="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg">${full.date_class}</a>
+                                                    <span class="text-muted font-weight-bold d-block">${full.start_datetime} - ${full.end_datetime}</span>
+                                                </div>
+                                            </div>`;
+                                }
+                            },
+                            {
+                                targets: 2,
+                                searchable: false,
+                                orderable: false,
+                                render: function(data, typr, full, meta) {
+
+                                    return ` <div class="d-flex align-items-center">
+                                            <div>
+                                                <a href="#" class="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg text-center">${full.class_name}</a>
+                                            </div>
+                                        </div>`;
+                                }
+                            },
+                            {
+                                targets: 3,
+                                searchable: false,
+                                orderable: false,
+                                render: function(data, typr, full, meta) {
+
+                                    return ` <div class="d-flex align-items-center">
+                                            <div>
+                                                <a href="#" class="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg text-center">${full.package_type}</a>
+                                            </div>
+                                        </div>`;
+                                }
+                            },
+                            {
+                                targets: 4,
+                                searchable: false,
+                                orderable: false,
+                                render: function(data, typr, full, meta) {
+
+                                    return ` <div class="d-flex align-items-center">
+                                            <div>
+                                                <a href="#" class="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg text-center">${full.student_name}</a>
+                                            </div>
+                                        </div>`;
+                                }
+                            },
+                            {
+                                targets: 5,
+                                searchable: false,
+                                orderable: false,
+                                render: function(data, typr, full, meta) {
+
+                                    return ` <div class="d-flex align-items-center">
+                                            <div>
+                                                <a href="#" class="text-${full.color_status} font-weight-bolder text-hover-primary mb-1 font-size-lg text-center">${full.status}</a>
+                                            </div>
+                                        </div>`;
+                                }
                             },
                             {
                                 targets: -1,
                                 searchable: false,
                                 orderable: false,
-                                className: "text-center",
                                 data: "id",
                                 render: function(data, type, full, meta) {
                                     return `
-                                    <a class="btn btn-sm btn-permission mr-1 btn-clean btn-icon" title="Permission" href="{{ url('/admin/master/admin/permission') }}/${data}">
+                                    <a href="{{ url('coach/dashboard/coach-show-review-last-class/${full.id}/${full.student_schedule_id}') }}" id="coach-show-last-class-btn-${full.id}" class="btn btn-primary coach-show-last-class-btn btn-sm btn-clean btn-icon mr-2" title="Student Review">
                                         <span class="svg-icon svg-icon-md">
-                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                            <!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-02-01-052524/theme/html/demo1/dist/../src/media/svg/icons/General/Visible.svg-->
+                                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                             <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                                 <rect x="0" y="0" width="24" height="24"/>
-                                                <polygon fill="#000000" opacity="0.3" transform="translate(8.885842, 16.114158) rotate(-315.000000) translate(-8.885842, -16.114158) " points="6.89784488 10.6187476 6.76452164 19.4882481 8.88584198 21.6095684 11.0071623 19.4882481 9.59294876 18.0740345 10.9659914 16.7009919 9.55177787 15.2867783 11.0071623 13.8313939 10.8837471 10.6187476"/>
-                                                <path d="M15.9852814,14.9852814 C12.6715729,14.9852814 9.98528137,12.2989899 9.98528137,8.98528137 C9.98528137,5.67157288 12.6715729,2.98528137 15.9852814,2.98528137 C19.2989899,2.98528137 21.9852814,5.67157288 21.9852814,8.98528137 C21.9852814,12.2989899 19.2989899,14.9852814 15.9852814,14.9852814 Z M16.1776695,9.07106781 C17.0060967,9.07106781 17.6776695,8.39949494 17.6776695,7.57106781 C17.6776695,6.74264069 17.0060967,6.07106781 16.1776695,6.07106781 C15.3492424,6.07106781 14.6776695,6.74264069 14.6776695,7.57106781 C14.6776695,8.39949494 15.3492424,9.07106781 16.1776695,9.07106781 Z" fill="#000000" transform="translate(15.985281, 8.985281) rotate(-315.000000) translate(-15.985281, -8.985281) "/>
-                                                <rect fill="#000000" opacity="0.3" x="5" y="20" width="15" height="2" rx="1"/>
+                                                <path d="M3,12 C3,12 5.45454545,6 12,6 C16.9090909,6 21,12 21,12 C21,12 16.9090909,18 12,18 C5.45454545,18 3,12 3,12 Z" fill="#000000" fill-rule="nonzero" opacity="0.3"/>
+                                                <path d="M12,15 C10.3431458,15 9,13.6568542 9,12 C9,10.3431458 10.3431458,9 12,9 C13.6568542,9 15,10.3431458 15,12 C15,13.6568542 13.6568542,15 12,15 Z" fill="#000000" opacity="0.3"/>
                                             </g>
-                                        </svg><!--end::Svg Icon--></span>
-                                    </a>
-                                    <a href="{{ url('/admin/master/admin') }}/${data}" title="Edit" class="btn btn-edit btn-sm btn-clean btn-icon mr-2" title="Edit details">
-                                        <span class="svg-icon svg-icon-md">
-                                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                    <rect x="0" y="0" width="24" height="24"/>
-                                                    <path d="M8,17.9148182 L8,5.96685884 C8,5.56391781 8.16211443,5.17792052 8.44982609,4.89581508 L10.965708,2.42895648 C11.5426798,1.86322723 12.4640974,1.85620921 13.0496196,2.41308426 L15.5337377,4.77566479 C15.8314604,5.0588212 16,5.45170806 16,5.86258077 L16,17.9148182 C16,18.7432453 15.3284271,19.4148182 14.5,19.4148182 L9.5,19.4148182 C8.67157288,19.4148182 8,18.7432453 8,17.9148182 Z" fill="#000000" fill-rule="nonzero" transform="translate(12.000000, 10.707409) rotate(-135.000000) translate(-12.000000, -10.707409) "/>
-                                                    <rect fill="#000000" opacity="0.3" x="5" y="20" width="15" height="2" rx="1"/>
-                                                </g>
-                                            </svg>
+                                            </svg><!--end::Svg Icon-->
                                         </span>
                                     </a>
-                                    <a href="{{ url('/admin/master/admin') }}/${data}" title="Delete" class="btn btn-delete btn-sm btn-clean btn-icon" title="Delete">
+                                    <a href="{{ url('coach/dashboard/show-last-class/${full.id}/${full.student_schedule_id}') }}" id="review-last-class-btn-${full.id}" class="btn btn-warning review-last-class-btn btn-sm btn-clean btn-icon mr-2" title="Review Student">
                                         <span class="svg-icon svg-icon-md">
+                                            <!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-02-01-052524/theme/html/demo1/dist/../src/media/svg/icons/General/Visible.svg-->
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                    <rect x="0" y="0" width="24" height="24"/>
-                                                    <path d="M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z" fill="#000000" fill-rule="nonzero"/>
-                                                    <path d="M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z" fill="#000000" opacity="0.3"/>
+                                                    <polygon points="0 0 24 0 24 24 0 24"/>
+                                                    <rect fill="#000000" opacity="0.3" transform="translate(8.500000, 12.000000) rotate(-90.000000) translate(-8.500000, -12.000000) " x="7.5" y="7.5" width="2" height="9" rx="1"/>
+                                                    <path d="M9.70710318,15.7071045 C9.31657888,16.0976288 8.68341391,16.0976288 8.29288961,15.7071045 C7.90236532,15.3165802 7.90236532,14.6834152 8.29288961,14.2928909 L14.2928896,8.29289093 C14.6714686,7.914312 15.281055,7.90106637 15.675721,8.26284357 L21.675721,13.7628436 C22.08284,14.136036 22.1103429,14.7686034 21.7371505,15.1757223 C21.3639581,15.5828413 20.7313908,15.6103443 20.3242718,15.2371519 L15.0300721,10.3841355 L9.70710318,15.7071045 Z" fill="#000000" fill-rule="nonzero" transform="translate(14.999999, 11.999997) scale(1, -1) rotate(90.000000) translate(-14.999999, -11.999997) "/>
                                                 </g>
-                                            </svg>
+                                            </svg><!--end::Svg Icon-->
                                         </span>
-                                    </a>
-                                    `
+                                    </a>`
                                 }
                             },
                         ],
@@ -278,193 +462,254 @@
                     });
                 },
                 initAction = () => {
-                    $(document).on('click', '#add-btn', function(event) {
+                    $(document).on('click', '.review-last-class-btn', function(event) {
                         event.preventDefault();
 
-                        $('#form-admin').trigger("reset");
-                        $('#form-admin').attr('action', '{{ url('admin/master/admin') }}');
-                        $('#form-admin').attr('method', 'POST');
-                        $('.change_password').hide();
-                        $('.change_role').hide();
-                        $('input[type=password]').attr('required');
-                        $('#password').css('display', '');
-                        $('input[type=role]').attr('required');
-                        $('#role').css('display', '');
-                        showModal('modal-admin');
-                    });
+                        var id_name = $(this).attr("id");
 
-                    $(document).on('click', '.btn-edit', function(event) {
-                        event.preventDefault();
+                        btn_loading_class_not_text(
+                            id_name,
+                            'start',
+                            `<span class="svg-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                        <polygon points="0 0 24 0 24 24 0 24"/>
+                                        <rect fill="#000000" opacity="0.3" transform="translate(8.500000, 12.000000) rotate(-90.000000) translate(-8.500000, -12.000000) " x="7.5" y="7.5" width="2" height="9" rx="1"/>
+                                        <path d="M9.70710318,15.7071045 C9.31657888,16.0976288 8.68341391,16.0976288 8.29288961,15.7071045 C7.90236532,15.3165802 7.90236532,14.6834152 8.29288961,14.2928909 L14.2928896,8.29289093 C14.6714686,7.914312 15.281055,7.90106637 15.675721,8.26284357 L21.675721,13.7628436 C22.08284,14.136036 22.1103429,14.7686034 21.7371505,15.1757223 C21.3639581,15.5828413 20.7313908,15.6103443 20.3242718,15.2371519 L15.0300721,10.3841355 L9.70710318,15.7071045 Z" fill="#000000" fill-rule="nonzero" transform="translate(14.999999, 11.999997) scale(1, -1) rotate(90.000000) translate(-14.999999, -11.999997) "/>
+                                    </g>
+                                </svg>
+                            </span>`
+                        );
 
-                        var data = init_table.row($(this).parents('tr')).data();
-
-                        $('#form-admin').trigger("reset");
-                        $('#form-admin').attr('action', $(this).attr('href'));
-                        $('#form-admin').attr('method', 'PUT');
-
-                        $('#form-admin').find('input[name="name"]').val(data.name);
-                        $('#form-admin').find('input[name="username"]').val(data.username);
-                        $('#form-admin').find('input[name="email"]').val(data.email);
-                        $(`#${data.role_id}`).attr('checked', true);
-
-                        $('.change_password').show();
-                        $('.change_role').show();
-
-                        $('#change_password').attr('checked', true)
-                        $('input[type=password]').attr('required');
-                        $('#password').css('display', '');
-
-                        $('#change_role').attr('checked', true)
-                        $('input[type=role]').attr('required');
-                        $('#role').css('display', '');
-
-                        showModal('modal-admin');
-                    });
-
-                    $(document).on('click', '.btn-delete', function(event) {
-                        event.preventDefault();
-                        var url = $(this).attr('href');
-
-                        Swal.fire({
-                            title: 'Delete Admin?',
-                            text: "Deleted Admin will be permanently lost!",
-                            icon: 'warning',
-                            showCancelButton: true,
-                            confirmButtonColor: '#7F16A7',
-                            confirmButtonText: 'Yes, Delete',
-                        }).then(function(result) {
-                            if (result.value) {
-                                $.ajax({
-                                        url: url,
-                                        type: 'DELETE',
-                                        dataType: 'json',
-                                    })
-                                    .done(function(res, xhr, meta) {
-                                        toastr.success(res.message, 'Success')
-                                        init_table.draw(false);
-                                    })
-                                    .fail(function(res, error) {
-                                        toastr.error(res.responseJSON.message, 'Failed')
-                                    })
-                                    .always(function() {});
-                            }
-                        })
-                        $('.swal2-title').addClass('justify-content-center')
-                    });
-
-                    $(document).on('click', '.btn-permission', function(event) {
-                        event.preventDefault();
-
-                        $('#form_permission').attr('action', $(this).attr('href'));
-                        showModal('modal_permission');
-
-                        $.ui.fancytree.getTree("#tree-table").visit(function(node) {
-                            if (node.expanded == true && node.children != null) {
-                                node.toggleExpanded();
-                            }
-                        });
-
-                        $('input[type=checkbox]').prop('checked', false);
-
-                        setChecked($(this).attr('href'));
-                    });
-
-                    $(document).on('click', '.btn-config', function(event) {
-                        event.preventDefault();
-                        init_number_input = 1;
-
-                        var data = init_table.row($(this).parents('tr')).data();
-
-                        $('#form-config').trigger("reset");
-                        $('#form-config').attr('action', $(this).attr('href'));
-                        $('#form-config').attr('method', 'POST');
-                        $('.other-package').hide();
-                        $('.add-package').show();
-                        $('#selectdisplay2').attr('required', false);
-                        selectdisplay1.set([]);
-                        selectdisplay2.set([]);
-                        let init_package_type = 0;
-                        let package_type_1, package_type_2;
-                        let increment = 0;
                         $.ajax({
-                                url: `{{ url('admin/master/admin/class') }}/${data.id}`,
-                                type: `GET`,
+                                url: $(this).attr('href'),
+                                type: 'get',
+                                dataType: 'json',
                             })
                             .done(function(res, xhr, meta) {
 
-                                $.each(res.data, function(index, data) {
-                                    if (init_package_type == 0) {
-                                        init_package_type = data.package_type
-                                        data1[index] = data.classroom_id;
-                                        package_type_1 = data.package_type;
-                                    } else if (init_package_type == data.package_type) {
-                                        data1[index] = data.classroom_id;
-                                    } else {
-                                        if (increment == 0) {
-                                            $('.other-package').show();
-                                            package_type_2 = data.package_type;
+                                $('#form-review-last-class').trigger("reset");
+                                $('#form-review-last-class').attr('action', "{{ url('coach/dashboard/review-last-class') }}/" + res.data.detail_schedules.id);
+                                $('#form-review-last-class').attr('method', 'PUT');
 
-                                        }
-                                        data2[increment] = data.classroom_id;
-                                        increment++;
-                                    }
-                                });
-                                if (package_type_1) {
-                                    $('#package1').val(package_type_1).change();
-                                }
-                                if (package_type_2) {
-                                    $('#package2').val(package_type_2).change();
-                                }
-                            })
-                            .fail(function(res, error) {
-                                if (res.status == 400 || res.status == 422) {
-                                    $.each(res.responseJSON.errors, function(index, err) {
-                                        if (Array.isArray(err)) {
-                                            $.each(err, function(index, val) {
-                                                toastr.error(val, 'Failed')
-                                            });
+                                $('.classroom-name').html(res.data.detail_schedules.class_name);
+                                $('.student-name').html(res.data.detail_schedules.student_name);
+                                $('.date').html(moment(res.data.detail_schedules.datetime).format('DD MMMM YYYY'));
+                                $('.time').html(moment(res.data.detail_schedules.datetime).format('HH:MI'));
+
+                                let feedback = ``;
+
+                                $.each(res.data.feedback, function(index, data) {
+                                    let rate = ``;
+
+                                    for (i = 1; i <= 5; i++) {
+                                        if (i <= data.star) {
+                                            rate += `<span class="svg-icon svg-icon-warning svg-icon-2x">
+                                                        <svg
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
+                                                            viewBox="0 0 24 24" version="1.1">
+                                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                                <polygon points="0 0 24 0 24 24 0 24" />
+                                                                <path
+                                                                    d="M12,18 L7.91561963,20.1472858 C7.42677504,20.4042866 6.82214789,20.2163401 6.56514708,19.7274955 C6.46280801,19.5328351 6.42749334,19.309867 6.46467018,19.0931094 L7.24471742,14.545085 L3.94038429,11.3241562 C3.54490071,10.938655 3.5368084,10.3055417 3.92230962,9.91005817 C4.07581822,9.75257453 4.27696063,9.65008735 4.49459766,9.61846284 L9.06107374,8.95491503 L11.1032639,4.81698575 C11.3476862,4.32173209 11.9473121,4.11839309 12.4425657,4.36281539 C12.6397783,4.46014562 12.7994058,4.61977315 12.8967361,4.81698575 L14.9389263,8.95491503 L19.5054023,9.61846284 C20.0519472,9.69788046 20.4306287,10.2053233 20.351211,10.7518682 C20.3195865,10.9695052 20.2170993,11.1706476 20.0596157,11.3241562 L16.7552826,14.545085 L17.5353298,19.0931094 C17.6286908,19.6374458 17.263103,20.1544017 16.7187666,20.2477627 C16.5020089,20.2849396 16.2790408,20.2496249 16.0843804,20.1472858 L12,18 Z"
+                                                                    fill="#000000" />
+                                                            </g>
+                                                        </svg>
+                                                        <!--end::Svg Icon-->
+                                                    </span>`;
                                         } else {
-                                            toastr.error(err, 'Failed')
+                                            rate += `<span class="svg-icon svg-icon-muted svg-icon-2x">
+                                                        <svg
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
+                                                            viewBox="0 0 24 24" version="1.1">
+                                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                                <polygon points="0 0 24 0 24 24 0 24" />
+                                                                <path
+                                                                    d="M12,18 L7.91561963,20.1472858 C7.42677504,20.4042866 6.82214789,20.2163401 6.56514708,19.7274955 C6.46280801,19.5328351 6.42749334,19.309867 6.46467018,19.0931094 L7.24471742,14.545085 L3.94038429,11.3241562 C3.54490071,10.938655 3.5368084,10.3055417 3.92230962,9.91005817 C4.07581822,9.75257453 4.27696063,9.65008735 4.49459766,9.61846284 L9.06107374,8.95491503 L11.1032639,4.81698575 C11.3476862,4.32173209 11.9473121,4.11839309 12.4425657,4.36281539 C12.6397783,4.46014562 12.7994058,4.61977315 12.8967361,4.81698575 L14.9389263,8.95491503 L19.5054023,9.61846284 C20.0519472,9.69788046 20.4306287,10.2053233 20.351211,10.7518682 C20.3195865,10.9695052 20.2170993,11.1706476 20.0596157,11.3241562 L16.7552826,14.545085 L17.5353298,19.0931094 C17.6286908,19.6374458 17.263103,20.1544017 16.7187666,20.2477627 C16.5020089,20.2849396 16.2790408,20.2496249 16.0843804,20.1472858 L12,18 Z"
+                                                                    fill="#000000" />
+                                                            </g>
+                                                        </svg>
+                                                        <!--end::Svg Icon-->
+                                                    </span>`;
                                         }
-                                    });
-                                } else {
-                                    toastr.error(res.responseJSON.message, 'Failed')
-                                }
+                                    }
+
+                                    feedback +=
+                                        ` <div class="col-12 col-sm-12 col-lg-12 col-xl-12">
+                                            <!--begin::Item-->
+                                            <div class="d-flex align-items-center pb-9">
+                                                <!--begin::Symbol-->
+                                                <div class="symbol symbol-circle symbol-60  mr-3">
+                                                    <img alt="Pic" src="${data.image_url}" />
+                                                </div>
+                                                <!--end::Symbol-->
+                                                <!--begin::Section-->
+                                                <div class="d-flex flex-column flex-grow-1">
+                                                    <!--begin::Title-->
+                                                    <a href="#"
+                                                        class="text-dark-75 font-weight-bolder font-size-lg text-hover-primary mb-1">${data.student_name}</a>
+                                                    <!--end::Title-->
+                                                    <!--begin::rating-->
+                                                    <span class="text-dark-50 font-weight-normal font-size-sm">
+                                                        ` + rate + `
+                                                    </span>
+                                                    <!--begin::rating-->
+                                                    <!--begin::Desc-->
+                                                    <span class="text-dark-50 font-weight-normal font-size-sm">${data.description}</span>
+                                                    <!--begin::Desc-->
+                                                </div>
+                                                <!--end::Section-->
+                                            </div>
+                                            <!--end::Item-->
+                                        </div>`;
+
+                                });
+
+                                $('.feedback').html(feedback);
+                                showModal('modal-review-last-class');
+
+                                btn_loading_class_not_text(
+                                    id_name,
+                                    'stop',
+                                    `<span class="svg-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                <polygon points="0 0 24 0 24 24 0 24"/>
+                                                <rect fill="#000000" opacity="0.3" transform="translate(8.500000, 12.000000) rotate(-90.000000) translate(-8.500000, -12.000000) " x="7.5" y="7.5" width="2" height="9" rx="1"/>
+                                                <path d="M9.70710318,15.7071045 C9.31657888,16.0976288 8.68341391,16.0976288 8.29288961,15.7071045 C7.90236532,15.3165802 7.90236532,14.6834152 8.29288961,14.2928909 L14.2928896,8.29289093 C14.6714686,7.914312 15.281055,7.90106637 15.675721,8.26284357 L21.675721,13.7628436 C22.08284,14.136036 22.1103429,14.7686034 21.7371505,15.1757223 C21.3639581,15.5828413 20.7313908,15.6103443 20.3242718,15.2371519 L15.0300721,10.3841355 L9.70710318,15.7071045 Z" fill="#000000" fill-rule="nonzero" transform="translate(14.999999, 11.999997) scale(1, -1) rotate(90.000000) translate(-14.999999, -11.999997) "/>
+                                            </g>
+                                        </svg>
+                                    </span>`
+                                );
                             })
-                            .always(function() {
-
-                            });
-
-                        showModal('modal-config');
                     });
 
-                    $(document).on('click', '.btn-change-password', function(event) {
+                    $(document).on('click', '.coach-show-last-class-btn', function(event) {
+                        event.preventDefault();
 
-                        if ($(this).prop('checked') == true) {
+                        var id_name = $(this).attr("id");
 
-                            $('input[type=password]').attr('required');
-                            $('#password').css('display', '');
-                        } else {
-                            $('input[type=password]').removeAttr('required');
-                            $('#password').css('display', 'none');
-                        }
-                    });
+                        btn_loading_class_not_text(
+                            id_name,
+                            'start',
+                            `<span class="svg-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                        <polygon points="0 0 24 0 24 24 0 24"/>
+                                        <rect fill="#000000" opacity="0.3" transform="translate(8.500000, 12.000000) rotate(-90.000000) translate(-8.500000, -12.000000) " x="7.5" y="7.5" width="2" height="9" rx="1"/>
+                                        <path d="M9.70710318,15.7071045 C9.31657888,16.0976288 8.68341391,16.0976288 8.29288961,15.7071045 C7.90236532,15.3165802 7.90236532,14.6834152 8.29288961,14.2928909 L14.2928896,8.29289093 C14.6714686,7.914312 15.281055,7.90106637 15.675721,8.26284357 L21.675721,13.7628436 C22.08284,14.136036 22.1103429,14.7686034 21.7371505,15.1757223 C21.3639581,15.5828413 20.7313908,15.6103443 20.3242718,15.2371519 L15.0300721,10.3841355 L9.70710318,15.7071045 Z" fill="#000000" fill-rule="nonzero" transform="translate(14.999999, 11.999997) scale(1, -1) rotate(90.000000) translate(-14.999999, -11.999997) "/>
+                                    </g>
+                                </svg>
+                            </span>`
+                        );
 
-                    $(document).on('click', '.btn-change-role', function(event) {
+                        $.ajax({
+                                url: $(this).attr('href'),
+                                type: 'get',
+                                dataType: 'json',
+                            })
+                            .done(function(res, xhr, meta) {
 
-                        if ($(this).prop('checked') == true) {
+                                showModal('modal-review');
 
-                            $('input[type=password]').attr('required');
-                            $('#role').css('display', '');
-                        } else {
-                            $('input[type=role]').removeAttr('required');
-                            $('#role').css('display', 'none');
-                        }
+                                let feedback = ``;
+
+                                $.each(res.data, function(index, data) {
+                                    let rate = ``;
+
+                                    for (i = 1; i <= 5; i++) {
+                                        if (i <= data.star) {
+                                            rate += `<span class="svg-icon svg-icon-warning svg-icon-2x">
+                                                        <svg
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
+                                                            viewBox="0 0 24 24" version="1.1">
+                                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                                <polygon points="0 0 24 0 24 24 0 24" />
+                                                                <path
+                                                                    d="M12,18 L7.91561963,20.1472858 C7.42677504,20.4042866 6.82214789,20.2163401 6.56514708,19.7274955 C6.46280801,19.5328351 6.42749334,19.309867 6.46467018,19.0931094 L7.24471742,14.545085 L3.94038429,11.3241562 C3.54490071,10.938655 3.5368084,10.3055417 3.92230962,9.91005817 C4.07581822,9.75257453 4.27696063,9.65008735 4.49459766,9.61846284 L9.06107374,8.95491503 L11.1032639,4.81698575 C11.3476862,4.32173209 11.9473121,4.11839309 12.4425657,4.36281539 C12.6397783,4.46014562 12.7994058,4.61977315 12.8967361,4.81698575 L14.9389263,8.95491503 L19.5054023,9.61846284 C20.0519472,9.69788046 20.4306287,10.2053233 20.351211,10.7518682 C20.3195865,10.9695052 20.2170993,11.1706476 20.0596157,11.3241562 L16.7552826,14.545085 L17.5353298,19.0931094 C17.6286908,19.6374458 17.263103,20.1544017 16.7187666,20.2477627 C16.5020089,20.2849396 16.2790408,20.2496249 16.0843804,20.1472858 L12,18 Z"
+                                                                    fill="#000000" />
+                                                            </g>
+                                                        </svg>
+                                                        <!--end::Svg Icon-->
+                                                    </span>`;
+                                        } else {
+                                            rate += `<span class="svg-icon svg-icon-muted svg-icon-2x">
+                                                        <svg
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
+                                                            viewBox="0 0 24 24" version="1.1">
+                                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                                <polygon points="0 0 24 0 24 24 0 24" />
+                                                                <path
+                                                                    d="M12,18 L7.91561963,20.1472858 C7.42677504,20.4042866 6.82214789,20.2163401 6.56514708,19.7274955 C6.46280801,19.5328351 6.42749334,19.309867 6.46467018,19.0931094 L7.24471742,14.545085 L3.94038429,11.3241562 C3.54490071,10.938655 3.5368084,10.3055417 3.92230962,9.91005817 C4.07581822,9.75257453 4.27696063,9.65008735 4.49459766,9.61846284 L9.06107374,8.95491503 L11.1032639,4.81698575 C11.3476862,4.32173209 11.9473121,4.11839309 12.4425657,4.36281539 C12.6397783,4.46014562 12.7994058,4.61977315 12.8967361,4.81698575 L14.9389263,8.95491503 L19.5054023,9.61846284 C20.0519472,9.69788046 20.4306287,10.2053233 20.351211,10.7518682 C20.3195865,10.9695052 20.2170993,11.1706476 20.0596157,11.3241562 L16.7552826,14.545085 L17.5353298,19.0931094 C17.6286908,19.6374458 17.263103,20.1544017 16.7187666,20.2477627 C16.5020089,20.2849396 16.2790408,20.2496249 16.0843804,20.1472858 L12,18 Z"
+                                                                    fill="#000000" />
+                                                            </g>
+                                                        </svg>
+                                                        <!--end::Svg Icon-->
+                                                    </span>`;
+                                        }
+                                    }
+
+                                    feedback +=
+                                        ` <div class="col-12 col-sm-12 col-lg-12 col-xl-12">
+                                            <!--begin::Item-->
+                                            <div class="d-flex align-items-center pb-9">
+                                                <!--begin::Symbol-->
+                                                <div class="symbol symbol-circle symbol-60  mr-3">
+                                                    <img alt="Pic" src="${data.image_url}" />
+                                                </div>
+                                                <!--end::Symbol-->
+                                                <!--begin::Section-->
+                                                <div class="d-flex flex-column flex-grow-1">
+                                                    <!--begin::Title-->
+                                                    <a href="#"
+                                                        class="text-dark-75 font-weight-bolder font-size-lg text-hover-primary mb-1">${data.student_name}</a>
+                                                    <!--end::Title-->
+                                                    <!--begin::rating-->
+                                                    <span class="text-dark-50 font-weight-normal font-size-sm">
+                                                        ` + rate + `
+                                                    </span>
+                                                    <!--begin::rating-->
+                                                    <!--begin::Desc-->
+                                                    <span class="text-dark-50 font-weight-normal font-size-sm">${data.description}</span>
+                                                    <!--begin::Desc-->
+                                                </div>
+                                                <!--end::Section-->
+                                            </div>
+                                            <!--end::Item-->
+                                        </div>`;
+
+                                });
+
+                                $('.feedback-student').html(feedback);
+                                showModal('modal-review');
+
+
+                                btn_loading_class_not_text(
+                                    id_name,
+                                    'stop',
+                                    `<span class="svg-icon svg-icon-md">
+                                        <!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-02-01-052524/theme/html/demo1/dist/../src/media/svg/icons/General/Visible.svg-->
+                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                            <rect x="0" y="0" width="24" height="24"/>
+                                            <path d="M3,12 C3,12 5.45454545,6 12,6 C16.9090909,6 21,12 21,12 C21,12 16.9090909,18 12,18 C5.45454545,18 3,12 3,12 Z" fill="#000000" fill-rule="nonzero" opacity="0.3"/>
+                                            <path d="M12,15 C10.3431458,15 9,13.6568542 9,12 C9,10.3431458 10.3431458,9 12,9 C13.6568542,9 15,10.3431458 15,12 C15,13.6568542 13.6568542,15 12,15 Z" fill="#000000" opacity="0.3"/>
+                                        </g>
+                                        </svg><!--end::Svg Icon-->
+                                    </span>`
+                                );
+                            })
                     });
                 },
                 formSubmit = () => {
-                    $('#form-admin').submit(function(event) {
+                    $('#form-review-last-class').submit(function(event) {
                         event.preventDefault();
+
+                        let form_data = new FormData(this)
 
                         btn_loading('start')
                         $.ajax({
@@ -474,8 +719,9 @@
                             })
                             .done(function(res, xhr, meta) {
                                 toastr.success(res.message, 'Success')
-                                init_table.draw(false);
-                                hideModal('modal-admin');
+                                lastClassTable();
+
+                                hideModal('modal-review-last-class');
                             })
                             .fail(function(res, error) {
                                 toastr.error(res.responseJSON.message, 'Failed')
@@ -484,227 +730,24 @@
                                 btn_loading('stop')
                             });
                     });
-
-                    $('#form_permission').submit(function(event) {
-                        event.preventDefault();
-
-                        btn_loading('start')
-                        $.ajax({
-                                url: $(this).attr('action'),
-                                type: $(this).attr('method'),
-                                data: $(this).serialize(),
-                            })
-                            .done(function(res, xhr, meta) {
-                                if (res.status == 200) {
-                                    toastr.success(res.message, 'Success')
-                                    init_table.draw(false);
-                                    hideModal('modal_permission');
-                                }
-                            })
-                            .fail(function(res, error) {
-                                toastr.error(res.responseJSON.message, 'Gagal')
-                            })
-                            .always(function() {
-                                btn_loading('stop')
-                            });
-                    });
-
-                    $('#form-config').submit(function(event) {
-                        event.preventDefault();
-                        btn_loading('start')
-                        $.ajax({
-                                url: $(this).attr('action'),
-                                type: $(this).attr('method'),
-                                data: new FormData(this),
-                                contentType: false,
-                                cache: false,
-                                processData: false,
-                            })
-                            .done(function(res, xhr, meta) {
-                                if (res.status == 200) {
-                                    toastr.success(res.message, 'Success');
-                                    init_table.draw(false);
-                                    hideModal('modal-config');
-                                }
-                            })
-                            .fail(function(res, error) {
-                                if (res.status == 400 || res.status == 422) {
-                                    $.each(res.responseJSON.errors, function(index, err) {
-                                        if (Array.isArray(err)) {
-                                            $.each(err, function(index, val) {
-                                                toastr.error(val, 'Failed')
-                                            });
-                                        } else {
-                                            toastr.error(err, 'Failed')
-                                        }
-                                    });
-                                } else {
-                                    toastr.error(res.responseJSON.message, 'Failed')
-                                }
-                            })
-                            .always(function() {
-                                btn_loading('stop')
-                            });
-                    });
                 }
-        };
 
-        const initTreeTable = () => {
-                $('#tree-table').fancytree({
-                    extensions: ['table'],
-                    checkbox: false,
-                    icon: false,
-                    table: {
-                        nodeColumnIdx: 0,
-                    },
-                    source: {
-                        url: '{{ asset('data/admin.json') }}'
-                    },
-                    lazyLoad: function(event, data) {
-                        data.result = {
-                            url: '{{ asset('data/admin.json') }}'
-                        }
-                    },
-                    renderColumns: function(event, data) {
-                        var node = data.node;
-
-                        $tdList = $(node.tr).find('>td');
-
-                        $tdList.eq(0).addClass('text-left');
-                        $tdList.eq(1).addClass('text-center').html(
-                            `<input type="checkbox" class="form-input-styled permissions ${node.key}" data-parent="${node.parent.key}" name="permissions[]" value="${node.key}" id="${node.key}">`
-                        );
-                        if (node.data.crud) {
-                            $tdList.eq(2).addClass(`text-center`).html(
-                                `<input type="checkbox" class="form-input-styled permissions ${node.key}_crud" name="permissions[]" value="${node.key}_list" data-parent="${node.key}">`
-                            );
-                            $tdList.eq(3).addClass(`text-center`).html(
-                                `<input type="checkbox" class="form-input-styled permissions ${node.key}_crud" name="permissions[]" value="${node.key}_insert" data-parent="${node.key}">`
-                            );
-                            $tdList.eq(4).addClass(`text-center`).html(
-                                `<input type="checkbox" class="form-input-styled permissions ${node.key}_crud" name="permissions[]" value="${node.key}_update" data-parent="${node.key}">`
-                            );
-                            $tdList.eq(5).addClass(`text-center`).html(
-                                `<input type="checkbox" class="form-input-styled permissions ${node.key}_crud" name="permissions[]" value="${node.key}_delete" data-parent="${node.key}">`
-                            );
-                            $tdList.eq(6).addClass(`text-center`).html(
-                                `<input type="checkbox" class="form-input-styled permissions ${node.key}_crud" name="permissions[]" value="${node.key}_print" data-parent="${node.key}">`
-                            );
-                        }
-
-                        if (node.data.other) {
-
-                            var element = ``;
-
-                            $.each(node.data.other, function(key, val) {
-                                element += `
-                                <div class="form-check form-check-inline">
-                                    <label class="form-check-label">
-                                        <input type="checkbox" class="form-check-input-styled permissions ${node.key}_crud" name="permissions[]" value="${key}" data-parent="${node.key}" data-fouc>&nbsp;&nbsp;
-                                        ${val}
-                                    </label>
-                                </div>
-                            `;
-                            });
-                            $tdList.eq(7).addClass('text-left').html(`
-                            <div class="d-flex align-items-center justify-content-start">
-                                ${element}
-                            </div>
-                        `);
-                        }
-
-                        $tdList.addClass('pt-1 pb-1');
-
+            const start_setup = (id, select_id) => {
+                const btn = document.querySelector("button");
+                const post = document.querySelector(".post");
+                const widget = document.querySelector(".star-widget");
+                const editBtn = document.querySelector(".edit");
+                btn.onclick = () => {
+                    widget.style.display = "none";
+                    post.style.display = "block";
+                    editBtn.onclick = () => {
+                        widget.style.display = "block";
+                        post.style.display = "none";
                     }
-                });
-
-                $('#tree-table').on('change', 'input[name="permissions[]"]', function(e) {
-                    $input = $(e.target);
-
-                    var value = $input.val();
-
-                    var parent = $input.data('parent');
-
-                    if ($('#tree-table').find(`[data-parent="${value}"]`).length > 0) {
-                        if ($input.is(':checked')) {
-                            var val = $input.val();
-                            $('#tree-table').find(`[data-parent="${val}"]`).prop('checked', true).trigger(
-                                'change');
-                        } else {
-                            var val = $input.val();
-                            $('#tree-table').find(`[data-parent="${val}"]`).prop('checked', false).trigger(
-                                'change');
-                        }
-                    } else {
-                        if ($input.is(':checked')) {
-                            var val = $input.val();
-                            $('#tree-table').find(`[data-parent="${val}"]`).prop('checked', true);
-                        } else {
-                            var val = $input.val();
-                            $('#tree-table').find(`[data-parent="${val}"]`).prop('checked', false);
-                        }
-                    }
-                });
-
-                $('#tree-table').on('click', 'input[name="permissions[]"]', function(e) {
-                    $input = $(e.target);
-
-                    var value = $input.val();
-
-                    var parent = $input.data('parent');
-
-                    if (typeof parent != 'undefined') {
-                        if (parent != 'root_1') {
-
-                            parent_parent = $(`#${parent}`).data('parent');
-
-                            if ($input.is(':checked')) {
-                                $('#tree-table').find(`.${parent}`).prop('checked', true);
-                            } else {
-                                if ($('#tree-table').find(`[data-parent="${parent}"]:checked`).length <=
-                                    0) {
-                                    $('#tree-table').find(`.${parent}`).prop('checked', false);
-                                }
-                            }
-
-                            if (typeof parent_parent != 'undefined') {
-                                if (parent_parent != 'root_1') {
-                                    if ($('#tree-table').find(`[data-parent="${parent_parent}"]:checked`)
-                                        .length > 0) {
-                                        $('#tree-table').find(`.${parent_parent}`).prop('checked', true);
-                                    } else {
-                                        if ($('#tree-table').find(
-                                                `[data-parent="${parent_parent}"]:checked`).length <= 0) {
-                                            $('#tree-table').find(`.${parent_parent}`).prop('checked',
-                                                false);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-            },
-            setChecked = (url) => {
-                $.ajax({
-                        url: url,
-                        type: 'GET',
-                        dataType: 'json',
-                    })
-                    .done(function(res, xhr, meta) {
-                        if (res.status == 200) {
-                            let val;
-                            $.each(res.data, function(index, data) {
-                                val = `:checkbox[value=${data.name}]`;
-                                $(val).prop("checked", "true");
-                            });
-                        }
-                    })
-                    .fail(function(res, error) {
-                        toastr.error(res.responseJSON.message, 'Gagal')
-                    })
-                    .always(function() {});
+                    return false;
+                }
             }
+        };
 
         return {
             init: function() {

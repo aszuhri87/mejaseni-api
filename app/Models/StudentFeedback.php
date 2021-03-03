@@ -19,7 +19,8 @@ class StudentFeedback extends Model
         'coach_id',
         'student_id',
         'star',
-        'description'
+        'description',
+        'student_schedule_id'
     ];
 
     protected $dates = ['deleted_at'];

@@ -365,6 +365,11 @@ Route::group(['middleware' => ['auth-handling']], function () {
     Route::group(['prefix' => 'coach', 'middleware' => 'coach-handling'], function () {
         Route::get('dashboard/summary-course-chart', [DashboardController::class, 'summary_course_chart']);
         Route::get('dashboard/side-summary-course', [DashboardController::class, 'side_summary_course']);
+        Route::post('dashboard/dt-last-class', [DashboardController::class, 'dt_last_class']);
+        Route::post('dashboard/closest-schedule', [DashboardController::class, 'closest_schedule']);
+        Route::get('dashboard/coach-show-review-last-class/{id}/{student_schedule_id}', [DashboardController::class, 'coach_show_review_last_class']);
+        Route::get('dashboard/show-last-class/{id}/{student_schedule_id}', [DashboardController::class, 'show_last_class']);
+        Route::put('dashboard/review-last-class/{id}', [DashboardController::class, 'review_last_class']);
         Route::resource('dashboard', DashboardController::class);
 
         Route::post('theory/file', [CoachTheoryController::class, 'theory_file']);
