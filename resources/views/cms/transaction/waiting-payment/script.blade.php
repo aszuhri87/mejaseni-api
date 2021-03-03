@@ -79,7 +79,7 @@
 <script src="{{ asset('/js/app.js') }}"></script>
 <script>
     Echo.channel('laravel_database_payment-notification')
-        .listen('.server.notification', e => {
+        .listen('.payment.notification.{{$transaction->id}}', e => {
             if(e.data){
                 window.location = "{{url('payment-success')}}";
             }

@@ -7,11 +7,11 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
-class PaymentNotification implements ShouldBroadcastNow
+class StudentNotification implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -31,7 +31,7 @@ class PaymentNotification implements ShouldBroadcastNow
 
     public function broadcastAs()
     {
-        return 'payment.notification.'.$this->id;
+        return 'student.notification.'.$this->id;
     }
 
     /**
@@ -41,12 +41,13 @@ class PaymentNotification implements ShouldBroadcastNow
      */
     public function broadcastOn()
     {
-        return new Channel('payment-notification');
+        return new Channel('student-notification');
     }
 
     public function broadcastWith()
     {
         return [
+            'id' => $this->id,
             'data' => $this->data
         ];
     }

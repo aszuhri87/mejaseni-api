@@ -228,13 +228,13 @@ class BaseMenu extends Controller
                     [
                         'key' => 'coach',
                         'title' => 'Coach',
-                        'url' => 'admin/master/coach',
+                        'url' => 'admin/transaction/coach',
                         'permission' => 'coach'
                     ],
                     [
                         'key' => 'student',
                         'title' => 'Student',
-                        'url' => 'admin/master/student',
+                        'url' => 'admin/transaction/student',
                         'permission' => 'student'
                     ],
                 ],
@@ -256,31 +256,31 @@ class BaseMenu extends Controller
                     [
                         'key' => 'review',
                         'title' => 'Review',
-                        'url' => 'student/master/review',
+                        'url' => '#',
                         'permission' => 'review',
                         'children' => [
                             [
                                 'key' => 'coach',
                                 'title' => 'Coach',
-                                'url' => 'admin/master/coach',
+                                'url' => 'admin/report/review/coach',
                                 'permission' => 'coach'
                             ],
                             [
                                 'key' => 'student',
                                 'title' => 'Student',
-                                'url' => 'admin/master/student',
+                                'url' => 'admin/report/review/student',
                                 'permission' => 'student'
                             ],
                             [
                                 'key' => 'class',
                                 'title' => 'Kelas',
-                                'url' => 'admin/master/class',
+                                'url' => 'admin/report/review/class',
                                 'permission' => 'class'
                             ],
                             [
                                 'key' => 'video',
                                 'title' => 'Video',
-                                'url' => 'admin/master/video',
+                                'url' => 'admin/report/review/video',
                                 'permission' => 'video'
                             ],
                         ]
@@ -288,49 +288,22 @@ class BaseMenu extends Controller
                     [
                         'key' => 'transaction',
                         'title' => 'Transaksi',
-                        'url' => 'student/master/transaction',
+                        'url' => '#',
                         'permission' => 'transaction',
                         'children' => [
                             [
                                 'key' => 'coach',
                                 'title' => 'Coach',
-                                'url' => 'admin/master/coach',
+                                'url' => 'admin/report/transaction/coach',
                                 'permission' => 'coach'
                             ],
                             [
                                 'key' => 'student',
                                 'title' => 'Student',
-                                'url' => 'admin/master/student',
+                                'url' => 'admin/report/transaction/student',
                                 'permission' => 'student'
                             ],
                         ]
-                    ],
-                ],
-            ],
-            [
-                'key' => 'notification',
-                'title' => 'Notification Setting',
-                'url' => '#',
-                'permission' => 'notification',
-                'icon' => $this->icon('master'),
-                'children' => [
-                    [
-                        'key' => 'general',
-                        'title' => 'Umum',
-                        'url' => 'admin/master/general',
-                        'permission' => 'general'
-                    ],
-                    [
-                        'key' => 'coach',
-                        'title' => 'Coach',
-                        'url' => 'admin/master/coach',
-                        'permission' => 'coach'
-                    ],
-                    [
-                        'key' => 'student',
-                        'title' => 'Student',
-                        'url' => 'admin/master/student',
-                        'permission' => 'student'
                     ],
                 ],
             ],

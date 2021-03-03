@@ -45,7 +45,7 @@
                             render: function(data, type, full, meta) {
                                 return `
                                     <div class="d-flex flex-column font-weight-bold">
-                                        <a href="{{url('admin/master/courses/session-video')}}/${full.id}" class="text-dark text-hover-primary mb-1 font-size-lg">${data}</a>
+                                        <a href="{{url('admin/master/courses/session-video')}}/${full.id}" class="text-primary text-hover-info mb-1 font-size-lg">${data}</a>
                                     </div>
                                 `;
                             }

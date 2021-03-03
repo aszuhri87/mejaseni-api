@@ -91,6 +91,7 @@ class MasterLessonController extends BaseMenu
                     'poster' => $request->file,
                     'slot' => $request->slot,
                     'platform_link' => $request->platform_link,
+                    'description' => $request->description,
                 ]);
 
                 if(count($request->guests) > 0){
@@ -120,40 +121,36 @@ class MasterLessonController extends BaseMenu
     public function update(Request $request, $id)
     {
         try {
-            if(!isset($request->file) && !isset($request->is_coach)){
-                return response([
-                    "message"   => 'Gambar harus diisi!'
-                ], 400);
-            }
-
-            if(isset($request->is_coach)){
-                $coach = DB::table('coaches')
-                    ->where('id', $request->coach_id)
-                    ->first();
-
-                if(!$coach){
-                    return response([
-                        "message"   => 'Coach harus diisi!'
-                    ], 400);
-                }
-            }
-
             $result = DB::transaction(function () use($request, $id){
-                if(isset($request->is_coach)){
-                    $coach = DB::table('coaches')
-                        ->where('id', $request->coach_id)
-                        ->first();
+                $master_lesson = MasterLesson::find($id);
+
+                if(isset($request->file)){
+                    $master_lesson->poster = $request->file;
+                    $master_lesson->update();
                 }
 
-                $result = MasterLesson::find($id)->update([
-                    'coach_id' => $request->coach_id,
-                    'expertise_id' => $request->is_coach ? $coach->expertise_id : $request->expertise_id,
-                    'name' => $request->is_coach ? $coach->name : $request->name,
-                    'image' => $request->is_coach ? $coach->image : $request->file,
-                    'description' => $request->is_coach ? $coach->description : $request->description,
+                $master_lesson->update([
+                    'classroom_category_id' => $request->classroom_category_id,
+                    'sub_classroom_category_id' => $request->sub_classroom_category_id,
+                    'price' => $request->price,
+                    'datetime' => date('Y-m-d H:i:s', strtotime($request->date.' '.$request->time)),
+                    'platform_id' => $request->platform_id,
+                    'name' => $request->name,
+                    'slot' => $request->slot,
+                    'platform_link' => $request->platform_link,
+                    'description' => $request->description,
                 ]);
 
-                return $result;
+                if(count($request->guests) > 0){
+                    foreach ($request->guests as $key => $value) {
+                        GuestStarMasterLesson::create([
+                            'master_lesson_id' => $master_lesson->id,
+                            'guest_star_id' => $value,
+                        ]);
+                    }
+                }
+
+                return $master_lesson;
             });
 
             return response([

@@ -11,27 +11,25 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
-class PaymentNotification implements ShouldBroadcastNow
+class AdminNotification implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $data;
-    public $id;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($data, $id)
+    public function __construct($data)
     {
         $this->data = $data;
-        $this->id = $id;
     }
 
     public function broadcastAs()
     {
-        return 'payment.notification.'.$this->id;
+        return 'admin.notification';
     }
 
     /**
@@ -41,7 +39,7 @@ class PaymentNotification implements ShouldBroadcastNow
      */
     public function broadcastOn()
     {
-        return new Channel('payment-notification');
+        return new Channel('admin-notification');
     }
 
     public function broadcastWith()

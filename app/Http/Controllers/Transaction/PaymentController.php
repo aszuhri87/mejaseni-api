@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 
 use App\Models\Transaction;
 use App\Models\StudentClassroom;
+use App\Models\StudentNotification;
+use App\Models\Income;
 
 use Auth;
 use Redirect;
@@ -49,6 +51,13 @@ class PaymentController extends Controller
         ]);
     }
 
+    public function redirect()
+    {
+        return view('cms.transaction.payment-success.redirect', [
+            'step' => 3,
+        ]);
+    }
+
     public function notification(Request $request)
     {
         $transaction = Transaction::where([
@@ -57,6 +66,9 @@ class PaymentController extends Controller
                 'status' => 1
             ])
             ->first();
+
+        $transaction->json_doku_notification = json_encode($request->all());
+        $transaction->update();
 
         if($transaction && $request['transaction']['status'] == 'SUCCESS'){
             if($request['service']['id'] == 'VIRTUAL_ACCOUNT'){
@@ -71,8 +83,8 @@ class PaymentController extends Controller
                 $transaction->total = $request['order']['amount'];
             }
 
-            DB::transaction(function () use($request, $transaction){
-                $transaction->json_doku_notification = json_encode($request->all());
+            $data = DB::transaction(function () use($request, $transaction){
+
                 $transaction->update();
 
                 $classrooms = DB::table('transaction_details')
@@ -94,8 +106,41 @@ class PaymentController extends Controller
                     ]);
                 }
 
-                event(new \App\Events\PaymentNotification(true));
+                $notification = StudentNotification::create([
+                    'student_id' => $transaction->student_id,
+                    'transaction_id' => $transaction->id,
+                    'type' => 1,
+                    'text' => 'Transaksi dengan nomor invoice '.$transaction->number.' telah berhasil.',
+                    'datetime' => date('Y-m-d H:i:s')
+                ]);
+
+                // $carts = DB::table('transaction_details')
+                //     ->select([
+                //         'carts.classroom_id'
+                //     ])
+                //     ->leftJoin('carts','carts.id','=','transaction_details.cart_id')
+                //     ->where('transaction_id', $transaction->id)
+                //     ->whereNotNull([
+                //         'carts.classroom_id'
+                //     ])
+                //     ->get();
+
+                // foreach ($carts as $key => $cart) {
+                //     Income::create([
+                //         'master_lesson_id',
+                //         'session_video_id',
+                //         'classroom_id',
+                //         'coach_id',
+                //         'theory_id',
+                //     ]);
+                // }
+
+                return $notification;
             });
+
+            event(new \App\Events\StudentNotification($data, $transaction->student_id));
+            event(new \App\Events\PaymentNotification(true, $transaction->id));
+            event(new \App\Events\AdminNotification($data));
         }
 
         return true;

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\MediaController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Transaction\DokuController;
 use App\Http\Controllers\Transaction\CartController;
 use App\Http\Controllers\Transaction\PaymentController;
@@ -35,6 +36,7 @@ use App\Http\Controllers\Admin\Master\StudentController;
 use App\Http\Controllers\Admin\Master\ExpertiseController;
 use App\Http\Controllers\Admin\Master\GuestStarController;
 use App\Http\Controllers\Admin\Master\MasterLessonController;
+use App\Http\Controllers\Admin\Transaction\StudentController as TransactionStudentController;
 use App\Http\Controllers\Admin\Schedule\ScheduleController;
 
 /*
@@ -161,6 +163,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
     Route::get('logout', [LoginController::class, 'logout']);
     Route::post('media/file', [MediaController::class, 'file_upload']);
     Route::delete('media/file/{id}', [MediaController::class, 'file_delete']);
+    Route::get('/notification', [NotificationController::class, 'notification']);
 
     /*
     |--------------------------------------------------------------------------
@@ -177,6 +180,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::get('/cancel-payment/{id}', [PaymentController::class, 'cancel_payment']);
         Route::get('/waiting-payment/{id}', [PaymentController::class, 'waiting']);
         Route::get('/payment-success', [PaymentController::class, 'success']);
+        Route::get('/redirect-payment-success', [PaymentController::class, 'redirect']);
     });
 
     /*
@@ -222,6 +226,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
 
                 Route::get('master-lesson/guest-star/{id}', [MasterLessonController::class, 'get_guest_star']);
                 Route::delete('master-lesson/guest-star/{id}', [MasterLessonController::class, 'destroy_guest_star']);
+                Route::post('master-lesson/update/{id}', [MasterLessonController::class, 'update']);
                 Route::post('master-lesson/dt', [MasterLessonController::class, 'dt']);
                 Route::resource('master-lesson', MasterLessonController::class);
             });
@@ -268,12 +273,19 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::resource('media-conference', PlatformController::class);
 
             Route::get('theory', [TheoryController::class, 'index']);
+            Route::post('theory', [TheoryController::class, 'store']);
             Route::delete('theory/{id}', [TheoryController::class, 'destroy']);
             Route::post('theory/dt', [TheoryController::class, 'dt']);
             Route::post('theory/update/{id}', [TheoryController::class, 'update']);
 
             Route::post('expertise/dt', [ExpertiseController::class, 'dt']);
             Route::resource('expertise', ExpertiseController::class);
+        });
+
+        Route::group(['prefix' => 'transaction'], function () {
+            Route::get('student', [TransactionStudentController::class, 'index']);
+            Route::post('student/dt', [TransactionStudentController::class, 'dt']);
+            Route::get('student/detail/{id}', [TransactionStudentController::class, 'detail']);
         });
 
         Route::get('schedule/master-lesson/{id}', [ScheduleController::class, 'show_master_lesson']);
@@ -536,14 +548,4 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::get('get-session-coach/{classroom_id}', [PublicController::class, 'get_session_coach']);
         Route::get('get-guest-star', [PublicController::class, 'get_guest_star']);
     });
-});
-
-
-Route::get('fire', function () {
-    event(new \App\Events\PaymentNotification(true));
-    return 'oke';
-});
-
-Route::get('welcome', function () {
-    return view('welcome');
 });
