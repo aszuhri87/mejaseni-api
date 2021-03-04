@@ -45,7 +45,7 @@
                                     plotOptions: {
                                         bar: {
                                             horizontal: false,
-                                            columnWidth: ['12%'],
+                                            columnWidth: ['5%'],
                                             endingShape: 'rounded'
                                         },
                                     },
@@ -122,7 +122,7 @@
                                         },
                                         y: {
                                             formatter: function(val) {
-                                                return  val + " student"
+                                                return val + " student"
                                             }
                                         }
                                     },
@@ -187,7 +187,61 @@
                             $.each(res.data, function(index, data) {
 
                                 const start = moment(data.datetime);
-                                const end   = moment();
+                                const end = moment();
+                                let status = ``;
+
+                                if (end > start) {
+                                    if (data.deleted_at != null) {
+                                        status += `<span class="text-danger font-weight-bolder">Cancle</span>`
+                                    } else {
+                                        status += `<a href="${data.platform_link}" target="_blank" class="btn btn-light-primary btn-sm">
+                                                        Join Class
+                                                        <span class="svg-icon"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-02-01-052524/theme/html/demo1/dist/../src/media/svg/icons/Navigation/Right-2.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                                <polygon points="0 0 24 0 24 24 0 24"/>
+                                                                <rect fill="#000000" opacity="0.3" transform="translate(8.500000, 12.000000) rotate(-90.000000) translate(-8.500000, -12.000000) " x="7.5" y="7.5" width="2" height="9" rx="1"/>
+                                                                <path d="M9.70710318,15.7071045 C9.31657888,16.0976288 8.68341391,16.0976288 8.29288961,15.7071045 C7.90236532,15.3165802 7.90236532,14.6834152 8.29288961,14.2928909 L14.2928896,8.29289093 C14.6714686,7.914312 15.281055,7.90106637 15.675721,8.26284357 L21.675721,13.7628436 C22.08284,14.136036 22.1103429,14.7686034 21.7371505,15.1757223 C21.3639581,15.5828413 20.7313908,15.6103443 20.3242718,15.2371519 L15.0300721,10.3841355 L9.70710318,15.7071045 Z" fill="#000000" fill-rule="nonzero" transform="translate(14.999999, 11.999997) scale(1, -1) rotate(90.000000) translate(-14.999999, -11.999997) "/>
+                                                            </g>
+                                                        </svg><!--end::Svg Icon--></span>
+                                                    </a>                                                         
+                                                    <a href="#" class="btn btn-hover-light-primary btn-sm btn-icon" data-toggle="dropdown"
+                                                            aria-haspopup="true" aria-expanded="false">
+                                                        <i class="ki ki-bold-more-hor"></i>
+                                                    </a>
+                                                    <div class="dropdown-menu p-0 m-0 dropdown-menu-right">
+                                                        <!--begin::Navigation-->
+                                                        <ul class="navi navi-hover">
+                                                            <li class="navi-item">
+                                                                <a href="{{ url('/coach/dashboard/cancle/schedule') }}/${data.id}" class="navi-link text-danger cancle-schedule-btn">
+                                                                    Cancle Kelas
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                        <!--end::Navigation-->
+                                                    </div> `
+                                    }
+                                } else {
+                                    if (data.deleted_at != null) {
+                                        status += `<span class="text-danger font-weight-bolder">Cancle</span>`
+                                    } else {
+                                        status += `<span class="text-primary font-weight-bolder">${end.to(start)}</span>                                                         
+                                                    <a href="#" class="btn btn-hover-light-primary btn-sm btn-icon" data-toggle="dropdown"
+                                                            aria-haspopup="true" aria-expanded="false">
+                                                        <i class="ki ki-bold-more-hor"></i>
+                                                    </a>
+                                                    <div class="dropdown-menu p-0 m-0 dropdown-menu-right">
+                                                        <!--begin::Navigation-->
+                                                        <ul class="navi navi-hover">
+                                                            <li class="navi-item">
+                                                                <a href="{{ url('/coach/dashboard/cancle/schedule') }}/${data.id}" class="navi-link text-danger cancle-schedule-btn">
+                                                                    Cancle Kelas
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                        <!--end::Navigation-->
+                                                    </div> `
+                                    }
+                                }
 
                                 element += `<!--begin::Item-->
                                                 <div class="d-flex align-items-center mb-10">
@@ -207,23 +261,7 @@
                                                     <!--begin::Dropdown-->
                                                     <div class="dropdown dropdown-inline ml-2" data-toggle="tooltip" title="Quick actions"
                                                         data-placement="left">
-                                                        <span class="text-primary">${end.to(start)}</span>
-
-                                                        <a href="#" class="btn btn-hover-light-primary btn-sm btn-icon" data-toggle="dropdown"
-                                                            aria-haspopup="true" aria-expanded="false">
-                                                            <i class="ki ki-bold-more-hor"></i>
-                                                        </a>
-                                                        <div class="dropdown-menu p-0 m-0 dropdown-menu-right">
-                                                            <!--begin::Navigation-->
-                                                            <ul class="navi navi-hover">
-                                                                <li class="navi-item">
-                                                                    <a href="#" class="navi-link text-danger">
-                                                                        Cancle Kelas
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                            <!--end::Navigation-->
-                                                        </div>
+                                                        ` + status + `                                                      
                                                     </div>
                                                     <!--end::Dropdown-->
                                                 </div>
@@ -248,7 +286,7 @@
                             $.each(res.data, function(index, data) {
 
                                 const start = moment(data.datetime);
-                                const end   = moment();
+                                const end = moment();
 
                                 element += `<!--begin::Item-->
                                                 <div class="d-flex align-items-center mb-10">
@@ -489,7 +527,7 @@
                             .done(function(res, xhr, meta) {
 
                                 $('#form-review-last-class').trigger("reset");
-                                $('#form-review-last-class').attr('action', "{{ url('coach/dashboard/review-last-class') }}/" + res.data.detail_schedules.id);
+                                $('#form-review-last-class').attr('action',"{{ url('coach/dashboard/review-last-class') }}/" + res.data.detail_schedules.id);
                                 $('#form-review-last-class').attr('method', 'PUT');
 
                                 $('.classroom-name').html(res.data.detail_schedules.class_name);
@@ -499,76 +537,82 @@
 
                                 let feedback = ``;
 
-                                $.each(res.data.feedback, function(index, data) {
-                                    let rate = ``;
+                                if(res.data.length > 0){
+                                    $.each(res.data.feedback, function(index, data) {
+                                        let rate = ``;
 
-                                    for (i = 1; i <= 5; i++) {
-                                        if (i <= data.star) {
-                                            rate += `<span class="svg-icon svg-icon-warning svg-icon-2x">
-                                                        <svg
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
-                                                            viewBox="0 0 24 24" version="1.1">
-                                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                                <polygon points="0 0 24 0 24 24 0 24" />
-                                                                <path
-                                                                    d="M12,18 L7.91561963,20.1472858 C7.42677504,20.4042866 6.82214789,20.2163401 6.56514708,19.7274955 C6.46280801,19.5328351 6.42749334,19.309867 6.46467018,19.0931094 L7.24471742,14.545085 L3.94038429,11.3241562 C3.54490071,10.938655 3.5368084,10.3055417 3.92230962,9.91005817 C4.07581822,9.75257453 4.27696063,9.65008735 4.49459766,9.61846284 L9.06107374,8.95491503 L11.1032639,4.81698575 C11.3476862,4.32173209 11.9473121,4.11839309 12.4425657,4.36281539 C12.6397783,4.46014562 12.7994058,4.61977315 12.8967361,4.81698575 L14.9389263,8.95491503 L19.5054023,9.61846284 C20.0519472,9.69788046 20.4306287,10.2053233 20.351211,10.7518682 C20.3195865,10.9695052 20.2170993,11.1706476 20.0596157,11.3241562 L16.7552826,14.545085 L17.5353298,19.0931094 C17.6286908,19.6374458 17.263103,20.1544017 16.7187666,20.2477627 C16.5020089,20.2849396 16.2790408,20.2496249 16.0843804,20.1472858 L12,18 Z"
-                                                                    fill="#000000" />
-                                                            </g>
-                                                        </svg>
-                                                        <!--end::Svg Icon-->
-                                                    </span>`;
-                                        } else {
-                                            rate += `<span class="svg-icon svg-icon-muted svg-icon-2x">
-                                                        <svg
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
-                                                            viewBox="0 0 24 24" version="1.1">
-                                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                                <polygon points="0 0 24 0 24 24 0 24" />
-                                                                <path
-                                                                    d="M12,18 L7.91561963,20.1472858 C7.42677504,20.4042866 6.82214789,20.2163401 6.56514708,19.7274955 C6.46280801,19.5328351 6.42749334,19.309867 6.46467018,19.0931094 L7.24471742,14.545085 L3.94038429,11.3241562 C3.54490071,10.938655 3.5368084,10.3055417 3.92230962,9.91005817 C4.07581822,9.75257453 4.27696063,9.65008735 4.49459766,9.61846284 L9.06107374,8.95491503 L11.1032639,4.81698575 C11.3476862,4.32173209 11.9473121,4.11839309 12.4425657,4.36281539 C12.6397783,4.46014562 12.7994058,4.61977315 12.8967361,4.81698575 L14.9389263,8.95491503 L19.5054023,9.61846284 C20.0519472,9.69788046 20.4306287,10.2053233 20.351211,10.7518682 C20.3195865,10.9695052 20.2170993,11.1706476 20.0596157,11.3241562 L16.7552826,14.545085 L17.5353298,19.0931094 C17.6286908,19.6374458 17.263103,20.1544017 16.7187666,20.2477627 C16.5020089,20.2849396 16.2790408,20.2496249 16.0843804,20.1472858 L12,18 Z"
-                                                                    fill="#000000" />
-                                                            </g>
-                                                        </svg>
-                                                        <!--end::Svg Icon-->
-                                                    </span>`;
+                                        for (i = 1; i <= 5; i++) {
+                                            if (i <= data.star) {
+                                                rate += `<span class="svg-icon svg-icon-warning svg-icon-2x">
+                                                            <svg
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
+                                                                viewBox="0 0 24 24" version="1.1">
+                                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                                    <polygon points="0 0 24 0 24 24 0 24" />
+                                                                    <path
+                                                                        d="M12,18 L7.91561963,20.1472858 C7.42677504,20.4042866 6.82214789,20.2163401 6.56514708,19.7274955 C6.46280801,19.5328351 6.42749334,19.309867 6.46467018,19.0931094 L7.24471742,14.545085 L3.94038429,11.3241562 C3.54490071,10.938655 3.5368084,10.3055417 3.92230962,9.91005817 C4.07581822,9.75257453 4.27696063,9.65008735 4.49459766,9.61846284 L9.06107374,8.95491503 L11.1032639,4.81698575 C11.3476862,4.32173209 11.9473121,4.11839309 12.4425657,4.36281539 C12.6397783,4.46014562 12.7994058,4.61977315 12.8967361,4.81698575 L14.9389263,8.95491503 L19.5054023,9.61846284 C20.0519472,9.69788046 20.4306287,10.2053233 20.351211,10.7518682 C20.3195865,10.9695052 20.2170993,11.1706476 20.0596157,11.3241562 L16.7552826,14.545085 L17.5353298,19.0931094 C17.6286908,19.6374458 17.263103,20.1544017 16.7187666,20.2477627 C16.5020089,20.2849396 16.2790408,20.2496249 16.0843804,20.1472858 L12,18 Z"
+                                                                        fill="#000000" />
+                                                                </g>
+                                                            </svg>
+                                                            <!--end::Svg Icon-->
+                                                        </span>`;
+                                            } else {
+                                                rate += `<span class="svg-icon svg-icon-muted svg-icon-2x">
+                                                            <svg
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
+                                                                viewBox="0 0 24 24" version="1.1">
+                                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                                    <polygon points="0 0 24 0 24 24 0 24" />
+                                                                    <path
+                                                                        d="M12,18 L7.91561963,20.1472858 C7.42677504,20.4042866 6.82214789,20.2163401 6.56514708,19.7274955 C6.46280801,19.5328351 6.42749334,19.309867 6.46467018,19.0931094 L7.24471742,14.545085 L3.94038429,11.3241562 C3.54490071,10.938655 3.5368084,10.3055417 3.92230962,9.91005817 C4.07581822,9.75257453 4.27696063,9.65008735 4.49459766,9.61846284 L9.06107374,8.95491503 L11.1032639,4.81698575 C11.3476862,4.32173209 11.9473121,4.11839309 12.4425657,4.36281539 C12.6397783,4.46014562 12.7994058,4.61977315 12.8967361,4.81698575 L14.9389263,8.95491503 L19.5054023,9.61846284 C20.0519472,9.69788046 20.4306287,10.2053233 20.351211,10.7518682 C20.3195865,10.9695052 20.2170993,11.1706476 20.0596157,11.3241562 L16.7552826,14.545085 L17.5353298,19.0931094 C17.6286908,19.6374458 17.263103,20.1544017 16.7187666,20.2477627 C16.5020089,20.2849396 16.2790408,20.2496249 16.0843804,20.1472858 L12,18 Z"
+                                                                        fill="#000000" />
+                                                                </g>
+                                                            </svg>
+                                                            <!--end::Svg Icon-->
+                                                        </span>`;
+                                            }
                                         }
-                                    }
 
-                                    feedback +=
-                                        ` <div class="col-12 col-sm-12 col-lg-12 col-xl-12">
-                                            <!--begin::Item-->
-                                            <div class="d-flex align-items-center pb-9">
-                                                <!--begin::Symbol-->
-                                                <div class="symbol symbol-circle symbol-60  mr-3">
-                                                    <img alt="Pic" src="${data.image_url}" />
+                                        feedback +=
+                                            ` <div class="col-12 col-sm-12 col-lg-12 col-xl-12">
+                                                <!--begin::Item-->
+                                                <div class="d-flex align-items-center pb-9">
+                                                    <!--begin::Symbol-->
+                                                    <div class="symbol symbol-circle symbol-60  mr-3">
+                                                        <img alt="Pic" src="${data.image_url}" />
+                                                    </div>
+                                                    <!--end::Symbol-->
+                                                    <!--begin::Section-->
+                                                    <div class="d-flex flex-column flex-grow-1">
+                                                        <!--begin::Title-->
+                                                        <a href="#"
+                                                            class="text-dark-75 font-weight-bolder font-size-lg text-hover-primary mb-1">${data.student_name}</a>
+                                                        <!--end::Title-->
+                                                        <!--begin::rating-->
+                                                        <span class="text-dark-50 font-weight-normal font-size-sm">
+                                                            ` + rate + `
+                                                        </span>
+                                                        <!--begin::rating-->
+                                                        <!--begin::Desc-->
+                                                        <span class="text-dark-50 font-weight-normal font-size-sm">${data.description}</span>
+                                                        <!--begin::Desc-->
+                                                    </div>
+                                                    <!--end::Section-->
                                                 </div>
-                                                <!--end::Symbol-->
-                                                <!--begin::Section-->
-                                                <div class="d-flex flex-column flex-grow-1">
-                                                    <!--begin::Title-->
-                                                    <a href="#"
-                                                        class="text-dark-75 font-weight-bolder font-size-lg text-hover-primary mb-1">${data.student_name}</a>
-                                                    <!--end::Title-->
-                                                    <!--begin::rating-->
-                                                    <span class="text-dark-50 font-weight-normal font-size-sm">
-                                                        ` + rate + `
-                                                    </span>
-                                                    <!--begin::rating-->
-                                                    <!--begin::Desc-->
-                                                    <span class="text-dark-50 font-weight-normal font-size-sm">${data.description}</span>
-                                                    <!--begin::Desc-->
-                                                </div>
-                                                <!--end::Section-->
-                                            </div>
-                                            <!--end::Item-->
-                                        </div>`;
+                                                <!--end::Item-->
+                                            </div>`;
 
-                                });
+                                    });
 
-                                $('.feedback').html(feedback);
-                                showModal('modal-review-last-class');
+                                    $('.feedback').html(feedback);
+                                    showModal('modal-review-last-class');
+                                }else{
+
+                                    $('.feedback').html(feedback);
+                                    hideModal('modal-review-last-class');
+                                }                                                             
 
                                 btn_loading_class_not_text(
                                     id_name,
@@ -584,6 +628,20 @@
                                     </span>`
                                 );
                             })
+                            btn_loading_class_not_text(
+                            id_name,
+                            'stop',
+                            `<span class="svg-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                        <polygon points="0 0 24 0 24 24 0 24"/>
+                                        <rect fill="#000000" opacity="0.3" transform="translate(8.500000, 12.000000) rotate(-90.000000) translate(-8.500000, -12.000000) " x="7.5" y="7.5" width="2" height="9" rx="1"/>
+                                        <path d="M9.70710318,15.7071045 C9.31657888,16.0976288 8.68341391,16.0976288 8.29288961,15.7071045 C7.90236532,15.3165802 7.90236532,14.6834152 8.29288961,14.2928909 L14.2928896,8.29289093 C14.6714686,7.914312 15.281055,7.90106637 15.675721,8.26284357 L21.675721,13.7628436 C22.08284,14.136036 22.1103429,14.7686034 21.7371505,15.1757223 C21.3639581,15.5828413 20.7313908,15.6103443 20.3242718,15.2371519 L15.0300721,10.3841355 L9.70710318,15.7071045 Z" fill="#000000" fill-rule="nonzero" transform="translate(14.999999, 11.999997) scale(1, -1) rotate(90.000000) translate(-14.999999, -11.999997) "/>
+                                    </g>
+                                </svg>
+                            </span>`
+                        );
+
                     });
 
                     $(document).on('click', '.coach-show-last-class-btn', function(event) {
@@ -703,6 +761,53 @@
                                     </span>`
                                 );
                             })
+                    });
+
+                    $(document).on('click', '.cancle-schedule-btn', function(event) {
+                        event.preventDefault();
+
+                        var id_name = $(this).attr("id");
+                        var url = $(this).attr('href');
+
+                        btn_loading_class(
+                            id_name,
+                            'start',
+                            `Cancle`
+                        );
+
+                        Swal.fire({
+                            title: 'Cancle Schedule?',
+                            text: "Schedule Can be Cancle!",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#7F16A7',
+                            confirmButtonText: 'Yes, Delete',
+                        }).then(function(result) {
+                            if (result.value) {
+                                $.ajax({
+                                        url: url,
+                                        type: 'DELETE',
+                                        dataType: 'json',
+                                    })
+                                    .done(function(res, xhr, meta) {
+                                        toastr.success(res.message, 'Success')
+
+                                        closestScheduleTable();
+                                        lastClassTable();
+
+                                        btn_loading_class(
+                                            id_name,
+                                            'stop',
+                                            `Cancle`
+                                        );
+                                    })
+                                    .fail(function(res, error) {
+                                        toastr.error(res.responseJSON.message, 'Failed')
+                                    })
+                                    .always(function() {});
+                            }
+                        })
+                        $('.swal2-title').addClass('justify-content-center')
                     });
                 },
                 formSubmit = () => {

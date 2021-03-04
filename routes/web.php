@@ -369,7 +369,8 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::post('dashboard/closest-schedule', [DashboardController::class, 'closest_schedule']);
         Route::get('dashboard/coach-show-review-last-class/{id}/{student_schedule_id}', [DashboardController::class, 'coach_show_review_last_class']);
         Route::get('dashboard/show-last-class/{id}/{student_schedule_id}', [DashboardController::class, 'show_last_class']);
-        Route::put('dashboard/review-last-class/{id}', [DashboardController::class, 'review_last_class']);
+        Route::put('dashboard/review-last-class/{id}/{student_schedule_id}', [DashboardController::class, 'review_last_class']);
+        Route::delete('dashboard/cancle/schedule/{id}', [DashboardController::class, 'cancle_schedule']);
         Route::resource('dashboard', DashboardController::class);
 
         Route::post('theory/file', [CoachTheoryController::class, 'theory_file']);

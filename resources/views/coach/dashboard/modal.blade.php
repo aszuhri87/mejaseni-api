@@ -128,7 +128,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="row mb-5 overflow-auto feedback-student" style="height:500px !important">
+                    <div class="row mb-5 overflow-auto feedback-student" style="height:200px !important">
                     </div>
                 </div>
                 <div class="modal-footer">
