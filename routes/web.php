@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ProviderController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\MediaController;
@@ -162,8 +163,19 @@ Route::post('/notifications/payments', [PaymentController::class, 'notification'
 
 Route::group(['middleware' => ['guest-handling']], function () {
 
+    Route::get('email-verification/check/{token}',[RegisterController::class, 'email_verification']);
+
+    Route::get('forgot-password', [RegisterController::class, 'index_forgot_password']);
+    Route::post('forgot-password', [RegisterController::class, 'forgot_password']);
+
     Route::get('login', [LoginController::class, 'index_login']);
     Route::post('login', [LoginController::class, 'login']);
+
+    Route::get('register', [RegisterController::class, 'index_register']);
+    Route::post('register', [RegisterController::class, 'register']);
+
+    Route::get('register-success', [RegisterController::class, 'registration_success']);
+    Route::get('reset-password-success', [RegisterController::class, 'reset_password_success']);
 
     Route::get('auth/{provider}', [ProviderController::class, 'redirect_provider']);
     Route::get('auth/{provider}/callback', [ProviderController::class, 'callback_provider']);

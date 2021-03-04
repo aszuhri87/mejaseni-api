@@ -54,10 +54,10 @@
                     <!--begin::Signin-->
                     <div class="login-form">
                         <!--begin::Form-->
-                        <form class="form" id="kt_login_signin_form" method="POST" action="{{ url('login') }}" autocomplete="off">
+                        <form class="form" id="kt_login_signin_form" method="POST" action="{{ url('forgot-password') }}" autocomplete="off">
                             @csrf
                             <div class="pb-5 pb-lg-15">
-                                <h3 class="font-weight-bolder text-dark font-size-h2 font-size-h1-lg">Masuk</h3>
+                                <h3 class="font-weight-bolder text-dark font-size-h2 font-size-h1-lg">Lupa Password</h3>
                             </div>
                             <div class="pb-10 d-flex">
                                 <a href="{{url('auth/google')}}" class="btn btn-outline-secondary font-weight-bolder font-size-lg" style="width:80%;">
@@ -91,30 +91,18 @@
                                     <i class="far fa-times-circle text-white text-left"></i> {{ $errors->first('message') }}
                                 </div>
                             @endif
-                            <!--begin::Form group-->
-                            <div class="form-group">
-                                <label class="font-size-h6 font-weight-bolder text-dark">Email atau Username</label>
-                                <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg border-0" type="text" value="{{old('username')}}" name="username" autocomplete="off" />
-                            </div>
-                            <!--end::Form group-->
 
                             <!--begin::Form group-->
                             <div class="form-group">
-                                <div class="d-flex justify-content-between mt-n5">
-                                    <label class="font-size-h6 font-weight-bolder text-dark pt-5">Password</label>
-
-                                    <a href="{{url('forgot-password')}}" class="text-primary font-size-h6 font-weight-bolder text-hover-primary pt-5">
-                                        Lupa Password ?
-                                    </a>
-                                </div>
-                                <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg border-0" type="password" name="password" autocomplete="off" />
+                                <label class="font-size-h6 font-weight-bolder text-dark">Email</label>
+                                <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg border-0" type="text" value="{{old('email')}}" name="email" autocomplete="off" />
                             </div>
                             <!--end::Form group-->
 
                             <!--begin::Action-->
                             <div class="pb-lg-0 pb-5">
-                                <button type="submit" id="kt_login_singin_form_submit_button" class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-3">Masuk</button>
-                                <a href="{{url('register')}}" id="kt_login_singin_form_submit_button" class="btn btn-outline-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-3">Daftar</a>
+                                <button type="submit" id="kt_login_singin_form_submit_button" class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-3">Reset Password</button>
+                                <a href="{{url('login')}}" id="kt_login_singin_form_submit_button" class="btn btn-outline-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-3">Login</a>
                             </div>
                             <!--end::Action-->
                         </form>

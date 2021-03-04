@@ -26,7 +26,10 @@ class Student extends Authenticatable
         'expertise',
         'actived',
         'verified',
-        'provider'
+        'provider',
+        'token_verification',
+        'token_expired_at',
+        'change_email'
     ];
 
     protected $dates = ['deleted_at'];

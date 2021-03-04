@@ -54,10 +54,10 @@
                     <!--begin::Signin-->
                     <div class="login-form">
                         <!--begin::Form-->
-                        <form class="form" id="kt_login_signin_form" method="POST" action="{{ url('login') }}" autocomplete="off">
+                        <form class="form mt-10 mb-10 pt-10 pb-10" id="kt_login_signin_form" method="POST" action="{{ url('register') }}" autocomplete="off">
                             @csrf
                             <div class="pb-5 pb-lg-15">
-                                <h3 class="font-weight-bolder text-dark font-size-h2 font-size-h1-lg">Masuk</h3>
+                                <h3 class="font-weight-bolder text-dark font-size-h2 font-size-h1-lg">Daftar Akun</h3>
                             </div>
                             <div class="pb-10 d-flex">
                                 <a href="{{url('auth/google')}}" class="btn btn-outline-secondary font-weight-bolder font-size-lg" style="width:80%;">
@@ -74,7 +74,7 @@
                                                 fill="#EB4335" />
                                         </svg>
                                         <!--end::Svg Icon-->
-                                    </span> Masuk dengan Google
+                                    </span> Daftar dengan Google
                                 </a>
                                 <a href="{{url('auth/facebook')}}" class="btn btn-outline-secondary font-weight-bolder font-size-lg ml-2" style="width:20%;">
                                     <img src="assets/images/logo-fb.svg" class="max-h-70px" alt="" />
@@ -86,15 +86,38 @@
                                 <div style="width: 40%"><hr></div>
                             </div>
                             <!--begin::Title-->
+
                             @if($errors->has('message'))
                                 <div class="alert alert-danger" style="text-align: left;" role="alert">
                                     <i class="far fa-times-circle text-white text-left"></i> {{ $errors->first('message') }}
                                 </div>
                             @endif
+
                             <!--begin::Form group-->
                             <div class="form-group">
-                                <label class="font-size-h6 font-weight-bolder text-dark">Email atau Username</label>
-                                <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg border-0" type="text" value="{{old('username')}}" name="username" autocomplete="off" />
+                                <label class="font-size-h6 font-weight-bolder text-dark">Nama</label>
+                                <input required class="form-control form-control-solid h-auto py-7 px-6 rounded-lg border-0" type="text" name="name" autocomplete="off" />
+                            </div>
+                            <!--end::Form group-->
+
+                            <!--begin::Form group-->
+                            <div class="form-group">
+                                <label class="font-size-h6 font-weight-bolder text-dark">Nomor Hp</label>
+                                <input required class="form-control form-control-solid h-auto py-7 px-6 rounded-lg border-0" type="text" name="phone" autocomplete="off" />
+                            </div>
+                            <!--end::Form group-->
+
+                            <!--begin::Form group-->
+                            <div class="form-group">
+                                <label class="font-size-h6 font-weight-bolder text-dark">Email</label>
+                                <input required class="form-control form-control-solid h-auto py-7 px-6 rounded-lg border-0" type="email" name="email" autocomplete="off" />
+                            </div>
+                            <!--end::Form group-->
+
+                            <!--begin::Form group-->
+                            <div class="form-group">
+                                <label class="font-size-h6 font-weight-bolder text-dark">Username</label>
+                                <input required class="form-control form-control-solid h-auto py-7 px-6 rounded-lg border-0" type="text" name="username" autocomplete="off" />
                             </div>
                             <!--end::Form group-->
 
@@ -102,19 +125,24 @@
                             <div class="form-group">
                                 <div class="d-flex justify-content-between mt-n5">
                                     <label class="font-size-h6 font-weight-bolder text-dark pt-5">Password</label>
-
-                                    <a href="{{url('forgot-password')}}" class="text-primary font-size-h6 font-weight-bolder text-hover-primary pt-5">
-                                        Lupa Password ?
-                                    </a>
                                 </div>
-                                <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg border-0" type="password" name="password" autocomplete="off" />
+                                <input required class="form-control form-control-solid h-auto py-7 px-6 rounded-lg border-0" type="password" name="password" autocomplete="off" />
+                            </div>
+                            <!--end::Form group-->
+
+                            <!--begin::Form group-->
+                            <div class="form-group">
+                                <div class="d-flex justify-content-between mt-n5">
+                                    <label class="font-size-h6 font-weight-bolder text-dark pt-5">Konfirmasi Password</label>
+                                </div>
+                                <input required class="form-control form-control-solid h-auto py-7 px-6 rounded-lg border-0" type="password" name="c_password" autocomplete="off" />
                             </div>
                             <!--end::Form group-->
 
                             <!--begin::Action-->
                             <div class="pb-lg-0 pb-5">
-                                <button type="submit" id="kt_login_singin_form_submit_button" class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-3">Masuk</button>
-                                <a href="{{url('register')}}" id="kt_login_singin_form_submit_button" class="btn btn-outline-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-3">Daftar</a>
+                                <button type="submit" id="kt_login_singin_form_submit_button" class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-3">Daftar</button>
+                                <a href="{{url('login')}}" id="kt_login_singin_form_submit_button" class="btn btn-outline-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-3">Masuk</a>
                             </div>
                             <!--end::Action-->
                         </form>
