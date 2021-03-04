@@ -32,7 +32,6 @@ class DashboardController extends BaseMenu
             $data = DB::table('student_classrooms')
                 ->where('student_classrooms.student_id', Auth::guard('student')->user()->id)
                 ->whereNull('student_classrooms.deleted_at')
-                ->whereNotNull('student_classrooms.id')
                 ->count();
 
             return response([
@@ -212,124 +211,57 @@ class DashboardController extends BaseMenu
         }
     }
 
-    public function not_present()
+    public function rest_session()
     {
         try {
-            $date = date('Y-m-d');
-
-            $coaches = DB::table('coaches')
-                ->select([
-                    'coaches.id',
-                    'coaches.name',
-                ])
-                ->whereNull('coaches.deleted_at');
-
-            $coach_classroom = DB::table('coach_classrooms')
-                ->select([
-                    'coach_classrooms.id',
-                    'coach_classrooms.coach_id',
-                    'coaches.name as coach_name',
-                ])
-                ->joinSub($coaches, 'coaches', function ($join) {
-                    $join->on('coach_classrooms.coach_id', '=', 'coaches.id');
-                })
-                ->whereNull('coach_classrooms.deleted_at');
-
-            $coach_schedule = DB::table('coach_schedules')
-                ->select([
-                    'coach_schedules.id',
-                    'coach_schedules.datetime',
-                    'coach_classrooms.coach_name',
-                    'coach_classrooms.coach_id',
-                ])
-                ->joinSub($coach_classroom, 'coach_classrooms', function ($join) {
-                    $join->on('coach_schedules.coach_classroom_id', '=', 'coach_classrooms.id');
-                })
-                ->whereNull('coach_schedules.deleted_at');
-
-            $session_feedback = DB::table('session_feedback')
-                ->select([
-                    'session_feedback.student_schedule_id',
-                    'session_feedback.star',
-                    'session_feedback.id',
-                ])
-                ->where('session_feedback.student_id',Auth::guard('student')->user()->id)
-                ->whereNull('session_feedback.deleted_at');
 
             $student_schedule = DB::table('student_schedules')
                 ->select([
-                    'student_schedules.id',
                     'student_schedules.student_classroom_id',
-                    'student_schedules.check_in',
-                    'coach_schedules.datetime',
-                    'student_schedules.coach_schedule_id',
-                    'coach_schedules.coach_name',
-                    'coach_schedules.coach_id',
-                    'session_feedback.star',
-                    'session_feedback.id as session_feedback_id',
+                    DB::raw('COUNT(student_schedules.student_classroom_id) AS count_booking')
                 ])
-                ->leftJoinSub($session_feedback, 'session_feedback', function ($join) {
-                    $join->on('student_schedules.id', '=', 'session_feedback.student_schedule_id');
-                })
-                ->joinSub($coach_schedule, 'coach_schedules', function ($join) {
-                    $join->on('student_schedules.coach_schedule_id', '=', 'coach_schedules.id');
-                })
-                ->whereNull('student_schedules.deleted_at');
+                ->whereNull('student_schedules.deleted_at')
+                ->groupBy('student_schedules.student_classroom_id');
 
             $classroom = DB::table('classrooms')
                 ->select([
                     'classrooms.id',
-                    'classrooms.name',
-                    'classrooms.session_duration',
+                    'classrooms.session_total',
                 ])
-                ->whereNull('deleted_at');
+                ->whereNull('classrooms.deleted_at');
 
             $data = DB::table('student_classrooms')
                 ->select([
-                    'student_schedules.id',
-                    'student_schedules.coach_schedule_id',
-                    'classrooms.name as classroom_name',
-                    'classrooms.session_duration',
-                    'student_schedules.coach_name',
-                    'student_schedules.coach_id',
-                    'student_schedules.datetime',
-                    'student_schedules.session_feedback_id',
-                    DB::raw("(
+                    'classrooms.session_total',
+                    DB::raw('(
                         CASE
-                            WHEN student_schedules.star IS NOT NULL THEN
-                                1
+                            WHEN student_schedules.count_booking IS NOT NULL THEN
+                                student_schedules.count_booking
                             ELSE
                                 0
                         END
-                    ) as is_review_session"),
-                    DB::raw("(
-                        CASE
-                            WHEN student_schedules.check_in IS NOT NULL THEN
-                                1
-                            ELSE
-                                0
-                        END
-                    ) as status_checkin"),
-                    DB::raw("
-                        (student_schedules.datetime::timestamp + (classrooms.session_duration * INTERVAL '1 MINUTES')) as datetime_interval
-                    ")
+                    ) AS count_booking'),
                 ])
-                ->rightJoinSub($student_schedule, 'student_schedules', function ($join) {
-                    $join->on('student_classrooms.id', '=', 'student_schedules.student_classroom_id');
-                })
-                ->joinSub($classroom, 'classrooms', function ($join) {
+                ->leftJoinSub($classroom, 'classrooms', function ($join) {
                     $join->on('student_classrooms.classroom_id', '=', 'classrooms.id');
+                })
+                ->leftJoinSub($student_schedule, 'student_schedules', function ($join) {
+                    $join->on('student_classrooms.id', '=', 'student_schedules.student_classroom_id');
                 })
                 ->where('student_classrooms.student_id',Auth::guard('student')->user()->id)
                 ->whereNull('student_classrooms.deleted_at')
-                ->whereNull('student_schedules.check_in')
-                ->whereRaw("(student_schedules.datetime::timestamp + (classrooms.session_duration * INTERVAL '1 MINUTES')) <= now()")
-                ->orderBy('student_schedules.datetime','desc')
-                ->count();
+                ->get();
+            dd($data);
+            $result = 0;
+
+            foreach ($data as $key => $value) {
+                $count = $value->session_total-$value->count_booking;
+                $result = $result + $count;
+            }
 
             return response([
                 "status"  => 200,
-                "data"    => $data,
+                "data"    => $result,
                 "message" => 'OK!'
             ],200);
         }catch (Exception $e) {
@@ -419,10 +351,9 @@ class DashboardController extends BaseMenu
                 ->whereNull('student_classrooms.deleted_at')
                 ->whereRaw("(student_schedules.datetime::timestamp) >= now()")
                 ->orderBy('student_schedules.datetime','asc')
-                ->limit(2)
+                ->limit(1)
                 ->get();
 
-            // dd($upcoming_classroom);
             // upcoming master lesson
 
             $master_lesson = DB::table('master_lessons')
@@ -951,6 +882,7 @@ class DashboardController extends BaseMenu
                 ->leftJoinSub($student_schedule, 'student_schedules', function ($join) {
                     $join->on('student_classrooms.id', '=', 'student_schedules.student_classroom_id');
                 })
+                ->where('student_classrooms.student_id',Auth::guard('student')->user()->id)
                 ->whereNull('student_classrooms.deleted_at')
                 ->get();
 

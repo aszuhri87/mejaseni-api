@@ -68,6 +68,7 @@ use App\Http\Controllers\Student\ProfileController as StudentProfileController;
 use App\Http\Controllers\Student\CartController as StudentCartController;
 use App\Http\Controllers\Student\ExerciseController as StudentExerciseController;
 use App\Http\Controllers\Student\ReviewController as StudentReviewController;
+use App\Http\Controllers\Student\NotificationController as StudentNotificationController;
 
 
 /*
@@ -434,7 +435,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::get('total-booking', [StudentDashboardController::class, 'total_booking']);
             Route::get('history-booking', [StudentDashboardController::class, 'history_booking']);
             Route::get('history-booking', [StudentDashboardController::class, 'history_booking']);
-            Route::get('not-present', [StudentDashboardController::class, 'not_present']);
+            Route::get('rest-session', [StudentDashboardController::class, 'rest_session']);
             Route::get('upcoming', [StudentDashboardController::class, 'upcoming']);
             Route::get('student-booking-week', [StudentDashboardController::class, 'student_booking_week']);
             Route::get('my-course', [StudentDashboardController::class, 'my_course']);
@@ -531,6 +532,11 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::get('/', [StudentReviewController::class, 'index']);
             Route::get('get-review/{id}', [StudentReviewController::class, 'get_review']);
             Route::post('dt', [StudentReviewController::class, 'dt']);
+        });
+
+        Route::group(['prefix' => 'notification'], function () {
+            Route::get('/', [StudentNotificationController::class, 'index']);
+            Route::post('dt', [StudentNotificationController::class, 'dt']);
         });
 
         Route::post('profile/{id}', [StudentProfileController::class,'update']);

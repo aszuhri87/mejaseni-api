@@ -13,7 +13,7 @@
                 totalVideo();
                 totalBooking();
                 historyBooking();
-                notPresent();
+                restSession();
                 initChart();
                 upcoming();
                 myCourse();
@@ -79,14 +79,14 @@
                 })
                 .always(function() { });
             },
-            notPresent = () => {
+            restSession = () => {
                 $.ajax({
-                    url: `{{ url('student/dashboard/not-present') }}`,
+                    url: `{{ url('student/dashboard/rest-session') }}`,
                     type: 'GET',
                     dataType: 'json',
                 })
                 .done(function(res, xhr, meta) {
-                    $('#not-present').html(res.data)
+                    $('#rest-session').html(res.data)
                 })
                 .fail(function(res, error) {
                     toastr.error(res.responseJSON.message, 'Failed')
@@ -132,7 +132,7 @@
                     if(res.status == 200 ){
                         var options = {
                             chart: {
-                                height: 280,
+                                height: 228,
                                 type: "radialBar"
                             },
 
@@ -254,6 +254,13 @@
                             $('#title-upcoming').html(data.name);
                             $('#date-upcoming').html(moment(data.datetime).format('DD MMMM YYYY'));
                             $('#time-upcoming').html(moment(data.datetime).format('HH:mm'));
+
+                            if(res.data.is_master_lesson){
+                                if(moment(data.datetime).isSameOrBefore(moment().format('YYYY-MM-DD HH:mm:ss'))){
+                                    $('#enter-master-lesson').html(`<a href="${data.link}" class="btn btn-primary mt-5 mb-5">Masuk Kelas</a>`)
+                                }
+                            }
+
                             $('#is_exist_upcoming').show();
                         }
                         else{
