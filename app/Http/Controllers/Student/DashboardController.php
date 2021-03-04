@@ -161,7 +161,7 @@ class DashboardController extends BaseMenu
                     'coach_schedules.accepted'
                 ])
                 ->where('coach_schedules.accepted',true)
-                ->whereNull('coach_schedules.id');
+                ->whereNull('coach_schedules.deleted_at');
 
             $student_schedule = DB::table('student_schedules')
                 ->select([
@@ -173,18 +173,29 @@ class DashboardController extends BaseMenu
                 ->joinSub($coach_schedule, 'coach_schedules', function ($join) {
                     $join->on('student_schedules.coach_schedule_id', '=', 'coach_schedules.id');
                 })
-                ->whereDate('coach_schedules.datetime','<',date('Y-m-d'))
                 ->whereNull('student_schedules.deleted_at');
+
+            $classroom = DB::table('classrooms')
+                ->select([
+                    'classrooms.id',
+                    'classrooms.session_duration',
+                ])
+                ->whereNull('classrooms.deleted_at');
 
             $data = DB::table('student_classrooms')
                 ->select([
-                    'student_schedules.coach_schedule_id'
+                    'student_schedules.coach_schedule_id',
+                    'student_schedules.datetime',
                 ])
                 ->leftJoinSub($student_schedule, 'student_schedules', function ($join) {
                     $join->on('student_classrooms.id', '=', 'student_schedules.student_classroom_id');
                 })
+                ->joinSub($classroom, 'classrooms', function ($join) {
+                    $join->on('student_classrooms.classroom_id', '=', 'classrooms.id');
+                })
                 ->where('student_classrooms.student_id', Auth::guard('student')->user()->id)
                 ->where('student_classrooms.deleted_at')
+                ->whereRaw("(student_schedules.datetime::timestamp + (classrooms.session_duration * INTERVAL '1 MINUTES')) <= now()")
                 ->whereNotNull('student_schedules.coach_schedule_id')
                 ->count();
 
@@ -831,6 +842,144 @@ class DashboardController extends BaseMenu
             return response([
                 "status"  => 200,
                 "data"    => $data,
+                "message" => 'OK!'
+            ],200);
+        }catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message" => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function student_booking_week()
+    {
+        try {
+            $coach_schedule = DB::table('coach_schedules')
+                ->select([
+                    'coach_schedules.id',
+                    'coach_schedules.datetime',
+                ])
+                ->whereNull('coach_schedules.deleted_at');
+
+            $data = DB::table('student_schedules')
+                ->select([
+                    'student_schedules.coach_schedule_id'
+                ])
+                ->joinSub($coach_schedule, 'coach_schedules', function ($join) {
+                    $join->on('student_schedules.coach_schedule_id', '=', 'coach_schedules.id');
+                })
+                ->whereRaw('(SELECT EXTRACT(WEEK FROM coach_schedules.datetime)) = (SELECT EXTRACT(WEEK FROM now()))')
+                ->whereNull('student_schedules.deleted_at')
+                ->count();
+
+            return response([
+                "status"  => 200,
+                "data"    => $data,
+                "message" => 'OK!'
+            ],200);
+        }catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message" => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function progress_class()
+    {
+        try {
+            $coach_schedule = DB::table('coach_schedules')
+                ->select([
+                    'coach_schedules.id',
+                    'coach_schedules.datetime',
+                ])
+                ->whereNull('coach_schedules.deleted_at');
+
+            $student_schedule = DB::table('student_schedules')
+                ->select([
+                    'student_schedules.student_classroom_id',
+                    'coach_schedules.datetime',
+                ])
+                ->joinSub($coach_schedule, 'coach_schedules', function ($join) {
+                    $join->on('student_schedules.coach_schedule_id', '=', 'coach_schedules.id');
+                })
+                ->whereNull('student_schedules.deleted_at');
+
+            $classroom = DB::table('classrooms')
+                ->select([
+                    'classrooms.id',
+                    'classrooms.session_total',
+                    'classrooms.session_duration',
+                ])
+                ->whereNull('classrooms.deleted_at');
+
+            $sub_data = DB::table('student_classrooms')
+                ->select([
+                    'student_classrooms.id',
+                    DB::raw('count(student_schedules.student_classroom_id) as total_present')
+                ])
+                ->leftJoinSub($student_schedule, 'student_schedules', function ($join) {
+                    $join->on('student_classrooms.id', '=', 'student_schedules.student_classroom_id');
+                })
+                ->joinSub($classroom, 'classrooms', function ($join) {
+                    $join->on('student_classrooms.classroom_id', '=', 'classrooms.id');
+                })
+                ->whereRaw("(student_schedules.datetime::timestamp + (classrooms.session_duration * INTERVAL '1 MINUTES')) <= now()")
+                ->whereNull('student_classrooms.deleted_at')
+                ->groupBy('student_classrooms.id');
+
+            $data = DB::table('student_classrooms')
+                ->select([
+                    'classrooms.session_total',
+                    'classrooms.session_duration',
+                    DB::raw('(
+                        CASE
+                            WHEN sub_data.total_present IS NOT NULL THEN
+                                sub_data.total_present
+                            ELSE
+                                0
+                        END
+                    ) as total_present'),
+                ])
+                ->joinSub($classroom, 'classrooms', function ($join) {
+                    $join->on('student_classrooms.classroom_id', '=', 'classrooms.id');
+                })
+                ->leftJoinSub($sub_data, 'sub_data', function ($join) {
+                    $join->on('student_classrooms.id', '=', 'sub_data.id');
+                })
+                ->leftJoinSub($student_schedule, 'student_schedules', function ($join) {
+                    $join->on('student_classrooms.id', '=', 'student_schedules.student_classroom_id');
+                })
+                ->whereNull('student_classrooms.deleted_at')
+                ->get();
+
+                $total_class = 0;
+                $total_present = 0;
+
+                foreach ($data as $key => $value) {
+                    $total_class++;
+                    if($key == 0 ){
+                        $total_present = ($value->total_present / $value->session_total)*100;
+                    }
+                    else{
+                        $present = ($value->total_present / $value->session_total)*100;
+                        $total_present+=$present;
+                    }
+                }
+
+                if($total_class > 0){
+                    $total_present = $total_present/$total_class;
+                }
+
+                $result = [
+                    'total_class' => $total_class,
+                    'total_present' => round($total_present,2),
+                ];
+
+            return response([
+                "status"  => 200,
+                "data"    => $result,
                 "message" => 'OK!'
             ],200);
         }catch (Exception $e) {

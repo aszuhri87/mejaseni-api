@@ -8,7 +8,7 @@
             const danger = '#F64E60';
 
             $(document).ready(function() {
-                initProgressClass();
+                progressClass();
                 totalClass();
                 totalVideo();
                 totalBooking();
@@ -18,6 +18,7 @@
                 upcoming();
                 myCourse();
                 initAction();
+                studentBookingWeek();
             });
 
             const initChart = () => {
@@ -31,10 +32,10 @@
                         var options = {
                             series: [{
                                 name: 'Kelas Dihadiri',
-                                data: res.data.booking
+                                data: res.data.present
                             }, {
                                 name: 'Kelas Dibooking',
-                                data: res.data.present
+                                data: res.data.booking
                             }],
                             chart: {
                                 type: 'bar',
@@ -122,48 +123,63 @@
                     });
                 });
             },
-            initProgressClass = () => {
-                var options = {
-                    chart: {
-                        height: 280,
-                        type: "radialBar"
-                    },
-
-                    series: [67],
-
-                    plotOptions: {
-                        radialBar: {
-                        hollow: {
-                            margin: 15,
-                            size: "70%"
-                        },
-
-                        dataLabels: {
-                            showOn: "always",
-                            name: {
-                            offsetY: -10,
-                            show: false,
-                            color: "#888",
-                            fontSize: "13px"
+            progressClass = () => {
+                $.ajax({
+                    url: `{{url('student/dashboard/progress-class')}}`,
+                    type: 'GET',
+                })
+                .done(function(res, xhr, meta) {
+                    if(res.status == 200 ){
+                        var options = {
+                            chart: {
+                                height: 280,
+                                type: "radialBar"
                             },
-                            value: {
-                            color: "#111",
-                            fontSize: "30px",
-                            show: true
+
+                            series: [res.data.total_present],
+
+                            plotOptions: {
+                                radialBar: {
+                                hollow: {
+                                    margin: 15,
+                                    size: "70%"
+                                },
+
+                                dataLabels: {
+                                    showOn: "always",
+                                    name: {
+                                    offsetY: -10,
+                                    show: false,
+                                    color: "#888",
+                                    fontSize: "13px"
+                                    },
+                                    value: {
+                                    color: "#111",
+                                    fontSize: "30px",
+                                    show: true
+                                    }
+                                }
+                                }
+                            },
+
+                            stroke: {
+                                lineCap: "round",
                             }
-                        }
-                        }
-                    },
+                        };
 
-                    stroke: {
-                        lineCap: "round",
+                        var chart = new ApexCharts(document.querySelector("#progress-class"), options);
+                        chart.render();
+
+                        $('#percent-progress-class').html(res.data.total_present);
+                        $('#class-active').html(res.data.total_class);
                     }
-                };
+                })
+                .fail(function(res, error) {
+                    toastr.error(res.responseJSON.message, 'Failed')
+                })
+                .always(function() {
 
-                var chart = new ApexCharts(document.querySelector("#progress-class"), options);
-
-                chart.render();
-
+                });
             },
             totalClass = () => {
                 $.ajax({
@@ -238,6 +254,7 @@
                             $('#title-upcoming').html(data.name);
                             $('#date-upcoming').html(moment(data.datetime).format('DD MMMM YYYY'));
                             $('#time-upcoming').html(moment(data.datetime).format('HH:mm'));
+                            $('#is_exist_upcoming').show();
                         }
                         else{
                             element +=`
@@ -360,6 +377,23 @@
                     $('#text-course').html(
                         `Terdapat <strong>${total_course} kursus</strong> yang kamu miliki dan <strong>${total_completed} kursus</strong> telah kamu selesaikan`
                     )
+                })
+                .fail(function(res, error) {
+                    toastr.error(res.responseJSON.message, 'Failed')
+                })
+                .always(function() {
+
+                });
+            },
+            studentBookingWeek = () => {
+                $.ajax({
+                    url: `{{url('student/dashboard/student-booking-week')}}`,
+                    type: 'GET',
+                })
+                .done(function(res, xhr, meta) {
+                    if(res.status == 200 ){
+                        $('#student-booking-week').html(res.data);
+                    }
                 })
                 .fail(function(res, error) {
                     toastr.error(res.responseJSON.message, 'Failed')
