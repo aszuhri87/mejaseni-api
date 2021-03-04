@@ -519,6 +519,13 @@ class BaseMenu extends Controller
                     ],
                 ],
             ],
+            [
+                'key' => 'notification',
+                'title' => 'Notification',
+                'url' => 'coach/notification',
+                'permission' => 'notification',
+                'icon' => $this->icon('theory'),
+            ],
         ];
     }
 }

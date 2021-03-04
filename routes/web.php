@@ -49,6 +49,8 @@ use App\Http\Controllers\Coach\TheoryController as CoachTheoryController;
 use App\Http\Controllers\Coach\Schedule\ScheduleController as CoachScheduleController;
 use App\Http\Controllers\Coach\Exercise\AssignmentController;
 use App\Http\Controllers\Coach\Exercise\ReviewAssignmentController;
+use App\Http\Controllers\Coach\Notification\NotificationController as CoachNotificationController;
+
 /*
 |--------------------------------------------------------------------------
 | Student Controller
@@ -108,8 +110,6 @@ use App\Http\Controllers\Cms\StoreDetailController as StoreDetailController;
 use App\Http\Controllers\Cms\EventListController as EventListController;
 use App\Http\Controllers\Cms\EventDetailController as EventDetailController;
 
-
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -129,6 +129,7 @@ use App\Http\Controllers\Cms\EventDetailController as EventDetailController;
 | CMS
 |--------------------------------------------------------------------------
 */
+
 Route::get('/', [HomePageController::class, 'index']);
 Route::get('/class', [ClassController::class, 'index']);
 Route::get('/class/classroom_category/{category_id}/sub_classroom_category', [ClassController::class, 'get_sub_category']);
@@ -250,7 +251,6 @@ Route::group(['middleware' => ['auth-handling']], function () {
                     Route::get('get-class-by-coach/{id}', [CoachListController::class, 'get_class']);
                     Route::get('{id}', [CoachListController::class, 'index']);
                     Route::post('store', [CoachListController::class, 'store']);
-
                 });
             });
 
@@ -352,7 +352,6 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::post('marketplace/dt', [MarketPlaceController::class, 'dt']);
             Route::post('marketplace/update/{id}', [MarketPlaceController::class, 'update']);
             Route::resource('marketplace', MarketPlaceController::class);
-
         });
     });
 
@@ -363,21 +362,28 @@ Route::group(['middleware' => ['auth-handling']], function () {
     */
 
     Route::group(['prefix' => 'coach', 'middleware' => 'coach-handling'], function () {
-        Route::get('dashboard/summary-course-chart', [DashboardController::class, 'summary_course_chart']);
-        Route::get('dashboard/side-summary-course', [DashboardController::class, 'side_summary_course']);
-        Route::post('dashboard/dt-last-class', [DashboardController::class, 'dt_last_class']);
-        Route::post('dashboard/closest-schedule', [DashboardController::class, 'closest_schedule']);
-        Route::get('dashboard/coach-show-review-last-class/{id}/{student_schedule_id}', [DashboardController::class, 'coach_show_review_last_class']);
-        Route::get('dashboard/show-last-class/{id}/{student_schedule_id}', [DashboardController::class, 'show_last_class']);
-        Route::put('dashboard/review-last-class/{id}/{student_schedule_id}', [DashboardController::class, 'review_last_class']);
-        Route::delete('dashboard/cancle/schedule/{id}', [DashboardController::class, 'cancle_schedule']);
-        Route::resource('dashboard', DashboardController::class);
+        Route::group(['prefix' => 'dashboard'], function () {
 
-        Route::post('theory/file', [CoachTheoryController::class, 'theory_file']);
-        Route::delete('theory/file/{id}', [CoachTheoryController::class, 'theory_file_delete']);
-        Route::get('theory/list/{classroom_id}/{session_id}', [CoachTheoryController::class, 'theory_list']);
-        Route::get('theory/download/{id}', [CoachTheoryController::class, 'theory_download']);
-        Route::resource('theory', CoachTheoryController::class);
+            Route::get('summary-course-chart', [DashboardController::class, 'summary_course_chart']);
+            Route::get('side-summary-course', [DashboardController::class, 'side_summary_course']);
+            Route::post('dt-last-class', [DashboardController::class, 'dt_last_class']);
+            Route::post('closest-schedule', [DashboardController::class, 'closest_schedule']);
+            Route::get('coach-show-review-last-class/{id}/{student_schedule_id}', [DashboardController::class, 'coach_show_review_last_class']);
+            Route::get('show-last-class/{id}/{student_schedule_id}', [DashboardController::class, 'show_last_class']);
+            Route::put('review-last-class/{id}/{student_schedule_id}', [DashboardController::class, 'review_last_class']);
+            Route::delete('cancle/schedule/{id}', [DashboardController::class, 'cancle_schedule']);
+            Route::resource('review-assignment', ReviewAssignmentController::class);
+            Route::resource('/', DashboardController::class);
+        });
+
+        Route::group(['prefix' => 'theory'], function () {
+
+            Route::post('file', [CoachTheoryController::class, 'theory_file']);
+            Route::delete('file/{id}', [CoachTheoryController::class, 'theory_file_delete']);
+            Route::get('list/{classroom_id}/{session_id}', [CoachTheoryController::class, 'theory_list']);
+            Route::get('download/{id}', [CoachTheoryController::class, 'theory_download']);
+            Route::resource('/', CoachTheoryController::class);
+        });
 
         Route::group(['prefix' => 'exercise'], function () {
 
@@ -393,21 +399,25 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::get('review-assignment/download/{id}', [ReviewAssignmentController::class, 'assignment_download']);
             Route::post('review-assignment/dt/{classroom_id}/{session_id}', [ReviewAssignmentController::class, 'dt']);
             Route::resource('review-assignment', ReviewAssignmentController::class);
-
         });
 
-        Route::get('schedule/master-lesson/{id}', [CoachScheduleController::class, 'show_master_lesson']);
-        Route::post('schedule/master-lesson/update/{id}', [CoachScheduleController::class, 'update_time_master_lesson']);
+        Route::group(['prefix' => 'schedule'], function () {
 
-        Route::get('schedule', [CoachScheduleController::class, 'index']);
-        Route::get('schedule/all', [CoachScheduleController::class, 'all']);
-        Route::get('schedule/{id}', [CoachScheduleController::class, 'show']);
-        Route::get('schedule-show/{id}', [CoachScheduleController::class, 'show_edit']);
-        Route::post('schedule', [CoachScheduleController::class, 'store']);
-        Route::post('schedule/{id}', [CoachScheduleController::class, 'update']);
-        Route::post('schedule/update/{id}', [CoachScheduleController::class, 'update_time']);
-        Route::post('schedule/confirm/{id}', [CoachScheduleController::class, 'confirm']);
-        Route::post('schedule/delete/{id}', [CoachScheduleController::class, 'delete']);
+            Route::get('master-lesson/{id}', [CoachScheduleController::class, 'show_master_lesson']);
+            Route::post('master-lesson/update/{id}', [CoachScheduleController::class, 'update_time_master_lesson']);
+            Route::get('/', [CoachScheduleController::class, 'index']);
+            Route::get('all', [CoachScheduleController::class, 'all']);
+            Route::get('{id}', [CoachScheduleController::class, 'show']);
+            Route::get('schedule-show/{id}', [CoachScheduleController::class, 'show_edit']);
+            Route::post('schedule', [CoachScheduleController::class, 'store']);
+            Route::post('{id}', [CoachScheduleController::class, 'update']);
+            Route::post('update/{id}', [CoachScheduleController::class, 'update_time']);
+            Route::post('confirm/{id}', [CoachScheduleController::class, 'confirm']);
+            Route::post('delete/{id}', [CoachScheduleController::class, 'delete']);
+        });
+
+        Route::get('/notification', [CoachNotificationController::class, 'index']);
+        Route::post('/notification/dt', [CoachNotificationController::class, 'dt']);
 
     });
 
@@ -463,24 +473,24 @@ Route::group(['middleware' => ['auth-handling']], function () {
         });
 
         Route::group(['prefix' => 'my-class'], function () {
-            Route::get('/',[StudentMyClassController::class, 'index']);
-            Route::post('booking/dt',[StudentMyClassController::class, 'booking_dt']);
-            Route::post('rating',[StudentMyClassController::class, 'rating']);
-            Route::post('last-class/dt',[StudentMyClassController::class, 'last_class_dt']);
-            Route::post('review/{id}',[StudentMyClassController::class, 'review']);
-            Route::put('reschedule/{id}',[StudentMyClassController::class, 'reschedule']);
-            Route::get('class-active/{id}',[StudentMyClassController::class, 'class_active']);
-            Route::get('checkin/{id}',[StudentMyClassController::class, 'checkin']);
-            Route::get('get-review/{id}',[StudentMyClassController::class, 'get_review']);
+            Route::get('/', [StudentMyClassController::class, 'index']);
+            Route::post('booking/dt', [StudentMyClassController::class, 'booking_dt']);
+            Route::post('rating', [StudentMyClassController::class, 'rating']);
+            Route::post('last-class/dt', [StudentMyClassController::class, 'last_class_dt']);
+            Route::post('review/{id}', [StudentMyClassController::class, 'review']);
+            Route::put('reschedule/{id}', [StudentMyClassController::class, 'reschedule']);
+            Route::get('class-active/{id}', [StudentMyClassController::class, 'class_active']);
+            Route::get('checkin/{id}', [StudentMyClassController::class, 'checkin']);
+            Route::get('get-review/{id}', [StudentMyClassController::class, 'get_review']);
         });
 
         Route::group(['prefix' => 'new-package'], function () {
-            Route::get('/',[StudentNewPackageController::class, 'index']);
-            Route::get('get-package',[StudentNewPackageController::class, 'get_package']);
+            Route::get('/', [StudentNewPackageController::class, 'index']);
+            Route::get('get-package', [StudentNewPackageController::class, 'get_package']);
             Route::get('get-sub-classroom-category', [StudentNewPackageController::class, 'get_sub_classroom_category']);
-            Route::get('sub-classroom-category/{sub_classroom_category_id}',[StudentNewPackageController::class, 'get_classroom_by_sub_category_id']);
+            Route::get('sub-classroom-category/{sub_classroom_category_id}', [StudentNewPackageController::class, 'get_classroom_by_sub_category_id']);
             Route::get('get-session-video', [StudentNewPackageController::class, 'get_session_video']);
-            Route::get('classroom-category/{classroom_category_id}',[StudentNewPackageController::class, 'get_classroom_by_category_id']);
+            Route::get('classroom-category/{classroom_category_id}', [StudentNewPackageController::class, 'get_classroom_by_category_id']);
         });
 
         Route::group(['prefix' => 'theory'], function () {
@@ -518,15 +528,15 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::post('dt', [StudentReviewController::class, 'dt']);
         });
 
-        Route::post('profile/{id}', [StudentProfileController::class,'update']);
-        Route::post('profile/change-password/{id}', [StudentProfileController::class,'change_password']);
-        Route::get('profile', [StudentProfileController::class,'index']);
+        Route::post('profile/{id}', [StudentProfileController::class, 'update']);
+        Route::post('profile/change-password/{id}', [StudentProfileController::class, 'change_password']);
+        Route::get('profile', [StudentProfileController::class, 'index']);
 
-        Route::get('package-detail/{session_video_id}',[StudentPackageDetailController::class, 'index']);
+        Route::get('package-detail/{session_video_id}', [StudentPackageDetailController::class, 'index']);
 
-        Route::post('add-to-cart',[StudentCartController::class, 'store']);
-        Route::get('get-cart/{student_id}',[StudentCartController::class, 'get_cart']);
-        Route::delete('delete-cart/{cart_id}',[StudentCartController::class, 'delete_cart']);
+        Route::post('add-to-cart', [StudentCartController::class, 'store']);
+        Route::get('get-cart/{student_id}', [StudentCartController::class, 'get_cart']);
+        Route::delete('delete-cart/{cart_id}', [StudentCartController::class, 'delete_cart']);
     });
 
     /*
@@ -541,15 +551,15 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::get('get-sub-classroom-category', [PublicController::class, 'get_sub_classroom_category']);
         Route::get('get-sub-classroom-category-by-category/{id}', [PublicController::class, 'get_sub_classroom_category_by_category']);
         Route::get('get-profile-coach-video', [PublicController::class, 'get_profile_coach_videos']);
-        Route::get('get-sosmed',[PublicController::class, 'get_sosmed']);
-        Route::get('get-package',[PublicController::class, 'get_package']);
-        Route::get('get-class/{package_id}',[PublicController::class, 'get_class']);
+        Route::get('get-sosmed', [PublicController::class, 'get_sosmed']);
+        Route::get('get-package', [PublicController::class, 'get_package']);
+        Route::get('get-class/{package_id}', [PublicController::class, 'get_class']);
         Route::get('get-classroom/{category_id}&{sub_category_id}', [PublicController::class, 'get_classroom']);
         Route::get('get-session/{classroom_id}', [PublicController::class, 'get_session']);
-        Route::get('get-coach',[PublicController::class, 'get_coach']);
-        Route::get('get-coach-by-class/{id}',[PublicController::class, 'get_coach_by_class']);
-        Route::get('get-expertise',[PublicController::class, 'get_expertise']);
-        Route::get('get-platform',[PublicController::class, 'get_platform']);
+        Route::get('get-coach', [PublicController::class, 'get_coach']);
+        Route::get('get-coach-by-class/{id}', [PublicController::class, 'get_coach_by_class']);
+        Route::get('get-expertise', [PublicController::class, 'get_expertise']);
+        Route::get('get-platform', [PublicController::class, 'get_platform']);
         Route::get('get-classroom-coach', [PublicController::class, 'get_classroom_coach']);
         Route::get('get-session-coach/{classroom_id}', [PublicController::class, 'get_session_coach']);
         Route::get('get-guest-star', [PublicController::class, 'get_guest_star']);
