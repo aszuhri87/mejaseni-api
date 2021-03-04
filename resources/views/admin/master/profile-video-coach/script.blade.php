@@ -1,12 +1,15 @@
 <script type="text/javascript">
     var Page = function() {
         var _componentPage = function(){
-            var init_table, init_profile_coach_video;
+            var init_table, init_coach;
+            var arr_path = [],
+                docsDropzone;
 
             $(document).ready(function() {
                 initTable();
                 formSubmit();
                 initAction();
+                initDropzone();
             });
 
             const initTable = () => {
@@ -17,11 +20,12 @@
                     sScrollY: ($(window).height() < 700) ? $(window).height() - 200 : $(window).height() - 450,
                     ajax: {
                         type: 'POST',
-                        url: "{{ url('admin/master/courses/classroom-category/dt') }}",
+                        url: "{{ url('admin/master/profile-video-coach/dt') }}",
                     },
                     columns: [
                         { data: 'DT_RowIndex' },
                         { data: 'name' },
+                        { data: 'url_video' },
                         { defaultContent: '' }
                         ],
                     columnDefs: [
@@ -39,7 +43,7 @@
                             data: "id",
                             render : function(data, type, full, meta) {
                                 return `
-                                    <a href="{{url('/admin/master/courses/classroom-category')}}/${data}" title="Edit" class="btn btn-edit btn-sm btn-clean btn-icon mr-2" title="Edit details">
+                                    <a href="{{url('/admin/master/profile-video-coach/update')}}/${data}" title="Edit" class="btn btn-edit btn-sm btn-clean btn-icon mr-2" title="Edit details">
                                         <span class="svg-icon svg-icon-md">
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -50,7 +54,7 @@
                                             </svg>
                                         </span>
                                     </a>
-                                    <a href="{{url('/admin/master/courses/classroom-category')}}/${data}" title="Delete" class="btn btn-delete btn-sm btn-clean btn-icon" title="Delete">
+                                    <a href="{{url('/admin/master/profile-video-coach')}}/${data}" title="Delete" class="btn btn-delete btn-sm btn-clean btn-icon" title="Delete">
                                         <span class="svg-icon svg-icon-md">
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -91,13 +95,20 @@
                 $(document).on('click', '#add-btn', function(event){
                     event.preventDefault();
 
-                    $('#form-classroom-category').trigger("reset");
-                    $('#form-classroom-category').attr('action','{{url('admin/master/courses/classroom-category')}}');
-                    $('#form-classroom-category').attr('method','POST');
+                    $('#form-profile-video-coach').trigger("reset");
+                    $('#form-profile-video-coach').attr('action','{{url('admin/master/profile-video-coach')}}');
+                    $('#form-profile-video-coach').attr('method','POST');
 
-                    get_profile_coach_video();
+                    get_coach();
 
-                    showModal('modal-classroom-category');
+                    $('#switch-youtube').attr('checked', true);
+                    $('#i-url').prop('required', true);
+                    $('.file-upload').hide()
+                    $('.url-input').show()
+
+                    docsDropzone.removeAllFiles( true );
+
+                    showModal('modal-profile-video-coach');
                 });
 
                 $(document).on('click', '.btn-edit', function(event){
@@ -105,15 +116,39 @@
 
                     var data = init_table.row($(this).parents('tr')).data();
 
-                    $('#form-classroom-category').trigger("reset");
-                    $('#form-classroom-category').attr('action', $(this).attr('href'));
-                    $('#form-classroom-category').attr('method','PUT');
+                    $('#form-profile-video-coach').trigger("reset");
+                    $('#form-profile-video-coach').attr('action', $(this).attr('href'));
+                    $('#form-profile-video-coach').attr('method','POST');
 
-                    $('#form-classroom-category').find('input[name="name"]').val(data.name);
+                    $('#form-profile-video-coach').find('input[name="name"]').val(data.name);
+                    get_coach(data.coach_id);
 
-                    get_profile_coach_video(data.profile_coach_video_id);
+                    if(data.is_youtube){
+                        $('#form-profile-video-coach').find('input[name="url"]').val(data.url);
+                        $('#switch-youtube').attr('checked', true);
+                        $('#i-url').prop('required', true);
+                        $('.file-upload').hide()
+                        $('.url-input').show()
+                    }else{
+                        $('#switch-youtube').attr('checked', false);
+                        $('#i-url').prop('required', false);
+                        $('.file-upload').show()
+                        $('.url-input').hide()
 
-                    showModal('modal-classroom-category');
+                        docsDropzone.removeAllFiles( true );
+
+                        var mockFile = {
+                            name: data.url,
+                            accepted: true
+                        };
+
+                        docsDropzone.files.push(mockFile);
+                        docsDropzone.emit("addedfile", mockFile);
+                        docsDropzone.emit("thumbnail", mockFile, data.url_video);
+                        docsDropzone.emit("complete", mockFile);
+                    }
+
+                    showModal('modal-profile-video-coach');
                 });
 
                 $(document).on('click', '.btn-delete', function(event){
@@ -121,8 +156,8 @@
                     var url = $(this).attr('href');
 
                     Swal.fire({
-                        title: 'Delete Classroom Category?',
-                        text: "Deleted Classroom Category will be permanently lost!",
+                        title: 'Delete Video?',
+                        text: "Deleted Video will be permanently lost!",
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#7F16A7',
@@ -146,21 +181,45 @@
                     })
                     $('.swal2-title').addClass('justify-content-center')
                 });
+
+                $(document).on('change', '#switch-youtube', function(){
+                    if($('input[name="is_youtube"]:checked').length == 1){
+                        $('.file-upload').hide()
+                        $('.url-input').show()
+                        $('#i-url').prop('required', true);
+                    }else{
+                        $('.file-upload').show()
+                        $('.url-input').hide()
+                        $('#i-url').prop('required', false);
+
+                        docsDropzone.removeAllFiles( true );
+                    }
+                })
             },
             formSubmit = () => {
-                $('#form-classroom-category').submit(function(event){
+                $('#form-profile-video-coach').submit(function(event){
                     event.preventDefault();
+
+                    let form_data = new FormData(this)
+
+                    if(arr_path.length > 0){
+                        form_data.append('file', arr_path[0]['path']);
+                    }
 
                     btn_loading('start')
                     $.ajax({
                         url: $(this).attr('action'),
                         type: $(this).attr('method'),
-                        data: $(this).serialize(),
+                        data: form_data,
+                        contentType: false,
+                        cache: false,
+                        processData: false,
                     })
                     .done(function(res, xhr, meta) {
                         toastr.success(res.message, 'Success')
                         init_table.draw(false);
-                        hideModal('modal-classroom-category');
+                        arr_path = [];
+                        hideModal('modal-profile-video-coach');
                     })
                     .fail(function(res, error) {
                         toastr.error(res.responseJSON.message, 'Failed')
@@ -170,32 +229,79 @@
                     });
                 });
             },
-            get_profile_coach_video = (id) => {
-                if(init_profile_coach_video){
-                    init_profile_coach_video.destroy();
+            get_coach = (select_id) => {
+                if(init_coach){
+                    init_coach.destroy();
                 }
 
-                init_profile_coach_video = new SlimSelect({
-                    select: '#profile-coach-video'
+                init_coach = new SlimSelect({
+                    select: '#coach-select'
                 })
 
                 $.ajax({
-                    url: '{{url('public/get-profile-coach-video')}}',
+                    url: '{{url('public/get-coach')}}',
                     type: 'GET',
                     dataType: 'json',
                 })
                 .done(function(res, xhr, meta) {
-                    let element = `<option value="">Select Profile Video</option>`
+                    let element = `<option value="">Pilih Coach</option>`
+
                     $.each(res.data, function(index, data) {
-                        if(id == data.id){
+                        if(select_id == data.id){
                             element += `<option value="${data.id}" selected>${data.name}</option>`;
                         }else{
                             element += `<option value="${data.id}">${data.name}</option>`;
                         }
                     });
 
-                    $('#profile-coach-video').html(element);
+                    $('#coach-select').html(element);
                 })
+            }
+
+            const initDropzone = () => {
+                docsDropzone = new Dropzone( "#kt_dropzone_2", {
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: "{{url('media/file')}}",
+                    paramName: "file",
+                    maxFiles: 1,
+                    maxFilesize: 2,
+                    uploadMultiple: false,
+                    addRemoveLinks: true,
+                    init: function() {
+                        this.on("maxfilesexceeded", function(file) {
+                                this.removeAllFiles();
+                                this.addFile(file);
+                        });
+                    },
+                    success: function (file, response) {
+                        arr_path.push({id: file.upload.uuid, path_id: response.data.id, path: response.data.path})
+                        $('.dz-remove').addClass('dz-style-custom');
+                    },
+                    removedfile: function (file) {
+                        $.each(arr_path, function(index, arr_data){
+                            if(file.upload.uuid == arr_data['id']){
+                                arr_path.splice(index, 1);
+
+                                $.ajax({
+                                    url: "{{url('media/file')}}/"+arr_data['path_id'],
+                                    type: 'DELETE',
+                                    dataType: 'json',
+                                })
+                                .done(function(res, xhr, meta) {
+
+                                })
+                                .fail(function(res, error) {
+                                    toastr.error(res.responseJSON.message, 'Failed')
+                                })
+                            }
+                        })
+
+                        var _ref;
+                        return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
+                    },
+                });
             }
         };
 

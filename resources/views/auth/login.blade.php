@@ -60,7 +60,7 @@
                                 <h3 class="font-weight-bolder text-dark font-size-h2 font-size-h1-lg">Masuk</h3>
                             </div>
                             <div class="pb-10 d-flex">
-                                <button type="button" class="btn btn-outline-secondary font-weight-bolder font-size-lg" style="width:80%;">
+                                <a href="{{url('auth/google')}}" class="btn btn-outline-secondary font-weight-bolder font-size-lg" style="width:80%;">
                                     <span class="svg-icon svg-icon-md">
                                         <!--begin::Svg Icon | path:assets/media/svg/social-icons/google.svg-->
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -75,10 +75,10 @@
                                         </svg>
                                         <!--end::Svg Icon-->
                                     </span> Masuk dengan Google
-                                </button>
-                                <button type="button" class="btn btn-outline-secondary font-weight-bolder font-size-lg ml-2" style="width:20%;">
+                                </a>
+                                <a href="{{url('auth/facebook')}}" class="btn btn-outline-secondary font-weight-bolder font-size-lg ml-2" style="width:20%;">
                                     <img src="assets/images/logo-fb.svg" class="max-h-70px" alt="" />
-                                </button>
+                                </a>
                             </div>
                             <div class="d-flex mb-10">
                                 <div style="width: 40%"><hr></div>

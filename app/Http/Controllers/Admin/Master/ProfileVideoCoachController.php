@@ -6,11 +6,12 @@ use App\Http\Controllers\BaseMenu;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
-use App\Models\ClassroomCategory;
+use App\Models\ProfileCoachVideo;
 
 use DataTables;
+use Storage;
 
-class ClassroomCategoryController extends BaseMenu
+class ProfileVideoCoachController extends BaseMenu
 {
     public function index()
     {
@@ -19,15 +20,12 @@ class ClassroomCategoryController extends BaseMenu
                 'title' => 'Master'
             ],
             [
-                'title' => 'Courses'
-            ],
-            [
-                'title' => 'Class Category'
+                'title' => 'Profile Video Coach'
             ],
         ];
 
-        return view('admin.master.classroom-category.index', [
-            'title' => 'Class Category',
+        return view('admin.master.profile-video-coach.index', [
+            'title' => 'Profile Video Coach',
             'navigation' => $navigation,
             'list_menu' => $this->menu_admin(),
         ]);
@@ -35,15 +33,20 @@ class ClassroomCategoryController extends BaseMenu
 
     public function dt()
     {
-        $data = DB::table('classroom_categories')
+        $path = Storage::disk('s3')->url('/');
+
+        $data = DB::table('profile_coach_videos')
             ->select([
-                'id',
-                'name',
-                'profile_coach_video_id'
+                'profile_coach_videos.*',
+                'coaches.name',
+                DB::raw("CASE
+                    WHEN is_youtube = true
+                    THEN profile_coach_videos.url
+                    ELSE CONCAT('{$path}',profile_coach_videos.url)
+                END url_video")
             ])
-            ->whereNull([
-                'deleted_at'
-            ])
+            ->leftJoin('coaches','coaches.id','=','profile_coach_videos.coach_id')
+            ->whereNull("profile_coach_videos.deleted_at")
             ->get();
 
         return DataTables::of($data)->addIndexColumn()->make(true);
@@ -53,9 +56,10 @@ class ClassroomCategoryController extends BaseMenu
     {
         try {
             $result = DB::transaction(function () use($request){
-                $result = ClassroomCategory::create([
-                    'name' => $request->name,
-                    'profile_coach_video_id' => $request->profile_coach_video_id
+                $result = ProfileCoachVideo::create([
+                    'coach_id' => $request->coach_id,
+                    'is_youtube' => isset($request->is_youtube) ? true : false,
+                    'url' => isset($request->is_youtube) ? $request->url : $request->file,
                 ]);
 
                 return $result;
@@ -77,9 +81,10 @@ class ClassroomCategoryController extends BaseMenu
     {
         try {
             $result = DB::transaction(function () use($request, $id){
-                $result = ClassroomCategory::find($id)->update([
-                    'name' => $request->name,
-                    'profile_coach_video_id' => $request->profile_coach_video_id
+                $result = ProfileCoachVideo::find($id)->update([
+                    'coach_id' => $request->coach_id,
+                    'is_youtube' => isset($request->is_youtube) ? true : false,
+                    'url' => isset($request->is_youtube) ? $request->url : $request->file,
                 ]);
 
                 return $result;
@@ -100,7 +105,7 @@ class ClassroomCategoryController extends BaseMenu
     public function destroy($id)
     {
         try {
-            $result = ClassroomCategory::find($id);
+            $result = ProfileCoachVideo::find($id);
 
             DB::transaction(function () use($result){
                 $result->delete();

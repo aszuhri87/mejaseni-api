@@ -17,7 +17,8 @@ class ClassroomCategory extends Model
     public $keyType = 'string';
 
     protected $fillable = [
-        'name'
+        'name',
+        'profile_coach_video_id'
     ];
 
     protected $cascadeDeletes = ['sub_classroom_categories'];

@@ -70,7 +70,7 @@ class CartController extends Controller
                     'carts.deleted_at'
                 ])
                 ->get();
-                
+
             return response([
                 "data"      => $data,
                 "message"   => 'OK'

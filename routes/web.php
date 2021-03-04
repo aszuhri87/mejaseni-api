@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\ProviderController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\NotificationController;
@@ -36,6 +37,7 @@ use App\Http\Controllers\Admin\Master\StudentController;
 use App\Http\Controllers\Admin\Master\ExpertiseController;
 use App\Http\Controllers\Admin\Master\GuestStarController;
 use App\Http\Controllers\Admin\Master\MasterLessonController;
+use App\Http\Controllers\Admin\Master\ProfileVideoCoachController;
 use App\Http\Controllers\Admin\Transaction\StudentController as TransactionStudentController;
 use App\Http\Controllers\Admin\Schedule\ScheduleController;
 
@@ -161,6 +163,9 @@ Route::group(['middleware' => ['guest-handling']], function () {
 
     Route::get('login', [LoginController::class, 'index_login']);
     Route::post('login', [LoginController::class, 'login']);
+
+    Route::get('auth/{provider}', [ProviderController::class, 'redirect_provider']);
+    Route::get('auth/{provider}/callback', [ProviderController::class, 'callback_provider']);
 });
 
 Route::group(['middleware' => ['auth-handling']], function () {
@@ -282,6 +287,10 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::delete('theory/{id}', [TheoryController::class, 'destroy']);
             Route::post('theory/dt', [TheoryController::class, 'dt']);
             Route::post('theory/update/{id}', [TheoryController::class, 'update']);
+
+            Route::post('profile-video-coach/dt', [ProfileVideoCoachController::class, 'dt']);
+            Route::post('profile-video-coach/update/{id}', [ProfileVideoCoachController::class, 'update']);
+            Route::resource('profile-video-coach', ProfileVideoCoachController::class);
 
             Route::post('expertise/dt', [ExpertiseController::class, 'dt']);
             Route::resource('expertise', ExpertiseController::class);

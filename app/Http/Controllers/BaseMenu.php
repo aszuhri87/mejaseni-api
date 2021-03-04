@@ -216,6 +216,12 @@ class BaseMenu extends Controller
                         'url' => 'admin/master/student',
                         'permission' => 'student'
                     ],
+                    [
+                        'key' => 'profile-video-coach',
+                        'title' => 'Profile Video Coach',
+                        'url' => 'admin/master/profile-video-coach',
+                        'permission' => 'profile_video_coach'
+                    ],
                 ],
             ],
             [
