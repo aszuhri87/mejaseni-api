@@ -1,7 +1,7 @@
 <script type="text/javascript">
     var Page = function() {
         var _componentPage = function(){
-            var init_table;
+            var init_table, init_profile_coach_video;
 
             $(document).ready(function() {
                 initTable();
@@ -95,6 +95,8 @@
                     $('#form-classroom-category').attr('action','{{url('admin/master/courses/classroom-category')}}');
                     $('#form-classroom-category').attr('method','POST');
 
+                    get_profile_coach_video();
+
                     showModal('modal-classroom-category');
                 });
 
@@ -108,6 +110,8 @@
                     $('#form-classroom-category').attr('method','PUT');
 
                     $('#form-classroom-category').find('input[name="name"]').val(data.name);
+
+                    get_profile_coach_video(data.profile_coach_video_id);
 
                     showModal('modal-classroom-category');
                 });
@@ -165,6 +169,33 @@
                         btn_loading('stop')
                     });
                 });
+            },
+            get_profile_coach_video = (id) => {
+                if(init_profile_coach_video){
+                    init_profile_coach_video.destroy();
+                }
+
+                init_profile_coach_video = new SlimSelect({
+                    select: '#profile-coach-video'
+                })
+
+                $.ajax({
+                    url: '{{url('public/get-profile-coach-video')}}',
+                    type: 'GET',
+                    dataType: 'json',
+                })
+                .done(function(res, xhr, meta) {
+                    let element = `<option value="">Select Profile Video</option>`
+                    $.each(res.data, function(index, data) {
+                        if(id == data.id){
+                            element += `<option value="${data.id}" selected>${data.name}</option>`;
+                        }else{
+                            element += `<option value="${data.id}">${data.name}</option>`;
+                        }
+                    });
+
+                    $('#profile-coach-video').html(element);
+                })
             }
         };
 

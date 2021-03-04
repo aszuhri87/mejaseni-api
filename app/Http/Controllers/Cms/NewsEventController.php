@@ -26,11 +26,11 @@ class NewsEventController extends Controller
     					'id',
     					'title',
     					'description',
-    					'date',
+    					'start_at as date',
     					 DB::raw("CONCAT('{$path}',image) as image_url"),
     				])
     				->whereNull('deleted_at')
-    				->orderBy('date','desc')
+    				->orderBy('start_at','desc')
                     ->take(3)
     				->get();
 

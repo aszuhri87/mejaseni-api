@@ -575,12 +575,6 @@ class ScheduleController extends BaseMenu
         try {
             $path = Storage::disk('s3')->url('/');
             // session star
-            $student_classroom = DB::table('student_classrooms')
-                ->select([
-                    'student_classrooms.id',
-                ])
-                ->whereNull('student_classrooms.deleted_at')
-                ->where('student_classrooms.student_id',Auth::guard('student')->user()->id);
 
             $session_feedback = DB::table('session_feedback')
                 ->select([
@@ -595,9 +589,6 @@ class ScheduleController extends BaseMenu
                     'student_schedules.coach_schedule_id',
                     'session_feedback.star',
                 ])
-                ->leftJoinSub($student_classroom, 'student_classrooms', function ($join) {
-                    $join->on('student_schedules.student_classroom_id', '=', 'student_classrooms.id');
-                })
                 ->leftJoinSub($session_feedback, 'session_feedback', function ($join) {
                     $join->on('student_schedules.id', '=', 'session_feedback.student_schedule_id');
                 })
@@ -677,9 +668,9 @@ class ScheduleController extends BaseMenu
                             WHEN coach_classrooms.rating_schedule IS NOT NULL AND coach_classrooms.rating_classroom IS NOT NULL THEN
                                 (coach_classrooms.rating_schedule::FLOAT + coach_classrooms.rating_classroom::FLOAT)/2
                             WHEN coach_classrooms.rating_schedule IS NOT NULL AND coach_classrooms.rating_classroom IS NULL THEN
-                                (coach_classrooms.rating_schedule::FLOAT + 0)/2
+                                coach_classrooms.rating_schedule::FLOAT
                             WHEN coach_classrooms.rating_schedule IS NULL AND coach_classrooms.rating_classroom IS NOT NULL THEN
-                                (0 + coach_classrooms.rating_classroom::FLOAT)/2
+                                coach_classrooms.rating_classroom::FLOAT
                             ELSE
                                 0
                         END

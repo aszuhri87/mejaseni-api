@@ -35,10 +35,11 @@
                     $('.package').removeClass('active');
                     $(this).addClass('active');
 
+                    let package = $(this).data('id')
                     let selected_category = $('.class-category-selected').data('id')
                     let selected_sub_category = $('.btn-tertiary.active').data('id')
-                    console.log(selected_category)
-                    console.log(selected_sub_category)
+                    console.log(package)
+                    getPackage(selected_category, selected_sub_category, package)
                     event.preventDefault()
                 })
             }
@@ -61,13 +62,14 @@
                 })
             }
 
-            var getPackage = (category_id, sub_category_id, element)=>{
+            var getPackage = (category_id, sub_category_id, package)=>{
                 $.ajax({
-                    url: `{{ url('/class/classroom_category') }}/${category_id}/sub_classroom_category`,
+                    url: `/class/${category_id}/sub_classroom_category/${sub_category_id}/package/${package}`,
                     type: 'GET',
                 })
                 .done(function(res, xhr, meta) {
-                    console.log(res)
+                    $("#classrooms").html(res.data.classroom_html)
+                    splide()
                 })
                 .fail(function(res, error) {
                     toastr.error(res.responseJSON.message, 'Failed')

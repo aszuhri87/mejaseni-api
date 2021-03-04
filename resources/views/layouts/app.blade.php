@@ -22,7 +22,7 @@
 
     @include('layouts.style')
 
-    <link rel="shortcut icon" href="assets/media/logos/favicon.ico" />
+    <link rel="shortcut icon" href="assets/images/favicon.png" />
 
     @stack('style')
 
@@ -50,7 +50,7 @@
 
                     <!--begin::Logo-->
                     <a href="{{ url('/') }}" class="brand-logo">
-                        <img alt="Logo" src="assets/media/logos/logo-light.png" />
+                        <img alt="Logo" src="assets/images/logo-white.png" />
                     </a>
                     <!--end::Logo-->
 

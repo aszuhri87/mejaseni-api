@@ -1,0 +1,59 @@
+
+
+@extends('cms.layouts.app')
+
+@push('banner')
+@include('cms.layouts.banner')
+@endpush
+
+@php
+function FunctionName($date)
+{
+    return date('l', strtotime($date));
+}
+@endphp
+
+@section('content')
+<section id="news-wrapper">
+        <div class="row column-center">
+            <div class="col-12 column-center">
+                <img class="w-100 news-img__wrapper" src="{{ $news->image_url ? $news->image_url:'' }}" alt="">
+            </div>
+            <div class="col-12 col-lg-8 column-center mb-0 pb-0">
+                <div class="news-detail mb-0 pb-0">
+                    <div class="news-detail__overlay p-5">
+                        <h3>{{ $news->title ? $news->title:'' }}</h3>
+                        <h5 class="pt-4 mt-2 pb-4">Jumat, 26 Februari 2021</h5>
+                        <p>
+                            {{ $news->description ? $news->description:'' }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-8">
+                <div class="splide" id="other-news">
+                    <div class="splide__track">
+                        <ul class="splide__list">
+                            @foreach($list_news as $news)
+
+                                <li class="splide__slide px-3 pb-md-0 pb-3 pb-md-5">
+                                    <a href="{{ url('news') }}/{{ $news->id }}/detail">
+                                        <img src="{{ $news->image_url ? $news->image_url:'' }}"
+                                            data-splide-lazy="path-to-the-image" alt="">
+                                        <div class="px-4 px-md-0 px-md-0 pt-4 pt-md-0">
+                                            <h5 class="mt-2">{{ $news->title ? $news->title:'' }}</h5>
+                                        </div>
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+@endsection
+
+@push('script')
+@include('cms.news-detail.script')
+@endpush

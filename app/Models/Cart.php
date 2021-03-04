@@ -21,6 +21,7 @@ class Cart extends Model
         'classroom_id',
         'student_id',
         'theory_id',
+        'event_id'
     ];
 
     protected $dates = ['deleted_at'];

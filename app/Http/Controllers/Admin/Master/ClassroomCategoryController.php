@@ -39,6 +39,7 @@ class ClassroomCategoryController extends BaseMenu
             ->select([
                 'id',
                 'name',
+                'profile_coach_video_id'
             ])
             ->whereNull([
                 'deleted_at'
@@ -54,6 +55,7 @@ class ClassroomCategoryController extends BaseMenu
             $result = DB::transaction(function () use($request){
                 $result = ClassroomCategory::create([
                     'name' => $request->name,
+                    'profile_coach_video_id' => $request->profile_coach_video_id
                 ]);
 
                 return $result;
@@ -77,6 +79,7 @@ class ClassroomCategoryController extends BaseMenu
             $result = DB::transaction(function () use($request, $id){
                 $result = ClassroomCategory::find($id)->update([
                     'name' => $request->name,
+                    'profile_coach_video_id' => $request->profile_coach_video_id
                 ]);
 
                 return $result;

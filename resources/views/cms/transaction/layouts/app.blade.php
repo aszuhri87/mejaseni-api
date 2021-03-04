@@ -21,7 +21,7 @@
             <div class="col-12">
                 <div class="cart__wrapper mt-3 mb-5 my-md-5 pt-4 pb-0 pb-md-3 px-3 px-md-5">
                     <div class="row-center-spacebetween">
-                        <a class="navbar-brand row-center" href="#">
+                        <a class="navbar-brand row-center" href="{{ url('/') }}">
                             <img class="logo mr-1" src="assets/img/logo.png" alt="">
                             mejaseni
                         </a>

@@ -17,6 +17,12 @@
                         </label>
                         <input required type="text" name="name" class="form-control" placeholder="Name"/>
                     </div>
+                    <div class="form-group">
+                        <label>
+                            Coach Video
+                        </label>
+                        <select name="profile_coach_video_id" id="profile-coach-video"></select>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>

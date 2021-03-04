@@ -92,7 +92,7 @@
             <div class="col-12">
                 <div class="more-info__btn">
                     <div class="column-center buttons">
-                        <a href="news-list.html" class="btn btn-1">
+                        <a href="{{ url('news-list') }}" class="btn btn-1">
                             <svg>
                                 <rect x="0" y="0" fill="none" width="100%" height="100%" />
                             </svg>

@@ -115,8 +115,3 @@
 
 </script>
 
-<script>
-function backPage() {
-  window.history.back();
-}
-</script>

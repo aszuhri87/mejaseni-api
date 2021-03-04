@@ -19,7 +19,40 @@
                     </div>
                     <div class="form-group">
                         <label>Date<span class="text-danger">*</span></label>
-                        <input type="text" name="date" class="form-control datepicker" readonly required placeholder="Date" style="width: 100% !important">
+                        <input type="text" name="date" class="form-control select_daterange" readonly required placeholder="Date" style="width: 100% !important">
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            Free ?
+                            <span class="text-danger">*</span>
+                        </label>
+                        <span class="switch switch-icon">
+                            <label>
+                                <input type="checkbox" checked="checked" name="is_free"/>
+                                <span></span>
+                            </label>
+                        </span>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            Price
+                            <span class="text-danger">*</span>
+                        </label>
+                        <input required type="number" disabled name="total" class="form-control" value="0" placeholder="Price"/>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            Quota
+                            <span class="text-danger">*</span>
+                        </label>
+                        <input required type="number" name="quota" class="form-control" min="1" placeholder="Quota"/>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            Location
+                            <span class="text-danger">*</span>
+                        </label>
+                        <textarea required name="location" class="form-control" placeholder="Location" rows="4"></textarea>
                     </div>
                     <div class="form-group">
                         <label>

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\ProviderController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\NotificationController;
@@ -36,6 +37,7 @@ use App\Http\Controllers\Admin\Master\StudentController;
 use App\Http\Controllers\Admin\Master\ExpertiseController;
 use App\Http\Controllers\Admin\Master\GuestStarController;
 use App\Http\Controllers\Admin\Master\MasterLessonController;
+use App\Http\Controllers\Admin\Master\ProfileVideoCoachController;
 use App\Http\Controllers\Admin\Transaction\StudentController as TransactionStudentController;
 use App\Http\Controllers\Admin\Schedule\ScheduleController;
 
@@ -68,6 +70,7 @@ use App\Http\Controllers\Student\ProfileController as StudentProfileController;
 use App\Http\Controllers\Student\CartController as StudentCartController;
 use App\Http\Controllers\Student\ExerciseController as StudentExerciseController;
 use App\Http\Controllers\Student\ReviewController as StudentReviewController;
+use App\Http\Controllers\Student\NotificationController as StudentNotificationController;
 
 
 /*
@@ -109,6 +112,11 @@ use App\Http\Controllers\Cms\CareerDetailController as CareerDetailController;
 use App\Http\Controllers\Cms\StoreDetailController as StoreDetailController;
 use App\Http\Controllers\Cms\EventListController as EventListController;
 use App\Http\Controllers\Cms\EventDetailController as EventDetailController;
+use App\Http\Controllers\Cms\NewsListController as NewsListController;
+use App\Http\Controllers\Cms\NewsDetailController as NewsDetailController;
+
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -144,6 +152,8 @@ Route::get('/classroom_category/sub_classroom_category/{sub_category_id}/video-c
 Route::get('/news-event', [NewsEventController::class, 'index']);
 Route::get('/event-list', [EventListController::class, 'index']);
 Route::get('/event/{event_id}/detail', [EventDetailController::class, 'index']);
+Route::get('/news-list',[NewsListController::class, 'index']);
+Route::get('/news/{news_id}/detail',[NewsDetailController::class, 'index']);
 
 Route::get('/about', [AboutController::class, 'index']);
 Route::get('/privacy-policy', [PrivacyPolicyController::class, 'index']);
@@ -157,6 +167,9 @@ Route::group(['middleware' => ['guest-handling']], function () {
 
     Route::get('login', [LoginController::class, 'index_login']);
     Route::post('login', [LoginController::class, 'login']);
+
+    Route::get('auth/{provider}', [ProviderController::class, 'redirect_provider']);
+    Route::get('auth/{provider}/callback', [ProviderController::class, 'callback_provider']);
 });
 
 Route::group(['middleware' => ['auth-handling']], function () {
@@ -277,6 +290,10 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::delete('theory/{id}', [TheoryController::class, 'destroy']);
             Route::post('theory/dt', [TheoryController::class, 'dt']);
             Route::post('theory/update/{id}', [TheoryController::class, 'update']);
+
+            Route::post('profile-video-coach/dt', [ProfileVideoCoachController::class, 'dt']);
+            Route::post('profile-video-coach/update/{id}', [ProfileVideoCoachController::class, 'update']);
+            Route::resource('profile-video-coach', ProfileVideoCoachController::class);
 
             Route::post('expertise/dt', [ExpertiseController::class, 'dt']);
             Route::resource('expertise', ExpertiseController::class);
@@ -435,6 +452,13 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::get('total-video', [StudentDashboardController::class, 'total_video']);
             Route::get('total-booking', [StudentDashboardController::class, 'total_booking']);
             Route::get('history-booking', [StudentDashboardController::class, 'history_booking']);
+            Route::get('history-booking', [StudentDashboardController::class, 'history_booking']);
+            Route::get('rest-session', [StudentDashboardController::class, 'rest_session']);
+            Route::get('upcoming', [StudentDashboardController::class, 'upcoming']);
+            Route::get('student-booking-week', [StudentDashboardController::class, 'student_booking_week']);
+            Route::get('my-course', [StudentDashboardController::class, 'my_course']);
+            Route::get('progress-class', [StudentDashboardController::class, 'progress_class']);
+            Route::get('summary-course', [StudentDashboardController::class, 'summary_course']);
         });
 
         Route::group(['prefix' => 'invoice'], function () {
@@ -528,15 +552,22 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::post('dt', [StudentReviewController::class, 'dt']);
         });
 
-        Route::post('profile/{id}', [StudentProfileController::class, 'update']);
-        Route::post('profile/change-password/{id}', [StudentProfileController::class, 'change_password']);
-        Route::get('profile', [StudentProfileController::class, 'index']);
+        Route::group(['prefix' => 'notification'], function () {
+            Route::get('/', [StudentNotificationController::class, 'index']);
+            Route::post('dt', [StudentNotificationController::class, 'dt']);
+        });
+
+        Route::post('profile/{id}', [StudentProfileController::class,'update']);
+        Route::post('profile/change-password/{id}', [StudentProfileController::class,'change_password']);
+        Route::get('profile', [StudentProfileController::class,'index']);
 
         Route::get('package-detail/{session_video_id}', [StudentPackageDetailController::class, 'index']);
 
-        Route::post('add-to-cart', [StudentCartController::class, 'store']);
-        Route::get('get-cart/{student_id}', [StudentCartController::class, 'get_cart']);
-        Route::delete('delete-cart/{cart_id}', [StudentCartController::class, 'delete_cart']);
+        Route::post('add-to-cart',[StudentCartController::class, 'store']);
+        Route::get('get-cart/{student_id}',[StudentCartController::class, 'get_cart']);
+        Route::delete('delete-cart/{cart_id}',[StudentCartController::class, 'delete_cart']);
+
+        Route::post('/event/{event_id}/add-to-cart',[StudentCartController::class, 'event']);
     });
 
     /*
@@ -564,4 +595,17 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::get('get-session-coach/{classroom_id}', [PublicController::class, 'get_session_coach']);
         Route::get('get-guest-star', [PublicController::class, 'get_guest_star']);
     });
+});
+
+Route::get('fire', function () {
+    event(new \App\Events\PaymentNotification(true));
+    return 'oke';
+});
+
+Route::get('welcome', function () {
+    return view('welcome');
+});
+
+Route::get('video', function () {
+    return view('video');
 });

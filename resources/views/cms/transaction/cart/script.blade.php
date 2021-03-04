@@ -26,18 +26,18 @@
                                     </div>
                                 </div>
                                 <div class="col-10 col-lg-8 col-xl-7 py-0 my-md-0 mr-0 pl-lg-4 pl-xl-1">
-                                    <h5>${data.name}</h5>
-                                    <div class="badge-class mt-2 text-center">${data.type}</div>
+                                    <h5>${data.name ? data.name:''}</h5>
+                                    <div class="badge-class mt-2 text-center">${data.type ? data.type:''}</div>
                                 </div>
                                 <div
                                     class="col-11 col-md-12 col-xl-4 text-left text-xl-right mt-3 mt-md-4 mt-xl-0 mt-md-0 mx-4 mx-md-0 px-4 pl-3 pl-xl-0">
                                     <div class="row row-center-spacebetween">
                                         <div class="col-9 col-md-10">
-                                            <h5 style="overflow-wrap: break-word;">Rp. ${data.price}</h5>
+                                            <h5 style="overflow-wrap: break-word;">Rp. ${data.price ? data.price:0}</h5>
                                         </div>
                                         <div class="col-3 col-md-2">
                                             <div class="delete-item" data-id="${data.id}">
-                                                <a href="#">
+                                                <a href="">
                                                     <img src="assets/img/svg/Trash.svg" alt="">
                                                 </a>
                                             </div>
@@ -48,19 +48,21 @@
                         </div>
                         <div class="border-line mx-4 mb-4"></div>`;
 
-                        total += parseInt(data.price)
+                        if(data.price)
+                            total += parseInt(data.price)
                     })
 
-                    if(total > 0){
+                    // if(total > 0){
                         $('.cart-place').show();
                         $('.empty-place').hide();
-                    }else{
-                        $('.empty-place').show();
-                        $('.cart-place').hide();
-                    }
+                    // }else{
+                    //     $('.empty-place').show();
+                    //     $('.cart-place').hide();
+                    // }
 
+                    total = total ? total:0;
                     $('#list-place').html(element);
-                    $('.grand-total').html('Rp. '+total);
+                    $('.grand-total').html('Rp. '+ total);
                 });
             },
             initAction = () => {

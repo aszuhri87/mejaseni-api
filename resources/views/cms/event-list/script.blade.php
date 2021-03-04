@@ -1,4 +1,7 @@
 <script>
+        $(".filter-btn").click(function () {
+            $(".filter__wrapper").toggle();
+        });
         $("#filter-btn-mobile").click(function () {
           $(".filter-overlay").css("display", "block");
         });
@@ -12,15 +15,10 @@
 
     <script>
         new SlimSelect({
-            select: '#select_event_categories'
+            select: '#select-event-categories'
         })
         $('.input-daterange input').each(function () {
             $(this).datepicker('clearDates');
-        });
-    </script>
-    <script>
-        $("#event_filter_btn").click(function () {
-            $(".filter__wrapper").toggle();
         });
     </script>
 
