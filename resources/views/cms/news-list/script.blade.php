@@ -1,21 +1,21 @@
 <script>
-        $(".filter-btn").click(function () {
+        $("#news_filter_btn").click(function () {
             $(".filter__wrapper").toggle();
         });
-        $("#filter-btn-mobile").click(function () {
-          $(".filter-overlay").css("display", "block");
+        $("#news-filter-btn-mobile").click(function () {
+            $(".filter-overlay").css("display", "block");
         });
         $(".menu-overlay__close").click(function () {
-          $(".filter-overlay").css("display", "none");
+            $(".filter-overlay").css("display", "none");
         });
         $(".close-btn").click(function () {
-          $(".filter-overlay").css("display", "none");
+            $(".filter-overlay").css("display", "none");
         });
-      </script>
+    </script>
 
     <script>
         new SlimSelect({
-            select: '#select-event-categories'
+            select: '#select-news-categories'
         })
         $('.input-daterange input').each(function () {
             $(this).datepicker('clearDates');

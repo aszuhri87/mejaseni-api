@@ -19,7 +19,12 @@ class Event extends Model
         'title',
         'description',
         'image',
-        'date'
+        'start_at',
+        'end_at',
+        'quota',
+        'location',
+        'is_free',
+        'total'
     ];
 
     protected $dates = ['deleted_at'];

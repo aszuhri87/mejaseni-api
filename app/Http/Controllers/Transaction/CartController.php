@@ -41,13 +41,14 @@ class CartController extends Controller
                         WHEN carts.master_lesson_id IS NOT NULL THEN master_lessons.name
                         WHEN carts.session_video_id IS NOT NULL THEN session_videos.name
                         WHEN carts.classroom_id IS NOT NULL THEN classrooms.name
+                        WHEN carts.event_id IS NOT NULL THEN events.title
                     END as name"),
 
                     DB::raw("CASE
                         WHEN carts.theory_id IS NOT NULL THEN theories.price
                         WHEN carts.master_lesson_id IS NOT NULL THEN master_lessons.price
                         WHEN carts.session_video_id IS NOT NULL THEN session_videos.price
-                        WHEN carts.classroom_id IS NOT NULL THEN classrooms.price
+                        WHEN carts.event_id IS NOT NULL THEN events.total
                     END as price"),
 
                     DB::raw("CASE
@@ -59,6 +60,7 @@ class CartController extends Controller
                 ->leftJoin('master_lessons','master_lessons.id','carts.master_lesson_id')
                 ->leftJoin('session_videos','session_videos.id','carts.session_video_id')
                 ->leftJoin('classrooms','classrooms.id','carts.classroom_id')
+                ->leftJoin('events','events.id','carts.event_id')
                 ->leftJoinSub($transaction_details, 'transaction_details', function($join){
                     $join->on('transaction_details.cart_id','carts.id');
                 })
@@ -68,7 +70,7 @@ class CartController extends Controller
                     'carts.deleted_at'
                 ])
                 ->get();
-
+                
             return response([
                 "data"      => $data,
                 "message"   => 'OK'

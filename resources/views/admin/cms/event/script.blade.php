@@ -7,6 +7,7 @@
                 initTable();
                 formSubmit();
                 initAction();
+                initDateRangePicker()
             });
 
             const initTable = () => {
@@ -23,8 +24,10 @@
                         { data: 'DT_RowIndex' },
                         { data: 'image_url' },
                         { data: 'title' },
-                        { data: 'date' },
-                        { data: 'description' },
+                        { data: 'start_at' },
+                        { data: 'end_at' },
+                        { data: 'quota' },
+                        { data: 'quota' },
                         { defaultContent: '' }
                         ],
                     columnDefs: [
@@ -47,12 +50,21 @@
                             }
                         },
                         {
-                            targets: -3,
+                            targets: -5,
                             searchable: false,
                             className: "text-center",
-                            data: "date",
+                            data: "start_at",
                             render : function(data, type, full, meta) {
-                                return moment(data).format('D MMMM YYYY')
+                                return moment(data).format('D MMMM YYYY, HH:mm')
+                            }
+                        },
+                        {
+                            targets: -4,
+                            searchable: false,
+                            className: "text-center",
+                            data: "end_at",
+                            render : function(data, type, full, meta) {
+                                return moment(data).format('D MMMM YYYY, HH:mm')
                             }
                         },
                         {
@@ -63,6 +75,17 @@
                             data: "id",
                             render : function(data, type, full, meta) {
                                 return `
+                                    <a href="{{url('/admin/cms/event/update')}}/${data}" title="List Participant" class="btn btn-participants btn-sm btn-clean btn-icon mr-2" title="Edit details">
+                                        <span class="svg-icon svg-icon-md">
+                                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                    <rect x="0" y="0" width="24" height="24"/>
+                                                    <path d="M10.5,5 L19.5,5 C20.3284271,5 21,5.67157288 21,6.5 C21,7.32842712 20.3284271,8 19.5,8 L10.5,8 C9.67157288,8 9,7.32842712 9,6.5 C9,5.67157288 9.67157288,5 10.5,5 Z M10.5,10 L19.5,10 C20.3284271,10 21,10.6715729 21,11.5 C21,12.3284271 20.3284271,13 19.5,13 L10.5,13 C9.67157288,13 9,12.3284271 9,11.5 C9,10.6715729 9.67157288,10 10.5,10 Z M10.5,15 L19.5,15 C20.3284271,15 21,15.6715729 21,16.5 C21,17.3284271 20.3284271,18 19.5,18 L10.5,18 C9.67157288,18 9,17.3284271 9,16.5 C9,15.6715729 9.67157288,15 10.5,15 Z" fill="#000000"/>
+                                                    <path d="M5.5,8 C4.67157288,8 4,7.32842712 4,6.5 C4,5.67157288 4.67157288,5 5.5,5 C6.32842712,5 7,5.67157288 7,6.5 C7,7.32842712 6.32842712,8 5.5,8 Z M5.5,13 C4.67157288,13 4,12.3284271 4,11.5 C4,10.6715729 4.67157288,10 5.5,10 C6.32842712,10 7,10.6715729 7,11.5 C7,12.3284271 6.32842712,13 5.5,13 Z M5.5,18 C4.67157288,18 4,17.3284271 4,16.5 C4,15.6715729 4.67157288,15 5.5,15 C6.32842712,15 7,15.6715729 7,16.5 C7,17.3284271 6.32842712,18 5.5,18 Z" fill="#000000" opacity="0.3"/>
+                                                </g>
+                                            </svg>
+                                        </span>
+                                    </a>
                                     <a href="{{url('/admin/cms/event/update')}}/${data}" title="Edit" class="btn btn-edit btn-sm btn-clean btn-icon mr-2" title="Edit details">
                                         <span class="svg-icon svg-icon-md">
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -131,15 +154,27 @@
 
                     var data = init_table.row($(this).parents('tr')).data();
 
-                    console.log(data)
+                    let start_at = moment(data.start_at).format('D MMMM YYYY h:mm A')
+                    let end_at = moment(data.end_at).format('D MMMM YYYY h:mm A')
+
+                    let date = `${start_at} - ${end_at}`
 
                     $('#form-event').trigger("reset");
                     $('#form-event').attr('action', $(this).attr('href'));
                     $('#form-event').attr('method','POST');
 
                     $('#form-event').find('input[name="title"]').val(data.title);
-                    $('#form-event').find('input[name="date"]').val(data.date);
+                    $('#form-event').find('input[name="date"]').val(date);
+                    $('#form-event').find('input[name="quota"]').val(data.quota);
+                    $('#form-event input[name="is_free"]').prop('checked', data.is_free);
+                    $('#form-event').find('textarea[name="location"]').val(data.location);
                     $('#form-event').find('textarea[name="description"]').val(data.description);
+
+                    if(!data.is_free){
+                        $("#form-event input[name='total']").removeAttr('disabled')
+                        $("#form-event input[name='total']").attr("min","5000")
+                        $("#form-event input[name='total']").val(data.total)   
+                    }
                     $('#image').empty();
 
                     if(data.image_url){
@@ -186,17 +221,40 @@
                     })
                     $('.swal2-title').addClass('justify-content-center')
                 });
+
+                $("#form-event input[name='is_free']").on('change',function(event){
+                    event.preventDefault()
+                    if($(this).prop('checked')){
+                        $("#form-event input[name='total']").attr("min","0")
+                        $("#form-event input[name='total']").val(0)
+                        $("#form-event input[name='total']").attr("disabled","disabled")
+                    }
+                    else{
+                        $("#form-event input[name='total']").removeAttr('disabled')
+                        $("#form-event input[name='total']").attr("min","5000")
+                    }
+                })
                 
             },
             formSubmit = () => {
                 $('#form-event').submit(function(event){
                     event.preventDefault();
 
+                    let data = new FormData(this)
+                    let date = $("#form-event").find('input[name=date]').val()
+
+                    date = date.split('-')
+                    let start_at = moment(date[0]).format('YYYY-MM-DD HH:mm:ss')
+                    let end_at = moment(date[1]).format('YYYY-MM-DD HH:mm:ss')
+                    data.append('start_at', start_at)
+                    data.append('end_at', end_at)
+
+
                     btn_loading('start')
                     $.ajax({
                         url: $(this).attr('action'),
                         type: $(this).attr('method'),
-                        data: new FormData(this),
+                        data: data,
                         contentType: false,
                         cache: false,
                         processData: false,
@@ -212,6 +270,21 @@
                     .always(function() {
                         btn_loading('stop')
                     });
+                });
+            },
+            initDateRangePicker = ()=>{
+                $('.select_daterange').daterangepicker({
+                    buttonClasses: ' btn',
+                    applyClass: 'btn-primary',
+                    cancelClass: 'btn-secondary',
+
+                    timePicker: true,
+                    timePickerIncrement: 30,
+                    locale: {
+                        format: 'D MMMM YYYY h:mm A'
+                    }
+                }, function(start, end, label) {
+                    $('.form-control.select_dateranges').val( start.format('D MMMM YYYY h:mm A') + ' / ' + end.format('D MMMM YYYY h:mm A'));
                 });
             }
         };

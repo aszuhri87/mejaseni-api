@@ -90,8 +90,13 @@ class EventController extends BaseMenu
                 $result = Event::create([
                     'title' => $request->title,
                     'description' => $request->description,
-                    'date' => date('Y-m-d',strtotime($request->date)),
-                    'image' => $path
+                    'image' => $path,
+                    'is_free' => $request->is_free ? $request->is_free:false,
+                    'total' => $request->total ? $request->total:0,
+                    'quota' => $request->quota,
+                    'location' => $request->location,
+                    'start_at' => $request->start_at,
+                    'end_at' => $request->end_at,
                 ]);
 
                 return $result;
@@ -153,8 +158,13 @@ class EventController extends BaseMenu
                 $result->update([
                     'title' => $request->title,
                     'description' => $request->description,
-                    'date' => date('Y-m-d',strtotime($request->date)),
-                    'image' => $path ? $path:$result->image
+                    'image' => $path ? $path:$result->image,
+                    'is_free' => $request->is_free ? $request->is_free:false,
+                    'total' => $request->total ? $request->total:0,
+                    'quota' => $request->quota,
+                    'location' => $request->location,
+                    'start_at' => $request->start_at,
+                    'end_at' => $request->end_at,
                 ]);
 
                 return $result;

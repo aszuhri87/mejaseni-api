@@ -181,20 +181,16 @@ class ClassController extends Controller
             $special_class_type = 1;
             $regular_class_type = 2;
             $master_lesson_type = 3;
-
+            $path = Storage::disk('s3')->url('/');
 
             if($package == $master_lesson_type){
                 $classrooms = DB::table('session_videos')
                     ->select([
                         'session_videos.*',
                         'sub_classroom_categories.classroom_category_id',
-                        'coaches.name as coach',
-                        'expertises.name as expertise',
                         'sub_classroom_categories.name as sub_category',
                         'classroom_categories.name as category'
                     ])
-                    ->leftJoin('coaches', 'coaches.id','=','session_videos.coach_id')
-                    ->leftJoin('expertises', 'expertises.id','=','session_videos.expertise_id')
                     ->leftJoin('sub_classroom_categories', 'sub_classroom_categories.id','=','session_videos.sub_classroom_category_id')
                     ->leftJoin('classroom_categories', 'classroom_categories.id','=','sub_classroom_categories.classroom_category_id')
                     ->where('classroom_categories.id',$classroom_category_id)
@@ -208,6 +204,7 @@ class ClassController extends Controller
                         'classrooms.*',
                         'classroom_categories.name as category',
                         'sub_classroom_categories.name as sub_category',
+                        DB::raw("CONCAT('{$path}',classrooms.image) as image_url"),
                     ])
                     ->leftJoin('classroom_categories','classroom_categories.id','=','classrooms.classroom_category_id')
                     ->leftJoin('sub_classroom_categories','sub_classroom_categories.id','=','classrooms.sub_classroom_category_id')
@@ -225,9 +222,14 @@ class ClassController extends Controller
                 $classrooms = $classrooms->get();
             }
 
+            $classroom_html = $this->_get_classroom_html($classrooms);
+
 
             return response([
-                "data"      => $classrooms,
+                "data"      => [
+                  "classrooms" => $classrooms,
+                  "classroom_html" => $classroom_html
+                ],
                 "message"   => 'Successfully saved!'
             ], 200);
         } catch (Exception $e) {
@@ -242,9 +244,7 @@ class ClassController extends Controller
     public function get_classroom($sub_category_id)
     {
         try {
-
             $classroom_html = $this->_get_classroom($sub_category_id);
-
 
             return response([
                 "data"      => [
@@ -259,6 +259,7 @@ class ClassController extends Controller
             ]);
         }
     }
+
 
     public function _getPackage($category_id)
     {
@@ -327,6 +328,46 @@ class ClassController extends Controller
             ->first();
 
         return $data;
+    }
+
+    public function _get_classroom_html($classrooms)
+    {
+        $html ="";
+        foreach ($classrooms as $key => $classroom) {
+            $html .= '<li class="splide__slide px-2 pb-5">
+                        <img class="w-100 rounded" src="'. $classroom->image_url .'" alt="">
+                        <div class="badge-left">
+                          <h3 class="mt-4 ml-2">'. $classroom->name.'</h3>
+                        </div>
+                        <ul class="row-center-start class-tab mt-5 mt-md-4">
+                          <li class="active tab-detail" href="tab-description">Deskripsi</li>
+                          <li class="tab-detail" href="tab-coach">Coach</li>
+                          <li class="tab-detail" href="tab-tools">Tools</li>
+                        </ul>
+                        <div id="tab-description" class="content-tab-detail" style="">
+                          <div class="desc__class-tab my-4">
+                            <p>
+                              '. $classroom->description.'
+                            </p>
+                          </div>
+                        </div>
+                        <div class="class-tab-summary d-flex justify-content-between flex-md-row flex-column mb-4">
+                          <div class="d-flex flex-column">
+                            <p>'. $classroom->session_total .' Sesi | @ '. $classroom->session_duration .'menit</p>
+                            <span class="mt-2">Rp. '. $classroom->price.',-</span>
+                          </div>
+                          <div class="mt-5 mt-md-0">
+                            <a href="#" class="btn btn-primary shadow registerNow">Daftar
+                              Sekarang
+                              <img class="ml-2" src="/cms/assets/img/svg/Sign-in.svg" alt="">
+                            </a>
+                          </div>
+                        </div>
+                      </li>';
+        }
+
+        return $html;
+
     }
 
 

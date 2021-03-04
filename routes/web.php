@@ -107,6 +107,9 @@ use App\Http\Controllers\Cms\CareerDetailController as CareerDetailController;
 use App\Http\Controllers\Cms\StoreDetailController as StoreDetailController;
 use App\Http\Controllers\Cms\EventListController as EventListController;
 use App\Http\Controllers\Cms\EventDetailController as EventDetailController;
+use App\Http\Controllers\Cms\NewsListController as NewsListController;
+use App\Http\Controllers\Cms\NewsDetailController as NewsDetailController;
+
 
 
 
@@ -143,6 +146,8 @@ Route::get('/classroom_category/sub_classroom_category/{sub_category_id}/video-c
 Route::get('/news-event', [NewsEventController::class, 'index']);
 Route::get('/event-list', [EventListController::class, 'index']);
 Route::get('/event/{event_id}/detail', [EventDetailController::class, 'index']);
+Route::get('/news-list',[NewsListController::class, 'index']);
+Route::get('/news/{news_id}/detail',[NewsDetailController::class, 'index']);
 
 Route::get('/about', [AboutController::class, 'index']);
 Route::get('/privacy-policy', [PrivacyPolicyController::class, 'index']);
@@ -528,6 +533,8 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::post('add-to-cart',[StudentCartController::class, 'store']);
         Route::get('get-cart/{student_id}',[StudentCartController::class, 'get_cart']);
         Route::delete('delete-cart/{cart_id}',[StudentCartController::class, 'delete_cart']);
+
+        Route::post('/event/{event_id}/add-to-cart',[StudentCartController::class, 'event']);
     });
 
     /*
@@ -555,4 +562,17 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::get('get-session-coach/{classroom_id}', [PublicController::class, 'get_session_coach']);
         Route::get('get-guest-star', [PublicController::class, 'get_guest_star']);
     });
+});
+
+Route::get('fire', function () {
+    event(new \App\Events\PaymentNotification(true));
+    return 'oke';
+});
+
+Route::get('welcome', function () {
+    return view('welcome');
+});
+
+Route::get('video', function () {
+    return view('video');
 });

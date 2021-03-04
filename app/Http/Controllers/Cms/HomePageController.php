@@ -27,11 +27,11 @@ class HomePageController extends Controller
                         'id',
                         'title',
                         'description',
-                        'date',
+                        'start_at',
                          DB::raw("CONCAT('{$path}',image) as image_url"),
                     ])
                     ->whereNull('deleted_at')
-                    ->orderBy('date','desc')
+                    ->orderBy('start_at','desc')
                     ->take(4)
                     ->get();
 

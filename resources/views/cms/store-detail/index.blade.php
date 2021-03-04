@@ -31,7 +31,7 @@
                 <div class="row pt-5">
                     <div class="col-md-8 mb-5 mb-lg-0">
                         <div class="content-embed__wrapper">
-                            <iframe class="w-100 h-100" src="https://www.youtube.com/embed/hXQxSi34GWY" frameborder="0"
+                            <iframe class="w-100 h-100" src="https://mejaseni.yk1.s3.gmedia.id/media/original/2021-03-03/e5efb88f-a1c8-400c-b163-56a7dbec0100.mp4" frameborder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                 allowfullscreen></iframe>
                         </div>

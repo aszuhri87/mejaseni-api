@@ -15,7 +15,7 @@
             <img src="assets/img/svg/empty-cart.svg" alt="">
             <h4 class="mt-3">Wah, keranjang belanjamu kosong</h4>
             <p class="mt-3 mb-4">Yuk, isi dengan kelas impianmu!</p>
-            <a href="kelas.html" class="btn btn-primary shadow">Cari kelas Idaman</a>
+            <a href="{{ url('class') }}" class="btn btn-primary shadow">Cari kelas Idaman</a>
         </div>
     </div>
     <div class="row mt-4 cart-place" style="display: none">

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 use App\Models\Cart;
 
+use Auth;
 use Storage;
 
 class CartController extends Controller
@@ -32,7 +33,8 @@ class CartController extends Controller
                         'student_id' => $request->student_id,
                         'theory_id' => $request->id
                     ];
-                }else{
+                }
+                else{
                     $data = [
                         'student_id' => $request->student_id,
                         'session_video_id' => $request->id
@@ -143,6 +145,33 @@ class CartController extends Controller
                 "status"    => 200,
                 "data"      => $result,
                 "message"   => 'Successfully Delete Cart!'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function event(Request $request, $event_id)
+    {
+        try {
+
+            $result = DB::transaction(function () use($request, $event_id){
+                $user = Auth::guard('student')->user();
+
+                $cart = Cart::create([
+                    'event_id' => $event_id,
+                    'student_id' => $user->id
+                ]);
+                return $cart;
+            });
+
+            return response([
+                "status"    => 200,
+                "data"      => $result,
+                "message"   => 'Successfully Add To Cart!'
             ], 200);
         } catch (Exception $e) {
             throw new Exception($e);

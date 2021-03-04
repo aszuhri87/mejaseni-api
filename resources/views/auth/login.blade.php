@@ -128,7 +128,7 @@
             <!--begin::Aside-->
             <div class="login-aside order-1 order-lg-2 bgi-no-repeat bgi-position-x-right">
                 <div class="login-conteiner bgi-no-repeat bgi-position-x-right bgi-position-y-bottom" style="background-image: url(assets/images/login-visual.svg);">
-                    <a href="#" class="login-logo ml-5">
+                    <a href="{{ url('/') }}" class="login-logo ml-5">
                         <img src="assets/images/logo-name.png" class="max-h-70px mt-10 ml-5" alt="" />
                     </a>
                 </div>
