@@ -32,6 +32,7 @@ class NotificationController extends BaseMenu
                 'coach_notifications.id',
                 'coach_notifications.text',
                 'coach_notifications.datetime',
+                'coach_notifications.type',
                 'coaches.name as coach_name',
                 'transactions.number',
                 'transactions.payment_chanel',

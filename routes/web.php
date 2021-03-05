@@ -40,6 +40,11 @@ use App\Http\Controllers\Admin\Master\MasterLessonController;
 use App\Http\Controllers\Admin\Master\ProfileVideoCoachController;
 use App\Http\Controllers\Admin\Transaction\StudentController as TransactionStudentController;
 use App\Http\Controllers\Admin\Schedule\ScheduleController;
+use App\Http\Controllers\Admin\Reporting\Review\Coach\CoachController as AdminCoachController;
+use App\Http\Controllers\Admin\Reporting\Review\Coach\Detail\CoachDetailController;
+use App\Http\Controllers\Admin\Reporting\Review\Student\StudentController as AdminStudentController;
+use App\Http\Controllers\Admin\Reporting\Review\Student\Detail\StudentDetailController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -52,7 +57,6 @@ use App\Http\Controllers\Coach\Schedule\ScheduleController as CoachScheduleContr
 use App\Http\Controllers\Coach\Exercise\AssignmentController;
 use App\Http\Controllers\Coach\Exercise\ReviewAssignmentController;
 use App\Http\Controllers\Coach\Notification\NotificationController as CoachNotificationController;
-
 /*
 |--------------------------------------------------------------------------
 | Student Controller
@@ -317,6 +321,35 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::post('schedule/update/{id}', [ScheduleController::class, 'update_time']);
         Route::post('schedule/confirm/{id}', [ScheduleController::class, 'confirm']);
         Route::post('schedule/delete/{id}', [ScheduleController::class, 'delete']);
+
+        Route::group(['prefix' => 'report'], function () {
+
+            Route::group(['prefix' => 'review'], function () {
+
+                Route::group(['prefix' => 'coach'], function () {
+                    Route::get('/', [AdminCoachController::class, 'index']);
+                    Route::post('dt', [AdminCoachController::class, 'dt']);           
+                    Route::get('admin/report/review/coach/details/{id}', [AdminCoachController::class, 'dt']);   
+                    Route::group(['prefix' => 'detail'], function () {
+                        Route::get('/{id}', [CoachDetailController::class, 'index']);   
+                        Route::post('dt/{id}', [CoachDetailController::class, 'dt']);                 
+                        Route::get('get-classroom/{id}', [CoachDetailController::class, 'get_classrooms']);                 
+                    });         
+                });            
+
+                Route::group(['prefix' => 'student'], function () {
+                    Route::get('/', [AdminStudentController::class, 'index']);
+                    Route::post('dt', [AdminStudentController::class, 'dt']);           
+                    Route::group(['prefix' => 'detail'], function () {
+                        Route::get('/{id}', [StudentDetailController::class, 'index']);   
+                        Route::post('dt/{id}', [StudentDetailController::class, 'dt']);                 
+                        Route::get('get-classroom/{id}', [StudentDetailController::class, 'get_classrooms']);                 
+                    });         
+                });  
+                          
+            });
+        });
+
 
         Route::group(['prefix' => 'cms'], function () {
             Route::post('company/dt', [CompanyController::class, 'dt']);

@@ -641,128 +641,26 @@ class DashboardController extends BaseMenu
     {
         try {
             $path = Storage::disk('s3')->url('/');
-
-            // $coach_schedules = DB::table('coach_schedules')
-            //     ->select(
-            //         'coach_schedules.id',
-            //         'coach_schedules.coach_classroom_id'
-            //     )
-            //     ->where([
-            //         ['coach_schedules.id', $id]
-            //     ])
-            //     ->WhereNull('coach_schedules.deleted_at');
-
-            // $coach_classrooms = DB::table('coach_classrooms')
-            //     ->select(
-            //         'coach_classrooms.*'
-            //     )
-            //     ->leftJoinSub($coach_schedules, 'coach_schedules', function ($join) {
-            //         $join->on('coach_schedules.coach_classroom_id', '=', 'coach_classrooms.id');
-            //     })
-            //     ->WhereNull('coach_classrooms.deleted_at');
-
-            // $coaches = DB::table('coaches')
-            //     ->select(
-            //         'coaches.*',
-            //     )
-            //     ->where([
-            //         ['coaches.id', Auth::guard('coach')->id()],
-            //     ])
-            //     ->leftJoinSub($coach_classrooms, 'coach_classrooms', function ($join) {
-            //         $join->on('coach_classrooms.coach_id', '=', 'coaches.id');
-            //     })
-            //     ->WhereNull('coaches.deleted_at');
-
-
-
-            // $students = DB::table('students')
-            //     ->select(
-            //         'students.id',
-            //         'students.name as student_name',
-            //         DB::raw("CONCAT('{$path}',students.image) as image_url"),
-            //     )
-            //     ->WhereNull('deleted_at');
-
-            // $classrooms = DB::table('classrooms')
-            //     ->select(
-            //         'classrooms.name as classrooms_name',
-            //         'classrooms.id',
-            //     )
-            //     ->WhereNull('classrooms.deleted_at');
-
-            // $student_classrooms = DB::table('student_classrooms')
-            //     ->select(
-            //         'student_classrooms.id',
-            //         'student_classrooms.classroom_id',
-            //         'students.student_name',
-            //         'students.image_url',
-            //         'classrooms.classrooms_name',
-            //     )
-            //     ->JoinSub($students, 'students', function ($join) {
-            //         $join->on('student_classrooms.student_id', '=', 'students.id');
-            //     })
-            //     ->JoinSub($classrooms, 'classrooms', function ($join) {
-            //         $join->on('student_classrooms.classroom_id', '=', 'classrooms.id');
-            //     })
-            //     ->WhereNull('student_classrooms.deleted_at');
-
-            // $student_schedules = DB::table('student_schedules')
-            //     ->select(
-            //         'student_schedules.id',
-            //         'student_classrooms.student_name',
-            //         'student_classrooms.classrooms_name',
-            //         'student_classrooms.image_url',
-            //         'coach_schedules.id as coach_schedules_id'
-            //     )
-            //     ->where([
-            //         ['student_schedules.deleted_at', null]
-            //     ])
-            //     ->where('student_schedules.id', $student_schedule_id)
-            //     ->JoinSub($student_classrooms, 'student_classrooms', function ($join) {
-            //         $join->on('student_schedules.student_classroom_id', '=', 'student_classrooms.id');
-            //     })
-            //     ->JoinSub($coach_schedules, 'coach_schedules', function ($join) {
-            //         $join->on('student_schedules.coach_schedule_id', '=', 'coach_schedules.id');
-            //     })
-            //     ->WhereNull('student_schedules.deleted_at');
-
-
-            // $result = DB::table('student_feedback')
-            //     ->select(
-            //         'student_feedback.*',
-            //         'student_schedules.student_name',
-            //         'student_schedules.coach_schedules_id',
-            //         'student_schedules.image_url',
-            //     )
-            //     ->JoinSub($coaches, 'coaches', function ($join) {
-            //         $join->on('student_feedback.coach_id', '=', 'coaches.id');
-            //     })
-            //     ->JoinSub($student_schedules, 'student_schedules', function ($join) {
-            //         $join->on('student_feedback.student_schedule_id', '=', 'student_schedules.id');
-            //     })
-            //     ->WhereNull('student_feedback.deleted_at')
-            //     ->get();
-
-            $result = DB::table('classroom_feedback')
+            
+            $result = DB::table('session_feedback')
                 ->select(
-                    'classroom_feedback.*',
+                    'session_feedback.*',
                     'students.name as student_name',
                     'coach_schedules.id as coach_schedule_id',
                     DB::raw("CONCAT('{$path}',students.image) as image_url"),
-                )
-                ->join('classrooms', 'classrooms.id', 'classroom_feedback.classroom_id')
-                ->join('coach_classrooms', 'coach_classrooms.classroom_id', 'classrooms.id')
-                ->join('coach_schedules', 'coach_schedules.coach_classroom_id', 'coach_classrooms.id')
-                ->join('coaches', 'coaches.id', 'coach_classrooms.coach_id')
-                ->join('student_classrooms', 'student_classrooms.classroom_id', 'classrooms.id')
+                )                
+                ->join('student_schedules', 'student_schedules.id', 'session_feedback.student_schedule_id')
+                ->join('student_classrooms', 'student_classrooms.id', 'student_schedules.student_classroom_id')
                 ->join('students', 'students.id', 'student_classrooms.student_id')
-                ->join('student_schedules', 'student_schedules.student_classroom_id', 'student_classrooms.id')
+                ->join('coach_schedules', 'coach_schedules.id', 'student_schedules.coach_schedule_id')
+                ->join('coach_classrooms', 'coach_classrooms.id', 'coach_schedules.coach_classroom_id')
+                ->join('coaches', 'coaches.id', 'coach_classrooms.coach_id')
                 ->where([
                     ['coaches.id', Auth::guard('coach')->id()],
                     ['coach_schedules.id', $id],
                     ['student_schedules.id', $student_schedule_id],
                 ])
-                ->WhereNull('classroom_feedback.deleted_at')
+                ->WhereNull('session_feedback.deleted_at')
                 ->get();
 
             return response([

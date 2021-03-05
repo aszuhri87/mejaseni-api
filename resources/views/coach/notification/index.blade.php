@@ -24,12 +24,9 @@
                     <thead>
                         <tr class="text-uppercase">
                             <th>No</th>
-                            {{-- <th>Number</th> --}}
+                            <th>Tanggal</th>
+                            <th>Tipe</th>
                             <th>Text</th>
-                            {{-- <th>Payment</th>
-                            <th>Total</th> --}}
-                            <th>Created</th>
-                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
