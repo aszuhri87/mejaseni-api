@@ -41,6 +41,8 @@ use App\Http\Controllers\Admin\Master\MasterLessonController;
 use App\Http\Controllers\Admin\Master\ProfileVideoCoachController;
 use App\Http\Controllers\Admin\Transaction\StudentController as TransactionStudentController;
 use App\Http\Controllers\Admin\Schedule\ScheduleController;
+use App\Http\Controllers\Admin\Review\VideoController;
+use App\Http\Controllers\Admin\Review\ClassController as ReviewClassController;
 
 /*
 |--------------------------------------------------------------------------
@@ -308,6 +310,27 @@ Route::group(['middleware' => ['auth-handling']], function () {
 
             Route::post('expertise/dt', [ExpertiseController::class, 'dt']);
             Route::resource('expertise', ExpertiseController::class);
+        });
+
+        Route::group(['prefix' => 'report'], function () {
+            Route::group(['prefix' => 'review'], function () {
+                Route::group(['prefix' => 'video'], function () {
+                    Route::get('/', [VideoController::class, 'index']);
+                    Route::get('{id}', [VideoController::class, 'detail']);
+                    Route::post('dt', [VideoController::class, 'dt']);
+                    Route::post('dt/{id}', [VideoController::class, 'dt_detail']);
+                    Route::post('dt/{id}', [VideoController::class, 'dt_detail']);
+                    Route::post('print-excel/{id}', [VideoController::class, 'print_excel']);
+                    Route::post('print-pdf/{id}', [VideoController::class, 'print_pdf']);
+                });
+
+                Route::group(['prefix' => 'class'], function () {
+                    Route::get('/', [ReviewClassController::class, 'index']);
+                    Route::get('{id}', [ReviewClassController::class, 'detail']);
+                    Route::post('dt', [ReviewClassController::class, 'dt']);
+                    Route::post('dt/{id}', [ReviewClassController::class, 'dt_detail']);
+                });
+            });
         });
 
         Route::group(['prefix' => 'transaction'], function () {
