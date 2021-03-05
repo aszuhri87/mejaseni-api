@@ -214,6 +214,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
 
     Route::group(['prefix' => 'admin', 'middleware' => 'admin-handling'], function () {
         Route::get('dashboard', [AdminDashboard::class, 'index']);
+        Route::get('cart-dashboard', [AdminDashboard::class, 'cart_data']);
 
         Route::group(['prefix' => 'master'], function () {
             Route::group(['prefix' => 'courses'], function () {

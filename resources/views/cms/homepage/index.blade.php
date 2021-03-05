@@ -13,10 +13,10 @@
         <div class="login-wrapper p-5">
           <h1>Welcome to mejaseni {{ Auth::guard('student')->user()}}</h1>
           <div class="pt-3">
-            <a href="#" class="btn btn-blue row-center mt-5"><img class="img__btn-login mr-2"
+            <a href="{{url('auth/facebook')}}" class="btn btn-blue row-center mt-5"><img class="img__btn-login mr-2"
               src="{{ asset('cms/assets/img/logo-facebook.svg') }}" alt="">Lanjutkan dengan Facebook
             </a>
-            <a href="#" class="btn btn-white row-center mt-3"><img class="img__btn-login mr-2"
+            <a href="{{url('auth/google')}}" class="btn btn-white row-center mt-3"><img class="img__btn-login mr-2"
               src="{{ asset('cms/assets/img/logo-google.svg') }}" alt="">Lanjutkan dengan Google
             </a>
             <div class="row-center pt-5">
