@@ -371,7 +371,7 @@
                                 searchable: false,
                                 orderable: false,
                                 className: "text-center",
-                                render: function(data, typr, full, meta) {
+                                render: function(data, type, full, meta) {
 
                                     return ` <div class="d-flex justify-content-md-center">
                                                 <div class="text-center">
@@ -386,7 +386,7 @@
                                 targets: 2,
                                 searchable: false,
                                 orderable: false,
-                                render: function(data, typr, full, meta) {
+                                render: function(data, type, full, meta) {
 
                                     return ` <div class="d-flex align-items-center">
                                             <div>
@@ -399,7 +399,7 @@
                                 targets: 3,
                                 searchable: false,
                                 orderable: false,
-                                render: function(data, typr, full, meta) {
+                                render: function(data, type, full, meta) {
 
                                     return ` <div class="d-flex align-items-center">
                                             <div>
@@ -412,7 +412,7 @@
                                 targets: 4,
                                 searchable: false,
                                 orderable: false,
-                                render: function(data, typr, full, meta) {
+                                render: function(data, type, full, meta) {
 
                                     return ` <div class="d-flex align-items-center">
                                             <div>
@@ -425,14 +425,29 @@
                                 targets: 5,
                                 searchable: false,
                                 orderable: false,
-                                render: function(data, typr, full, meta) {
+                                render: function(data, type, full, meta) {
 
-                                    return ` <div class="d-flex align-items-center">
+                                    if (moment(full.datetime) > moment() && moment() < moment(full.datetime).subtract(full.session_duration, "minutes")) {
+                                        var status =  `Active`;
+                                        var color = `primary`;
+                                    } else if ( moment() > moment(full.datetime).subtract(full.session_duration, "minutes")) {
+                                        var status =  `Completed`;
+                                        var color = `success`;
+                                    } else{
+                                        var status =  `Cancle`;
+                                        var color = `danger`;
+                                    }
+
+                                    return `
+                                    <div class="d-flex align-items-center">
                                             <div>
-                                                <a href="#" class="text-${full.color_status} font-weight-bolder text-hover-primary mb-1 font-size-lg text-center">${full.status}</a>
+                                                <a href="#" class="text-`+color+` font-weight-bolder text-hover-primary mb-1 font-size-lg text-center">`+status+`</a>
                                             </div>
-                                        </div>`;
+                                        </div>
+                                    `;
+
                                 }
+                                
                             },
                             {
                                 targets: -1,

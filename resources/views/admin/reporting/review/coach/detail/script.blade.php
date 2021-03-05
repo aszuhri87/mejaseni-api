@@ -148,7 +148,7 @@
                                 className: "text-center",
                                 render: function(data, type, full, meta) {
 
-                                    if (moment(full.datetime) > moment() && moment(full.datetime).subtract(full.session_duration, "minutes") < moment()) {
+                                    if (moment(full.datetime) > moment() && moment() < moment(full.datetime).subtract(full.session_duration, "minutes")) {
                                        var status =  `Active`;
                                        var color = `primary`;
                                     } else if ( moment() > moment(full.datetime).subtract(full.session_duration, "minutes")) {
