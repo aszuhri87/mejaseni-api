@@ -179,7 +179,19 @@
 
                     $('#input-id').rating('update', data.star);
                     showModal('modal-class-detail');
-                })
+                });
+
+                $(document).on('click','.btn-excel',function(event){
+                    event.preventDefault();
+                    $('#form-filter').attr('action',$(this).attr('href'));
+                    $('#form-filter').submit();
+                });
+
+                $(document).on('click','.btn-pdf',function(event){
+                    event.preventDefault();
+                    $('#form-filter').attr('action',$(this).attr('href'));
+                    $('#form-filter').submit();
+                });
             },
             formSubmit = () => {
                 $('#form-classroom-category').submit(function(event){

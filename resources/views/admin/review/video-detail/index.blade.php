@@ -74,7 +74,7 @@
                 <div class="form-group ml-1">
                     <div class="btn-group dropdown">
                         <button class="btn btn-sm btn-primary font-weight-bold dropdown-toggle py-3 px-5" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Filter
+                            Export
                         </button>
                         <div class="dropdown-menu">
                             <div class="d-flex">

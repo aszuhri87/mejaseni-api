@@ -330,6 +330,8 @@ Route::group(['middleware' => ['auth-handling']], function () {
                     Route::get('{id}', [ReviewClassController::class, 'detail']);
                     Route::post('dt', [ReviewClassController::class, 'dt']);
                     Route::post('dt/{id}', [ReviewClassController::class, 'dt_detail']);
+                    Route::post('print-excel/{id}', [ReviewClassController::class, 'print_excel']);
+                    Route::post('print-pdf/{id}', [ReviewClassController::class, 'print_pdf']);
                 });
             });
 

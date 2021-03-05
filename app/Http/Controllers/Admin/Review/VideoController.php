@@ -5,9 +5,13 @@ namespace App\Http\Controllers\Admin\Review;
 use App\Http\Controllers\BaseMenu;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+
+use App\Exports\ReviewVideoExport;
 
 use DataTables;
 use Storage;
+use PDF;
 
 class VideoController extends BaseMenu
 {
@@ -229,11 +233,52 @@ class VideoController extends BaseMenu
 
     public function print_pdf(Request $request,$id)
     {
-        dd($request->all());
+        $session_video = DB::table('session_videos')
+            ->where('id',$id)
+            ->whereNull('deleted_at')
+            ->first();
+
+        $path = Storage::disk('s3')->url('/');
+
+        $student = DB::table('students')
+            ->select([
+                'students.id',
+                'students.name as student_name',
+                DB::raw("CONCAT('{$path}',image) as image"),
+            ])
+            ->whereNull('students.deleted_at');
+
+        $data = DB::table('session_video_feedback')
+            ->select([
+                'session_video_feedback.*',
+                'session_video_feedback.created_at as datetime',
+                'students.student_name',
+                'students.image',
+            ])
+            ->leftJoinSub($student, 'students', function ($join) {
+                $join->on('session_video_feedback.student_id', '=', 'students.id');
+            })
+            ->where('session_video_feedback.session_video_id',$id)
+            ->whereNull('session_video_feedback.deleted_at')
+            ->where(function($query) use($request){
+                if(!empty($request->select)){
+                    $query->where('star',$request->select);
+                }
+            })
+            ->get();
+
+
+        $pdf = PDF::loadview('admin.print.pdf.review-video',compact('data'));
+        return $pdf->download('review-video-'.$session_video->name.'-'.date('d-m-Y'));
     }
 
     public function print_excel(Request $request,$id)
     {
-        dd($request->all());
+        $session_video = DB::table('session_videos')
+            ->where('id',$id)
+            ->whereNull('deleted_at')
+            ->first();
+
+        return Excel::download(new ReviewVideoExport($request->select,$id), 'review-video-'.$session_video->name.'-'.date('d-m-Y').'.xlsx');
     }
 }
