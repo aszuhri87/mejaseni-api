@@ -360,6 +360,15 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::post('schedule/confirm/{id}', [ScheduleController::class, 'confirm']);
         Route::post('schedule/delete/{id}', [ScheduleController::class, 'delete']);
 
+        Route::group(['prefix' => 'report'], function () {
+
+            Route::group(['prefix' => 'transaction'], function () {
+                Route::get('student', [ScheduleController::class, 'index']);
+                Route::post('student/excel', [TransactionStudentController::class, 'excel']);
+                Route::post('student/dt', [TransactionStudentController::class, 'dt']);
+            });
+        });
+
         Route::group(['prefix' => 'cms'], function () {
             Route::post('company/dt', [CompanyController::class, 'dt']);
             Route::resource('company', CompanyController::class);
