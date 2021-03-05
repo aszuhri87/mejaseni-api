@@ -43,6 +43,7 @@ use App\Http\Controllers\Admin\Transaction\StudentController as TransactionStude
 use App\Http\Controllers\Admin\Schedule\ScheduleController;
 use App\Http\Controllers\Admin\Review\VideoController;
 use App\Http\Controllers\Admin\Review\ClassController as ReviewClassController;
+use App\Http\Controllers\Admin\ReportTransaction\TransactionStudentController as ReviewTransactionStudentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -329,6 +330,13 @@ Route::group(['middleware' => ['auth-handling']], function () {
                     Route::get('{id}', [ReviewClassController::class, 'detail']);
                     Route::post('dt', [ReviewClassController::class, 'dt']);
                     Route::post('dt/{id}', [ReviewClassController::class, 'dt_detail']);
+                });
+            });
+
+            Route::group(['prefix' => 'transaction'], function () {
+                Route::group(['prefix' => 'student'], function () {
+                    Route::get('/', [ReviewTransactionStudentController::class, 'index']);
+                    Route::post('dt', [ReviewTransactionStudentController::class, 'dt']);
                 });
             });
         });
