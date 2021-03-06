@@ -347,6 +347,12 @@ class BaseMenu extends Controller
                         'permission' => 'company'
                     ],
                     [
+                        'key' => 'coach-review',
+                        'title' => 'Coach Review',
+                        'url' => 'admin/cms/coach-review',
+                        'permission' => 'coach-review'
+                    ],
+                    [
                         'key' => 'event',
                         'title' => 'Event',
                         'url' => 'admin/cms/event',
@@ -405,6 +411,12 @@ class BaseMenu extends Controller
                         'title' => 'Working Hour',
                         'url' => 'admin/cms/working-hour',
                         'permission' => 'working-hour'
+                    ],
+                    [
+                        'key' => 'question',
+                        'title' => 'Question',
+                        'url' => 'admin/cms/question',
+                        'permission' => 'question'
                     ],
 
                 ],

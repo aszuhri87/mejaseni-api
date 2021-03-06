@@ -63,7 +63,7 @@
             <img class="image-badge__footer mr-2" src="{{ asset('cms/assets/img/svg/Mail.svg') }}" alt="">
             <h5>Email</h5>
           </div>
-          <a href="{{ $company->email ? $company->email:'#' }}">{{ $company->email ? $company->email:'' }}</a>
+          <a>{{ $company->email ? $company->email:'' }}</a>
         </div>
         <div class="mt-5 mt-md-4">
           <div class="badge__wrapper mb-2">

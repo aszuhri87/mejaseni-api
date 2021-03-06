@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Traits\Uuid;
+use Storage;
 
 class Student extends Authenticatable
 {
@@ -33,4 +34,10 @@ class Student extends Authenticatable
     ];
 
     protected $dates = ['deleted_at'];
+
+    public function getImageUrl()
+    {
+        $path = Storage::disk('s3')->url('/');
+        return $path . $this->image;
+    }
 }

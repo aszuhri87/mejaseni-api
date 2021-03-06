@@ -15,6 +15,7 @@ class NewsSeeder extends Seeder
     public function run()
     {
         $result = DB::transaction(function (){
+            $classroom_category = \App\Models\ClassroomCategory::first();
             $seeders = [
                 [
                     'title' => 'Mejaseni Virtual Festival 1',
@@ -45,6 +46,7 @@ class NewsSeeder extends Seeder
                         'title' => $seeder['title'],
                         'description' => $seeder['description'],
                         'image' => $seeder['image'],
+                        'classroom_category_id' => $classroom_category->id
                     ]);
                 }
             }

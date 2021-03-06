@@ -17,12 +17,13 @@
         <a class="nav-link" href="{{ url('/') }}">Home</a>
       </li>
       <li class="nav-item @if($segment1 == 'class'){{'active'}}@endif">
-        <a class="nav-link" href="{{ url('class') }}">Kelas</a>
+        <a class="nav-link" href="{{ url('class') }}">Class</a>
       </li>
       <li class="nav-item @if($segment1 == 'store' || $segment1 == 'video-course'){{'active'}}@endif">
         <a class="nav-link" href="{{ url('store') }}">E-Store</a>
       </li>
-      <li class="nav-item @if($segment1 == 'news-event' || $segment1 == 'event-list' || $segment1 == 'event' || $segment1 == 'news'){{'active'}}@endif">
+      <li class="nav-item @if($segment1 == 'news-event' || $segment1 == 'event-list' 
+      || $segment1 == 'event' || $segment1 == 'news' || $segment1 == 'news-list' ){{'active'}}@endif">
         <a class="nav-link" href="{{ url('news-event') }}">News & Event</a>
       </li>
       @if(Auth::guard('student')->check())
@@ -39,7 +40,7 @@
               </div>
 
               <div class="inside-circle">
-                <img class="rounded-circle profile-img" id="profile-img" src="{{ asset('cms/assets/img/coach.png') }}"
+                <img class="rounded-circle profile-img" id="profile-img" src="{{ Auth::guard('student')->user()->getImageUrl() }}"
                 alt="">
               </div>
 

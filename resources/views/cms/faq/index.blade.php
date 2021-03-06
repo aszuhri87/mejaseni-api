@@ -7,24 +7,24 @@
             <h1>Get In Touch</h1>
             <p class="mt-3">Have a question or just want to get in touch? Have a question or just want to get in
             touch? Convey your message, we will get back to you soon.</p>
-            <form action="#" class="mt-4">
+            <form id="form-question" method="POST" action="{{ url('question') }}" class="mt-4">
                 <div class="form-group mb-4">
                     <label>Name</label>
-                    <input type="text" class="form-control mt-3" placeholder="Your Name">
+                    <input type="text" name="name" class="form-control mt-3" placeholder="Your Name">
                 </div>
                 <div class="form-group mb-4">
                     <label>Email</label>
-                    <input type="email" class="form-control mt-3" placeholder="Your Email">
+                    <input type="email" name="email" class="form-control mt-3" placeholder="Your Email">
                 </div>
                 <div class="form-group mb-4">
                     <label>Phone Number</label>
-                    <input type="text" class="form-control mt-3" placeholder="Your Phone Number">
+                    <input type="text" name="phone" class="form-control mt-3" placeholder="Your Phone Number">
                 </div>
                 <div class="form-group mb-4">
                     <label>Message</label>
-                    <textarea name="#" id="#" class="form-control mt-3" cols="30" rows="4" placeholder="Your Message"></textarea>
+                    <textarea name="message" class="form-control mt-3" cols="30" rows="4" placeholder="Your Message"></textarea>
                 </div>
-                <a href="#" class="btn btn-primary mt-2">Send Message</a>
+                <button type="submit" class="btn btn-primary mt-2">Send Message</button>
             </form>
         </div>
         <div class="col-lg-8 col-12 p-5 order-1 order-lg-2">

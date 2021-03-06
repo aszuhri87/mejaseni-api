@@ -11,6 +11,7 @@ use App\Models\Company;
 use App\Models\SocialMedia;
 
 
+use Auth;
 use DB;
 use Storage;
 
@@ -39,13 +40,16 @@ class HomePageController extends Controller
 
         $coachs = DB::table('coaches')
             ->select([
-                'coaches.*',
-                DB::raw("CONCAT('{$path}',coaches.image) as image_url"),
+                'coaches.name',
+                'coaches.description',
+                'coach_reviews.id',
                 'expertises.name as expertise_name',
+                DB::raw("CONCAT('{$path}',coaches.image) as image_url"),
             ])
+            ->leftJoin('coach_reviews','coach_reviews.coach_id','=','coaches.id')
             ->leftJoin('expertises','coaches.expertise_id','=','expertises.id')
             ->whereNull([
-                'coaches.deleted_at'
+                'coach_reviews.deleted_at'
             ])
             ->get();
 

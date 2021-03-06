@@ -95,6 +95,10 @@ use App\Http\Controllers\Admin\Cms\WorkingHourController as WorkingHourControlle
 use App\Http\Controllers\Admin\Cms\GaleryController as GaleryController;
 use App\Http\Controllers\Admin\Cms\SocialMediaController as SocialMediaController;
 use App\Http\Controllers\Admin\Cms\MarketPlaceController as MarketPlaceController;
+use App\Http\Controllers\Admin\Cms\QuestionController as QuestionController;
+use App\Http\Controllers\Admin\Cms\CoachReviewController as CoachReviewController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -162,13 +166,19 @@ Route::get('/classroom_category/sub_classroom_category/{sub_category_id}/video-c
 Route::get('/news-event', [NewsEventController::class, 'index']);
 Route::get('/event-list', [EventListController::class, 'index']);
 Route::get('/event/{event_id}/detail', [EventDetailController::class, 'index']);
+
 Route::get('/news-list',[NewsListController::class, 'index']);
+Route::post('/news-list/search', [NewsListController::class, 'search']);
 Route::get('/news/{news_id}/detail',[NewsDetailController::class, 'index']);
 
 Route::get('/about', [AboutController::class, 'index']);
 Route::get('/privacy-policy', [PrivacyPolicyController::class, 'index']);
 Route::get('/tos', [TosController::class, 'index']);
+
+
 Route::get('/faq', [FaqController::class, 'index']);
+Route::post('/question',[QuestionController::class,'store']);
+
 Route::get('/career', [CareerController::class, 'index']);
 Route::get('/career/{id}/detail', [CareerDetailController::class, 'index']);
 Route::post('/notifications/payments', [PaymentController::class, 'notification']);
@@ -431,6 +441,15 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::post('marketplace/dt', [MarketPlaceController::class, 'dt']);
             Route::post('marketplace/update/{id}', [MarketPlaceController::class, 'update']);
             Route::resource('marketplace', MarketPlaceController::class);
+
+            Route::post('question/dt', [QuestionController::class, 'dt']);
+            Route::resource('question', QuestionController::class);
+
+            Route::post('coach-review/dt', [CoachReviewController::class, 'dt']);
+            Route::post('coach-review/coach_dt', [CoachReviewController::class, 'coach_dt']);
+            Route::post('coach-review/{coach_id}', [CoachReviewController::class, 'store']);
+            Route::resource('coach-review', CoachReviewController::class);
+            
 
         });
     });

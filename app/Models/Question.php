@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\Uuid;
 
-class Event extends Model
+class Question extends Model
 {
     use HasFactory, Uuid, SoftDeletes;
 
@@ -16,21 +16,11 @@ class Event extends Model
     public $keyType = 'string';
 
     protected $fillable = [
-        'title',
-        'description',
-        'image',
-        'start_at',
-        'end_at',
-        'quota',
-        'location',
-        'is_free',
-        'total'
+        'name',
+        'email',
+        'phone',
+        'message'
     ];
 
     protected $dates = ['deleted_at'];
-
-    public function getDate()
-    {
-        return $this->start_at;
-    }
 }

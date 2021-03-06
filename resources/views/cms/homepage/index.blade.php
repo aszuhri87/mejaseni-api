@@ -37,7 +37,7 @@
     @else
       <div class="col-lg-5 col-xl-4 col-12 mx-0 pr-5 px-md-0 pr-lg-5 login-aside" data-aos="zoom-out">
         <div class="login-wrapper p-5 p-lg-4 p-xl-5">
-          <img class="rounded-circle img-logged mb-3" src="{{ asset('cms/assets/img/coach.png') }}" alt="">
+          <img class="rounded-circle img-logged mb-3" src="{{ Auth::guard('student')->user()->getImageUrl() }}" alt="">
           <h1>Halo, <br />{{ Auth::guard('student')->user()->name }}!!!</h1>
           <div class="pt-3">
             <div class="row-spacearound mt-3">

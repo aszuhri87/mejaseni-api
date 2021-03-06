@@ -14,18 +14,6 @@
             <a >
               <li class="active">Video Course</li>
             </a>
-            {{-- <a href="#">
-              <li>Course Tools</li>
-            </a>
-            <a href="#">
-              <li>Music Instrument</li>
-            </a>
-            <a href="#">
-              <li>Art Product</li>
-            </a>
-            <a href="#">
-              <li>Merchandhise</li>
-            </a> --}}
           </ul>
         </div>
         <div class="online-shop row-center">
