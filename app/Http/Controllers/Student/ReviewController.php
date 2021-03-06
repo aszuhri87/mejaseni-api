@@ -115,6 +115,108 @@ class ReviewController extends BaseMenu
         }
     }
 
+    public function dt_new(){
+        try {
+            $path = Storage::disk('s3')->url('/');
+
+            $coach = DB::table('coaches')
+                ->select([
+                    'coaches.id',
+                    'coaches.name',
+                    DB::raw("CONCAT('{$path}',coaches.image) as coach_image"),
+                ]);
+
+            $classroom = DB::table('classrooms')
+                ->select([
+                    'classrooms.id',
+                    'classrooms.name as classroom_name',
+                ]);
+
+            $student = DB::table('students')
+                ->select([
+                    'students.id',
+                ]);
+
+            $student_classroom = DB::table('student_classrooms')
+                ->select([
+                    'student_classrooms.id',
+                    'classrooms.classroom_name',
+                    'students.id as student_id'
+                ])
+                ->leftJoinSub($classroom, 'classrooms', function ($join) {
+                    $join->on('student_classrooms.classroom_id', '=', 'classrooms.id');
+                })
+                ->leftJoinSub($student, 'students', function ($join) {
+                    $join->on('student_classrooms.student_id', '=', 'students.id');
+                })
+                ->whereNull('deleted_at')
+                ->distinct('student_classrooms.classroom_id');
+
+            $theory = DB::table('theories')
+                ->select([
+                    'theories.session_id',
+                    'theories.name as theory_name',
+                ])
+                ->distinct('theories.session_id');
+
+            $session = DB::table('sessions')
+                ->select([
+                    'sessions.id',
+                    'theories.theory_name',
+                ])
+                ->leftJoinSub($theory, 'theories', function ($join) {
+                    $join->on('sessions.id', '=', 'theories.session_id');
+                });
+
+            $student_schedule = DB::table('student_schedules')
+                ->select([
+                    'student_schedules.id',
+                    'student_classrooms.classroom_name',
+                    'sessions.theory_name',
+                    'student_classrooms.student_id',
+                ])
+                ->leftJoinSub($student_classroom, 'student_classrooms', function ($join) {
+                    $join->on('student_schedules.student_classroom_id', '=', 'student_classrooms.id');
+                })
+                ->leftJoinSub($session, 'sessions', function ($join) {
+                    $join->on('student_schedules.session_id', '=', 'sessions.id');
+                })
+                ->whereNull('student_schedules.deleted_at');
+
+            $result = DB::table('student_feedback')
+                ->select([
+                    'student_feedback.*',
+                    'student_feedback.created_at as datetime',
+                    'coaches.name as coach_name',
+                    'coaches.coach_image',
+                    'student_schedules.classroom_name',
+                    'student_schedules.theory_name',
+                    'student_schedules.student_id',
+                ])
+                ->leftJoinSub($coach, 'coaches', function ($join) {
+                    $join->on('student_feedback.coach_id', '=', 'coaches.id');
+                })
+                ->leftJoinSub($student_schedule, 'student_schedules', function ($join) {
+                    $join->on('student_feedback.student_schedule_id', '=', 'student_schedules.id');
+                })
+                ->whereNull('student_feedback.deleted_at')
+                ->where('student_schedules.student_id', Auth::guard('student')->user()->id)
+                ->orderBy('student_feedback.created_at','DESC')
+                ->get();
+
+            return DataTables::of($result)
+                ->addIndexColumn()
+                ->make(true);
+
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "status" => 400,
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
     public function get_review($id)
     {
         try {

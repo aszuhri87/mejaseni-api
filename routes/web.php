@@ -615,6 +615,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::get('/', [StudentReviewController::class, 'index']);
             Route::get('get-review/{id}', [StudentReviewController::class, 'get_review']);
             Route::post('dt', [StudentReviewController::class, 'dt']);
+            Route::post('dt-new', [StudentReviewController::class, 'dt_new']);
         });
 
         Route::group(['prefix' => 'notification'], function () {

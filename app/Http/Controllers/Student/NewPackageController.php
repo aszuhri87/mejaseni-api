@@ -75,6 +75,7 @@ class NewPackageController extends BaseMenu
                     $join->on('classrooms.id', '=', 'carts.classroom_id');
                 })
                 ->where('classrooms.deleted_at')
+                ->distinct('classrooms.id')
                 ->paginate(6);
 
             foreach ($result as $key => $value) {
@@ -168,6 +169,7 @@ class NewPackageController extends BaseMenu
                 })
                 ->where('classrooms.deleted_at')
                 ->where('classrooms.sub_classroom_category_id',$sub_classroom_category_id)
+                ->distinct('classrooms.id')
                 ->paginate(6);
 
             foreach ($result as $key => $value) {
@@ -359,6 +361,7 @@ class NewPackageController extends BaseMenu
                 })
                 ->where('classrooms.deleted_at')
                 ->where('classrooms.classroom_category_id',$id)
+                ->distinct('classrooms.id')
                 ->paginate(6);
 
             foreach ($result as $key => $value) {
