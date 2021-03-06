@@ -21,6 +21,9 @@ class UpdateTableEvent extends Migration
             $table->boolean('is_free');
             $table->double('total');
             $table->integer('quota');
+
+            $table->uuid('classroom_category_id')->nullable();
+            $table->foreign('classroom_category_id')->references('id')->on('classroom_categories');
         });
     }
 
@@ -32,13 +35,14 @@ class UpdateTableEvent extends Migration
     public function down()
     {
         Schema::table('events', function (Blueprint $table) {
-            $table->date('date');
+            $table->date('date')->nullable();
             $table->dropColumn('start_at');
             $table->dropColumn('end_at');
             $table->dropColumn('location');
             $table->dropColumn('is_free');
             $table->dropColumn('total');
             $table->dropColumn('quota');
+            $table->dropColumn('classroom_category_id');
         });
     }
 }

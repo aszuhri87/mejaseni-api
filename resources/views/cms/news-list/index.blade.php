@@ -19,26 +19,28 @@
                 <div class="row my-5 w-100">
                     <div class="col-12 col-lg-3 pl-lg-0 pr-lg-3">
                         <button class="btn btn-white w-100 row-center-spacebetween filter-btn"
-                            id="news_filter_btn">Semua berita <img src="././assets/img/svg/chevron-down.svg"
+                            id="news_filter_btn">Semua berita <img src="{{ asset('cms/assets/img/svg/chevron-down.svg') }}"
                                 alt=""></button>
                         <div class="filter__wrapper p-4">
                             <label>Pilih Kategori Seni</label>
-                            <select class="mt-3 mb-4" name="select-news-categories" id="select-news-categories"></select>
-                            <div class="input-group input-daterange d-flex flex-column">
-                                <div class="mb-4">
-                                    <label for="">Dari Tanggal</label>
-                                    <input type="text" class="form-control w-100 mt-3 text-left" value="2012-04-05">
+                            <form>
+                                <select class="mt-3 mb-4" name="classroom_category" id="select-news-categories"></select>
+                                <div class="input-group input-daterange d-flex flex-column">
+                                    <div class="mb-4">
+                                        <label for="">Dari Tanggal</label>
+                                        <input type="text" name="start_at" class="form-control w-100 mt-3 text-left" required>
+                                    </div>
+                                    <div>
+                                        <label for="">Sampai Tanggal</label>
+                                        <input type="text" name="end_at" class="form-control w-100 mt-3 text-left" required>
+                                    </div>
                                 </div>
-                                <div>
-                                    <label for="">Sampai Tanggal</label>
-                                    <input type="text" class="form-control w-100 mt-3 text-left" value="2012-04-19">
-                                </div>
-                            </div>
-                            <button class="btn btn-primary mt-4 w-100">Terapkan Filter</button>
+                                <button type="submit" class="btn btn-primary mt-4 w-100">Terapkan Filter</button>
+                            </form>
                         </div>
                     </div>
                     <div class="col-12 col-lg-9 px-0">
-                        <input class="form-control input-rounded" id="exampleDataList" placeholder="Type to search...">
+                        <input class="form-control input-rounded" id="search" placeholder="Type to search...">
                     </div>
                 </div>
                 <div class="store-content__wrapper my-4">
@@ -53,25 +55,13 @@
                                 <div class="col-xl-8 px-4">
                                     <div class="badge-left">
                                         <a href="{{ url('news') }}/{{$new->id}}/detail">
-                                            <h3 class="ml-2 mt-2 mt-md-4 mt-lg-0">Loreem ipsum, dolor sit amet consectetur
-                                                adipisicing elit. Lorem
-                                                ipsum, consequatur.</h3>
+                                            <h3 class="ml-2 mt-2 mt-md-4 mt-lg-0">{{ $new->title ? $new->title:''}}</h3>
                                         </a>
                                     </div>
-                                    <p class="mt-3 ml-3 desc__store-content">Lorem ipsum dolor sit amet consectetur
-                                        adipisicing elit. Quaerat cum,
-                                        laboriosam
-                                        saepe libero, eaque laborum natus similique iure totam illo placeat ipsa nostrum
-                                        doloremque eligendi dolore aliquam modi temporibus enim sed dicta accusamus?
-                                        Deserunt quos accusantium voluptatem distinctio dolor ex excepturi ullam officia,
-                                        nobis tempore eveniet, incidunt cum recusandae vitae inventore unde laboriosam
-                                        mollitia, illo reprehenderit. Laboriosam quos odio perferendis excepturi voluptas.
-                                        Ipsa aspernatur nulla at distinctio facilis vel,!</p>
+                                    <p class="mt-3 ml-3 desc__store-content">{{ $new->description ? $new->description:''}}</p>
                                     <div class="detail__store-content ml-3 mt-3">
                                         <div class="class__store-content row-center mt-md-0 mt-3">
-                                            <img src="{{ asset('cms/assets/img/svg/calendar.svg') }}" class="mr-2" alt="">Jum, 26 Februari
-                                            | 09:00 AM
-                                            2021
+                                            <img src="{{ asset('cms/assets/img/svg/calendar.svg') }}" class="mr-2" alt="">{{ $new->created_at ? date_format(date_create($new->created_at), "l, d F Y | H:i"):''}}
                                         </div>
                                     </div>
                                 </div>

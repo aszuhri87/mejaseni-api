@@ -67,8 +67,12 @@ class PaymentController extends Controller
             ])
             ->first();
 
-        $transaction->json_doku_notification = json_encode($request->all());
-        $transaction->update();
+        DB::transaction(function () use($request, $transaction){
+            if($transaction){
+                $transaction->json_doku_notification = json_encode($request->all());
+                $transaction->update();
+            }
+        });
 
         if($transaction && $request['transaction']['status'] == 'SUCCESS'){
             if($request['service']['id'] == 'VIRTUAL_ACCOUNT'){
@@ -114,26 +118,70 @@ class PaymentController extends Controller
                     'datetime' => date('Y-m-d H:i:s')
                 ]);
 
-                // $carts = DB::table('transaction_details')
-                //     ->select([
-                //         'carts.classroom_id'
-                //     ])
-                //     ->leftJoin('carts','carts.id','=','transaction_details.cart_id')
-                //     ->where('transaction_id', $transaction->id)
-                //     ->whereNotNull([
-                //         'carts.classroom_id'
-                //     ])
-                //     ->get();
+                $carts = DB::table('transaction_details')
+                    ->select([
+                        'carts.classroom_id',
+                        'carts.session_video_id',
+                        DB::raw("CASE
+                            WHEN carts.classroom_id IS NOT NULL
+                                THEN classrooms.price
+                            ELSE session_videos.price
+                            END price
+                        "),
+                        DB::raw("CASE
+                            WHEN carts.classroom_id IS NOT NULL
+                                THEN 1
+                            ELSE 2
+                            END type_class
+                        "),
+                        DB::raw("CASE
+                            WHEN carts.classroom_id IS NOT NULL
+                                THEN null
+                            ELSE session_videos.coach_id
+                            END session_video_coach_id
+                        "),
+                    ])
+                    ->leftJoin('carts','carts.id','=','transaction_details.cart_id')
+                    ->leftJoin('classrooms','classrooms.id','=','carts.classroom_id')
+                    ->leftJoin('session_videos','session_videos.id','=','carts.session_video_id')
+                    ->where('transaction_id', $transaction->id)
+                    ->where(function($query){
+                        $query->whereNotNull('carts.classroom_id')
+                            ->orWhereNotNull('carts.session_video_id');
+                    })
+                    ->get();
 
-                // foreach ($carts as $key => $cart) {
-                //     Income::create([
-                //         'master_lesson_id',
-                //         'session_video_id',
-                //         'classroom_id',
-                //         'coach_id',
-                //         'theory_id',
-                //     ]);
-                // }
+                foreach ($carts as $key_cart => $cart) {
+                    if($cart->type_class == 1){
+                        $coach_classrooms = DB::table('coach_classrooms')
+                            ->where('classroom_id', $cart->classroom_id)
+                            ->whereNull('deleted_at')
+                            ->get();
+
+                        if(count($coach_classrooms) > 0){
+                            $salary = ((int)$cart->price * 0.45) / count($coach_classrooms);
+
+                            foreach ($coach_classrooms as $key_coach_classroom => $coach_classroom) {
+                                Income::create([
+                                    'classroom_id' => $cart->classroom_id,
+                                    'coach_id' => $coach_classroom->coach_id,
+                                    'transaction_id' => $transaction->id,
+                                    'amount' => $salary,
+                                ]);
+                            }
+                        }
+                    }else{
+
+                        $salary = (int)$cart->price * 0.3;
+
+                        Income::create([
+                            'session_video_id' => $cart->session_video_id,
+                            'coach_id' => $cart->session_video_coach_id,
+                            'transaction_id' => $transaction->id,
+                            'amount' => $salary,
+                        ]);
+                    }
+                }
 
                 return $notification;
             });

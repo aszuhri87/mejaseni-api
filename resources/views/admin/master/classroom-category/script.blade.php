@@ -39,7 +39,7 @@
                             data: "id",
                             render : function(data, type, full, meta) {
                                 return `
-                                    <a href="{{url('/admin/master/courses/classroom-category')}}/${data}" title="Edit" class="btn btn-edit btn-sm btn-clean btn-icon mr-2" title="Edit details">
+                                    <a href="{{url('/admin/master/courses/classroom-category')}}/update/${data}" title="Edit" class="btn btn-edit btn-sm btn-clean btn-icon mr-2" title="Edit details">
                                         <span class="svg-icon svg-icon-md">
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -95,6 +95,9 @@
                     $('#form-classroom-category').attr('action','{{url('admin/master/courses/classroom-category')}}');
                     $('#form-classroom-category').attr('method','POST');
 
+                    $('#image').html('<input type="file" name="image" class="dropify image"/>');
+                    $('.dropify').dropify();
+
                     get_profile_coach_video();
 
                     showModal('modal-classroom-category');
@@ -107,9 +110,22 @@
 
                     $('#form-classroom-category').trigger("reset");
                     $('#form-classroom-category').attr('action', $(this).attr('href'));
-                    $('#form-classroom-category').attr('method','PUT');
+                    $('#form-classroom-category').attr('method','POST');
 
                     $('#form-classroom-category').find('input[name="name"]').val(data.name);
+                    $('#form-classroom-category').find('textarea[name="description"]').val(data.description);
+
+                    $('#image').empty();
+
+                    if(data.image_url){
+                        element = `<input type="file" name="image" class="dropify image"  data-default-file="${data.image_url}"/>`;
+                    }else{
+                        element = `<input type="file" name="image" class="dropify image"/>`;
+                    }
+
+                    $('#image').html(element);
+
+                    $('.dropify').dropify();
 
                     get_profile_coach_video(data.profile_coach_video_id);
 
@@ -155,7 +171,10 @@
                     $.ajax({
                         url: $(this).attr('action'),
                         type: $(this).attr('method'),
-                        data: $(this).serialize(),
+                        data: new FormData(this),
+                        contentType: false,
+                        cache: false,
+                        processData: false,
                     })
                     .done(function(res, xhr, meta) {
                         toastr.success(res.message, 'Success')

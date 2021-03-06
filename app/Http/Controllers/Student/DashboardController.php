@@ -251,7 +251,7 @@ class DashboardController extends BaseMenu
                 ->where('student_classrooms.student_id',Auth::guard('student')->user()->id)
                 ->whereNull('student_classrooms.deleted_at')
                 ->get();
-            dd($data);
+            
             $result = 0;
 
             foreach ($data as $key => $value) {

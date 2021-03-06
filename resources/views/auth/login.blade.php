@@ -94,7 +94,7 @@
                             <!--begin::Form group-->
                             <div class="form-group">
                                 <label class="font-size-h6 font-weight-bolder text-dark">Email atau Username</label>
-                                <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg border-0" type="text" name="username" autocomplete="off" />
+                                <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg border-0" type="text" value="{{old('username')}}" name="username" autocomplete="off" />
                             </div>
                             <!--end::Form group-->
 
@@ -103,7 +103,7 @@
                                 <div class="d-flex justify-content-between mt-n5">
                                     <label class="font-size-h6 font-weight-bolder text-dark pt-5">Password</label>
 
-                                    <a href="custom/pages/login/login-4/forgot.html" class="text-primary font-size-h6 font-weight-bolder text-hover-primary pt-5">
+                                    <a href="{{url('forgot-password')}}" class="text-primary font-size-h6 font-weight-bolder text-hover-primary pt-5">
                                         Lupa Password ?
                                     </a>
                                 </div>
@@ -114,6 +114,7 @@
                             <!--begin::Action-->
                             <div class="pb-lg-0 pb-5">
                                 <button type="submit" id="kt_login_singin_form_submit_button" class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-3">Masuk</button>
+                                <a href="{{url('register')}}" id="kt_login_singin_form_submit_button" class="btn btn-outline-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-3">Daftar</a>
                             </div>
                             <!--end::Action-->
                         </form>

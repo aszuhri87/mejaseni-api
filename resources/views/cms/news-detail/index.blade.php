@@ -6,13 +6,6 @@
 @include('cms.layouts.banner')
 @endpush
 
-@php
-function FunctionName($date)
-{
-    return date('l', strtotime($date));
-}
-@endphp
-
 @section('content')
 <section id="news-wrapper">
         <div class="row column-center">
@@ -23,7 +16,7 @@ function FunctionName($date)
                 <div class="news-detail mb-0 pb-0">
                     <div class="news-detail__overlay p-5">
                         <h3>{{ $news->title ? $news->title:'' }}</h3>
-                        <h5 class="pt-4 mt-2 pb-4">Jumat, 26 Februari 2021</h5>
+                        <h5 class="pt-4 mt-2 pb-4">{{ $news->date ? date_format(date_create($news->date), "l, d F Y"):''}}</h5>
                         <p>
                             {{ $news->description ? $news->description:'' }}
                         </p>

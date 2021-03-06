@@ -48,6 +48,7 @@ class CartController extends Controller
                         WHEN carts.theory_id IS NOT NULL THEN theories.price
                         WHEN carts.master_lesson_id IS NOT NULL THEN master_lessons.price
                         WHEN carts.session_video_id IS NOT NULL THEN session_videos.price
+                        WHEN carts.classroom_id IS NOT NULL THEN classrooms.price
                         WHEN carts.event_id IS NOT NULL THEN events.total
                     END as price"),
 

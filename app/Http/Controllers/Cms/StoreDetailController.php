@@ -51,11 +51,22 @@ class StoreDetailController extends Controller
             ])
             ->first();
 
+        $social_medias = DB::table('social_media')
+            ->select([
+                'url',
+                DB::raw("CONCAT('{$path}',image) as image_url"),
+            ])
+            ->whereNull([
+                'deleted_at'
+            ])
+            ->get();
+
         return view('cms.store-detail.index', [
             "company" => $company, 
             "branchs" => $branchs,
             "video_course_items" => $video_course_items,
-            "video_course" => $video_course
+            "video_course" => $video_course,
+            "social_medias" => $social_medias
         ]);
     }
 

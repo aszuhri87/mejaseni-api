@@ -22,6 +22,20 @@ class DatabaseSeeder extends Seeder
             SuperCoachSeeder::class,
             PermissionCoachSeeder::class,
             SosmedSeeder::class
+            CompanySeeder::class,
+            BranchSeeder::class,
+            EventSeeder::class,
+            FaqSeeder::class,
+            GalerySeeder::class,
+            MarketPlaceSeeder::class,
+            NewsSeeder::class,
+            PrivacyPolicySeeder::class,
+            ProgramSeeder::class,
+            Question::class,
+            SocialMediaSeeder::class,
+            TeamSeeder::class,
+            WorkHourSeeder::class,
+
             // CollectionSeed::class
         ]);
     }

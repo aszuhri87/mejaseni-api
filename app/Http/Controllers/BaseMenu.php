@@ -300,7 +300,7 @@ class BaseMenu extends Controller
                         ]
                     ],
                     [
-                        'key' => 'transaction',
+                        'key' => 'transaction-report',
                         'title' => 'Transaksi',
                         'url' => '#',
                         'permission' => 'transaction',
@@ -314,7 +314,7 @@ class BaseMenu extends Controller
                             [
                                 'key' => 'student',
                                 'title' => 'Student',
-                                'url' => 'admin/report/transaction/student',
+                                'url' => 'admin/report/transaction-report/student',
                                 'permission' => 'student'
                             ],
                         ]
@@ -345,6 +345,12 @@ class BaseMenu extends Controller
                         'title' => 'Company',
                         'url' => 'admin/cms/company',
                         'permission' => 'company'
+                    ],
+                    [
+                        'key' => 'coach-review',
+                        'title' => 'Coach Review',
+                        'url' => 'admin/cms/coach-review',
+                        'permission' => 'coach-review'
                     ],
                     [
                         'key' => 'event',
@@ -405,6 +411,12 @@ class BaseMenu extends Controller
                         'title' => 'Working Hour',
                         'url' => 'admin/cms/working-hour',
                         'permission' => 'working-hour'
+                    ],
+                    [
+                        'key' => 'question',
+                        'title' => 'Question',
+                        'url' => 'admin/cms/question',
+                        'permission' => 'question'
                     ],
 
                 ],

@@ -18,6 +18,8 @@ class ClassroomCategory extends Model
 
     protected $fillable = [
         'name',
+        'description',
+        'image',
         'profile_coach_video_id'
     ];
 

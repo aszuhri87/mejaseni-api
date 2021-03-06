@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ProviderController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\MediaController;
@@ -45,6 +46,9 @@ use App\Http\Controllers\Admin\Reporting\Review\Coach\Detail\CoachDetailControll
 use App\Http\Controllers\Admin\Reporting\Review\Student\StudentController as AdminStudentController;
 use App\Http\Controllers\Admin\Reporting\Review\Student\Detail\StudentDetailController;
 
+use App\Http\Controllers\Admin\Review\VideoController;
+use App\Http\Controllers\Admin\Review\ClassController as ReviewClassController;
+use App\Http\Controllers\Admin\ReportTransaction\TransactionStudentController as ReviewTransactionStudentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -97,6 +101,10 @@ use App\Http\Controllers\Admin\Cms\WorkingHourController as WorkingHourControlle
 use App\Http\Controllers\Admin\Cms\GaleryController as GaleryController;
 use App\Http\Controllers\Admin\Cms\SocialMediaController as SocialMediaController;
 use App\Http\Controllers\Admin\Cms\MarketPlaceController as MarketPlaceController;
+use App\Http\Controllers\Admin\Cms\QuestionController as QuestionController;
+use App\Http\Controllers\Admin\Cms\CoachReviewController as CoachReviewController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -147,30 +155,58 @@ Route::get('/class', [ClassController::class, 'index']);
 Route::get('/class/classroom_category/{category_id}/sub_classroom_category', [ClassController::class, 'get_sub_category']);
 Route::get('/classroom_category/sub_classroom_category/{sub_category_id}/classroom', [ClassController::class, 'get_classroom']);
 Route::get('/class/{classroom_category_id}/sub_classroom_category/{sub_classroom_category_id}/package/{package}', [ClassController::class, 'get_package']);
+Route::get('/class/{classroom_id}/coachs', [ClassController::class, 'get_coach']);
+Route::get('/class/{classroom_id}/tools', [ClassController::class, 'get_tools']);
+Route::get('/class/{classroom_id}/description', [ClassController::class, 'get_description']);
+Route::get('/master-lesson/{master_lesson_id}/guest-star', [ClassController::class, 'get_guest_start']);
+Route::get('/master-lesson/{master_lesson_id}/detail', [ClassController::class, 'get_master_lesson']);
 
 
 Route::get('/store', [StoreController::class, 'index']);
+Route::post('/store/search', [StoreController::class, 'search']);
 Route::get('/video-course/{video_course_id}/detail', [StoreDetailController::class, 'index']);
 Route::get('/classroom_category/{category_id}/sub_classroom_category', [StoreController::class, 'get_sub_category']);
 Route::get('/classroom_category/sub_classroom_category/{sub_category_id}/video-course', [StoreController::class, 'get_video_courses']);
+
+
+
 Route::get('/news-event', [NewsEventController::class, 'index']);
 Route::get('/event-list', [EventListController::class, 'index']);
 Route::get('/event/{event_id}/detail', [EventDetailController::class, 'index']);
 Route::get('/news-list',[NewsListController::class, 'index']);
 Route::get('/news/{news_id}/detail',[NewsDetailController::class, 'index']);
 
+Route::get('/news-list',[NewsListController::class, 'index']);
+Route::post('/news-list/search', [NewsListController::class, 'search']);
+Route::get('/news/{news_id}/detail',[NewsDetailController::class, 'index']);
+
 Route::get('/about', [AboutController::class, 'index']);
 Route::get('/privacy-policy', [PrivacyPolicyController::class, 'index']);
 Route::get('/tos', [TosController::class, 'index']);
+
+
 Route::get('/faq', [FaqController::class, 'index']);
+Route::post('/question',[QuestionController::class,'store']);
+
 Route::get('/career', [CareerController::class, 'index']);
-Route::get('/career-detail', [CareerDetailController::class, 'index']);
+Route::get('/career/{id}/detail', [CareerDetailController::class, 'index']);
 Route::post('/notifications/payments', [PaymentController::class, 'notification']);
 
 Route::group(['middleware' => ['guest-handling']], function () {
 
+    Route::get('email-verification/check/{token}',[RegisterController::class, 'email_verification']);
+
+    Route::get('forgot-password', [RegisterController::class, 'index_forgot_password']);
+    Route::post('forgot-password', [RegisterController::class, 'forgot_password']);
+
     Route::get('login', [LoginController::class, 'index_login']);
     Route::post('login', [LoginController::class, 'login']);
+
+    Route::get('register', [RegisterController::class, 'index_register']);
+    Route::post('register', [RegisterController::class, 'register']);
+
+    Route::get('register-success', [RegisterController::class, 'registration_success']);
+    Route::get('reset-password-success', [RegisterController::class, 'reset_password_success']);
 
     Route::get('auth/{provider}', [ProviderController::class, 'redirect_provider']);
     Route::get('auth/{provider}/callback', [ProviderController::class, 'callback_provider']);
@@ -209,6 +245,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
 
     Route::group(['prefix' => 'admin', 'middleware' => 'admin-handling'], function () {
         Route::get('dashboard', [AdminDashboard::class, 'index']);
+        Route::get('cart-dashboard', [AdminDashboard::class, 'cart_data']);
 
         Route::group(['prefix' => 'master'], function () {
             Route::group(['prefix' => 'courses'], function () {
@@ -216,6 +253,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
                 Route::resource('package', PackageController::class);
 
                 Route::post('classroom-category/dt', [ClassroomCategoryController::class, 'dt']);
+                Route::post('classroom-category/update/{id}', [ClassroomCategoryController::class, 'update']);
                 Route::resource('classroom-category', ClassroomCategoryController::class);
 
                 Route::post('sub-classroom-category/dt', [SubClassroomCategoryController::class, 'dt']);
@@ -303,6 +341,38 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::resource('expertise', ExpertiseController::class);
         });
 
+        Route::group(['prefix' => 'report'], function () {
+            Route::group(['prefix' => 'review'], function () {
+                Route::group(['prefix' => 'video'], function () {
+                    Route::get('/', [VideoController::class, 'index']);
+                    Route::get('{id}', [VideoController::class, 'detail']);
+                    Route::post('dt', [VideoController::class, 'dt']);
+                    Route::post('dt/{id}', [VideoController::class, 'dt_detail']);
+                    Route::post('dt/{id}', [VideoController::class, 'dt_detail']);
+                    Route::post('print-excel/{id}', [VideoController::class, 'print_excel']);
+                    Route::post('print-pdf/{id}', [VideoController::class, 'print_pdf']);
+                });
+
+                Route::group(['prefix' => 'class'], function () {
+                    Route::get('/', [ReviewClassController::class, 'index']);
+                    Route::get('{id}', [ReviewClassController::class, 'detail']);
+                    Route::post('dt', [ReviewClassController::class, 'dt']);
+                    Route::post('dt/{id}', [ReviewClassController::class, 'dt_detail']);
+                    Route::post('print-excel/{id}', [ReviewClassController::class, 'print_excel']);
+                    Route::post('print-pdf/{id}', [ReviewClassController::class, 'print_pdf']);
+                });
+            });
+
+            Route::group(['prefix' => 'transaction-report'], function () {
+                Route::group(['prefix' => 'student'], function () {
+                    Route::get('/', [ReviewTransactionStudentController::class, 'index']);
+                    Route::post('dt', [ReviewTransactionStudentController::class, 'dt']);
+                    Route::post('print-pdf', [ReviewTransactionStudentController::class, 'print_pdf']);
+                    Route::post('print-excel', [ReviewTransactionStudentController::class, 'print_excel']);
+                });
+            });
+        });
+
         Route::group(['prefix' => 'transaction'], function () {
             Route::get('student', [TransactionStudentController::class, 'index']);
             Route::post('student/dt', [TransactionStudentController::class, 'dt']);
@@ -328,28 +398,34 @@ Route::group(['middleware' => ['auth-handling']], function () {
 
                 Route::group(['prefix' => 'coach'], function () {
                     Route::get('/', [AdminCoachController::class, 'index']);
-                    Route::post('dt', [AdminCoachController::class, 'dt']);           
-                    Route::get('admin/report/review/coach/details/{id}', [AdminCoachController::class, 'dt']);   
+                    Route::post('dt', [AdminCoachController::class, 'dt']);
+                    Route::get('admin/report/review/coach/details/{id}', [AdminCoachController::class, 'dt']);
                     Route::group(['prefix' => 'detail'], function () {
-                        Route::get('/{id}', [CoachDetailController::class, 'index']);   
-                        Route::post('dt/{id}', [CoachDetailController::class, 'dt']);                 
-                        Route::get('get-classroom/{id}', [CoachDetailController::class, 'get_classrooms']);                 
-                    });         
-                });            
+                        Route::get('/{id}', [CoachDetailController::class, 'index']);
+                        Route::post('dt/{id}', [CoachDetailController::class, 'dt']);
+                        Route::get('get-classroom/{id}', [CoachDetailController::class, 'get_classrooms']);
+                    });
+                });
 
                 Route::group(['prefix' => 'student'], function () {
                     Route::get('/', [AdminStudentController::class, 'index']);
-                    Route::post('dt', [AdminStudentController::class, 'dt']);           
+                    Route::post('dt', [AdminStudentController::class, 'dt']);
                     Route::group(['prefix' => 'detail'], function () {
-                        Route::get('/{id}', [StudentDetailController::class, 'index']);   
-                        Route::post('dt/{id}', [StudentDetailController::class, 'dt']);                 
-                        Route::get('get-classroom/{id}', [StudentDetailController::class, 'get_classrooms']);                 
-                    });         
-                });  
-                          
+                        Route::get('/{id}', [StudentDetailController::class, 'index']);
+                        Route::post('dt/{id}', [StudentDetailController::class, 'dt']);
+                        Route::get('get-classroom/{id}', [StudentDetailController::class, 'get_classrooms']);
+                    });
+                });
+
+            });
+
+
+            Route::group(['prefix' => 'transaction'], function () {
+                Route::get('student', [ScheduleController::class, 'index']);
+                Route::post('student/excel', [TransactionStudentController::class, 'excel']);
+                Route::post('student/dt', [TransactionStudentController::class, 'dt']);
             });
         });
-
 
         Route::group(['prefix' => 'cms'], function () {
             Route::post('company/dt', [CompanyController::class, 'dt']);
@@ -402,6 +478,16 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::post('marketplace/dt', [MarketPlaceController::class, 'dt']);
             Route::post('marketplace/update/{id}', [MarketPlaceController::class, 'update']);
             Route::resource('marketplace', MarketPlaceController::class);
+
+            Route::post('question/dt', [QuestionController::class, 'dt']);
+            Route::resource('question', QuestionController::class);
+
+            Route::post('coach-review/dt', [CoachReviewController::class, 'dt']);
+            Route::post('coach-review/coach_dt', [CoachReviewController::class, 'coach_dt']);
+            Route::post('coach-review/{coach_id}', [CoachReviewController::class, 'store']);
+            Route::resource('coach-review', CoachReviewController::class);
+
+
         });
     });
 
@@ -432,7 +518,11 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::delete('file/{id}', [CoachTheoryController::class, 'theory_file_delete']);
             Route::get('list/{classroom_id}/{session_id}', [CoachTheoryController::class, 'theory_list']);
             Route::get('download/{id}', [CoachTheoryController::class, 'theory_download']);
-            Route::resource('/', CoachTheoryController::class);
+            Route::get('/', [CoachTheoryController::class, 'index']);
+            Route::post('/', [CoachTheoryController::class, 'store']);
+            Route::put('/{id}', [CoachTheoryController::class, 'update']);
+            Route::delete('/{id}', [CoachTheoryController::class, 'destroy']);
+            // Route::resource('/', CoachTheoryController::class);
         });
 
         Route::group(['prefix' => 'exercise'], function () {
@@ -448,7 +538,12 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::get('review-assignment/list/{classroom_id}/{session_id}', [ReviewAssignmentController::class, 'assignment_list']);
             Route::get('review-assignment/download/{id}', [ReviewAssignmentController::class, 'assignment_download']);
             Route::post('review-assignment/dt/{classroom_id}/{session_id}', [ReviewAssignmentController::class, 'dt']);
-            Route::resource('review-assignment', ReviewAssignmentController::class);
+            Route::get('review-assignment', [ReviewAssignmentController::class, 'index']);
+            Route::get('review-assignment/{id}', [ReviewAssignmentController::class, 'show']);
+            Route::post('review-assignment', [ReviewAssignmentController::class, 'store']);
+            Route::put('review-assignment/{id}', [ReviewAssignmentController::class, 'update']);
+            Route::delete('review-assignment/{id}', [ReviewAssignmentController::class, 'destroy']);
+            // Route::resource('review-assignment', ReviewAssignmentController::class);
         });
 
         Route::group(['prefix' => 'schedule'], function () {
@@ -583,6 +678,12 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::get('/', [StudentReviewController::class, 'index']);
             Route::get('get-review/{id}', [StudentReviewController::class, 'get_review']);
             Route::post('dt', [StudentReviewController::class, 'dt']);
+            Route::post('dt-new', [StudentReviewController::class, 'dt_new']);
+        });
+
+        Route::group(['prefix' => 'notification'], function () {
+            Route::get('/', [StudentNotificationController::class, 'index']);
+            Route::post('dt', [StudentNotificationController::class, 'dt']);
         });
 
         Route::group(['prefix' => 'notification'], function () {
@@ -601,6 +702,8 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::delete('delete-cart/{cart_id}',[StudentCartController::class, 'delete_cart']);
 
         Route::post('/event/{event_id}/add-to-cart',[StudentCartController::class, 'event']);
+        Route::get('/class/{classroom_id}/detail', [ClassController::class, 'detail']);
+        Route::post('/class/add-to-cart', [ClassController::class, 'store']);
     });
 
     /*
@@ -627,6 +730,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::get('get-classroom-coach', [PublicController::class, 'get_classroom_coach']);
         Route::get('get-session-coach/{classroom_id}', [PublicController::class, 'get_session_coach']);
         Route::get('get-guest-star', [PublicController::class, 'get_guest_star']);
+        Route::get('get-student', [PublicController::class, 'get_student']);
     });
 });
 
@@ -637,6 +741,10 @@ Route::get('fire', function () {
 
 Route::get('welcome', function () {
     return view('welcome');
+});
+
+Route::get('redirect-blank', function () {
+    return view('cms.transaction.payment-success.redirect');
 });
 
 Route::get('video', function () {

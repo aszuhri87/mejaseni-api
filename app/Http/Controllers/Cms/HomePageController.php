@@ -8,8 +8,10 @@ use Illuminate\Http\Request;
 use App\Models\Branch;
 use App\Models\Coach;
 use App\Models\Company;
+use App\Models\SocialMedia;
 
 
+use Auth;
 use DB;
 use Storage;
 
@@ -20,8 +22,17 @@ class HomePageController extends Controller
     {
     	$company = Company::first();
     	$branchs = Branch::all();
-
     	$path = Storage::disk('s3')->url('/');
+        $social_medias = DB::table('social_media')
+            ->select([
+                'url',
+                DB::raw("CONCAT('{$path}',image) as image_url"),
+            ])
+            ->whereNull([
+                'deleted_at'
+            ])
+            ->get();
+
         $events = DB::table('events')
                     ->select([
                         'id',
@@ -35,16 +46,18 @@ class HomePageController extends Controller
                     ->take(4)
                     ->get();
 
-
         $coachs = DB::table('coaches')
             ->select([
-                'coaches.*',
-                DB::raw("CONCAT('{$path}',coaches.image) as image_url"),
+                'coaches.name',
+                'coaches.description',
+                'coach_reviews.id',
                 'expertises.name as expertise_name',
+                DB::raw("CONCAT('{$path}',coaches.image) as image_url"),
             ])
+            ->leftJoin('coach_reviews','coach_reviews.coach_id','=','coaches.id')
             ->leftJoin('expertises','coaches.expertise_id','=','expertises.id')
             ->whereNull([
-                'coaches.deleted_at'
+                'coach_reviews.deleted_at'
             ])
             ->get();
 
@@ -59,12 +72,30 @@ class HomePageController extends Controller
             ])
             ->get();
 
+        
+
+        $classroom_categories = DB::table('classroom_categories')
+            ->select([
+                'id',
+                'name',
+                'image',
+                'description',
+                'profile_coach_video_id',
+                DB::raw("CONCAT('{$path}',image) as image_url"),
+            ])
+            ->whereNull([
+                'deleted_at'
+            ])
+            ->get();
+
     	return view('cms.homepage.index',[
             "company" => $company, 
             "branchs" => $branchs, 
             "coachs" => $coachs,
             "programs" => $programs,
-            "events" => $events
+            "events" => $events,
+            "social_medias" => $social_medias,
+            "classroom_categories" => $classroom_categories
         ]);
     }
 }

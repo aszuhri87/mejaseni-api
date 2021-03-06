@@ -1,12 +1,102 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.min.js"></script>
 <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 <script type="text/javascript">
-    $('.registerNow').click(function () {
-        $('#modalLoginNeeded').modal('show')
+    $('.btn-register-classroom').click(function () {
+        $('#classRegisterModal').modal('show')
     });
     $('.btn-close').click(function () {
         $('.modal').modal('hide')
     });
+
+    $(".addtocart").click(function () {
+        $.ajax({
+            url: "{{ url('student/class/add-to-cart') }}",
+            type: "POST",
+            data: $("#form-classrom").serialize()
+        })
+        .done(function(res, xhr, meta) {
+            $(".cart-added").toggle();
+            $(".addtocart").toggle();
+            $(".cart-added").css("display", "flex");
+        })
+        .fail(function(res, error) {
+            toastr.error('Internal Server Error', 'Failed')
+        })
+        .always(function() {
+        });
+    });
+
+    $(".addMasterLessonToCart").click(function () {
+        $.ajax({
+            url: "{{ url('student/class/add-to-cart') }}",
+            type: "POST",
+            data: $("#form-master-lesson").serialize()
+        })
+        .done(function(res, xhr, meta) {
+            $(".cart-added").toggle();
+            $(".addMasterLessonToCart").toggle();
+            $(".cart-added").css("display", "flex");
+        })
+        .fail(function(res, error) {
+            toastr.error('Internal Server Error', 'Failed')
+        })
+        .always(function() {
+        });
+    });
+
+    var showModalLoginRequired = ()=>{
+        $("#loginRequiredModal").modal('show')
+    }
+
+    var showModalRegisterClassroom = (classroom_id)=>{
+        $.ajax({
+            url: `/student/class/${classroom_id}/detail`,
+            type: 'GET',
+        })
+        .done(function(res, xhr, meta) {
+            $("#form-classrom").find("input[name=classroom_id]").val(res.data.id)
+            $("#classroom-name").text(res.data.name)
+            $("#classroom-session").text(`${res.data.session_total} Sesi | @${res.data.session_duration}Menit`)
+            $("#classroom-price").text(res.data.price)
+
+            if(res.data.package_type == 1)
+                $("#classroom-type").text('Special Class')
+            else if(res.data.package_type == 2)
+                $("#classroom-type").text('Regular Class')
+            else
+                $("#classroom-type").text('Master Lesson')
+
+            $('#classRegisterModal').modal('show')
+        })
+        .fail(function(res, error) {
+            toastr.error(res.responseJSON.message, 'Failed')
+        })
+        .always(function() {
+           
+        });
+    }
+
+    var showModalRegisterMasterLesson = (master_lession_id)=>{
+        $.ajax({
+            url: `/master-lesson/${master_lession_id}/detail`,
+            type: 'GET',
+        })
+        .done(function(res, xhr, meta) {
+            $("#form-master-lesson").find("input[name=master_lesson_id]").val(res.data.master_lesson.id)
+            $("#master-lesson-name").text(res.data.master_lesson.name)
+            $("#master-lesson-platform").text(res.data.master_lesson.platform)
+            $("#master-lesson-price").text(res.data.master_lesson.price)
+            $("#master-lesson-description").text(res.data.master_lesson.description)
+
+            $('#masterLessonRegisterModal').modal('show')
+        })
+        .fail(function(res, error) {
+            toastr.error(res.responseJSON.message, 'Failed')
+        })
+        .always(function() {
+           
+        });
+    }
 
 
 </script>
@@ -16,6 +106,7 @@
         var _componentPage = function () {
             var splide_sub_category;
             var splide_classroom;
+            var splide_class;
             $(document).ready(function () {
                 splideCategory()
                 splide();
@@ -30,6 +121,8 @@
                 packageListener()
             });
 
+
+
             var packageListener = ()=>{
                 $('.package').click(function(event){
                     $('.package').removeClass('active');
@@ -38,7 +131,6 @@
                     let package = $(this).data('id')
                     let selected_category = $('.class-category-selected').data('id')
                     let selected_sub_category = $('.btn-tertiary.active').data('id')
-                    console.log(package)
                     getPackage(selected_category, selected_sub_category, package)
                     event.preventDefault()
                 })
@@ -69,6 +161,10 @@
                 })
                 .done(function(res, xhr, meta) {
                     $("#classrooms").html(res.data.classroom_html)
+                    TabDetailListener()
+                    eventCategorySelectedListener()
+                    eventSubCategoryChangeListener()
+                    packageListener()
                     splide()
                 })
                 .fail(function(res, error) {
@@ -98,7 +194,6 @@
                         $("#classroom-content").html('')
                         $("#empty-classroom").html(res.data.default_html)
                         splide_sub_category.destroy()
-                        console.log('destroy')
                     }
                 })
                 .fail(function(res, error) {
@@ -115,7 +210,7 @@
                     type: 'GET',
                 })
                 .done(function(res, xhr, meta) {
-                    console.log(res)
+
                     $("#classroom-content").html(res.data.classroom_html)
                     splideSubCategory()
                 })
@@ -127,13 +222,117 @@
                 });
             }
 
-            
+            var getDescription = (classroom_id)=>{
+                $.ajax({
+                    url: `/class/${classroom_id}/description`,
+                    type: 'GET',
+                })
+                .done(function(res, xhr, meta) {
+                    splide_class.destroy()
+                    $("#description").html(res.data.html)
+                    splide()
+                })
+                .fail(function(res, error) {
+                    toastr.error(res.responseJSON.message, 'Failed')
+                })
+                .always(function() {
+                   
+                });
+            }
+
+            var getCoach = (classroom_id)=>{
+                $.ajax({
+                    url: `/class/${classroom_id}/coachs`,
+                    type: 'GET',
+                })
+                .done(function(res, xhr, meta) {
+                    splide_class.destroy()
+                    $("#description").html(res.data.html)
+                    splide()
+                })
+                .fail(function(res, error) {
+                    toastr.error(res.responseJSON.message, 'Failed')
+                })
+                .always(function() {
+                   
+                });
+            }
+
+            var getTools = (classroom_id)=>{
+                $.ajax({
+                    url: `/class/${classroom_id}/tools`,
+                    type: 'GET',
+                })
+                .done(function(res, xhr, meta) {
+                    splide_class.destroy()
+                    $("#description").html(res.data.html)
+                    splide()
+                })
+                .fail(function(res, error) {
+                    toastr.error(res.responseJSON.message, 'Failed')
+                })
+                .always(function() {
+                   
+                });
+            }
+
+            var getGuests = (master_lession_id)=>{
+                $.ajax({
+                    url: `/master-lesson/${master_lession_id}/guest-star`,
+                    type: 'GET',
+                })
+                .done(function(res, xhr, meta) {
+                    splide_class.destroy()
+                    $("#description").html(res.data.html)
+                    splide()
+                })
+                .fail(function(res, error) {
+                    toastr.error(res.responseJSON.message, 'Failed')
+                })
+                .always(function() {
+                   
+                });
+            }
+
+            var getMasterLesson = (master_lession_id)=>{
+                $.ajax({
+                    url: `/master-lesson/${master_lession_id}/detail`,
+                    type: 'GET',
+                })
+                .done(function(res, xhr, meta) {
+                    splide_class.destroy()
+                    $("#description").html(res.data.html)
+                    splide()
+                })
+                .fail(function(res, error) {
+                    toastr.error(res.responseJSON.message, 'Failed')
+                })
+                .always(function() {
+                   
+                });
+            }
 
 
             var TabDetailListener = ()=>{
                 $('.tab-detail').click(function(event){
                     $('.tab-detail').removeClass('active');
                     $(this).addClass('active');
+
+                    let current_tab = $(this).attr('href')
+                    let classroom_id = $(this).data('id')
+
+                    if(current_tab == "tab-coach"){
+                        getCoach(classroom_id)
+                    }else if(current_tab == "tab-tools"){
+                        getTools(classroom_id)
+                    }else if(current_tab == "tab-description"){
+                        getDescription(classroom_id)
+                    }else if(current_tab == "tab-master-lession-description"){
+                        getMasterLesson(classroom_id)
+                    }else{
+                        getGuests(classroom_id)
+                    }
+
                     event.preventDefault()
                     
                     // let selected_tab = $(this).attr('href')
@@ -241,7 +440,7 @@
 
             splide = () => {
                 
-                new Splide('#class-splide', {
+                splide_class = new Splide('#class-splide', {
                     lazyLoad: true,
                     perPage: 1,
                     type: 'loop',

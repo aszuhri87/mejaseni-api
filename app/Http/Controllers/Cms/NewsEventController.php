@@ -33,7 +33,7 @@ class NewsEventController extends Controller
     				->orderBy('start_at','desc')
                     ->take(3)
     				->get();
-
+                    
         $news = DB::table('news')
                     ->select([
                         'id',
@@ -46,11 +46,22 @@ class NewsEventController extends Controller
                     ->take(3)
                     ->get();
 
+        $social_medias = DB::table('social_media')
+            ->select([
+                'url',
+                DB::raw("CONCAT('{$path}',image) as image_url"),
+            ])
+            ->whereNull([
+                'deleted_at'
+            ])
+            ->get();
+
     	return view('cms.news-event.index', [
             "company" => $company, 
             "branchs" => $branchs, 
             "events" => $events,
-            "news" => $news
+            "news" => $news,
+            "social_medias" => $social_medias
         ]);
     }
 }

@@ -67,13 +67,24 @@ class AboutController extends Controller
             ])
             ->get();
 
+        $social_medias = DB::table('social_media')
+            ->select([
+                'url',
+                DB::raw("CONCAT('{$path}',image) as image_url"),
+            ])
+            ->whereNull([
+                'deleted_at'
+            ])
+            ->get();
+
     	return view('cms.about.index', [
     		"company" => $company, 
     		"branchs" => $branchs,
     		"teams" => $teams,
     		"programs" => $programs,
             "working_hours" => $working_hours,
-            "galeries" => $galeries
+            "galeries" => $galeries,
+            "social_medias" => $social_medias
     	]);
     }
 }

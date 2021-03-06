@@ -70,7 +70,7 @@ class ScheduleController extends BaseMenu
                     'classrooms.name as classroom_name',
                     'classrooms.price',
                 ])
-                ->joinSub($classroom, 'classrooms', function ($join) {
+                ->leftJoinSub($classroom, 'classrooms', function ($join) {
                     $join->on('coach_classrooms.classroom_id', '=', 'classrooms.id');
                 })
                 ->whereNull('coach_classrooms.deleted_at');
@@ -131,6 +131,7 @@ class ScheduleController extends BaseMenu
                     $query->whereNull('student_schedules.coach_schedule_id')
                         ->orWhereRaw('student_schedules.student_classroom_id = student_classrooms.id');
                 })
+                ->distinct('student_classrooms.classroom_id')
                 ->get();
 
             return response([
@@ -588,24 +589,27 @@ class ScheduleController extends BaseMenu
                 ->select([
                     'student_schedules.coach_schedule_id',
                     'session_feedback.star',
+                    'student_classrooms.student_id',
                 ])
                 ->leftJoinSub($session_feedback, 'session_feedback', function ($join) {
                     $join->on('student_schedules.id', '=', 'session_feedback.student_schedule_id');
                 })
+                ->leftJoin('student_classrooms','student_schedules.student_classroom_id','=','student_classrooms.id')
                 ->whereNull('student_schedules.deleted_at')
+                ->where('student_classrooms.student_id',Auth::guard('student')->user()->id)
                 ->whereNotNull('session_feedback.student_schedule_id');
-
+            // dd($student_schedule->get());
             $coach_schedule = DB::table('coach_schedules')
                 ->select([
                     'coach_schedules.coach_classroom_id',
                     'student_schedules.star',
                 ])
-                ->joinSub($student_schedule, 'student_schedules', function ($join) {
+                ->leftJoinSub($student_schedule, 'student_schedules', function ($join) {
                     $join->on('coach_schedules.id', '=', 'student_schedules.coach_schedule_id');
                 })
                 ->whereNull('coach_schedules.deleted_at')
                 ->whereNotNull('student_schedules.coach_schedule_id');
-
+            // dd($coach_schedule->get());
             // end session star
 
             // classroom star
@@ -620,7 +624,8 @@ class ScheduleController extends BaseMenu
             $classroom = DB::table('classrooms')
                 ->select([
                     'classrooms.id',
-                    DB::raw('round(AVG(classroom_feedback.star),1) as rating_classroom')
+                    DB::raw('round(AVG(classroom_feedback.star),1) as rating_classroom'),
+                    DB::raw('(COUNT(classroom_feedback.classroom_id)) as total_review_classroom')
                 ])
                 ->leftJoinSub($classroom_feedback, 'classroom_feedback', function ($join) {
                     $join->on('classrooms.id', '=', 'classroom_feedback.classroom_id');
@@ -642,6 +647,7 @@ class ScheduleController extends BaseMenu
             $coach_classroom = DB::table('coach_classrooms')
                 ->select([
                     'coach_classrooms.coach_id',
+                    DB::raw('(SUM(classrooms.total_review_classroom)::integer + COUNT(coach_schedules.star)) as total_review'),
                     DB::raw('round(AVG(coach_schedules.star),1) as rating_schedule'),
                     DB::raw('round(AVG(classrooms.rating_classroom),1) as rating_classroom'),
                     DB::raw('COUNT(sub_coach_schedules.coach_classroom_id) as class_active'),
@@ -685,6 +691,14 @@ class ScheduleController extends BaseMenu
                                 0
                         END
                     )as class_active'),
+                    DB::raw('(
+                        CASE
+                            WHEN coach_classrooms.total_review IS NOT NULL THEN
+                                coach_classrooms.total_review
+                            ELSE
+                                0
+                        END
+                    )as total_review'),
                 ])
                 ->leftJoinSub($coach_classroom, 'coach_classrooms', function ($join) {
                     $join->on('coaches.id', '=', 'coach_classrooms.coach_id');
@@ -720,45 +734,34 @@ class ScheduleController extends BaseMenu
             $student_schedule = DB::table('student_schedules')
                 ->select([
                     'student_schedules.student_classroom_id',
-                    'student_schedules.id',
-                    'student_feedback.star',
-                ])
-                ->joinSub($student_feedback, 'student_feedback', function ($join) {
-                    $join->on('student_schedules.id', '=', 'student_feedback.student_schedule_id');
-                })
-                ->whereNull('student_schedules.deleted_at');
-
-            $sub_student_classroom = DB::table('student_classrooms')
-                ->select([
-                    'student_classrooms.id',
                     DB::raw("(
                         CASE
-                            WHEN student_schedules.star IS NOT NULL THEN
-                                student_schedules.star
-                            ELSE
-                                0
-                        END
-                    )as star")
-                ])
-                ->rightJoinSub($student_schedule, 'student_schedules', function ($join) {
-                    $join->on('student_classrooms.id', '=', 'student_schedules.student_classroom_id');
-                })
-                ->where('student_classrooms.student_id',Auth::guard('student')->user()->id)
-                ->whereNull('student_classrooms.deleted_at');
-
-            $result = DB::table('student_classrooms')
-                ->select([
-                    DB::raw("(
-                        CASE
-                            WHEN round(AVG(sub_student_classroom.star),1) IS NOT NULL THEN
-                                round(AVG(sub_student_classroom.star),1)
+                            WHEN round(AVG(student_feedback.star),2) IS NOT NULL THEN
+                                round(AVG(student_feedback.star),2)
                             ELSE
                                 0
                         END
                     ) as star")
                 ])
-                ->joinSub($sub_student_classroom, 'sub_student_classroom', function ($join) {
-                    $join->on('student_classrooms.id', '=', 'sub_student_classroom.id');
+                ->leftJoinSub($student_feedback, 'student_feedback', function ($join) {
+                    $join->on('student_schedules.id', '=', 'student_feedback.student_schedule_id');
+                })
+                ->whereNull('student_schedules.deleted_at')
+                ->groupBy('student_schedules.student_classroom_id');
+
+            $result = DB::table('student_classrooms')
+                ->select([
+                    DB::raw("(
+                        CASE
+                            WHEN round(AVG(student_schedules.star),2) IS NOT NULL THEN
+                                round(AVG(student_schedules.star),2)
+                            ELSE
+                                0
+                        END
+                    ) as star")
+                ])
+                ->leftJoinSub($student_schedule, 'student_schedules', function ($join) {
+                    $join->on('student_classrooms.id', '=', 'student_schedules.student_classroom_id');
                 })
                 ->where('student_classrooms.student_id',Auth::guard('student')->user()->id)
                 ->whereNull('student_classrooms.deleted_at')

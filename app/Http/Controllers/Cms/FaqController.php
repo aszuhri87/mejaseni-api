@@ -10,6 +10,9 @@ use App\Models\Branch;
 use App\Models\Company;
 use App\Models\Faq;
 
+use DB;
+use Storage;
+
 class FaqController extends Controller
 {
     public function index()
@@ -18,6 +21,22 @@ class FaqController extends Controller
     	$branchs = Branch::all();
     	$faqs = Faq::all();
 
-    	return view('cms.faq.index', ["company" => $company, "branchs" => $branchs, "faqs" => $faqs]);
+        $path = Storage::disk('s3')->url('/');
+    	$social_medias = DB::table('social_media')
+            ->select([
+                'url',
+                DB::raw("CONCAT('{$path}',image) as image_url"),
+            ])
+            ->whereNull([
+                'deleted_at'
+            ])
+            ->get();
+
+    	return view('cms.faq.index', [
+    		"company" => $company, 
+    		"branchs" => $branchs, 
+    		"faqs" => $faqs,
+    		"social_medias" => $social_medias
+    	]);
     }
 }

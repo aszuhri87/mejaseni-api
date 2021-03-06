@@ -451,4 +451,30 @@ class PublicController extends Controller
             ]);
         }
     }
+
+    public function get_student()
+    {
+        try {
+
+            $result = DB::table('students')
+                ->select([
+                    'id',
+                    'name',
+                    'username',
+                    'email',
+                ])
+                ->whereNull('deleted_at')
+                ->get();
+
+            return response([
+                "data"      => $result,
+                "message"   => 'OK'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
 }

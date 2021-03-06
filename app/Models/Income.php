@@ -16,14 +16,11 @@ class Income extends Model
     public $keyType = 'string';
 
     protected $fillable = [
-        'master_lesson_id',
         'session_video_id',
         'classroom_id',
         'coach_id',
-        'theory_id',
-        'guest_star_id',
-        'student_schedule_id',
-        'transaction_id'
+        'transaction_id',
+        'amount'
     ];
 
     protected $dates = ['deleted_at'];

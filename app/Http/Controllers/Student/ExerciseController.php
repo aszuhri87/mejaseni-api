@@ -50,6 +50,7 @@ class ExerciseController extends BaseMenu
                 })
                 ->where('student_id',$id)
                 ->whereNull('student_classrooms.deleted_at')
+                ->distinct('classrooms.id')
                 ->get();
 
             return response([
@@ -273,7 +274,6 @@ class ExerciseController extends BaseMenu
     public function file_delete($id)
     {
         try {
-            // dd($request->all());
             $result = CollectionFile::find($id);
 
             DB::transaction(function () use ($result) {

@@ -9,6 +9,7 @@ use App\Models\Branch;
 use App\Models\Company;
 
 use DB;
+use Storage;
 
 class CareerController extends Controller
 {
@@ -20,6 +21,7 @@ class CareerController extends Controller
     	$internal_team = 1;
     	$profesional_coach = 2;
 
+        $path = Storage::disk('s3')->url('/');
     	$internal_team_careers = DB::table('careers')
             ->select([
                 'id',
@@ -48,11 +50,22 @@ class CareerController extends Controller
             ])
             ->get();
 
+        $social_medias = DB::table('social_media')
+            ->select([
+                'url',
+                DB::raw("CONCAT('{$path}',image) as image_url"),
+            ])
+            ->whereNull([
+                'deleted_at'
+            ])
+            ->get();
+
     	return view('cms.career.index', [
     			"company" => $company, 
     			"branchs" => $branchs, 
     			'internal_team_careers' => $internal_team_careers, 
-    			'professional_coach_careers' => $professional_coach_careers
+    			'professional_coach_careers' => $professional_coach_careers,
+                "social_medias" => $social_medias
     		]);
     }
 }

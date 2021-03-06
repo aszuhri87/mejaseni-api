@@ -28,4 +28,9 @@ class Event extends Model
     ];
 
     protected $dates = ['deleted_at'];
+
+    public function getDate()
+    {
+        return $this->start_at;
+    }
 }

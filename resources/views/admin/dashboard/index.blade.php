@@ -12,7 +12,7 @@
                 </div>
                 <hr>
                 <div class="d-flex justify-content-between align-items-center mb-5">
-                    <div>
+                    {{-- <div>
                         <h4>2021</h4>
                     </div>
                     <div>
@@ -29,7 +29,7 @@
                             <button type="button" class="btn btn-outline-primary btn-sm">Montly</button>
                             <button type="button" class="btn btn-outline-primary btn-sm">Weekly</button>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="row">
                     <div class="col-md-3 col-sm-12">
@@ -60,7 +60,7 @@
                                 </div>
                             </div>
                             <div>
-                                <div class="font-size-sm font-weight-bold total-kelas">0</div>
+                                <div class="font-size-sm font-weight-bold total-kelas">{{$statistic['classroom']['total']}}</div>
                                 <div class="font-size-sm text-muted">Total Kelas</div>
                             </div>
                         </div>
@@ -89,8 +89,8 @@
                                 </div>
                             </div>
                             <div>
-                                <div class="font-size-sm font-weight-bold total-kelas">0</div>
-                                <div class="font-size-sm text-muted">Total Kelas</div>
+                                <div class="font-size-sm font-weight-bold total-kelas">{{$statistic['classroom']['sold']}}</div>
+                                <div class="font-size-sm text-muted">Total Terjual</div>
                             </div>
                         </div>
                         <!--end::Item-->
@@ -98,12 +98,11 @@
                         <hr>
 
                         <!--begin::Item-->
-                        <h6>Statistik Kelas</h6>
+                        <h6>Statistik Video</h6>
                         <div class="d-flex align-items-center mb-5 mt-3">
                             <div class="symbol symbol-circle symbol-white symbol-30 flex-shrink-0 mr-3">
                                 <div class="symbol-label">
-                                    <span class="svg-icon svg-icon-md svg-icon-danger">
-                                        <!--begin::Svg Icon | path:assets/media/svg/icons/Shopping/Cart3.svg-->
+                                    <span class="svg-icon svg-icon-md svg-icon-warning">
                                         <svg xmlns="http://www.w3.org/2000/svg"
                                             xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
                                             viewBox="0 0 24 24" version="1.1">
@@ -117,13 +116,12 @@
                                                     fill="#000000" />
                                             </g>
                                         </svg>
-                                        <!--end::Svg Icon-->
                                     </span>
                                 </div>
                             </div>
                             <div>
-                                <div class="font-size-sm font-weight-bold total-kelas">0</div>
-                                <div class="font-size-sm text-muted">Total Kelas</div>
+                                <div class="font-size-sm font-weight-bold total-kelas">{{$statistic['video']['total']}}</div>
+                                <div class="font-size-sm text-muted">Total Video</div>
                             </div>
                         </div>
                         <!--end::Item-->
@@ -132,8 +130,7 @@
                         <div class="d-flex align-items-center mb-5">
                             <div class="symbol symbol-circle symbol-white symbol-30 flex-shrink-0 mr-3">
                                 <div class="symbol-label">
-                                    <span class="svg-icon svg-icon-md svg-icon-danger">
-                                        <!--begin::Svg Icon | path:assets/media/svg/icons/Shopping/Cart3.svg-->
+                                    <span class="svg-icon svg-icon-md svg-icon-primary">
                                         <svg xmlns="http://www.w3.org/2000/svg"
                                             xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
                                             viewBox="0 0 24 24" version="1.1">
@@ -146,13 +143,12 @@
                                                     fill="#000000" />
                                             </g>
                                         </svg>
-                                        <!--end::Svg Icon-->
                                     </span>
                                 </div>
                             </div>
                             <div>
-                                <div class="font-size-sm font-weight-bold total-kelas">0</div>
-                                <div class="font-size-sm text-muted">Total Kelas</div>
+                                <div class="font-size-sm font-weight-bold total-kelas">{{$statistic['video']['sold']}}</div>
+                                <div class="font-size-sm text-muted">Total Terjual</div>
                             </div>
                         </div>
                         <!--end::Item-->
@@ -167,6 +163,96 @@
         </div>
     </div>
 </div>
+
+<style>
+    .vl {
+        border-left: 1px solid rgb(206, 206, 206);
+        height: 100%;
+    }
+</style>
+
+<div class="card mt-5">
+    <div class="card-header">
+        <h4 class="m-0 p-0">Most Frequent</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-6">
+                <h4 class="m-0 p-0 mb-5">Kelas</h4>
+                <!--begin::Table-->
+                <div class="table-responsive">
+                    <table class="table table-head-custom table-head-bg table-borderless table-vertical-center">
+                        <tbody>
+                            @foreach ($classrooms as $classroom)
+                            <tr>
+                                <td class="pl-0 py-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="symbol symbol-50 flex-shrink-0 mr-4">
+                                            <div class="symbol-label"
+                                                style="background-image: url('{{$classroom->image_url}}')">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <a href="javascript:void(0);" class="text-dark-75 font-weight-bolder mb-1 font-size-lg">
+                                                {{$classroom->name}}
+                                            </a>
+                                            <span class="text-muted font-weight-bold d-block d-flex align-items-center">
+                                                {{$classroom->category}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="text-muted font-weight-bolder d-block font-size-lg">{{$classroom->classroom_count}} Terjual</span>
+                                </td>
+                                <td></td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                <!--end::Table-->
+            </div>
+            <div class="col-6">
+                <h4 class="m-0 p-0 mb-5">Video</h4>
+                <!--begin::Table-->
+                <div class="table-responsive">
+                    <table class="table table-head-custom table-head-bg table-borderless table-vertical-center">
+                        <tbody>
+                            @foreach ($videos as $video)
+                            <tr>
+                                <td class="pl-0 py-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="symbol symbol-50 flex-shrink-0 mr-4">
+                                            <div class="symbol-label"
+                                                style="background-image: url('assets/images/video-placeholder.png')">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <a href="javascript:void(0);" class="text-dark-75 font-weight-bolder mb-1 font-size-lg">
+                                                {{$video->name}}
+                                            </a>
+                                            <span class="text-muted font-weight-bold d-block d-flex align-items-center">
+                                                {{$video->category}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="text-muted font-weight-bolder d-block font-size-lg">{{$video->video_count}} Terjual</span>
+                                </td>
+                                <td></td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                <!--end::Table-->
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @push('script')

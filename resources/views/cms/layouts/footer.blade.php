@@ -37,9 +37,9 @@
           <li>
             <a href="{{ url('privacy-policy') }}">Kebijakan Privasi</a>
           </li>
-          <li>
+          {{-- <li>
             <a href="{{ url('tos') }}">Syarat Layanan</a>
-          </li>
+          </li> --}}
           <li>
             <a href="{{ url('faq') }}">FAQ</a>
           </li>
@@ -63,25 +63,18 @@
             <img class="image-badge__footer mr-2" src="{{ asset('cms/assets/img/svg/Mail.svg') }}" alt="">
             <h5>Email</h5>
           </div>
-          <a href="{{ $company->email ? $company->email:'#' }}">{{ $company->email ? $company->email:'' }}</a>
+          <a>{{ $company->email ? $company->email:'' }}</a>
         </div>
         <div class="mt-5 mt-md-4">
           <div class="badge__wrapper mb-2">
             <h5>Social Media</h5>
           </div>
           <div class="badge__wrapper pt-2" id="social-media__wrapper">
-            <a target="_blank" href="#">
-              <img src="{{ asset('cms/assets/img/instagram-logo.png') }}" alt="">
-            </a>
-            <a target="_blank" href="#">
-              <img src="{{ asset('cms/assets/img/svg/logo-facebook.svg') }}" alt="">
-            </a>
-            <a target="_blank" href="#">
-              <img src="{{ asset('cms/assets/img/logo-linkedin.png') }}" alt="">
-            </a>
-            <a target="_blank" href="#">
-              <img src="{{ asset('cms/assets/img/svg/logo-twitter.svg') }}" alt="">
-            </a>
+            @foreach($social_medias as $social_media)
+              <a target="_blank" href="{{ $social_media->url ? $social_media->url:'#'}}">
+                <img src="{{ $social_media->image_url ? $social_media->image_url:'#'}}" alt="">
+              </a>
+            @endforeach
           </div>
         </div>
       </div>

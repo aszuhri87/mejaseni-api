@@ -6,12 +6,6 @@
 @include('cms.layouts.banner')
 @endpush
 
-@php
-function FunctionName($date)
-{
-    return date('l', strtotime($date));
-}
-@endphp
 
 @section('content')
 <section>
@@ -35,18 +29,28 @@ function FunctionName($date)
                                     </div>
                                     <div class="mb-3">
                                         <p class="label">Tanggal & Waktu</p>
-                                        <p>{{ $event->start_at }} {{ $event->end_at }}</p>
+                                        <p>{{ date_format(date_create($event->start_at), "l, d F Y") }} ({{date_format(date_create($event->start_at), "H:i")}}-{{date_format(date_create($event->end_at), "H:i")}})</p>
                                     </div>
                                     <div class="mb-3">
                                         <p class="label">Kuota</p>
-                                        <p class="event-quota">{{ $event->quota ? 'Masih Tersedia':'Sudah Penuh'}}</p>
+                                        @if($event->is_full)
+                                            <p class="" style="font-weight: 600; color: #F64E60;">Sudah Penuh</p>
+                                        @else
+                                            <p class="event-quota">Masih Tersedia</p>
+                                        @endif
+                                    </div>
+                                    <div class="mb-3">
+                                        <p class="label">Biaya</p>
+                                        <p class="event-fee">@convert($event->total)</p>
                                     </div>
                                 </div>
                             </div>
-                            @if($event->is_registered)
-                            <a  class="btn btn-primary w-100" data-toggle="modal" data-target="">Anda Sudah Terdaftar</a>
-                            @else
-                            <a class="btn btn-primary w-100" data-toggle="modal" data-target="@if (Auth::guard('student')->user()){{'#eventRegisterModal'}}@else{{'#loginRequiredModal'}}@endif">Daftar Event</a>
+                            @if(!$event->is_full)
+                                @if($event->is_registered)
+                                <a  class="btn btn-primary w-100" data-toggle="modal" data-target="">Anda Sudah Terdaftar</a>
+                                @else
+                                <a class="btn btn-primary w-100" data-toggle="modal" data-target="@if (Auth::guard('student')->user()){{'#eventRegisterModal'}}@else{{'#loginRequiredModal'}}@endif">Daftar Event</a>
+                                @endif
                             @endif
                         </div>
                     </div>
