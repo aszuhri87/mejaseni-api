@@ -1,25 +1,21 @@
 <script type="text/javascript">
     var Page = function() {
         var _componentPage = function(){
-            var init_table;
+            var init_table, init_select_student_id;
 
             $(document).ready(function() {
                 // formSubmit();
-                initTable();
+                // initTable();
                 initAction();
                 initDatePicker();
+                getStudent();
 
-                $('#input-id').rating({
-                    hoverOnClear: false,
-                    theme: 'krajee-svg',
-                    showCaption: false,
-                    showClear:false,
-                    showCaptionAsTitle:false,
-                    step:1
+                init_select_student_id = new SlimSelect({
+                    select: '#student_id'
                 });
             });
 
-            const initTable = (rating) => {
+            const initTable = (student_id,date_start,date_end) => {
                 init_table = $('#init-table').DataTable({
                     destroy: true,
                     processing: true,
@@ -27,10 +23,12 @@
                     sScrollY: ($(window).height() < 700) ? $(window).height() - 200 : $(window).height() - 450,
                     ajax: {
                         type: 'POST',
-                        url: "{{ url('admin/report/transaction/student/dt') }}",
-                        // data: {
-                        //     rating:rating
-                        // }
+                        url: "{{ url('admin/report/transaction-report/student/dt') }}",
+                        data: {
+                            student_id: student_id,
+                            date_start: date_start,
+                            date_end: date_end,
+                        }
                     },
                     columns: [
                         { data: 'DT_RowIndex' },
@@ -38,7 +36,7 @@
                         { data: 'datetime' },
                         { data: 'id' },
                         { data: 'price' },
-                        { defaultContent: '-' }
+                        { data: 'status' }
                         ],
                     columnDefs: [
                         {
@@ -106,6 +104,26 @@
                             render: function(data, type, full, meta){
                                 return `<strong>Rp. ${numeral(data).format('0,0')}</strong>`;
                             }
+                        },
+                        {
+                            targets: -1,
+                            searchable: true,
+                            orderable: true,
+                            className: "text-left",
+                            data: "status",
+                            render: function(data, type, full, meta){
+                                if(data == 0){
+                                    return `<span class="label label-pill label-inline label-danger mr-2">Cancel<span>`
+                                }
+                                else if(data == 1){
+                                    return `<span class="label label-pill label-inline label-secondary mr-2">Waiting<span>`
+                                }
+                                else if(data == 2){
+                                    return `<span class="label label-pill label-inline label-success mr-2">Success<span>`
+                                }else{
+                                    return `<span class="label label-pill label-inline label-warning mr-2">Return<span>`
+                                }
+                            }
                         }
                     ],
                     order: [[1, 'asc']],
@@ -151,10 +169,13 @@
                 });
             },
             initAction = () => {
-                $(document).on('change','#select',function(event){
+                $(document).on('click','#btn-filter',function(event){
                     event.preventDefault();
-                    let rating = $(this).val();
-                    initTable(rating);
+                    let student_id = $('#student_id').val();
+                    $('#date-start').val('');
+                    $('#date-end').val('');
+                    $('#card-table').show();
+                    initTable(student_id, null, null);
                 });
 
                 $(document).on('click','.btn-see',function(event){
@@ -170,7 +191,44 @@
 
                     $('#input-id').rating('update', data.star);
                     showModal('modal-class-detail');
-                })
+                });
+
+                $(document).on('change','#date-start',function() {
+                    if($(this).val() != null || $(this).val() != ''){
+                        if($('#date-end').val() != null || $('#date-end').val() != ''){
+                            let date_start = $(this).val();
+                            let date_end = $('#date-end').val();
+                            initTable(null,date_start,date_end);
+                        }
+                    }
+                });
+
+                $(document).on('change','#date-end',function() {
+                    if($(this).val() != null || $(this).val() != ''){
+                        if($('#date-start').val() != null || $('#date-start').val() != ''){
+                            let date_start = $('#date-start').val();
+                            let date_end = $(this).val();
+                            if(moment(moment(date_start).format('YYYY-MM-DD')).isSameOrBefore(moment(date_end).format('YYYY-MM-DD'))){
+                                initTable(null,date_start,date_end);
+                            }
+                            else{
+                                toastr.error('Tanngal mulai harus lebih kecil','Failed')
+                            }
+                        }
+                    }
+                });
+
+                $(document).on('click','.btn-excel',function(event){
+                    event.preventDefault();
+                    $('#form-submit').attr('action',$(this).attr('href'));
+                    $('#form-submit').submit();
+                });
+
+                $(document).on('click','.btn-pdf',function(event){
+                    event.preventDefault();
+                    $('#form-submit').attr('action',$(this).attr('href'));
+                    $('#form-submit').submit();
+                });
             },
             formSubmit = () => {
                 $('#form-classroom-category').submit(function(event){
@@ -193,6 +251,35 @@
                     .always(function() {
                         btn_loading('stop')
                     });
+                });
+            },
+            getStudent = () => {
+                $.ajax({
+                    url: `{{ url('public/get-student') }}`,
+                    type: 'GET',
+                })
+                .done(function(res, xhr, meta) {
+                    let element = `<option value="">Pilih Siswa</option>`;
+                    $.each(res.data, function(index, data) {
+                        element += `<option value="${data.id}">${data.name} - ${data.email}</option>`
+                    });
+
+                    $('#student_id').html(element);
+
+                    if(init_select_student_id){
+                        init_select_student_id.destroy();
+                    }
+
+                    init_select_student_id = new SlimSelect({
+                        select: '#student_id'
+                    });
+
+                })
+                .fail(function(res, error) {
+                    toastr.error(res.responseJSON.message, 'Failed')
+                })
+                .always(function() {
+                    btn_loading('stop')
                 });
             }
         };

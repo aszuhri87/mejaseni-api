@@ -300,7 +300,7 @@ class BaseMenu extends Controller
                         ]
                     ],
                     [
-                        'key' => 'transaction',
+                        'key' => 'transaction-report',
                         'title' => 'Transaksi',
                         'url' => '#',
                         'permission' => 'transaction',
@@ -314,7 +314,7 @@ class BaseMenu extends Controller
                             [
                                 'key' => 'student',
                                 'title' => 'Student',
-                                'url' => 'admin/report/transaction/student',
+                                'url' => 'admin/report/transaction-report/student',
                                 'permission' => 'student'
                             ],
                         ]

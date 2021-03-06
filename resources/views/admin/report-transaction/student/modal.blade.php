@@ -1,5 +1,5 @@
 <!-- Modal-->
-<div class="modal" id="modal-class-detail" tabindex="-1" role="dialog">
+<div class="modal" id="modal-report-transaction" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">

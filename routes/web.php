@@ -355,10 +355,12 @@ Route::group(['middleware' => ['auth-handling']], function () {
                 });
             });
 
-            Route::group(['prefix' => 'transaction'], function () {
+            Route::group(['prefix' => 'transaction-report'], function () {
                 Route::group(['prefix' => 'student'], function () {
                     Route::get('/', [ReviewTransactionStudentController::class, 'index']);
                     Route::post('dt', [ReviewTransactionStudentController::class, 'dt']);
+                    Route::post('print-pdf', [ReviewTransactionStudentController::class, 'print_pdf']);
+                    Route::post('print-excel', [ReviewTransactionStudentController::class, 'print_excel']);
                 });
             });
         });
@@ -450,7 +452,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::post('coach-review/coach_dt', [CoachReviewController::class, 'coach_dt']);
             Route::post('coach-review/{coach_id}', [CoachReviewController::class, 'store']);
             Route::resource('coach-review', CoachReviewController::class);
-            
+
 
         });
     });
@@ -663,6 +665,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::get('get-classroom-coach', [PublicController::class, 'get_classroom_coach']);
         Route::get('get-session-coach/{classroom_id}', [PublicController::class, 'get_session_coach']);
         Route::get('get-guest-star', [PublicController::class, 'get_guest_star']);
+        Route::get('get-student', [PublicController::class, 'get_student']);
     });
 });
 
