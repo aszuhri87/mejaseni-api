@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\ClassroomCategory;
 
 use DataTables;
+use Storage;
 
 class ClassroomCategoryController extends BaseMenu
 {
@@ -35,11 +36,15 @@ class ClassroomCategoryController extends BaseMenu
 
     public function dt()
     {
+        $path = Storage::disk('s3')->url('/');
         $data = DB::table('classroom_categories')
             ->select([
                 'id',
                 'name',
-                'profile_coach_video_id'
+                'image',
+                'description',
+                'profile_coach_video_id',
+                DB::raw("CONCAT('{$path}',image) as image_url"),
             ])
             ->whereNull([
                 'deleted_at'
@@ -52,14 +57,34 @@ class ClassroomCategoryController extends BaseMenu
     public function store(Request $request)
     {
         try {
+            if(!isset($request->image)){
+                return response([
+                    "message"   => 'Gambar harus diisi!'
+                ], 400);
+            }
+
             $result = DB::transaction(function () use($request){
+
+                if(isset($request->image)){
+                    $file = $request->file('image');
+                    $path = Storage::disk('s3')->put('media', $file);
+                }
+
                 $result = ClassroomCategory::create([
                     'name' => $request->name,
+                    'description' => $request->description,
+                    'image' => $path,
                     'profile_coach_video_id' => $request->profile_coach_video_id
                 ]);
 
                 return $result;
             });
+
+
+            return response([
+                "data"      => $result,
+                "message"   => 'Successfully saved!'
+            ], 200);
 
             return response([
                 "data"      => $result,
@@ -77,8 +102,18 @@ class ClassroomCategoryController extends BaseMenu
     {
         try {
             $result = DB::transaction(function () use($request, $id){
-                $result = ClassroomCategory::find($id)->update([
+                $result = ClassroomCategory::find($id);
+                $path = null;
+
+                if(isset($request->image)){
+                    $file = $request->file('image');
+                    $path = Storage::disk('s3')->put('media', $file);
+                }
+
+                $result->update([
                     'name' => $request->name,
+                    'description' => $request->description,
+                    'image' => $path ? $path:$result->image,
                     'profile_coach_video_id' => $request->profile_coach_video_id
                 ]);
 

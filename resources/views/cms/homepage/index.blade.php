@@ -90,114 +90,20 @@
         <div class="splide w-100" id="splide2">
           <div class="splide__track">
             <ul class="splide__list">
-              <li class="splide__slide px-2 px-md-4 pb-5">
-                <div class="content-embed__wrapper class-category__splide">
-                  <img src="{{ asset('cms/assets/img/class-category.png') }}" alt="">
-                </div>
-                <div class="px-4">
-                  <div class="badge-left">
-                    <h3 class="mt-3 mt-md-5 ml-2">Musik</h3>
+              @foreach($classroom_categories as $classroom_category)
+                <li class="splide__slide px-2 px-md-4 pb-5">
+                  <div class="content-embed__wrapper class-category__splide">
+                    <img src="{{ $classroom_category->image_url ? $classroom_category->image_url:''}}" alt="">
                   </div>
-                  <p class="my-3 desc__class-category">Loorem ipsum dolor sit amet consectetur adipisicing elit. Amet
-                    maiores saepe dolore
-                    molestias,
-                    molestiae sapiente aperiam odio in dicta reiciendis quaerat eligendi facere culpa nemo
-                    consequuntur
-                    delectus
-                    porro tempore aut possimus cum quidem dolores quis. Laborum ad corporis eaque quia commodi ab
-                    nisi!
-                    Accusamus maxime nulla quod a rerum, sequi aperiam voluptatem excepturi officiis expedita,
-                    repellendus,
-                    aspernatur velit asperiores. Reiciendis nostrum quam optio dolore, fugit vero obcaecati explicabo.
-                    Quis
-                    tempore nemo commodi culpa deleniti molestiae iste recusandae labore ipsa illo provident tempora
-                    vero,
-                    necessitatibus excepturi libero minima aspernatur eius similique ipsum ex? Velit et maxime numquam
-                    quidem,
-                    beatae veritatis iusto.</p>
-                </div>
-              </li>
-              <li class="splide__slide px-2 px-md-4 pb-5">
-                <div class="content-embed__wrapper class-category__splide">
-                  <img src="{{ asset('cms/assets/img/class-category.png') }}" alt="">
-                </div>
-                <div class="px-4">
-                  <div class="badge-left">
-                    <h3 class="mt-3 mt-md-5 ml-2">Musik</h3>
+                  <div class="px-4">
+                    <div class="badge-left">
+                      <h3 class="mt-3 mt-md-5 ml-2">{{ $classroom_category->name ? $classroom_category->name:''}}</h3>
+                    </div>
+                    <p class="my-3 desc__class-category">{{ $classroom_category->description ? $classroom_category->description:''}}</p>
                   </div>
-                  <p class="my-3 desc__class-category">Loorem ipsum dolor sit amet consectetur adipisicing elit. Amet
-                    maiores saepe dolore
-                    molestias,
-                    molestiae sapiente aperiam odio in dicta reiciendis quaerat eligendi facere culpa nemo
-                    consequuntur
-                    delectus
-                    porro tempore aut possimus cum quidem dolores quis. Laborum ad corporis eaque quia commodi ab
-                    nisi!
-                    Accusamus maxime nulla quod a rerum, sequi aperiam voluptatem excepturi officiis expedita,
-                    repellendus,
-                    aspernatur velit asperiores. Reiciendis nostrum quam optio dolore, fugit vero obcaecati explicabo.
-                    Quis
-                    tempore nemo commodi culpa deleniti molestiae iste recusandae labore ipsa illo provident tempora
-                    vero,
-                    necessitatibus excepturi libero minima aspernatur eius similique ipsum ex? Velit et maxime numquam
-                    quidem,
-                    beatae veritatis iusto.</p>
-                </div>
-              </li>
-              <li class="splide__slide px-2 px-md-4 pb-5">
-                <div class="content-embed__wrapper class-category__splide">
-                  <img src="{{ asset('cms/assets/img/class-category.png') }}" alt="">
-                </div>
-                <div class="px-4">
-                  <div class="badge-left">
-                    <h3 class="mt-3 mt-md-5 ml-2">Musik</h3>
-                  </div>
-                  <p class="my-3 desc__class-category">Loorem ipsum dolor sit amet consectetur adipisicing elit. Amet
-                    maiores saepe dolore
-                    molestias,
-                    molestiae sapiente aperiam odio in dicta reiciendis quaerat eligendi facere culpa nemo
-                    consequuntur
-                    delectus
-                    porro tempore aut possimus cum quidem dolores quis. Laborum ad corporis eaque quia commodi ab
-                    nisi!
-                    Accusamus maxime nulla quod a rerum, sequi aperiam voluptatem excepturi officiis expedita,
-                    repellendus,
-                    aspernatur velit asperiores. Reiciendis nostrum quam optio dolore, fugit vero obcaecati explicabo.
-                    Quis
-                    tempore nemo commodi culpa deleniti molestiae iste recusandae labore ipsa illo provident tempora
-                    vero,
-                    necessitatibus excepturi libero minima aspernatur eius similique ipsum ex? Velit et maxime numquam
-                    quidem,
-                    beatae veritatis iusto.</p>
-                </div>
-              </li>
-              <li class="splide__slide px-2 px-md-4 pb-5">
-                <div class="content-embed__wrapper class-category__splide">
-                  <img src="{{ asset('cms/assets/img/class-category.png') }}" alt="">
-                </div>
-                <div class="px-4">
-                  <div class="badge-left">
-                    <h3 class="mt-3 mt-md-5 ml-2">Musik</h3>
-                  </div>
-                  <p class="my-3 desc__class-category">Loorem ipsum dolor sit amet consectetur adipisicing elit. Amet
-                    maiores saepe dolore
-                    molestias,
-                    molestiae sapiente aperiam odio in dicta reiciendis quaerat eligendi facere culpa nemo
-                    consequuntur
-                    delectus
-                    porro tempore aut possimus cum quidem dolores quis. Laborum ad corporis eaque quia commodi ab
-                    nisi!
-                    Accusamus maxime nulla quod a rerum, sequi aperiam voluptatem excepturi officiis expedita,
-                    repellendus,
-                    aspernatur velit asperiores. Reiciendis nostrum quam optio dolore, fugit vero obcaecati explicabo.
-                    Quis
-                    tempore nemo commodi culpa deleniti molestiae iste recusandae labore ipsa illo provident tempora
-                    vero,
-                    necessitatibus excepturi libero minima aspernatur eius similique ipsum ex? Velit et maxime numquam
-                    quidem,
-                    beatae veritatis iusto.</p>
-                </div>
-              </li>
+                </li>
+
+              @endforeach
             </ul>
           </div>
         </div>

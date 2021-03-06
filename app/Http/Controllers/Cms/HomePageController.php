@@ -22,8 +22,17 @@ class HomePageController extends Controller
     {
     	$company = Company::first();
     	$branchs = Branch::all();
-
     	$path = Storage::disk('s3')->url('/');
+        $social_medias = DB::table('social_media')
+            ->select([
+                'url',
+                DB::raw("CONCAT('{$path}',image) as image_url"),
+            ])
+            ->whereNull([
+                'deleted_at'
+            ])
+            ->get();
+
         $events = DB::table('events')
                     ->select([
                         'id',
@@ -36,7 +45,6 @@ class HomePageController extends Controller
                     ->orderBy('start_at','desc')
                     ->take(4)
                     ->get();
-
 
         $coachs = DB::table('coaches')
             ->select([
@@ -64,9 +72,15 @@ class HomePageController extends Controller
             ])
             ->get();
 
-        $social_medias = DB::table('social_media')
+        
+
+        $classroom_categories = DB::table('classroom_categories')
             ->select([
-                'url',
+                'id',
+                'name',
+                'image',
+                'description',
+                'profile_coach_video_id',
                 DB::raw("CONCAT('{$path}',image) as image_url"),
             ])
             ->whereNull([
@@ -80,7 +94,8 @@ class HomePageController extends Controller
             "coachs" => $coachs,
             "programs" => $programs,
             "events" => $events,
-            "social_medias" => $social_medias
+            "social_medias" => $social_medias,
+            "classroom_categories" => $classroom_categories
         ]);
     }
 }

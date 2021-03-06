@@ -19,6 +19,20 @@
                     </div>
                     <div class="form-group">
                         <label>
+                            Description
+                            <span class="text-danger">*</span>
+                        </label>
+                        <textarea required name="description" class="form-control" placeholder="Description" rows="4"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            Picture
+                            <span class="text-danger">*</span>
+                        </label>
+                        <div id="image"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>
                             Coach Video
                         </label>
                         <select name="profile_coach_video_id" id="profile-coach-video"></select>

@@ -244,6 +244,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
                 Route::resource('package', PackageController::class);
 
                 Route::post('classroom-category/dt', [ClassroomCategoryController::class, 'dt']);
+                Route::post('classroom-category/update/{id}', [ClassroomCategoryController::class, 'update']);
                 Route::resource('classroom-category', ClassroomCategoryController::class);
 
                 Route::post('sub-classroom-category/dt', [SubClassroomCategoryController::class, 'dt']);
