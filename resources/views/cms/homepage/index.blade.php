@@ -25,7 +25,7 @@
               <span class="border-line"></span>
             </div>
             <div class="row-spacearound mt-5">
-              <a href="#" class="btn btn-primary w-75 row-center">Daftar Sekarang
+              <a href="{{ url('register') }}" class="btn btn-primary w-75 row-center">Daftar Sekarang
                 <img class="ml-2"
                 src="{{ asset('cms/assets/img/svg/Sign-in.svg') }}" alt="">
               </a>

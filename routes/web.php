@@ -674,8 +674,8 @@ Route::get('fire', function () {
     return 'oke';
 });
 
-Route::get('welcome', function () {
-    return view('welcome');
+Route::get('redirect-blank', function () {
+    return view('cms.transaction.payment-success.redirect');
 });
 
 Route::get('video', function () {

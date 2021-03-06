@@ -44,7 +44,7 @@ class DokuController extends Controller
                 "order" => [
                     "amount" => $amount,
                     "invoice_number" => $invoice,
-                    "callback_url" => url('/payment-success'),
+                    "callback_url" => url('/redirect-blank'),
                     "auto_redirect" => true
                 ],
                 "customer" => [
