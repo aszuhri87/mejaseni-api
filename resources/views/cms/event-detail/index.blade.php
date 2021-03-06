@@ -6,12 +6,6 @@
 @include('cms.layouts.banner')
 @endpush
 
-@php
-function FunctionName($date)
-{
-    return date('l', strtotime($date));
-}
-@endphp
 
 @section('content')
 <section>
@@ -39,7 +33,15 @@ function FunctionName($date)
                                     </div>
                                     <div class="mb-3">
                                         <p class="label">Kuota</p>
-                                        <p class="event-quota">{{ $event->quota ? 'Masih Tersedia':'Sudah Penuh'}}</p>
+                                        @if($event->is_full)
+                                            <p class="" style="font-weight: 600; color: #F64E60;">Sudah Penuh</p>
+                                        @else
+                                            <p class="event-quota">Masih Tersedia</p>
+                                        @endif
+                                    </div>
+                                    <div class="mb-3">
+                                        <p class="label">Biaya</p>
+                                        <p class="event-fee">{{ intval($event->total) ? $event->total:'Free'}}</p>
                                     </div>
                                 </div>
                             </div>

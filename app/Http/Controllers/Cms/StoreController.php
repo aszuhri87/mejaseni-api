@@ -85,6 +85,16 @@ class StoreController extends Controller
             ])
             ->get();
 
+        $social_medias = DB::table('social_media')
+            ->select([
+                'url',
+                DB::raw("CONCAT('{$path}',image) as image_url"),
+            ])
+            ->whereNull([
+                'deleted_at'
+            ])
+            ->get();
+
 
     	return view('cms.store.index', [
             "company" => $company, 
@@ -93,8 +103,33 @@ class StoreController extends Controller
             "selected_category" => $selected_category,
             "sub_categories" => $sub_categories,
             "video_courses" => $video_courses,
-            "market_places" => $market_places
+            "market_places" => $market_places,
+            "social_medias" => $social_medias
         ]);
+    }
+
+    public function search(Request $request)
+    {
+        try {
+
+            $video_courses = DB::table('session_videos')
+                ->where('name', 'ilike', '%'.strtolower($request->search).'%')
+                ->whereNull('deleted_at')
+                ->take(5)
+                ->get();
+
+
+            return response([
+                "data"      => $video_courses,
+                "message"   => 'Successfully saved!'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> "Internal Server Error",
+            ]);
+        }
+
     }
 
 

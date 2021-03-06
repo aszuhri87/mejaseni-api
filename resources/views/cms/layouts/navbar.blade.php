@@ -3,7 +3,7 @@
 @endphp
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand row-center" href="#">
+    <a class="navbar-brand row-center" href="{{ url('/') }}">
       <img class="logo mr-1" src="{{ asset('cms/assets/img/logo.png') }}" alt="">
     mejaseni</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -22,7 +22,7 @@
       <li class="nav-item @if($segment1 == 'store' || $segment1 == 'video-course'){{'active'}}@endif">
         <a class="nav-link" href="{{ url('store') }}">E-Store</a>
       </li>
-      <li class="nav-item @if($segment1 == 'news-event' || $segment1 == 'event-list'){{'active'}}@endif">
+      <li class="nav-item @if($segment1 == 'news-event' || $segment1 == 'event-list' || $segment1 == 'event' || $segment1 == 'news'){{'active'}}@endif">
         <a class="nav-link" href="{{ url('news-event') }}">News & Event</a>
       </li>
       @if(Auth::guard('student')->check())

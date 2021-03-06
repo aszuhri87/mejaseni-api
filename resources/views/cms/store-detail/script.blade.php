@@ -12,7 +12,39 @@
 
             $(document).ready(function () {
                 AOS.init();
+                eventSearchListener()
             });
+
+            var eventSearchListener = ()=>{
+                $('#search').keyup(searchDelay(function(event) {
+                    $.ajax({
+                        url: `{{ url('store/search') }}`,
+                        data:{
+                            'search':$(this).val()
+                        },
+                        type: 'POST',
+                    })
+                    .done(function(res, xhr, meta) {
+                        let element = "";
+                        $.each(res.data, function(index, item){
+                            element += `<option value="${item.name}" data-id="${item.id}">`
+                        })
+                        $("#datalistOptions").html(element)
+                    })
+                    .fail(function(res, error) {
+                        toastr.error(res.responseJSON.message, 'Failed')
+                    })
+                    .always(function() {
+                       
+                    });
+                }, 1000));
+
+                $("#search").on('input',function(event){
+                    let video_course_id = $("#datalistOptions option[value='" + $(this).val() + "']").attr('data-id')
+                    if(video_course_id)
+                        window.location.href = `/video-course/${video_course_id}/detail`;
+                })
+            }
         };
         return {
             init: function () {

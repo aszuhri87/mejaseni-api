@@ -31,11 +31,21 @@ class NewsListController extends Controller
                     ->orderBy('created_at','desc')
                     ->get();
 
+        $social_medias = DB::table('social_media')
+            ->select([
+                'url',
+                DB::raw("CONCAT('{$path}',image) as image_url"),
+            ])
+            ->whereNull([
+                'deleted_at'
+            ])
+            ->get();
 
     	return view('cms.news-list.index', [
     		"company" => $company, 
     		"branchs" => $branchs,
-    		"news" => $news
+    		"news" => $news,
+            "social_medias" => $social_medias
     	]);
     }
 }

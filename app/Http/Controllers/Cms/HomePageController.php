@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Branch;
 use App\Models\Coach;
 use App\Models\Company;
+use App\Models\SocialMedia;
 
 
 use DB;
@@ -59,12 +60,23 @@ class HomePageController extends Controller
             ])
             ->get();
 
+        $social_medias = DB::table('social_media')
+            ->select([
+                'url',
+                DB::raw("CONCAT('{$path}',image) as image_url"),
+            ])
+            ->whereNull([
+                'deleted_at'
+            ])
+            ->get();
+
     	return view('cms.homepage.index',[
             "company" => $company, 
             "branchs" => $branchs, 
             "coachs" => $coachs,
             "programs" => $programs,
-            "events" => $events
+            "events" => $events,
+            "social_medias" => $social_medias
         ]);
     }
 }

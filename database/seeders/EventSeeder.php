@@ -15,6 +15,7 @@ class EventSeeder extends Seeder
     public function run()
     {
         $result = DB::transaction(function (){
+            $classroom_category = \App\Models\ClassroomCategory::first();
             $seeders = [
                 [
                     'title' => 'Mejaseni Virtual Festival 1',
@@ -73,7 +74,8 @@ class EventSeeder extends Seeder
                         'is_free' => $seeder['is_free'],
                         'total' => $seeder['total'],
                         'location' => $seeder['location'],
-                        'quota' => $seeder['quota']
+                        'quota' => $seeder['quota'],
+                        'classroom_category_id' => $classroom_category->id
                     ]);
                 }
             }

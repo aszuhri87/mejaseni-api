@@ -12,6 +12,7 @@ use App\Models\Company;
 use App\Models\Career;
 
 use DB;
+use Storage;
 
 class CareerDetailController extends Controller
 {
@@ -32,6 +33,7 @@ class CareerDetailController extends Controller
 
 	    	$company = Company::first();
 	    	$branchs = Branch::all();
+	    	$path = Storage::disk('s3')->url('/');
 	    	$job_descriptions = DB::table('job_descriptions')
 	    							->select([
 	    								'id',
@@ -50,6 +52,15 @@ class CareerDetailController extends Controller
 	    							->whereNull('deleted_at')
 	    							->get();
 
+	    	$social_medias = DB::table('social_media')
+					            ->select([
+					                'url',
+					                DB::raw("CONCAT('{$path}',image) as image_url"),
+					            ])
+					            ->whereNull([
+					                'deleted_at'
+					            ])
+					            ->get();
 
 
 	    	return view('cms.career-detail.index', [
@@ -57,7 +68,8 @@ class CareerDetailController extends Controller
 	    		"branchs" => $branchs,
 	    		"job_requirements" => $job_requirements,
 	    		"job_descriptions" => $job_descriptions,
-	    		"career" => $career
+	    		"career" => $career,
+	    		"social_medias" => $social_medias
 	    	]);
     	} catch (Exception $e) {
     		return abort(500);

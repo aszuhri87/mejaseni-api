@@ -64,7 +64,7 @@
                       <h3 class="mt-3 ml-2">{{ $event->title ? $event->title:''}}</h3>
                     </div>
                     <p class="my-3 desc__slider-content">{{ $event->description ? $event->description:''}}</p>
-                    <a class="link link--arrowed" href="#">Selengkapnya
+                    <a class="link link--arrowed" href="{{ url('event') }}/{{$event->id}}/detail">Selengkapnya
                       <svg class="arrow-icon ml-1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
                         <g fill="none" stroke="#7F16A7" stroke-width="1.5" stroke-linejoin="round" stroke-miterlimit="10">
                           <circle class="arrow-icon--circle" cx="16" cy="16" r="15.12"></circle>

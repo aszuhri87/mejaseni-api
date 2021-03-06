@@ -14,14 +14,8 @@
                             <img src="{{ asset('cms/assets/img/svg/Arrow-left1.svg') }}" alt="">
                     </a>
                 </div>
-                <input class="form-control ml-3" list="datalistOptions" id="exampleDataList"
-                    placeholder="Type to search...">
+                <input class="form-control ml-3" list="datalistOptions" id="search" placeholder="Type to search...">
                 <datalist id="datalistOptions">
-                    <option value="San Francisco">
-                    <option value="New York">
-                    <option value="Seattle">
-                    <option value="Los Angeles">
-                    <option value="Chicago">
                 </datalist>
             </div>
             <div class="col-md-12">

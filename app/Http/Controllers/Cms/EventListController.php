@@ -19,23 +19,40 @@ class EventListController extends Controller
     	$branchs = Branch::all();
         $path = Storage::disk('s3')->url('/');
 
+        $classroom_categories = DB::table('classroom_categories')->whereNull('deleted_at')->get();
+
 
     	$events = DB::table('events')
     				->select([
-    					'id',
-    					'title',
-    					'description',
-    					'start_at as date',
+    					'events.id',
+    					'events.title',
+    					'events.description',
+    					'events.start_at as date',
+                        'classroom_categories.name as category',
     					 DB::raw("CONCAT('{$path}',image) as image_url"),
     				])
-    				->whereNull('deleted_at')
-    				->orderBy('start_at','desc')
-                    ->take(3)
+                    ->leftJoin('classroom_categories','classroom_categories.id','events.classroom_category_id')
+    				->whereNull('events.deleted_at')
+    				->orderBy('events.start_at','desc')
     				->get();
+
+        $social_medias = DB::table('social_media')
+            ->select([
+                'url',
+                DB::raw("CONCAT('{$path}',image) as image_url"),
+            ])
+            ->whereNull([
+                'deleted_at'
+            ])
+            ->get();
+
+                    
     	return view('cms.event-list.index', [
     		"company" => $company, 
     		"branchs" => $branchs,
-    		"events" => $events
+    		"events" => $events,
+            "classroom_categories" => $classroom_categories,
+            "social_medias" => $social_medias
     	]);
     }
 }

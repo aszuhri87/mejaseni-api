@@ -15,6 +15,9 @@
 
     <script>
         new SlimSelect({
+            select: '#select-subcategories'
+        })
+        new SlimSelect({
             select: '#select-event-categories'
         })
         $('.input-daterange input').each(function () {

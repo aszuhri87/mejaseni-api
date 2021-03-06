@@ -144,12 +144,21 @@ Route::get('/class', [ClassController::class, 'index']);
 Route::get('/class/classroom_category/{category_id}/sub_classroom_category', [ClassController::class, 'get_sub_category']);
 Route::get('/classroom_category/sub_classroom_category/{sub_category_id}/classroom', [ClassController::class, 'get_classroom']);
 Route::get('/class/{classroom_category_id}/sub_classroom_category/{sub_classroom_category_id}/package/{package}', [ClassController::class, 'get_package']);
+Route::get('/class/{classroom_id}/coachs', [ClassController::class, 'get_coach']);
+Route::get('/class/{classroom_id}/tools', [ClassController::class, 'get_tools']);
+Route::get('/class/{classroom_id}/description', [ClassController::class, 'get_description']);
+Route::get('/master-lesson/{master_lesson_id}/guest-star', [ClassController::class, 'get_guest_start']);
+Route::get('/master-lesson/{master_lesson_id}/detail', [ClassController::class, 'get_master_lesson']);
 
 
 Route::get('/store', [StoreController::class, 'index']);
+Route::post('/store/search', [StoreController::class, 'search']);
 Route::get('/video-course/{video_course_id}/detail', [StoreDetailController::class, 'index']);
 Route::get('/classroom_category/{category_id}/sub_classroom_category', [StoreController::class, 'get_sub_category']);
 Route::get('/classroom_category/sub_classroom_category/{sub_category_id}/video-course', [StoreController::class, 'get_video_courses']);
+
+
+
 Route::get('/news-event', [NewsEventController::class, 'index']);
 Route::get('/event-list', [EventListController::class, 'index']);
 Route::get('/event/{event_id}/detail', [EventDetailController::class, 'index']);
@@ -161,7 +170,7 @@ Route::get('/privacy-policy', [PrivacyPolicyController::class, 'index']);
 Route::get('/tos', [TosController::class, 'index']);
 Route::get('/faq', [FaqController::class, 'index']);
 Route::get('/career', [CareerController::class, 'index']);
-Route::get('/career-detail', [CareerDetailController::class, 'index']);
+Route::get('/career/{id}/detail', [CareerDetailController::class, 'index']);
 Route::post('/notifications/payments', [PaymentController::class, 'notification']);
 
 Route::group(['middleware' => ['guest-handling']], function () {
@@ -605,6 +614,8 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::delete('delete-cart/{cart_id}',[StudentCartController::class, 'delete_cart']);
 
         Route::post('/event/{event_id}/add-to-cart',[StudentCartController::class, 'event']);
+        Route::get('/class/{classroom_id}/detail', [ClassController::class, 'detail']);
+        Route::post('/class/add-to-cart', [ClassController::class, 'store']);
     });
 
     /*

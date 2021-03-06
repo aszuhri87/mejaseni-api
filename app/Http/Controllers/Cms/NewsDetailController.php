@@ -26,6 +26,7 @@ class NewsDetailController extends Controller
                         'id',
                         'title',
                         'description',
+                        'created_at as date',
                          DB::raw("CONCAT('{$path}',image) as image_url"),
                     ])
                     ->whereNull('deleted_at')
@@ -44,11 +45,22 @@ class NewsDetailController extends Controller
                     ->take(3)
                     ->get();
 
+        $social_medias = DB::table('social_media')
+            ->select([
+                'url',
+                DB::raw("CONCAT('{$path}',image) as image_url"),
+            ])
+            ->whereNull([
+                'deleted_at'
+            ])
+            ->get();
+
     	return view('cms.news-detail.index', [
     		"company" => $company, 
     		"branchs" => $branchs,
     		"news" => $news,
-    		"list_news" => $list_news
+    		"list_news" => $list_news,
+            "social_medias" => $social_medias
     	]);
     }
 }

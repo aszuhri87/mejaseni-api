@@ -4,12 +4,6 @@
   @include('cms.layouts.banner')
 @endpush
 
-@php
-    function FunctionName($date)
-    {
-        return date('l', strtotime($date));
-    }
-@endphp
 
 @section('content')
 <section>
@@ -22,7 +16,11 @@
                                 src="{{ asset('cms/assets/img/svg/chevron-down.svg') }}" alt=""></button>
                         <div class="filter__wrapper p-4">
                             <label>Pilih Kategori Seni</label>
-                            <select class="mt-3 mb-4" name="select-subcategories" id="select-subcategories"></select>
+                            <select class="mt-3 mb-4" name="select-subcategories" id="select-subcategories">
+                                @foreach($classroom_categories as $classroom_category)
+                                    <option>{{$classroom_category->name ? $classroom_category->name:''}}</option>
+                                @endforeach
+                            </select>
                             <div class="input-group input-daterange d-flex flex-column">
                                 <div class="mb-4">
                                     <label for="">Dari Tanggal</label>
@@ -58,12 +56,10 @@
                                     <p class="mt-3 ml-3 desc__store-content">{{ $event->description ? $event->description:'' }}</p>
                                     <div class="detail__store-content ml-3 mt-3">
                                         <div class="coach-name__store-content row-center mr-4">
-                                            <img src="{{ asset('cms/assets/img/svg/Crown.svg') }}" class="mr-2" alt="">Piano
+                                            <img src="{{ asset('cms/assets/img/svg/Crown.svg') }}" class="mr-2" alt="">{{ $event->category ? $event->category:'-'}}
                                         </div>
                                         <div class="class__store-content row-center mt-md-0 mt-3">
-                                            <img src="{{ asset('cms/assets/img/svg/calendar.svg') }}" class="mr-2" alt="">Jum, 26 Februari
-                                            | 09:00 AM
-                                            2021
+                                            <img src="{{ asset('cms/assets/img/svg/calendar.svg') }}" class="mr-2" alt="">{{ $event->date ? $event->date:''}}
                                         </div>
                                     </div>
                                 </div>
@@ -76,29 +72,35 @@
         </div>
     </section>
 <div class="shadow filter-btn-mobile" id="filter-btn-mobile">
-        <img src="{{ asset('cms/assets/img/svg/filter.svg') }}" alt="">
-    </div>
+    <img src="{{ asset('cms/assets/img/svg/filter.svg') }}" alt="">
+</div>
 @endsection
 
-<div class="filter-overlay pt-5 px-5 animate__animated animate__fadeInUp animate__faster">
-  <h3 class="mb-5">Filter Data Event</h3>
-  <label>Pilih Kategori Seni</label>
-  <select class="mt-3 mb-4" name="select-event-categories" id="select-event-categories"></select>
-  <div class="input-group input-daterange d-flex flex-column">
-    <div class="mb-4">
-      <label for="">Dari Tanggal</label>
-      <input type="text" class="form-control w-100 mt-3 text-left" value="2012-04-05">
+@push('filter')
+    <div class="filter-overlay pt-5 px-5 animate__animated animate__fadeInUp animate__faster">
+        <h3 class="mb-5">Filter Data Event</h3>
+        <label>Pilih Kategori Seni</label>
+        <select class="mt-3 mb-4" name="select-event-categories" id="select-event-categories">
+            <option>asdasdasdsa</option>
+        </select>
+        <div class="input-group input-daterange d-flex flex-column">
+          <div class="mb-4">
+            <label for="">Dari Tanggal</label>
+            <input type="text" class="form-control w-100 mt-3 text-left" value="2012-04-05">
+          </div>
+          <div>
+            <label for="">Sampai Tanggal</label>
+            <input type="text" class="form-control w-100 mt-3 text-left" value="2012-04-19">
+          </div>
+        </div>
+        <button class="btn btn-primary mt-4 w-100">Terapkan Filter</button>
+        <button type="button" class="close close-btn" aria-label="Close">
+          <img src="{{ asset('cms/assets/img/svg/x.svg') }}" alt="">
+        </button>
     </div>
-    <div>
-      <label for="">Sampai Tanggal</label>
-      <input type="text" class="form-control w-100 mt-3 text-left" value="2012-04-19">
-    </div>
-  </div>
-  <button class="btn btn-primary mt-4 w-100">Terapkan Filter</button>
-  <button type="button" class="close close-btn" aria-label="Close">
-    <img src="{{ asset('cms/assets/img/svg/x.svg') }}" alt="">
-  </button>
-</div>
+@endpush
+
+
 @push('script')
 @include('cms.event-list.script')
 @endpush
