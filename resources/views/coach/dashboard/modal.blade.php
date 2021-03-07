@@ -139,3 +139,74 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Withdraw-->
+<div class="modal" id="modal-withdraw-request" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <form id="form-withdraw-request" autocomplete="off">
+                <div class="modal-header">
+                    <h5 class="modal-title">Withdraw Request</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i aria-hidden="true" class="ki ki-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label>
+                                    Nama Bank
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input required type="text" name="bank" class="form-control" placeholder="Nama Bank"/>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label>
+                                    Nomor Rekening
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input required type="text" name="bank_number" class="form-control" placeholder="Nomor Rekening"/>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label>
+                                    Nama Pemilik Rekening
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input required type="text" name="name_account" class="form-control" placeholder="Nama Pemilik Rekening"/>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label>
+                                    Saldo Saat Ini
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input required type="text" disabled id="i-saldo" class="form-control" placeholder="Saldo Saat Ini"/>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="mt-5">
+                        <h4 class="mt-5 mb-5 text-center">Tarik Saldo</h4>
+                        <div class="form-group">
+                            <label>
+                                Nominal
+                                <span class="text-danger">*</span>
+                            </label>
+                            <input required type="number" name="amount" id="i-amount" class="form-control" placeholder="Nominal"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary btn-loading">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

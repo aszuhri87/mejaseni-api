@@ -56,6 +56,7 @@ use App\Http\Controllers\Admin\ReportTransaction\TransactionStudentController as
 |--------------------------------------------------------------------------
 */
 use App\Http\Controllers\Coach\DashboardController;
+use App\Http\Controllers\Coach\TransactionController as CoachTransactionController;
 use App\Http\Controllers\Coach\TheoryController as CoachTheoryController;
 use App\Http\Controllers\Coach\Schedule\ScheduleController as CoachScheduleController;
 use App\Http\Controllers\Coach\Exercise\AssignmentController;
@@ -561,8 +562,12 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::post('delete/{id}', [CoachScheduleController::class, 'delete']);
         });
 
-        Route::get('/notification', [CoachNotificationController::class, 'index']);
-        Route::post('/notification/dt', [CoachNotificationController::class, 'dt']);
+        Route::group(['prefix' => 'withdraw'], function () {
+            Route::post('/detail/dt', [CoachTransactionController::class, 'withdraw_dt']);
+            Route::get('/detail', [CoachTransactionController::class, 'withdraw']);
+            Route::get('/get-balance', [CoachTransactionController::class, 'get_balance']);
+            Route::post('/request', [CoachTransactionController::class, 'store']);
+        });
 
     });
 

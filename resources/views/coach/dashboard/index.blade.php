@@ -301,7 +301,7 @@
                                 <!--begin::Navigation-->
                                 <ul class="navi navi-hover">
                                     <li class="navi-item">
-                                        <a href="#" class="navi-link">
+                                        <a href="{{url('coach/withdraw/detail')}}" class="navi-link">
                                             <span class="navi-text">Lihat Riwayat</span>
                                         </a>
                                     </li>
@@ -322,12 +322,11 @@
                                 <div>
                                     <div class="font-size-sm text-muted font-weight-bold mt-1">Balance
                                     </div>
-                                    <div class="font-size-h6 text-dark-75 text-hover-primary font-weight-bolder">Rp.
-                                        12.000.000</div>
+                                    <div class="font-size-h6 text-dark-75 text-hover-primary font-weight-bolder d-balance">Rp. 0</div>
                                 </div>
                             </div>
-                            <a href="#" class="btn btn-light-info font-weight-bold mr-2">
-                                Widthdraw
+                            <a href="#" class="btn btn-light-info font-weight-bold mr-2 btn-withdraw">
+                                Withdraw
                                 <span class="svg-icon svg-icon-md">
                                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                         <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -338,29 +337,20 @@
                                     </svg>
                                 </span>
                             </a>
-
-                            {{-- <div class="label label-primary label-inline font-weight-bold text-primary-50 py-4 px-3 font-size-base">
-                                Widthdraw
-                            </div> --}}
                         </div>
-                        <!--end::Item-->
-                        <!--begin::Item-->
                         <div class="d-flex align-items-center justify-content-between">
                             <div class="d-flex align-items-center mr-2">
                                 <div>
                                     <div class="font-size-sm text-muted font-weight-bold mt-1">Total Income</div>
-                                    <div class="font-size-h6 text-dark-75 text-hover-primary font-weight-bolder">Rp.
-                                        120.000.000</div>
+                                    <div class="font-size-h6 text-dark-75 text-hover-primary font-weight-bolder d-amount">Rp. 0</div>
                                 </div>
                             </div>
                         </div>
-                        <!--end::Item-->
                     </div>
-                    <!--end::Items-->
 
                     <!--begin::Chart-->
-                    <div id="kt_tiles_widget_8_chart" class="card-rounded-bottom" data-color="danger" style="height: 100px">
-                    </div>
+                    {{-- <div id="kt_tiles_widget_8_chart" class="card-rounded-bottom" data-color="danger" style="height: 100px">
+                    </div> --}}
                     <!--end::Chart-->
                 </div>
                 <!--end::Body-->

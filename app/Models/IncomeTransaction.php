@@ -15,6 +15,11 @@ class IncomeTransaction extends Model
 
     public $keyType = 'string';
 
+    // Status Description
+    // 0, Cancel
+    // 1, Waiting
+    // 2, Success
+
     protected $fillable = [
         'number',
         'coach_id',
@@ -22,7 +27,11 @@ class IncomeTransaction extends Model
         'total',
         'datetime',
         'confirmed',
-        'confirmed_at'
+        'confirmed_at',
+        'image',
+        'bank',
+        'bank_number',
+        'name_account'
     ];
 
     protected $dates = ['deleted_at'];
