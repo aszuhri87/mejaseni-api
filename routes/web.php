@@ -46,6 +46,7 @@ use App\Http\Controllers\Admin\Reporting\Review\Coach\CoachController as AdminCo
 use App\Http\Controllers\Admin\Reporting\Review\Coach\Detail\CoachDetailController;
 use App\Http\Controllers\Admin\Reporting\Review\Student\StudentController as AdminStudentController;
 use App\Http\Controllers\Admin\Reporting\Review\Student\Detail\StudentDetailController;
+use App\Http\Controllers\Admin\Report\Transaction\CoachController as ReportTransactionCoachController;
 
 use App\Http\Controllers\Admin\Review\VideoController;
 use App\Http\Controllers\Admin\Review\ClassController as ReviewClassController;
@@ -362,6 +363,15 @@ Route::group(['middleware' => ['auth-handling']], function () {
                     Route::post('dt/{id}', [ReviewClassController::class, 'dt_detail']);
                     Route::post('print-excel/{id}', [ReviewClassController::class, 'print_excel']);
                     Route::post('print-pdf/{id}', [ReviewClassController::class, 'print_pdf']);
+                });
+            });
+
+            Route::group(['prefix' => 'transaction'], function () {
+                Route::group(['prefix' => 'coach'], function () {
+                    Route::get('/', [ReportTransactionCoachController::class, 'index']);
+                    Route::post('dt', [ReportTransactionCoachController::class, 'dt']);
+                    Route::post('print-pdf', [ReportTransactionCoachController::class, 'print_pdf']);
+                    Route::post('print-excel', [ReportTransactionCoachController::class, 'print_excel']);
                 });
             });
 
@@ -744,15 +754,6 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::get('get-guest-star', [PublicController::class, 'get_guest_star']);
         Route::get('get-student', [PublicController::class, 'get_student']);
     });
-});
-
-Route::get('fire', function () {
-    event(new \App\Events\PaymentNotification(true));
-    return 'oke';
-});
-
-Route::get('welcome', function () {
-    return view('welcome');
 });
 
 Route::get('redirect-blank', function () {
