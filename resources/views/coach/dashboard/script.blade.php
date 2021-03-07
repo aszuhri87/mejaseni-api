@@ -81,8 +81,8 @@
                                         }
                                     },
                                     yaxis: {
-                                        min: -80,
-                                        max: 80,
+                                        min: -30,
+                                        max: 30,
                                         labels: {
                                             style: {
                                                 colors: KTApp.getSettings()['colors']['gray'][
@@ -128,9 +128,7 @@
                                             }
                                         }
                                     },
-                                    colors: [KTApp.getSettings()['colors']['theme']['base']['warning'],
-                                        KTApp.getSettings()['colors']['theme']['base']['primary']
-                                    ],
+                                    colors: ['#7F16A7', '#FFA800'],
                                     grid: {
                                         borderColor: KTApp.getSettings()['colors']['gray']['gray-200'],
                                         strokeDashArray: 4,
