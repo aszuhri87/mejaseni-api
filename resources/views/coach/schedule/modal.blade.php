@@ -164,7 +164,6 @@
                 <div class="modal-footer">
                     <button type="button" class="btn function-btn btn-delete btn-danger" style="display: none">Hapus</button>
                     <button type="button" class="btn function-btn btn-edit btn-success" style="display: none">Ubah</button>
-                    <button type="button" class="btn function-btn btn-confirm btn-warning" style="display: none">Konfirmasi</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
                 </div>
             </form>

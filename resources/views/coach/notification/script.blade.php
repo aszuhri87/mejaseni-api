@@ -31,19 +31,16 @@
                             searchable: false,
                             orderable: false,
                             className: "text-center"
-                        },                   
+                        },
                         {
                             targets: 1,
                             searchable: false,
                             orderable: false,
-                            className: "text-center",
                             data:"datetime",
                             render : function(data, type, full, meta) {
-                                const created = moment(data).format("DD MMMM YYYY - HH:MM:ss");
-
-                                return created;
+                                return moment(data).format("DD MMMM YYYY - HH:MM:ss");
                             }
-                        },                          
+                        },
                         {
                             targets: 2,
                             searchable: false,
@@ -59,7 +56,7 @@
                                     return `Reschedule`;
                                 }
                             }
-                        },            
+                        },
                     ],
                     order: [[1, 'asc']],
                     searching: true,
@@ -84,7 +81,7 @@
                 });
             },
             initAction = () => {
-                
+
                 $(document).on('click', '.btn-detail', function(event){
                     event.preventDefault();
 

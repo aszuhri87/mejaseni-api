@@ -563,20 +563,14 @@ Route::group(['middleware' => ['auth-handling']], function () {
             // Route::resource('review-assignment', ReviewAssignmentController::class);
         });
 
-        Route::group(['prefix' => 'schedule'], function () {
-
-            Route::get('master-lesson/{id}', [CoachScheduleController::class, 'show_master_lesson']);
-            Route::post('master-lesson/update/{id}', [CoachScheduleController::class, 'update_time_master_lesson']);
-            Route::get('/', [CoachScheduleController::class, 'index']);
-            Route::get('all', [CoachScheduleController::class, 'all']);
-            Route::get('{id}', [CoachScheduleController::class, 'show']);
-            Route::get('schedule-show/{id}', [CoachScheduleController::class, 'show_edit']);
-            Route::post('schedule', [CoachScheduleController::class, 'store']);
-            Route::post('{id}', [CoachScheduleController::class, 'update']);
-            Route::post('update/{id}', [CoachScheduleController::class, 'update_time']);
-            Route::post('confirm/{id}', [CoachScheduleController::class, 'confirm']);
-            Route::post('delete/{id}', [CoachScheduleController::class, 'delete']);
-        });
+        Route::get('schedule', [CoachScheduleController::class, 'index']);
+        Route::get('schedule/all', [CoachScheduleController::class, 'all']);
+        Route::get('schedule/{id}', [CoachScheduleController::class, 'show']);
+        Route::get('schedule-show/{id}', [CoachScheduleController::class, 'show_edit']);
+        Route::post('schedule', [CoachScheduleController::class, 'store']);
+        Route::post('schedule/{id}', [CoachScheduleController::class, 'update']);
+        Route::post('schedule/update/{id}', [CoachScheduleController::class, 'update_time']);
+        Route::post('schedule/delete/{id}', [CoachScheduleController::class, 'delete']);
 
         Route::group(['prefix' => 'withdraw'], function () {
             Route::post('/detail/dt', [CoachTransactionController::class, 'withdraw_dt']);
@@ -585,6 +579,8 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::post('/request', [CoachTransactionController::class, 'store']);
         });
 
+        Route::get('/notification', [CoachNotificationController::class, 'index']);
+        Route::post('/notification/dt', [CoachNotificationController::class, 'dt']);
     });
 
     /*

@@ -61,25 +61,21 @@ class ScheduleController extends BaseMenu
             }
 
             $result = DB::transaction(function () use($request){
-                if($request->type_class == 1){
-                    $coach_classroom = DB::table('coach_classrooms')
-                        ->where([
-                            'classroom_id' => $request->classroom_id,
-                            'coach_id' => Auth::guard('coach')->id(),
-                        ])
-                        ->whereNull('deleted_at')
-                        ->first();
+                $coach_classroom = DB::table('coach_classrooms')
+                    ->where([
+                        'classroom_id' => $request->classroom_id,
+                        'coach_id' => Auth::guard('coach')->id(),
+                    ])
+                    ->whereNull('deleted_at')
+                    ->first();
 
-                    $result = CoachSchedule::create([
-                        'coach_classroom_id' => $coach_classroom->id,
-                        'platform_id' => $request->platform_id,
-                        'platform_link' => $request->platform_link,
-                        'accepted' => false,
-                        'datetime' => date('Y-m-d H:i:s', strtotime($request->date.' '.$request->time)),
-                    ]);
-                }else{
-
-                }
+                $result = CoachSchedule::create([
+                    'coach_classroom_id' => $coach_classroom->id,
+                    'platform_id' => $request->platform_id,
+                    'platform_link' => $request->platform_link,
+                    'accepted' => false,
+                    'datetime' => date('Y-m-d H:i:s', strtotime($request->date.' '.$request->time)),
+                ]);
 
                 return $result;
             });
@@ -129,24 +125,20 @@ class ScheduleController extends BaseMenu
             }
 
             $result = DB::transaction(function () use($request, $id){
-                if($request->type_class == 1){
-                    $coach_classroom = DB::table('coach_classrooms')
-                        ->where([
-                            'classroom_id' => $request->classroom_id,
-                            'coach_id' => Auth::guard('coach')->id(),
-                        ])
-                        ->whereNull('deleted_at')
-                        ->first();
+                $coach_classroom = DB::table('coach_classrooms')
+                    ->where([
+                        'classroom_id' => $request->classroom_id,
+                        'coach_id' => Auth::guard('coach')->id(),
+                    ])
+                    ->whereNull('deleted_at')
+                    ->first();
 
-                    $result = CoachSchedule::find($id)->update([
-                        'coach_classroom_id' => $coach_classroom->id,
-                        'platform_id' => $request->platform_id,
-                        'platform_link' => $request->platform_link,
-                        'datetime' => date('Y-m-d H:i:s', strtotime($request->date.' '.$request->time)),
-                    ]);
-                }else{
-
-                }
+                $result = CoachSchedule::find($id)->update([
+                    'coach_classroom_id' => $coach_classroom->id,
+                    'platform_id' => $request->platform_id,
+                    'platform_link' => $request->platform_link,
+                    'datetime' => date('Y-m-d H:i:s', strtotime($request->date.' '.$request->time)),
+                ]);
 
                 return $result;
             });
@@ -189,27 +181,10 @@ class ScheduleController extends BaseMenu
                 ->whereNull('coach_schedules.deleted_at')
                 ->whereNull('coach_schedules.deleted_at')
                 ->where('coach_classrooms.coach_id',Auth::guard('coach')->id())
-                ->get()
-                ->toArray();
-
-            $master_lessons = DB::table('master_lessons')
-                ->select([
-                    'master_lessons.id',
-                    'master_lessons.datetime',
-                    'master_lessons.name',
-                    DB::raw("'info' as color"),
-                    DB::raw("2 as type")
-                ])
-                ->whereNull([
-                    'master_lessons.deleted_at'
-                ])
-                ->get()
-                ->toArray();
-
-            $result = array_merge($coach_schedules, $master_lessons);
+                ->get();
 
             return response([
-                "data"      => $result,
+                "data"      => $coach_schedules,
                 "message"   => 'Successfully saved!'
             ], 200);
         } catch (Exception $e) {
@@ -259,46 +234,6 @@ class ScheduleController extends BaseMenu
 
             return response([
                 "data"      => $result,
-                "message"   => 'OK'
-            ], 200);
-        } catch (Exception $e) {
-            throw new Exception($e);
-            return response([
-                "message"=> $e->getMessage(),
-            ]);
-        }
-    }
-
-    public function show_master_lesson($id)
-    {
-        try {
-            $path = Storage::disk('s3')->url('/');
-
-            $result = DB::table('master_lessons')
-                ->select([
-                    'master_lessons.name',
-                    'master_lessons.slot',
-                    'master_lessons.datetime',
-                    DB::raw("CONCAT('{$path}',poster) as image_url"),
-                    DB::raw("0 as slot_uses"),
-                ])
-                ->leftJoin('classroom_categories','classroom_categories.id','=','master_lessons.classroom_category_id')
-                ->leftJoin('sub_classroom_categories','sub_classroom_categories.id','=','master_lessons.sub_classroom_category_id')
-                ->where('master_lessons.id', $id)
-                ->first();
-
-            $guest_stars = DB::table('guest_star_master_lessons')
-                ->select([
-                    'guest_stars.name',
-                    DB::raw("CONCAT('{$path}',guest_stars.image) as image_url"),
-                ])
-                ->leftJoin('guest_stars','guest_star_master_lessons.guest_star_id','=','guest_stars.id')
-                ->where('guest_star_master_lessons.master_lesson_id', $id)
-                ->get();
-
-            return response([
-                "data" => $result,
-                "guest_stars" => $guest_stars,
                 "message"   => 'OK'
             ], 200);
         } catch (Exception $e) {
@@ -361,49 +296,10 @@ class ScheduleController extends BaseMenu
         }
     }
 
-    public function confirm($id)
-    {
-        try {
-            $data = CoachSchedule::find($id)->update([
-                'coach_classroom_id' => Auth::guard('coach')->user()->id,
-                'accepted' => true,
-            ]);
-
-            return response([
-                "data"      => $data,
-                "message"   => 'OK'
-            ], 200);
-        } catch (Exception $e) {
-            throw new Exception($e);
-            return response([
-                "message"=> $e->getMessage(),
-            ]);
-        }
-    }
-
     public function delete($id)
     {
         try {
             $data = CoachSchedule::find($id)->delete();
-
-            return response([
-                "data"      => $data,
-                "message"   => 'OK'
-            ], 200);
-        } catch (Exception $e) {
-            throw new Exception($e);
-            return response([
-                "message"=> $e->getMessage(),
-            ]);
-        }
-    }
-
-    public function update_time_master_lesson(Request $request, $id)
-    {
-        try {
-            $data = MasterLesson::find($id)->update([
-                'datetime' => date('Y-m-d H:i:s', strtotime($request->date.' '.$request->time)),
-            ]);
 
             return response([
                 "data"      => $data,

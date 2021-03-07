@@ -41,11 +41,11 @@ class NotificationController extends BaseMenu
                 'students.name as student_name',
             )
             ->join('coaches','coaches.id','coach_notifications.coach_id')
-            ->leftjoin('transactions','transactions.id','coach_notifications.transaction_id')
-            ->leftjoin('coach_schedules','coach_schedules.id','coach_notifications.coach_schedule_id')
-            ->leftjoin('student_classrooms','student_classrooms.transaction_id','transactions.id')
-            ->leftjoin('students','students.id','student_classrooms.student_id')
-            ->leftjoin('classrooms','classrooms.id','student_classrooms.classroom_id')
+            ->leftJoin('transactions','transactions.id','coach_notifications.transaction_id')
+            ->leftJoin('coach_schedules','coach_schedules.id','coach_notifications.coach_schedule_id')
+            ->leftJoin('student_classrooms','student_classrooms.transaction_id','transactions.id')
+            ->leftJoin('students','students.id','student_classrooms.student_id')
+            ->leftJoin('classrooms','classrooms.id','student_classrooms.classroom_id')
             ->where('coaches.id',Auth::guard('coach')->id())
             ->orderByDesc('coach_notifications.datetime')
             ->get();
