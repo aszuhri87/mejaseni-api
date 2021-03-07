@@ -302,7 +302,7 @@ class DashboardController extends BaseMenu
         }
     }
 
-    public function dt_last_class()
+    public function dt_last_class(Request $request)
     {
         $coaches = DB::table('coaches')
             ->select(
@@ -382,14 +382,14 @@ class DashboardController extends BaseMenu
                 'student_schedules.class_name',
                 'student_schedules.student_name',
                 DB::raw("CASE WHEN student_schedules.package_type = 1 THEN 'Spacial Class' ELSE 'Regular class' END package_type"),
-                DB::raw("CASE 
-                                WHEN student_schedules.check_in IS NOT NULL THEN 'Complete' 
+                DB::raw("CASE
+                                WHEN student_schedules.check_in IS NOT NULL THEN 'Complete'
                                 WHEN coach_schedules.deleted_at IS NOT NULL THEN 'Cancle'
                                 ELSE 'Cancle'
                             END status"),
-                DB::raw("CASE 
-                                WHEN student_schedules.check_in IS NOT NULL THEN 'success' 
-                                WHEN coach_schedules.deleted_at IS NOT NULL THEN 'danger' 
+                DB::raw("CASE
+                                WHEN student_schedules.check_in IS NOT NULL THEN 'success'
+                                WHEN coach_schedules.deleted_at IS NOT NULL THEN 'danger'
                                 ELSE 'danger'
                             END color_status"),
                 DB::raw("to_char(coach_schedules.datetime, 'Day, DD Month YYYY') as date_class"),
@@ -402,6 +402,12 @@ class DashboardController extends BaseMenu
             ->where([
                 ['accepted', true]
             ])
+            ->where(function($query) use($request){
+                if(!empty($request->date_start)){
+                    $query->whereDate('coach_schedules.datetime','>=',$request->date_start)
+                        ->whereDate('coach_schedules.datetime','<=',$request->date_end);
+                }
+            })
             ->orderby('coach_schedules.created_at', 'desc')
             ->get();
 
@@ -499,14 +505,14 @@ class DashboardController extends BaseMenu
                     'student_schedules.check_in',
                     DB::raw("CONCAT('{$path}',student_schedules.student_image) as image_url"),
                     DB::raw("CASE WHEN student_schedules.package_type = 1 THEN 'Spacial Class' ELSE 'Regular class' END package_type"),
-                    DB::raw("CASE 
-                                WHEN student_schedules.check_in IS NOT NULL THEN 'Complete' 
+                    DB::raw("CASE
+                                WHEN student_schedules.check_in IS NOT NULL THEN 'Complete'
                                 WHEN coach_schedules.deleted_at IS NOT NULL THEN 'Complete'
                                 ELSE 'Cancle'
                             END status"),
-                    DB::raw("CASE 
-                                WHEN student_schedules.check_in IS NOT NULL THEN 'success' 
-                                WHEN coach_schedules.deleted_at IS NOT NULL THEN 'success' 
+                    DB::raw("CASE
+                                WHEN student_schedules.check_in IS NOT NULL THEN 'success'
+                                WHEN coach_schedules.deleted_at IS NOT NULL THEN 'success'
                                 ELSE 'danger'
                             END color_status"),
                     DB::raw("to_char(coach_schedules.datetime, 'Day, DD Month YYYY') as date_class"),
@@ -564,7 +570,7 @@ class DashboardController extends BaseMenu
                 ])
                 ->WhereNull('student_schedules.deleted_at')
                 ->first();
-            
+
             $feedback = DB::table('student_feedback')
                 ->select(
                     'student_feedback.*',
@@ -641,14 +647,14 @@ class DashboardController extends BaseMenu
     {
         try {
             $path = Storage::disk('s3')->url('/');
-            
+
             $result = DB::table('session_feedback')
                 ->select(
                     'session_feedback.*',
                     'students.name as student_name',
                     'coach_schedules.id as coach_schedule_id',
                     DB::raw("CONCAT('{$path}',students.image) as image_url"),
-                )                
+                )
                 ->join('student_schedules', 'student_schedules.id', 'session_feedback.student_schedule_id')
                 ->join('student_classrooms', 'student_classrooms.id', 'student_schedules.student_classroom_id')
                 ->join('students', 'students.id', 'student_classrooms.student_id')

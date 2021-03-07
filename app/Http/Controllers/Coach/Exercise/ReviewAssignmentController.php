@@ -35,7 +35,7 @@ class ReviewAssignmentController extends BaseMenu
         ]);
     }
 
-    public function dt(Request $request, $classroom_id, $session_id)
+    public function dt_old(Request $request, $classroom_id, $session_id)
     {
         $data = DB::table('collections')
             ->select(
@@ -45,8 +45,8 @@ class ReviewAssignmentController extends BaseMenu
                 DB::raw("to_char(assignments.due_date, 'DD Month YYYY') as due_date"),
                 DB::raw("COUNT(collection_feedback.id) AS status"),
             )
-            ->leftjoin('collection_feedback', 'collection_feedback.collection_id', 'collections.id')
-            ->leftjoin('collection_files', 'collection_files.collection_id', 'collections.id')
+            ->leftJoin('collection_feedback', 'collection_feedback.collection_id', 'collections.id')
+            ->leftJoin('collection_files', 'collection_files.collection_id', 'collections.id')
             ->join('assignments', 'assignments.id', 'collections.assignment_id')
             ->join('sessions', 'sessions.id', 'assignments.session_id')
             ->join('students', 'students.id', 'collections.student_id')
@@ -69,7 +69,7 @@ class ReviewAssignmentController extends BaseMenu
 
         $data->where([
             ['classrooms.id', $classroom_id],
-            ['sessions.name', $session_id],
+            ['sessions.id', $session_id],
             ['coaches.id', Auth::guard('coach')->id()],
         ])
             ->orderBy('collections.created_at', 'desc')
@@ -79,6 +79,114 @@ class ReviewAssignmentController extends BaseMenu
             ->groupBy('collections.id', 'assignments.due_date', 'students.name')
             ->get();
 
+        return DataTables::of($data)
+            ->addIndexColumn()
+            ->make(true);
+    }
+    public function dt(Request $request, $classroom_id, $session_id)
+    {
+        $coach_classroom = DB::table('coach_classrooms')
+            ->select([
+                'coach_classrooms.id',
+                'coach_classrooms.coach_id',
+            ])
+            ->where('coach_classrooms.classroom_id',$classroom_id)
+            ->whereNull('coach_classrooms.deleted_at');
+
+        $coach_schedule = DB::table('coach_schedules')
+            ->select([
+                'coach_schedules.id',
+                'coach_classrooms.coach_id'
+            ])
+            ->JoinSub($coach_classroom, 'coach_classrooms', function ($join) {
+                $join->on('coach_schedules.coach_classroom_id', '=', 'coach_classrooms.id');
+            })
+            ->whereNull('coach_schedules.deleted_at');
+
+        $student_schedule = DB::table('student_schedules')
+            ->select([
+                'student_schedules.session_id',
+                'coach_schedules.coach_id'
+            ])
+            ->JoinSub($coach_schedule, 'coach_schedules', function ($join) {
+                $join->on('student_schedules.coach_schedule_id', '=', 'coach_schedules.id');
+            })
+            ->whereNull('student_schedules.deleted_at');
+
+        $session = DB::table('sessions')
+            ->select([
+                'sessions.id',
+                'student_schedules.coach_id'
+            ])
+            ->JoinSub($student_schedule, 'student_schedules', function ($join) {
+                $join->on('sessions.id', '=', 'student_schedules.session_id');
+            })
+            ->where('sessions.id',$session_id)
+            ->whereNull('sessions.deleted_at');
+
+        $assignment = DB::table('assignments')
+            ->select([
+                'assignments.id',
+                'assignments.due_date',
+                'assignments.upload_date',
+                'sessions.coach_id'
+            ])
+            ->JoinSub($session, 'sessions', function ($join) {
+                $join->on('assignments.session_id', '=', 'sessions.id');
+            })
+            ->whereNull('assignments.deleted_at');
+
+        $student = DB::table('students')
+            ->select([
+                'students.id',
+                'students.name',
+            ])
+            ->whereNull('students.deleted_at');
+
+        $collection_feedback = DB::table('collection_feedback')
+            ->select([
+                'collection_feedback.collection_id',
+                DB::raw("COUNT(collection_feedback.collection_id) AS status"),
+            ])
+            ->whereNull('collection_feedback.deleted_at')
+            ->groupBy('collection_feedback.collection_id');
+
+        $data = DB::table('collections')
+            ->select([
+                'collections.id',
+                'assignments.coach_id',
+                'students.name',
+                DB::raw("to_char(collections.upload_date, 'DD Month YYYY') as upload_date"),
+                DB::raw("to_char(assignments.due_date, 'DD Month YYYY') as due_date"),
+                DB::raw('(
+                    CASE
+                        WHEN collection_feedback.status IS NOT NULL THEN
+                            collection_feedback.status
+                        ELSE
+                            0
+                    END
+                ) as status')
+            ])
+            ->leftJoinSub($assignment, 'assignments', function ($join) {
+                $join->on('collections.assignment_id', '=', 'assignments.id');
+            })
+            ->leftJoinSub($student, 'students', function ($join) {
+                $join->on('collections.student_id', '=', 'students.id');
+            })
+            ->leftJoinSub($collection_feedback, 'collection_feedback', function ($join) {
+                $join->on('collections.id', '=', 'collection_feedback.collection_id');
+            })
+            ->whereNull('collections.deleted_at')
+            ->whereNotNull('assignments.coach_id')
+            ->where('assignments.coach_id',Auth::guard('coach')->user()->id)
+            ->where(function($query) use($request){
+                if(!empty($request->start_date) && !empty($request->end_date)){
+                    $query->whereDate('collections.upload_date','>=',Carbon::parse($request->start_date)->format('Y-m-d H:i:s'))
+                        ->whereDate('collections.upload_date','<=',Carbon::parse($request->end_date)->format('Y-m-d H:i:s'));
+                }
+            })
+            ->get();
+        
         return DataTables::of($data)
             ->addIndexColumn()
             ->make(true);

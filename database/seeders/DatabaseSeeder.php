@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
             CoachSeeder::class,
             SuperCoachSeeder::class,
             PermissionCoachSeeder::class,
-            SosmedSeeder::class
+            SosmedSeeder::class,
             CompanySeeder::class,
             BranchSeeder::class,
             EventSeeder::class,

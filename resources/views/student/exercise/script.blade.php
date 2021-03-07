@@ -166,7 +166,7 @@
                         toastr.error(res.responseJSON.message, 'Failed')
                     })
                     .always(function() {
-                        btn_loading_exercise('stop')
+                        btn_loading_exercise('stop', 'Kirim Excercise')
                     });
                 });
             },

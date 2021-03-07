@@ -541,6 +541,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::post('review-assignment/dt/{classroom_id}/{session_id}', [ReviewAssignmentController::class, 'dt']);
             Route::get('review-assignment', [ReviewAssignmentController::class, 'index']);
             Route::get('review-assignment/{id}', [ReviewAssignmentController::class, 'show']);
+            Route::get('review-assignment/{id}/edit', [ReviewAssignmentController::class, 'edit']);
             Route::post('review-assignment', [ReviewAssignmentController::class, 'store']);
             Route::put('review-assignment/{id}', [ReviewAssignmentController::class, 'update']);
             Route::delete('review-assignment/{id}', [ReviewAssignmentController::class, 'destroy']);

@@ -54,7 +54,7 @@ class ClassController extends Controller
 
 
         $path = Storage::disk('s3')->url('/');
-        
+
         $classrooms = DB::table('classrooms')
             ->select([
                 'classrooms.*',
@@ -98,8 +98,8 @@ class ClassController extends Controller
 
 
     	return view('cms.class.index', [
-            "company" => $company, 
-            "branchs" => $branchs, 
+            "company" => $company,
+            "branchs" => $branchs,
             "classroom_categories" => $classroom_categories,
             "selected_category" => $selected_category,
             "sub_categories" => $sub_categories,
@@ -304,7 +304,7 @@ class ClassController extends Controller
         }
     }
 
-    
+
 
 
     /**
@@ -426,24 +426,11 @@ class ClassController extends Controller
             $regular_class_type = 2;
             $master_lesson_type = 3;
             $path = Storage::disk('s3')->url('/');
-<<<<<<< HEAD
-=======
             $classroom_html = "";
->>>>>>> e8df108927713e7c148bcd913f7125010fa2aa42
 
             if($package == $master_lesson_type){
                 $classrooms = DB::table('master_lessons')
                     ->select([
-<<<<<<< HEAD
-                        'session_videos.*',
-                        'sub_classroom_categories.classroom_category_id',
-                        'sub_classroom_categories.name as sub_category',
-                        'classroom_categories.name as category'
-                    ])
-                    ->leftJoin('sub_classroom_categories', 'sub_classroom_categories.id','=','session_videos.sub_classroom_category_id')
-                    ->leftJoin('classroom_categories', 'classroom_categories.id','=','sub_classroom_categories.classroom_category_id')
-                    ->where('classroom_categories.id',$classroom_category_id)
-=======
                         'master_lessons.*',
                         'classroom_categories.name as category',
                         'platforms.name as platform',
@@ -452,7 +439,6 @@ class ClassController extends Controller
                     ->leftJoin('classroom_categories','classroom_categories.id','=','master_lessons.classroom_category_id')
                     ->leftJoin('platforms','platforms.id','=','master_lessons.platform_id')
                     ->where('master_lessons.classroom_category_id',$classroom_category_id)
->>>>>>> e8df108927713e7c148bcd913f7125010fa2aa42
                     ->whereNull([
                         'master_lessons.deleted_at'
                     ])
@@ -476,7 +462,7 @@ class ClassController extends Controller
                     ->where('classroom_categories.id',$classroom_category_id);
 
                 $is_valid = Uuid::isValid($sub_classroom_category_id);
-                $classrooms = $is_valid ? 
+                $classrooms = $is_valid ?
                                 $classrooms->where('sub_classroom_categories.id',$sub_classroom_category_id):
                                 $classrooms;
 
@@ -524,8 +510,6 @@ class ClassController extends Controller
     }
 
 
-<<<<<<< HEAD
-=======
 
     /**
     * Utility Function
@@ -607,9 +591,8 @@ class ClassController extends Controller
 
         return $html;
     }
-    
 
->>>>>>> e8df108927713e7c148bcd913f7125010fa2aa42
+
     public function _getPackage($category_id)
     {
         $special_class_type = 1;
@@ -642,21 +625,21 @@ class ClassController extends Controller
                 DB::raw("
                         CASE
                             WHEN master_lessons.classroom_category_id IS NULL THEN 0
-                        ELSE 
+                        ELSE
                             1
                         END master_lesson "),
 
                 DB::raw("
                         CASE
                             WHEN special_class.classroom_category_id IS NULL THEN 0
-                        ELSE 
+                        ELSE
                             1
                         END special_class "),
 
                 DB::raw("
                         CASE
                             WHEN regular_class.classroom_category_id IS NULL THEN 0
-                        ELSE 
+                        ELSE
                             1
                         END regular_class "),
 
@@ -737,46 +720,46 @@ class ClassController extends Controller
 
 
 
-    public function _get_classroom_html($classrooms)
-    {
-        $html ="";
-        foreach ($classrooms as $key => $classroom) {
-            $html .= '<li class="splide__slide px-2 pb-5">
-                        <img class="w-100 rounded" src="'. $classroom->image_url .'" alt="">
-                        <div class="badge-left">
-                          <h3 class="mt-4 ml-2">'. $classroom->name.'</h3>
-                        </div>
-                        <ul class="row-center-start class-tab mt-5 mt-md-4">
-                          <li class="active tab-detail" data-id="'. $classroom->id.'" href="tab-description">Deskripsi</li>
-                          <li class="tab-detail" data-id="'. $classroom->id.'" href="tab-coach">Coach</li>
-                          <li class="tab-detail" data-id="'. $classroom->id.'" href="tab-tools">Tools</li>
-                        </ul>
-                        <div id="description">
-                            <div class="content-tab-detail" style="">
-                              <div class="desc__class-tab my-4">
-                                <p>
-                                  '. $classroom->description.'
-                                </p>
-                              </div>
-                            </div>
-                            <div class="class-tab-summary d-flex justify-content-between flex-md-row flex-column mb-4">
-                              <div class="d-flex flex-column">
-                                <p>'. $classroom->session_total .' Sesi | @ '. $classroom->session_duration .'menit</p>
-                                <span class="mt-2">Rp. '. $classroom->price.'</span>
-                              </div>
-                              <div class="mt-5 mt-md-0">
-                                <a href="#" class="btn btn-primary shadow registerNow" onclick="'.$this->_is_authenticated($classroom->id, 1).'">Daftar
-                                  Sekarang
-                                  <img class="ml-2" src="/cms/assets/img/svg/Sign-in.svg" alt="">
-                                </a>
-                              </div>
-                            </div>
-                        </div>
-                      </li>';
-        }
+    // public function _get_classroom_html($classrooms)
+    // {
+    //     $html ="";
+    //     foreach ($classrooms as $key => $classroom) {
+    //         $html .= '<li class="splide__slide px-2 pb-5">
+    //                     <img class="w-100 rounded" src="'. $classroom->image_url .'" alt="">
+    //                     <div class="badge-left">
+    //                       <h3 class="mt-4 ml-2">'. $classroom->name.'</h3>
+    //                     </div>
+    //                     <ul class="row-center-start class-tab mt-5 mt-md-4">
+    //                       <li class="active tab-detail" data-id="'. $classroom->id.'" href="tab-description">Deskripsi</li>
+    //                       <li class="tab-detail" data-id="'. $classroom->id.'" href="tab-coach">Coach</li>
+    //                       <li class="tab-detail" data-id="'. $classroom->id.'" href="tab-tools">Tools</li>
+    //                     </ul>
+    //                     <div id="description">
+    //                         <div class="content-tab-detail" style="">
+    //                           <div class="desc__class-tab my-4">
+    //                             <p>
+    //                               '. $classroom->description.'
+    //                             </p>
+    //                           </div>
+    //                         </div>
+    //                         <div class="class-tab-summary d-flex justify-content-between flex-md-row flex-column mb-4">
+    //                           <div class="d-flex flex-column">
+    //                             <p>'. $classroom->session_total .' Sesi | @ '. $classroom->session_duration .'menit</p>
+    //                             <span class="mt-2">Rp. '. $classroom->price.'</span>
+    //                           </div>
+    //                           <div class="mt-5 mt-md-0">
+    //                             <a href="#" class="btn btn-primary shadow registerNow" onclick="'.$this->_is_authenticated($classroom->id, 1).'">Daftar
+    //                               Sekarang
+    //                               <img class="ml-2" src="/cms/assets/img/svg/Sign-in.svg" alt="">
+    //                             </a>
+    //                           </div>
+    //                         </div>
+    //                     </div>
+    //                   </li>';
+    //     }
 
-        return $html;
-    }
+    //     return $html;
+    // }
 
 
     public function _get_master_lesson_html($master_lessons)
@@ -826,7 +809,7 @@ class ClassController extends Controller
 
     public function _get_classroom($sub_category_id)
     {
-        
+
         $classroom_html = "";
         $path = Storage::disk('s3')->url('/');
 

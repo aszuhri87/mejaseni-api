@@ -240,7 +240,7 @@
 
                                 });
 
-                            
+
                                 $.each(res.data.collection_files, function(index, data) {
                                     collection_files +=
                                         `<div class="col-xl-3 text-center">
@@ -316,7 +316,7 @@
                         let date_start = $('#end_date').val();
 
                         initTable();
-                        
+
                     });
 
                     $(document).on('change','#end_date',function(event){
@@ -325,7 +325,7 @@
                         let date_start = $('#start_date').val();
 
                         initTable();
-                        
+
                     });
                 },
                 formSubmit = () => {
@@ -389,18 +389,21 @@
                         dataType: 'json',
                     })
                     .done(function(res, xhr, meta) {
-                        let element = `<option value="">Select Session</option>`
+                        let element = `<option value="" selected>Select Session</option>`
 
                         if (res.data) {
-                            for (let index = 0; index < parseInt(res.data.session_total); index++) {
-                                if (index + 1 == select_id) {
-                                    element +=
-                                        `<option value="${index + 1}" selected>Session ${index + 1}</option>`;
-                                } else {
-                                    element +=
-                                        `<option value="${index + 1}">Session ${index + 1}</option>`;
-                                }
-                            }
+                            // for (let index = 0; index < parseInt(res.data.session_total); index++) {
+                            //     if (index + 1 == select_id) {
+                            //         element +=
+                            //             `<option value="${index + 1}" selected>Session ${index + 1}</option>`;
+                            //     } else {
+                            //         element +=
+                            //             `<option value="${index + 1}">Session ${index + 1}</option>`;
+                            //     }
+                            // }
+                            $.each(res.data,function(index,data){
+                                element += `<option value="${data.id}">Session ${data.name}</option>`;
+                            })
                         }
 
                         disable_action('session','stop')

@@ -432,13 +432,23 @@ class PublicController extends Controller
                 ], 200);
             }
 
-            $result = DB::table('classrooms')
+            // $result = DB::table('classrooms')
+            //     ->select([
+            //         'id',
+            //         'session_total',
+            //     ])
+            //     ->where('id', $classroom_id)
+            //     ->first();
+
+            $result = DB::table('sessions')
                 ->select([
                     'id',
-                    'session_total',
+                    'name',
+                    'classroom_id',
                 ])
-                ->where('id', $classroom_id)
-                ->first();
+                ->where('classroom_id', $classroom_id)
+                ->whereNull('deleted_at')
+                ->get();
 
             return response([
                 "data"      => $result,

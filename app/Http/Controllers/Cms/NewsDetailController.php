@@ -26,10 +26,7 @@ class NewsDetailController extends Controller
                         'id',
                         'title',
                         'description',
-<<<<<<< HEAD
-=======
                         'created_at as date',
->>>>>>> e8df108927713e7c148bcd913f7125010fa2aa42
                          DB::raw("CONCAT('{$path}',image) as image_url"),
                     ])
                     ->whereNull('deleted_at')
@@ -48,8 +45,6 @@ class NewsDetailController extends Controller
                     ->take(3)
                     ->get();
 
-<<<<<<< HEAD
-=======
         $social_medias = DB::table('social_media')
             ->select([
                 'url',
@@ -60,17 +55,12 @@ class NewsDetailController extends Controller
             ])
             ->get();
 
->>>>>>> e8df108927713e7c148bcd913f7125010fa2aa42
     	return view('cms.news-detail.index', [
-    		"company" => $company, 
+    		"company" => $company,
     		"branchs" => $branchs,
     		"news" => $news,
-<<<<<<< HEAD
-    		"list_news" => $list_news
-=======
     		"list_news" => $list_news,
             "social_medias" => $social_medias
->>>>>>> e8df108927713e7c148bcd913f7125010fa2aa42
     	]);
     }
 }

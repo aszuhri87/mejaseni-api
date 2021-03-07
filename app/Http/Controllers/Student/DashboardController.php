@@ -220,7 +220,9 @@ class DashboardController extends BaseMenu
                     'student_schedules.student_classroom_id',
                     DB::raw('COUNT(student_schedules.student_classroom_id) AS count_booking')
                 ])
+                ->leftJoin('coach_schedules','student_schedules.coach_schedule_id','=','coach_schedules.id')
                 ->whereNull('student_schedules.deleted_at')
+                ->whereNull('coach_schedules.deleted_at')
                 ->groupBy('student_schedules.student_classroom_id');
 
             $classroom = DB::table('classrooms')
@@ -250,8 +252,9 @@ class DashboardController extends BaseMenu
                 })
                 ->where('student_classrooms.student_id',Auth::guard('student')->user()->id)
                 ->whereNull('student_classrooms.deleted_at')
+                ->distinct('student_classrooms.classroom_id')
                 ->get();
-            
+
             $result = 0;
 
             foreach ($data as $key => $value) {

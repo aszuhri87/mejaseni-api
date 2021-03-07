@@ -4,10 +4,7 @@ namespace App\Http\Controllers\Cms;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-<<<<<<< HEAD
-=======
 use Ramsey\Uuid\Uuid;
->>>>>>> e8df108927713e7c148bcd913f7125010fa2aa42
 
 use App\Models\Branch;
 use App\Models\Company;
@@ -17,16 +14,6 @@ use Storage;
 
 class NewsListController extends Controller
 {
-<<<<<<< HEAD
-    public function index()
-    {
-    	$company = Company::first();
-    	$branchs = Branch::all();
-        $path = Storage::disk('s3')->url('/');
-
-
-    	$news = DB::table('news')
-=======
     public function index(Request $request)
     {
 
@@ -50,26 +37,10 @@ class NewsListController extends Controller
 
 
         $news = DB::table('news')
->>>>>>> e8df108927713e7c148bcd913f7125010fa2aa42
                     ->select([
                         'id',
                         'title',
                         'description',
-<<<<<<< HEAD
-                         DB::raw("CONCAT('{$path}',image) as image_url"),
-                    ])
-                    ->whereNull('deleted_at')
-                    ->orderBy('created_at','desc')
-                    ->get();
-
-
-    	return view('cms.news-list.index', [
-    		"company" => $company, 
-    		"branchs" => $branchs,
-    		"news" => $news
-    	]);
-    }
-=======
                         'created_at',
                          DB::raw("CONCAT('{$path}',image) as image_url"),
                     ])
@@ -95,10 +66,10 @@ class NewsListController extends Controller
             $news = $news->where('title', 'ilike', '%'.strtolower($search).'%');
         }
 
-        $news = $news->get();        
+        $news = $news->get();
 
     	return view('cms.news-list.index', [
-    		"company" => $company, 
+    		"company" => $company,
     		"branchs" => $branchs,
     		"news" => $news,
             "social_medias" => $social_medias
@@ -129,5 +100,4 @@ class NewsListController extends Controller
         }
 
     }
->>>>>>> e8df108927713e7c148bcd913f7125010fa2aa42
 }

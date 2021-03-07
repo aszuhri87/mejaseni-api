@@ -19,25 +19,6 @@ class EventDetailController extends Controller
     	$branchs = Branch::all();
         $path = Storage::disk('s3')->url('/');
 
-<<<<<<< HEAD
-        $cart = DB::table('carts')
-                ->whereNull('deleted_at');
-
-    	$event = DB::table('events')
-    				->select([
-    					'events.*',
-                        'carts.id as is_registered',
-    					 DB::raw("CONCAT('{$path}',image) as image_url"),
-    				])
-                    ->leftJoinSub($cart, 'carts', function($join){
-                        $join->on('events.id','carts.event_id');
-                    })
-    				->whereNull('events.deleted_at')
-                    ->whereNull('events.deleted_at')
-    				->where('events.id',$event_id)
-    				->first();
-
-=======
         $is_registered = DB::table('carts')
                 ->whereNull('deleted_at');
 
@@ -82,10 +63,9 @@ class EventDetailController extends Controller
                 'deleted_at'
             ])
             ->get();
-            
->>>>>>> e8df108927713e7c148bcd913f7125010fa2aa42
+
     	return view('cms.event-detail.index', [
-    		"company" => $company, 
+    		"company" => $company,
     		"branchs" => $branchs,
     		"event" => $event,
             "social_medias" => $social_medias

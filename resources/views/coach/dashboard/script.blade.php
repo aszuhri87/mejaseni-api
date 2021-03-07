@@ -11,6 +11,7 @@
                 closestScheduleTable();
                 latestComplateClassTable();
                 lastClassTable();
+                initDatePicker();
             });
 
             const summary_course_chart = () => {
@@ -153,6 +154,27 @@
                         .always(function() {
 
                         });
+                },
+                initDatePicker = () => {
+                    if (KTUtil.isRTL()) {
+                        arrows = {
+                            leftArrow: '<i class="la la-angle-right"></i>',
+                            rightArrow: '<i class="la la-angle-left"></i>'
+                        }
+                    } else {
+                        arrows = {
+                            leftArrow: '<i class="la la-angle-left"></i>',
+                            rightArrow: '<i class="la la-angle-right"></i>'
+                        }
+                    }
+                    $('.datepicker').datepicker({
+                        rtl: KTUtil.isRTL(),
+                        todayHighlight: true,
+                        orientation: "bottom left",
+                        templates: arrows,
+                        format:'d MM yyyy',
+                        autoClose: true
+                    });
                 },
                 side_summary_course = () => {
                     $.ajax({
@@ -327,7 +349,7 @@
                             $('.latest-complete-class').html(element);
                         });
                 },
-                lastClassTable = () => {
+                lastClassTable = (date_start,date_end) => {
                     init_table = $('#last-class-table').DataTable({
                         destroy: true,
                         processing: true,
@@ -337,6 +359,10 @@
                         ajax: {
                             type: 'POST',
                             url: "{{ url('coach/dashboard/dt-last-class') }}",
+                            data: {
+                                date_start: date_start,
+                                date_end: date_end
+                            }
                         },
                         columns: [{
                                 data: 'DT_RowIndex'
@@ -509,6 +535,33 @@
                     });
                 },
                 initAction = () => {
+                    $(document).on('change','#start_date',function(event){
+                        event.preventDefault();
+                        if($(this).val() != null || $(this).val() != ''){
+                            if($('#end_date').val() != null || $('#end_date').val() != ''){
+                                let date_start = moment($(this).val()).format('YYYY-MM-DD');
+                                let date_end = moment($('#end_date').val()).format('YYYY-MM-DD');
+
+                                if(moment(date_start).isSameOrBefore(date_end)){
+                                    lastClassTable(date_start,date_end);
+                                }
+                            }
+                        }
+                    });
+
+                    $(document).on('change','#end_date',function(event){
+                        event.preventDefault();
+                        if($(this).val() != null || $(this).val() != ''){
+                            if($('#start_date').val() != null || $('#start_date').val() != ''){
+                                let date_end = moment($(this).val()).format('YYYY-MM-DD');
+                                let date_start = moment($('#start_date').val()).format('YYYY-MM-DD');
+
+                                if(moment(date_start).isSameOrBefore(date_end)){
+                                    lastClassTable(date_start,date_end);
+                                }
+                            }
+                        }
+                    })
                     $(document).on('click', '.review-last-class-btn', function(event) {
                         event.preventDefault();
 

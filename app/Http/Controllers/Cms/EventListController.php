@@ -38,18 +38,6 @@ class EventListController extends Controller
 
     	$events = DB::table('events')
     				->select([
-<<<<<<< HEAD
-    					'id',
-    					'title',
-    					'description',
-    					'start_at as date',
-    					 DB::raw("CONCAT('{$path}',image) as image_url"),
-    				])
-    				->whereNull('deleted_at')
-    				->orderBy('start_at','desc')
-                    ->take(3)
-    				->get();
-=======
     					'events.id',
     					'events.title',
     					'events.description',
@@ -84,10 +72,9 @@ class EventListController extends Controller
 
         $events = $events->get();
 
-                    
->>>>>>> e8df108927713e7c148bcd913f7125010fa2aa42
+
     	return view('cms.event-list.index', [
-    		"company" => $company, 
+    		"company" => $company,
     		"branchs" => $branchs,
     		"events" => $events,
             "classroom_categories" => $classroom_categories,
