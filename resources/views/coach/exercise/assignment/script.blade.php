@@ -188,7 +188,7 @@
                     disable_action('session','start')
 
                     $.ajax({
-                            url: '{{ url('public/get-session-coach') }}/' + id,
+                            url: '{{ url('public/get-session-name-coach') }}/' + id,
                             type: 'GET',
                             dataType: 'json',
                         })
@@ -259,7 +259,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>   
+                                                </div>
                                             </div>
                                         <div class="card-body">
                                             <div class="row mb-5">
@@ -384,7 +384,7 @@
                     btn_loading_basic('start', 'Tampilkan')
 
                     $.ajax({
-                            url: '{{ url('public/get-session-coach') }}/' + id,
+                            url: '{{ url('public/get-session-name-coach') }}/' + id,
                             type: 'GET',
                             dataType: 'json',
                         })

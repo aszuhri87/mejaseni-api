@@ -113,7 +113,7 @@
 
                         get_theory_list(classroom,session)
 
-                        
+
                     });
 
                     $(document).on('change', '#is-premium', function() {
@@ -155,9 +155,12 @@
                             })
                             .done(function(res, xhr, meta) {
                                 toastr.success(res.message, 'Success')
-                                init_table.draw(false);
                                 arr_path = [];
                                 hideModal('modal-theory');
+                                var classroom = $('#classroom').val();
+                                var session = $('#session').val();
+
+                                get_theory_list(classroom,session)
                             })
                             .fail(function(res, error) {
                                 toastr.error(res.responseJSON.message, 'Failed')
@@ -198,7 +201,7 @@
                     disable_action('session','start')
 
                     $.ajax({
-                            url: '{{ url('public/get-session-coach') }}/' + id,
+                            url: '{{ url('public/get-session-name-coach') }}/' + id,
                             type: 'GET',
                             dataType: 'json',
                         })
@@ -257,7 +260,7 @@
                                                     </div>
                                                     <div class="col-9">
                                                         <p style="margin-bottom: 0 !important"><strong>${data.name}</strong></p>
-                                                        <span class="text-muted">${data.classroom_name}</span>
+                                                        <span class="text-muted">${data.classrooms_name}</span>
                                                     </div>
                                                     <div class="col">
                                                         <div class="dropdown dropdown-inline" data-toggle="tooltip" title="Quick actions"
@@ -270,14 +273,14 @@
                                                                 <!--begin::Navigation-->
                                                                 <ul class="navi navi-hover">
                                                                     <li class="navi-header font-weight-bold py-4">
-                                                                        <a href="{{ url('/coach/exercise/assignment') }}/${data.id}" class="font-weight-bold text-primary btn-delete">Hapus</a>
+                                                                        <a href="{{ url('/coach/theory') }}/${data.id}" class="font-weight-bold text-primary btn-delete">Hapus</a>
                                                                     </li>
                                                                 </ul>
                                                                 <!--end::Navigation-->
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>   
+                                                </div>
                                             </div>
                                         <div class="card-body">
                                             <div class="row mb-5">
@@ -290,7 +293,7 @@
                                                     <table class="bordered-less">
                                                         <tr>
                                                             <td width="100px"><span class="text-muted">Coach</span></td>
-                                                            <td>${data.coach_name}</td>
+                                                            <td>${data.coaches_name}</td>
                                                         </tr>
                                                         <tr>
                                                             <td width="100px"><span class="text-muted">Upload At</span></td>
@@ -402,7 +405,7 @@
                     btn_loading_basic('start', 'Tampilkan')
 
                     $.ajax({
-                            url: '{{ url('public/get-session-coach') }}/' + id,
+                            url: '{{ url('public/get-session-name-coach') }}/' + id,
                             type: 'GET',
                             dataType: 'json',
                         })

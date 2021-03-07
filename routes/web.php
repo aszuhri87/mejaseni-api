@@ -740,6 +740,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::get('get-platform', [PublicController::class, 'get_platform']);
         Route::get('get-classroom-coach', [PublicController::class, 'get_classroom_coach']);
         Route::get('get-session-coach/{classroom_id}', [PublicController::class, 'get_session_coach']);
+        Route::get('get-session-name-coach/{classroom_id}', [PublicController::class, 'get_session_name_coach']);
         Route::get('get-guest-star', [PublicController::class, 'get_guest_star']);
         Route::get('get-student', [PublicController::class, 'get_student']);
     });
