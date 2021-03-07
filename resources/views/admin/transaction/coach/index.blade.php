@@ -50,14 +50,14 @@
         <table class="table table-separate table-head-custom mb-0 pb-0" width="100%" id="init-table">
             <thead>
                 <tr>
-                    <th>No</th>
+                    <th width="">No</th>
                     <th width="15%">Tanggal</th>
-                    <th width="15%">Nomor </th>
-                    <th width="20%">Siswa</th>
-                    <th width="20%">Total Pembayaran</th>
-                    <th width="10%">Status Pembayaran</th>
-                    <th width="10%">Konfirmasi Pembayaran</th>
-                    <th width="10%">Actions</th>
+                    <th width="20%">Rekening</th>
+                    <th width="20%">Nama Pemilik Rekening</th>
+                    <th width="10%">Total</th>
+                    <th width="15%">Status</th>
+                    <th width="10%">Bukti</th>
+                    <th width="10%">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -66,9 +66,9 @@
     </div>
 </div>
 
-@include('admin.transaction.student.modal')
+@include('admin.transaction.coach.modal')
 @endsection
 
 @push('script')
-    @include('admin.transaction.student.script')
+    @include('admin.transaction.coach.script')
 @endpush

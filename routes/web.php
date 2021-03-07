@@ -40,6 +40,7 @@ use App\Http\Controllers\Admin\Master\GuestStarController;
 use App\Http\Controllers\Admin\Master\MasterLessonController;
 use App\Http\Controllers\Admin\Master\ProfileVideoCoachController;
 use App\Http\Controllers\Admin\Transaction\StudentController as TransactionStudentController;
+use App\Http\Controllers\Admin\Transaction\CoachController as TransactionCoachController;
 use App\Http\Controllers\Admin\Schedule\ScheduleController;
 use App\Http\Controllers\Admin\Reporting\Review\Coach\CoachController as AdminCoachController;
 use App\Http\Controllers\Admin\Reporting\Review\Coach\Detail\CoachDetailController;
@@ -375,6 +376,10 @@ Route::group(['middleware' => ['auth-handling']], function () {
         });
 
         Route::group(['prefix' => 'transaction'], function () {
+            Route::get('coach', [TransactionCoachController::class, 'index']);
+            Route::post('coach/dt', [TransactionCoachController::class, 'dt']);
+            Route::post('coach/confirm/{id}', [TransactionCoachController::class, 'confirm']);
+
             Route::get('student', [TransactionStudentController::class, 'index']);
             Route::post('student/dt', [TransactionStudentController::class, 'dt']);
             Route::get('student/detail/{id}', [TransactionStudentController::class, 'detail']);

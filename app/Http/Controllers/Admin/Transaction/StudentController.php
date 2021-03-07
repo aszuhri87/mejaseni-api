@@ -14,7 +14,7 @@ use Auth;
 
 class StudentController extends BaseMenu
 {
-    public function index(Type $var = null)
+    public function index()
     {
         $navigation = [
             [

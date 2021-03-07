@@ -18,7 +18,7 @@
 
 <div class="card">
     <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center">
+        {{-- <div class="d-flex justify-content-between align-items-center">
             <div style="width: 45%">
                 <div class="separator separator-solid"></div>
             </div>
@@ -26,7 +26,7 @@
             <div style="width: 45%">
                 <div class="separator separator-solid"></div>
             </div>
-        </div>
+        </div> --}}
         <div class="mt-10" id="calendar" style="height: 400px; border: none;"></div>
     </div>
 </div>
