@@ -206,8 +206,11 @@ class PaymentController extends Controller
             return Redirect::back()->withErrors(['message' => 'Permintaan ditolak.']);
         }
 
-        $transaction->status = 0;
-        $transaction->update();
+        DB::transaction(function () use($transaction){
+            $transaction->status = 0;
+            $transaction->update();
+            $transaction->delete();
+        });
 
         return redirect('cart');
     }

@@ -54,6 +54,7 @@ class CartController extends Controller
 
                     DB::raw("CASE
                         WHEN master_lessons.id IS NOT NULL THEN 'Master Lesson'
+                        WHEN events.id IS NOT NULL THEN 'Event'
                         ELSE 'Regular Class'
                     END as type"),
                 ])
@@ -99,12 +100,14 @@ class CartController extends Controller
                     WHEN carts.master_lesson_id IS NOT NULL THEN master_lessons.price::integer
                     WHEN carts.session_video_id IS NOT NULL THEN session_videos.price::integer
                     WHEN carts.classroom_id IS NOT NULL THEN classrooms.price::integer
+                    WHEN carts.event_id IS NOT NULL THEN events.total::integer
                 END as price"),
             ])
             ->leftJoin('theories','theories.id','carts.theory_id')
             ->leftJoin('master_lessons','master_lessons.id','carts.master_lesson_id')
             ->leftJoin('session_videos','session_videos.id','carts.session_video_id')
             ->leftJoin('classrooms','classrooms.id','carts.classroom_id')
+            ->leftJoin('events','events.id','carts.event_id')
             ->leftJoinSub($transaction_details, 'transaction_details', function($join){
                 $join->on('transaction_details.cart_id','carts.id');
             })
@@ -129,8 +132,10 @@ class CartController extends Controller
         }
 
         if($result->grand_total == 0){
-            session()->forget('arr_id');
-            return redirect('/cart');
+            return view('cms.transaction.payment.zero-index', [
+                'grand_total' => $result->grand_total,
+                'step' => 2
+            ]);
         }
 
         return view('cms.transaction.payment.index', [
@@ -150,6 +155,7 @@ class CartController extends Controller
                         WHEN carts.master_lesson_id IS NOT NULL THEN master_lessons.name
                         WHEN carts.session_video_id IS NOT NULL THEN session_videos.name
                         WHEN carts.classroom_id IS NOT NULL THEN classrooms.name
+                        WHEN carts.event_id IS NOT NULL THEN events.title
                     END as name"),
 
                     DB::raw("CASE
@@ -157,10 +163,12 @@ class CartController extends Controller
                         WHEN carts.master_lesson_id IS NOT NULL THEN master_lessons.price::integer
                         WHEN carts.session_video_id IS NOT NULL THEN session_videos.price::integer
                         WHEN carts.classroom_id IS NOT NULL THEN classrooms.price::integer
+                        WHEN carts.event_id IS NOT NULL THEN events.total::integer
                     END as price"),
 
                     DB::raw("CASE
                         WHEN master_lessons.id IS NOT NULL THEN 'Master Lesson'
+                        WHEN events.id IS NOT NULL THEN 'Event'
                         ELSE 'Regular Class'
                     END as type"),
                 ])
@@ -168,6 +176,7 @@ class CartController extends Controller
                 ->leftJoin('master_lessons','master_lessons.id','carts.master_lesson_id')
                 ->leftJoin('session_videos','session_videos.id','carts.session_video_id')
                 ->leftJoin('classrooms','classrooms.id','carts.classroom_id')
+                ->leftJoin('events','events.id','carts.event_id')
                 ->whereIn('carts.id', session()->get('arr_id', []))
                 ->whereNull([
                     'carts.deleted_at'
@@ -269,6 +278,102 @@ class CartController extends Controller
                     "message"   => 'Failed'
                 ], 400);
             }
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function zero_payment(Request $request)
+    {
+        try {
+            $carts = DB::table('carts')
+                ->select([
+                    'carts.id',
+                    DB::raw("CASE
+                        WHEN carts.theory_id IS NOT NULL THEN theories.name
+                        WHEN carts.master_lesson_id IS NOT NULL THEN master_lessons.name
+                        WHEN carts.session_video_id IS NOT NULL THEN session_videos.name
+                        WHEN carts.classroom_id IS NOT NULL THEN classrooms.name
+                        WHEN carts.event_id IS NOT NULL THEN events.title
+                    END as name"),
+
+                    DB::raw("CASE
+                        WHEN carts.theory_id IS NOT NULL THEN theories.price::integer
+                        WHEN carts.master_lesson_id IS NOT NULL THEN master_lessons.price::integer
+                        WHEN carts.session_video_id IS NOT NULL THEN session_videos.price::integer
+                        WHEN carts.classroom_id IS NOT NULL THEN classrooms.price::integer
+                        WHEN carts.event_id IS NOT NULL THEN events.total::integer
+                    END as price"),
+
+                    DB::raw("CASE
+                        WHEN master_lessons.id IS NOT NULL THEN 'Master Lesson'
+                        WHEN events.id IS NOT NULL THEN 'Event'
+                        ELSE 'Regular Class'
+                    END as type"),
+                ])
+                ->leftJoin('theories','theories.id','carts.theory_id')
+                ->leftJoin('master_lessons','master_lessons.id','carts.master_lesson_id')
+                ->leftJoin('session_videos','session_videos.id','carts.session_video_id')
+                ->leftJoin('classrooms','classrooms.id','carts.classroom_id')
+                ->leftJoin('events','events.id','carts.event_id')
+                ->whereIn('carts.id', session()->get('arr_id', []))
+                ->whereNull([
+                    'carts.deleted_at'
+                ]);
+
+            $amount = DB::table('carts')
+                ->select([
+                    DB::raw('SUM(sub_carts.price) as grand_total')
+                ])
+                ->joinSub($carts,'sub_carts',function($join){
+                    $join->on('sub_carts.id', 'carts.id');
+                })
+                ->first();
+
+            $carts =  $carts->get();
+
+            $transaction = DB::transaction(function () use($carts, $request, $amount){
+                $tran_number = Transaction::orderBy(DB::raw("SUBSTRING(number, 9, 4)::INTEGER"),'desc')->withTrashed()->first();
+
+                if($tran_number){
+                    $str = explode("MJSN".date('Y'), $tran_number->number);
+                    $number = sprintf("%04d", (int)$str[1] + 1);
+                    $number = "MJSN".date('Y').$number;
+                }else{
+                    $number = "MJSN".date('Y').'0001';
+                }
+
+                $trans = Transaction::create([
+                    'number' => $number,
+                    'student_id' => Auth::guard('student')->user()->id,
+                    'total' => $amount->grand_total,
+                    'status' => 2,
+                    'datetime' => date('Y-m-d H:i:s'),
+                    'confirmed' => true,
+                    'confirmed_at' => date('Y-m-d H:i:s'),
+                ]);
+
+                foreach ($carts as $key => $cart) {
+                    TransactionDetail::create([
+                        'transaction_id' => $trans->id,
+                        'cart_id' => $cart->id,
+                        'price' => $cart->price,
+                    ]);
+                }
+
+                session()->forget('arr_id');
+
+                return $trans;
+            });
+
+            return response([
+                "data"      => $transaction,
+                "redirect_url" => url("waiting-payment/".$transaction->id),
+                "message"   => 'OK'
+            ], 200);
         } catch (Exception $e) {
             throw new Exception($e);
             return response([

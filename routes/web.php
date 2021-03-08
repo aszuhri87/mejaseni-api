@@ -234,6 +234,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::delete('/cart/{id}', [CartController::class, 'destroy']);
         Route::post('/cart-store', [CartController::class, 'store']);
         Route::post('/cart-payment', [CartController::class, 'payment']);
+        Route::post('/cart-payment-zero', [CartController::class, 'zero_payment']);
         Route::get('/student-cart', [CartController::class, 'data']);
         Route::get('/cancel-payment/{id}', [PaymentController::class, 'cancel_payment']);
         Route::get('/waiting-payment/{id}', [PaymentController::class, 'waiting']);

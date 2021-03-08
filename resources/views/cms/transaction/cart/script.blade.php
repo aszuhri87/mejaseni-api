@@ -52,15 +52,14 @@
                             total += parseInt(data.price)
                     })
 
-                    // if(total > 0){
+                    if(res.data.length > 0){
                         $('.cart-place').show();
                         $('.empty-place').hide();
-                    // }else{
-                    //     $('.empty-place').show();
-                    //     $('.cart-place').hide();
-                    // }
+                    }else{
+                        $('.empty-place').show();
+                        $('.cart-place').hide();
+                    }
 
-                    total = total ? total:0;
                     $('#list-place').html(element);
                     $('.grand-total').html('Rp. '+ total);
                 });

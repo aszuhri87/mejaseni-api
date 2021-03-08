@@ -25,6 +25,17 @@
                         window.location = res.redirect_url;
                     })
                 })
+
+                $(document).on('click','#btn-next-zero',function(event){
+                    event.preventDefault();
+
+                    $.ajax({
+                        url: "{{url('cart-payment-zero')}}",
+                        type: 'POST',
+                    }).done(function(res, xhr, meta){
+                        window.location = res.redirect_url;
+                    })
+                })
             });
         };
 

@@ -12,7 +12,8 @@
     <title>{{ isset($title) ? 'Mejaseni - '.$title : 'Mejaseni'}}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="assets/css/style.css">
-    <title>Hello, world!</title>
+
+    <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}" />
 </head>
 
 <body>
@@ -35,7 +36,16 @@
                                         <div class="progress-bar"></div>
                                     </div>
                                     <div class="inside-circle">
-                                        <img class="rounded-circle profile-img" id="profile-img" src="assets/img/coach.png" alt="">
+                                        @php
+                                            $str = substr(Auth::guard('student')->user()->image, 0, 4);
+
+                                            if($str == 'http'){
+                                                $image = Auth::guard('student')->user()->image;
+                                            }else{
+                                                $image = Storage::disk('s3')->url(Auth::guard('student')->user()->image);
+                                            }
+                                        @endphp
+                                        <img class="rounded-circle profile-img" id="profile-img" src="{{$image}}" alt="">
                                     </div>
                                 </div>
                             </div>
@@ -63,7 +73,7 @@
                                         Jadwal
                                     </li>
                                 </a>
-                                <a href="#">
+                                <a href="{{url('student/invoice')}}">
                                     <li>
                                         <img class="mr-2" src="assets/img/svg/Wallet.svg" alt="">
                                         Pembayaran
