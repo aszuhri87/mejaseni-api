@@ -24,7 +24,8 @@ class Event extends Model
         'quota',
         'location',
         'is_free',
-        'total'
+        'total',
+        'classroom_category_id'
     ];
 
     protected $dates = ['deleted_at'];

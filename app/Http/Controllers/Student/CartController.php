@@ -180,4 +180,32 @@ class CartController extends Controller
             ]);
         }
     }
+
+
+    public function video_course(Request $request, $video_course_id)
+    {
+        try {
+
+            $result = DB::transaction(function () use($request, $video_course_id){
+                $user = Auth::guard('student')->user();
+
+                $cart = Cart::create([
+                    'session_video_id' => $video_course_id,
+                    'student_id' => $user->id
+                ]);
+                return $cart;
+            });
+
+            return response([
+                "status"    => 200,
+                "data"      => $result,
+                "message"   => 'Successfully Add To Cart!'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
 }

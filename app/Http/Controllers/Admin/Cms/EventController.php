@@ -41,13 +41,54 @@ class EventController extends BaseMenu
     {
         $path = Storage::disk('s3')->url('/');
 
+        $carts = DB::table('carts')
+            ->select([
+                'carts.event_id',
+                DB::raw("COUNT('carts.event_id') as count_participants")
+            ])
+            ->groupBy("carts.event_id")
+            ->whereNull("carts.deleted_at");
+
         $data = DB::table('events')
             ->select([
                 'events.*',
                 DB::raw("CONCAT('{$path}',image) as image_url"),
+                DB::raw("CASE
+                    WHEN carts.count_participants IS NULL THEN 0
+                    ELSE carts.count_participants
+                END count_participants")
             ])
+            ->leftJoinSub($carts, 'carts', function($join){
+                $join->on("events.id", "carts.event_id");
+            })
             ->whereNull([
                 'events.deleted_at'
+            ])
+            ->get();
+
+        return DataTables::of($data)
+            ->addIndexColumn()
+            ->make(true);
+    }
+
+
+    public function participants_dt($id)
+    {
+        $path = Storage::disk('s3')->url('/');
+
+        $data = DB::table('students')
+            ->select([
+                'students.*',
+                'carts.id as cart_id',
+                DB::raw("CONCAT('{$path}',image) as image_url"),
+            ])
+            ->leftJoin('carts','carts.student_id','=','students.id')
+            ->where('carts.event_id',$id)
+            ->whereNull([
+                'students.deleted_at'
+            ])
+            ->whereNull([
+                'carts.deleted_at'
             ])
             ->get();
 
@@ -88,6 +129,7 @@ class EventController extends BaseMenu
                 }
 
                 $result = Event::create([
+                    'classroom_category_id' => $request->classroom_category_id,
                     'title' => $request->title,
                     'description' => $request->description,
                     'image' => $path,
@@ -156,6 +198,7 @@ class EventController extends BaseMenu
                 }
 
                 $result->update([
+                    'classroom_category_id' => $request->classroom_category_id,
                     'title' => $request->title,
                     'description' => $request->description,
                     'image' => $path ? $path:$result->image,

@@ -41,7 +41,7 @@
                                     </div>
                                     <div class="mb-3">
                                         <p class="label">Biaya</p>
-                                        <p class="event-fee">@convert($event->total)</p>
+                                        <p class="event-fee">Rp.@convert($event->total)</p>
                                     </div>
                                 </div>
                             </div>
@@ -80,7 +80,7 @@
                         <label>Nama Event</label>
                         <h5 class="my-3">{{ $event->title ? $event->title:'0'}}</h5>
                         <label>Harga</label>
-                        <h5 class="mt-3 mb-4">{{ $event->total ? $event->total:'0'}}</h5>
+                        <h5 class="mt-3 mb-4">Rp.@convert($event->total)</h5>
                         <div class="border-line"></div>
                         <div class="event-cart">
                             <div class="cart-added pt-4">
@@ -117,7 +117,7 @@ aria-hidden="true">
             <div class="column-center py-3">
                 <h3>Kamu belum masuk</h3>
                 <a href="{{ url('login') }}" class="btn btn-primary my-4 shadow">Masuk Sekarang</a>
-                <span>Belum memiliki akun? <a href="{{ url('login') }}">Daftar Sekarang</a></span>
+                <span>Belum memiliki akun? <a href="{{ url('register') }}">Daftar Sekarang</a></span>
             </div>
         </div>
     </div>

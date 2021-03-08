@@ -54,11 +54,12 @@
             type: 'GET',
         })
         .done(function(res, xhr, meta) {
+            let nf = new Intl.NumberFormat();
             $("#form-classrom").find("input[name=classroom_id]").val(res.data.id)
             $("#classroom-name").text(res.data.name)
             $("#classroom-session").text(`${res.data.session_total} Sesi | @${res.data.session_duration}Menit`)
-            $("#classroom-price").text(res.data.price)
-
+            $("#classroom-price").text(`Rp.${nf.format(res.data.price)}.00`)
+            
             if(res.data.package_type == 1)
                 $("#classroom-type").text('Special Class')
             else if(res.data.package_type == 2)

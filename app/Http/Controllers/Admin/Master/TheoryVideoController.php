@@ -252,6 +252,7 @@ class TheoryVideoController extends BaseMenu
 
                 $result = TheoryVideo::find($id)->update([
                     'duration' => $request->duration,
+                    'video_url' => $request->video_url,
                     'is_converter_complete' => true
                 ]);
 

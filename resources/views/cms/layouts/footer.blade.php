@@ -54,8 +54,10 @@
             <img class="image-badge__footer mr-2" src="{{ asset('cms/assets/img/svg/Call.svg') }}" alt="">
             <h5>Call Us</h5>
           </div>
-          <p>0251 – 8417382 (Headquarters)</p>
-          <p>0274 – 4295095 (Branch Office)</p>
+          @foreach ($branchs as $branch)
+            <p>{{ $branch->telephone ? $branch->telephone:'-'}}</p>
+          @endforeach
+          
           <p>{{ $company->telephone ? $company->telephone:'' }}</p>
         </div>
         <div class="mt-4">

@@ -42,7 +42,7 @@
                     </div>
                 </div>
                 <div class="store-content__wrapper my-4">
-                    <div class="shine-hover">
+                    <div class="shine-hover" id="event-list">
                         @foreach($events as $event)
                         <div class="row mb-4 pr-0 pr-lg-5 pb-3">
                             <div class="col-xl-4 mb-3 mb-md-0">
@@ -70,7 +70,9 @@
                         @endforeach
                     </div>
                 </div>
-                <div class="lds-dual-ring mt-4"></div>
+                <div id="loading-scroll">
+                    
+                </div>
             </div>
         </div>
     </section>

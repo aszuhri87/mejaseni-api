@@ -25,7 +25,8 @@ class TheoryVideo extends Model
         'is_converter_complete',
         'duration',
         'number',
-        'is_public'
+        'is_public',
+        'video_url'
     ];
 
     protected $dates = ['deleted_at'];

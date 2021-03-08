@@ -171,6 +171,7 @@ Route::get('/master-lesson/{master_lesson_id}/detail', [ClassController::class, 
 Route::get('/store', [StoreController::class, 'index']);
 Route::post('/store/search', [StoreController::class, 'search']);
 Route::get('/video-course/{video_course_id}/detail', [StoreDetailController::class, 'index']);
+Route::get('/video-course/videos/{id}', [StoreDetailController::class, 'get_videos']);
 Route::get('/classroom_category/{category_id}/sub_classroom_category', [StoreController::class, 'get_sub_category']);
 Route::get('/classroom_category/sub_classroom_category/{sub_category_id}/video-course', [StoreController::class, 'get_video_courses']);
 
@@ -178,6 +179,7 @@ Route::get('/classroom_category/sub_classroom_category/{sub_category_id}/video-c
 
 Route::get('/news-event', [NewsEventController::class, 'index']);
 Route::get('/event-list', [EventListController::class, 'index']);
+Route::get('/event-list/paging', [EventListController::class, 'paging']);
 Route::get('/event/{event_id}/detail', [EventDetailController::class, 'index']);
 Route::get('/news-list',[NewsListController::class, 'index']);
 Route::get('/news/{news_id}/detail',[NewsDetailController::class, 'index']);
@@ -462,6 +464,8 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::resource('program', ProgramController::class);
 
             Route::post('event/dt', [EventController::class, 'dt']);
+            Route::post('event/{id}/participants/dt',[EventController::class, 'participants_dt']);
+            Route::delete('cart/{id}', [CartController::class, 'destroy']);
             Route::post('event/update/{id}', [EventController::class, 'update']);
             Route::resource('event', EventController::class);
 
@@ -735,6 +739,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::delete('delete-cart/{cart_id}',[StudentCartController::class, 'delete_cart']);
 
         Route::post('/event/{event_id}/add-to-cart',[StudentCartController::class, 'event']);
+        Route::post('/video-course/{video_course_id}/add-to-cart', [StudentCartController::class, 'video_course']);
         Route::get('/class/{classroom_id}/detail', [ClassController::class, 'detail']);
         Route::post('/class/add-to-cart', [ClassController::class, 'store']);
     });

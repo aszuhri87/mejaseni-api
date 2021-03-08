@@ -1,7 +1,8 @@
 <script type="text/javascript">
     var Page = function() {
         var _componentPage = function(){
-            var init_table, init_classroom_category, init_profile_coach_video;
+            var init_table, init_participants_table;
+            var init_classroom_category;
 
             $(document).ready(function() {
                 initTable();
@@ -27,7 +28,7 @@
                         { data: 'start_at' },
                         { data: 'end_at' },
                         { data: 'quota' },
-                        { data: 'quota' },
+                        { data: 'count_participants' },
                         { defaultContent: '' }
                         ],
                     columnDefs: [
@@ -75,7 +76,7 @@
                             data: "id",
                             render : function(data, type, full, meta) {
                                 return `
-                                    <a href="{{url('/admin/cms/event/update')}}/${data}" title="List Participant" class="btn btn-participants btn-sm btn-clean btn-icon mr-2" title="Edit details">
+                                    <a href="{{ url('admin/cms/event') }}/${data}/participants/dt" title="List Participant" class="btn btn-participants btn-sm btn-clean btn-icon mr-2" title="Edit details">
                                         <span class="svg-icon svg-icon-md">
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -134,6 +135,87 @@
                     init_table.page.len(this.value).draw();
                 });
             },
+            initParticipantsTable = (url) => {
+                init_participants_table = $('#init-participants-table').DataTable({
+                    destroy: true,
+                    processing: true,
+                    serverSide: true,
+                    sScrollY: ($(window).height() < 700) ? $(window).height() - 200 : $(window).height() - 450,
+                    ajax: {
+                        type: 'POST',
+                        url: url,
+                    },
+                    columns: [
+                        { data: 'DT_RowIndex' },
+                        { data: 'image_url' },
+                        { data: 'name' },
+                        { data: 'phone' },
+                        { defaultContent: '' }
+                        ],
+                    columnDefs: [
+                        {
+                            targets: 0,
+                            searchable: false,
+                            orderable: false,
+                            className: "text-center"
+                        },
+                        {
+                            targets: 1,
+                            searchable: false,
+                            orderable: false,
+                            className: "text-center",
+                            data: "image_url",
+                            render : function(data, type, full, meta) {
+                                return `
+                                    <img src="${data}" class="w-75 align-self-end" alt="">
+                                    `
+                            }
+                        },
+                        {
+                            targets: -1,
+                            searchable: false,
+                            orderable: false,
+                            className: "text-center",
+                            data: "cart_id",
+                            render : function(data, type, full, meta) {
+                                return `
+                                    <a href="{{url('/admin/cms/cart')}}/${data}" title="Delete" class="btn btn-participants-delete btn-sm btn-clean btn-icon" title="Delete">
+                                        <span class="svg-icon svg-icon-md">
+                                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                    <rect x="0" y="0" width="24" height="24"/>
+                                                    <path d="M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z" fill="#000000" fill-rule="nonzero"/>
+                                                    <path d="M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z" fill="#000000" opacity="0.3"/>
+                                                </g>
+                                            </svg>
+                                        </span>
+                                    </a>
+                                    `
+                            }
+                        },
+                    ],
+                    order: [[1, 'asc']],
+                    searching: true,
+                    paging:true,
+                    lengthChange:false,
+                    bInfo:true,
+                    dom: '<"datatable-header"><tr><"datatable-footer"ip>',
+                    language: {
+                        search: '<span>Search:</span> _INPUT_',
+                        searchPlaceholder: 'Search.',
+                        lengthMenu: '<span>Show:</span> _MENU_',
+                        processing: '<div class="d-flex justify-content-center align-items-center"><div class="mr-1 my-spinner-loading"></div>Loading...</div>',
+                    },
+                });
+
+                $('#searchParticipants').keyup(searchDelay(function(event) {
+                    init_participants_table.search($(this).val()).draw()
+                }, 1000));
+
+                $('#pageLength').on('change', function () {
+                    init_participants_table.page.len(this.value).draw();
+                });
+            },
             initAction = () => {
                 $(document).on('click', '#add-btn', function(event){
                     event.preventDefault();
@@ -141,6 +223,8 @@
                     $('#form-event').trigger("reset");
                     $('#form-event').attr('action','{{url('admin/cms/event')}}');
                     $('#form-event').attr('method','POST');
+
+                    get_classroom_category();
 
                     $('#image').html('<input type="file" name="image" class="dropify image"/>');
                     $('.dropify').dropify();
@@ -162,7 +246,8 @@
                     $('#form-event').trigger("reset");
                     $('#form-event').attr('action', $(this).attr('href'));
                     $('#form-event').attr('method','POST');
-
+                    console.log(data.classroom_category_id)
+                    get_classroom_category(data.classroom_category_id)
                     $('#form-event').find('input[name="title"]').val(data.title);
                     $('#form-event').find('input[name="date"]').val(date);
                     $('#form-event').find('input[name="quota"]').val(data.quota);
@@ -234,6 +319,47 @@
                         $("#form-event input[name='total']").attr("min","5000")
                     }
                 })
+
+                 $(document).on('click', '.btn-participants', function(event){
+                    event.preventDefault()
+                    var url = $(this).attr('href');
+                    initParticipantsTable(url)
+
+
+                    showModal('modal-participants')
+                })
+
+                 $(document).on('click', '.btn-participants-delete', function(event){
+                    event.preventDefault();
+                    var url = $(this).attr('href');
+
+                    Swal.fire({
+                        title: 'Delete Participant?',
+                        text: "Deleted Participant will be permanently lost!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#7F16A7',
+                        confirmButtonText: 'Yes, Delete',
+                    }).then(function (result) {
+                        if (result.value) {
+                            $.ajax({
+                                url: url,
+                                type: 'DELETE',
+                                dataType: 'json',
+                            })
+                            .done(function(res, xhr, meta) {
+                                toastr.success(res.message, 'Success')
+                                init_participants_table.draw(false);
+                                init_table.draw(false);
+                            })
+                            .fail(function(res, error) {
+                                toastr.error(res.responseJSON.message, 'Failed')
+                            })
+                            .always(function() { });
+                        }
+                    })
+                    $('.swal2-title').addClass('justify-content-center')
+                });
                 
             },
             formSubmit = () => {
@@ -286,6 +412,33 @@
                 }, function(start, end, label) {
                     $('.form-control.select_dateranges').val( start.format('D MMMM YYYY h:mm A') + ' / ' + end.format('D MMMM YYYY h:mm A'));
                 });
+            },
+            get_classroom_category = (id) => {
+                if(init_classroom_category){
+                    init_classroom_category.destroy();
+                }
+
+                init_classroom_category = new SlimSelect({
+                    select: '#classroom-category'
+                })
+
+                $.ajax({
+                    url: '{{url('public/get-classroom-category')}}',
+                    type: 'GET',
+                    dataType: 'json',
+                })
+                .done(function(res, xhr, meta) {
+                    let element = `<option value="">Select Class Category</option>`
+                    $.each(res.data, function(index, data) {
+                        if(id == data.id){
+                            element += `<option value="${data.id}" selected>${data.name}</option>`;
+                        }else{
+                            element += `<option value="${data.id}">${data.name}</option>`;
+                        }
+                    });
+
+                    $('#classroom-category').html(element);
+                })
             }
         };
 

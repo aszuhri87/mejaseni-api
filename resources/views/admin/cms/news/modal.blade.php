@@ -12,6 +12,14 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label>
+                            Category Class
+                            <span class="text-danger">*</span>
+                        </label>
+                        <select name="classroom_category_id" id="classroom-category"></select>
+                        <span class="text-small ml-1 text-danger required-classroom-category" style="display: none">&#8226; Harus diisi</span>
+                    </div>
+                    <div class="form-group">
+                        <label>
                             Title
                             <span class="text-danger">*</span>
                         </label>

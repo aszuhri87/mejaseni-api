@@ -22,14 +22,17 @@ class PrivacyPolicyController extends Controller
     	$privacy_policy = PrivacyPolicy::first();
         $path = Storage::disk('s3')->url('/');
 
-    	$privacy_policy_items = DB::table('privacy_policy_items')
-    				->select([
-    					'title',
-    					'description',
-    				])
+        $privacy_policy_items = null;
+    	if($privacy_policy){
+            $privacy_policy_items = DB::table('privacy_policy_items')
+                    ->select([
+                        'title',
+                        'description',
+                    ])
                     ->where('privacy_policy_id',$privacy_policy->id)
-    				->whereNull('deleted_at')
-    				->get();
+                    ->whereNull('deleted_at')
+                    ->get();
+        }
 
         $social_medias = DB::table('social_media')
             ->select([

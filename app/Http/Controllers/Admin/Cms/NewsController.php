@@ -87,6 +87,7 @@ class NewsController extends BaseMenu
                 }
 
                 $result = News::create([
+                    'classroom_category_id' => $request->classroom_category_id,
                     'title' => $request->title,
                     'description' => $request->description,
                     'image' => $path
@@ -149,6 +150,7 @@ class NewsController extends BaseMenu
                 }
 
                 $result->update([
+                    'classroom_category_id' => $request->classroom_category_id,
                     'title' => $request->title,
                     'description' => $request->description,
                     'image' => $path ? $path:$result->image

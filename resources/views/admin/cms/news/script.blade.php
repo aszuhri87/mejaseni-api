@@ -2,6 +2,7 @@
     var Page = function() {
         var _componentPage = function(){
             var init_table, init_classroom_category, init_profile_coach_video;
+            var init_classroom_category;
 
             $(document).ready(function() {
                 initTable();
@@ -109,6 +110,8 @@
                     $('#form-news').attr('action','{{url('admin/cms/news')}}');
                     $('#form-news').attr('method','POST');
 
+                    get_classroom_category();
+
                     $('#image').html('<input type="file" name="image" class="dropify image"/>');
                     $('.dropify').dropify();
 
@@ -125,6 +128,7 @@
                     $('#form-news').attr('action', $(this).attr('href'));
                     $('#form-news').attr('method','POST');
 
+                    get_classroom_category(data.classroom_category_id)
                     $('#form-news').find('input[name="title"]').val(data.title);
                     $('#form-news').find('input[name="date"]').val(data.date);
                     $('#form-news').find('textarea[name="description"]').val(data.description);
@@ -200,6 +204,33 @@
                         btn_loading('stop')
                     });
                 });
+            },
+            get_classroom_category = (id) => {
+                if(init_classroom_category){
+                    init_classroom_category.destroy();
+                }
+
+                init_classroom_category = new SlimSelect({
+                    select: '#classroom-category'
+                })
+
+                $.ajax({
+                    url: '{{url('public/get-classroom-category')}}',
+                    type: 'GET',
+                    dataType: 'json',
+                })
+                .done(function(res, xhr, meta) {
+                    let element = `<option value="">Select Class Category</option>`
+                    $.each(res.data, function(index, data) {
+                        if(id == data.id){
+                            element += `<option value="${data.id}" selected>${data.name}</option>`;
+                        }else{
+                            element += `<option value="${data.id}">${data.name}</option>`;
+                        }
+                    });
+
+                    $('#classroom-category').html(element);
+                })
             }
         };
 

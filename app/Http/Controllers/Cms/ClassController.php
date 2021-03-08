@@ -21,6 +21,16 @@ class ClassController extends Controller
     {
     	$company = Company::first();
     	$branchs = Branch::all();
+        $path = Storage::disk('s3')->url('/');
+        $social_medias = DB::table('social_media')
+            ->select([
+                'url',
+                DB::raw("CONCAT('{$path}',image) as image_url"),
+            ])
+            ->whereNull([
+                'deleted_at'
+            ])
+            ->get();
 
     	$classroom_categories = DB::table('classroom_categories')
             ->select(['id', 'name'])
@@ -37,65 +47,76 @@ class ClassController extends Controller
             ])
             ->first();
 
+        
 
-        $sub_categories = DB::table('sub_classroom_categories')
-            ->select(['id','name'])
-            ->where('classroom_category_id',$selected_category->id)
-            ->whereNull([
-                'deleted_at'
-            ])
-            ->get();
-        $selected_sub_category = DB::table('sub_classroom_categories')
-            ->select(['id','name'])
-            ->where('classroom_category_id',$selected_category->id)
-            ->whereNull([
-                'deleted_at'
-            ])
-            ->first();
+        $sub_categories = null;
+        $selected_sub_category = null;
+        $classrooms = null;
+        $regular_classrooms = null;
+        
+        if($selected_category){
+            $sub_categories = DB::table('sub_classroom_categories')
+                    ->select(['id','name'])
+                    ->where('classroom_category_id',$selected_category->id)
+                    ->whereNull([
+                        'deleted_at'
+                    ])
+                    ->get();
+            
+            $selected_sub_category = DB::table('sub_classroom_categories')
+                ->select(['id','name'])
+                ->where('classroom_category_id',$selected_category->id)
+                ->whereNull([
+                    'deleted_at'
+                ])
+                ->first();
 
+            $classrooms = DB::table('classrooms')
+                ->select([
+                    'classrooms.*',
+                    DB::raw("CONCAT('{$path}',classrooms.image) as image_url"),
+                ])
+                ->where('classroom_category_id',$selected_category->id)
+                ->whereNull([
+                    'classrooms.deleted_at'
+                ]);
 
-        $path = Storage::disk('s3')->url('/');
+            $special_class_type = 1;
+            $regular_class_type = 2;
+            $is_registered = DB::table('carts')
+                    ->where('classroom_id','!=',null)
+                    ->whereNull('deleted_at');
 
-        $classrooms = DB::table('classrooms')
-            ->select([
-                'classrooms.*',
-                DB::raw("CONCAT('{$path}',classrooms.image) as image_url"),
-            ])
-            ->where('classroom_category_id',$selected_category->id)
-            ->where('sub_classroom_category_id', $selected_sub_category->id)
-            ->whereNull([
-                'classrooms.deleted_at'
-            ])
-            ->get();
+            $regular_classrooms = DB::table('classrooms')
+                ->select([
+                    'classrooms.*',
+                    'classroom_categories.name as category',
+                    'sub_classroom_categories.name as sub_category',
+                    'is_registered.id as is_registered',
+                    DB::raw("CONCAT('{$path}',classrooms.image) as image_url"),
+                ])
+                ->leftJoin('classroom_categories','classroom_categories.id','=','classrooms.classroom_category_id')
+                ->leftJoin('sub_classroom_categories','sub_classroom_categories.id','=','classrooms.sub_classroom_category_id')
+                ->leftJoinSub($is_registered, 'is_registered', function($join){
+                    $join->on('classrooms.id','is_registered.classroom_id');
+                })
+                ->whereNull([
+                    'classrooms.deleted_at'
+                ])
+                ->where('classrooms.package_type',$regular_class_type)
+                ->where('classrooms.classroom_category_id',$selected_category->id);
+            
+            if($selected_sub_category){
+                $classrooms = $classrooms->where('sub_classroom_category_id', $selected_sub_category->id);
 
-        $special_class_type = 1;
-        $regular_class_type = 2;
-        $regular_classrooms = DB::table('classrooms')
-            ->select([
-                'classrooms.*',
-                'classroom_categories.name as category',
-                'sub_classroom_categories.name as sub_category',
-                DB::raw("CONCAT('{$path}',classrooms.image) as image_url"),
-            ])
-            ->leftJoin('classroom_categories','classroom_categories.id','=','classrooms.classroom_category_id')
-            ->leftJoin('sub_classroom_categories','sub_classroom_categories.id','=','classrooms.sub_classroom_category_id')
-            ->whereNull([
-                'classrooms.deleted_at'
-            ])
-            ->where('classrooms.package_type',$regular_class_type)
-            ->where('classrooms.classroom_category_id',$selected_category->id)
-            ->where('classrooms.sub_classroom_category_id', $selected_sub_category->id)
-            ->get();
+                $regular_classrooms = $regular_classrooms->where('classrooms.sub_classroom_category_id', $selected_sub_category->id);
+            }
 
-        $social_medias = DB::table('social_media')
-            ->select([
-                'url',
-                DB::raw("CONCAT('{$path}',image) as image_url"),
-            ])
-            ->whereNull([
-                'deleted_at'
-            ])
-            ->get();
+            $classrooms = $classrooms->get();
+            $regular_classrooms = $regular_classrooms->get();
+
+        }
+        
 
 
     	return view('cms.class.index', [
@@ -189,6 +210,8 @@ class ClassController extends Controller
                     'coaches.deleted_at',
                 ])
                 ->get();
+
+            dd($coachs);
 
             $coach_html = $this->_get_coach_html($coachs);
 
@@ -524,7 +547,7 @@ class ClassController extends Controller
                 </div>
                 <div class="class-tab-summary d-flex justify-content-between flex-md-row flex-column mt-5 mb-4">
                     <div class="d-flex flex-column">
-                        <span class="mt-2">Rp. '.$master_lesson->price.'</span>
+                        <span class="mt-2">Rp.'.number_format($master_lesson->price, 2).'</span>
                     </div>
                     <div class="mt-5 mt-md-0">
                         <a  class="btn btn-primary shadow " onclick="'.$this->_is_authenticated($master_lesson->id, 3).'">Daftar Sekarang
@@ -546,7 +569,7 @@ class ClassController extends Controller
                 <div class="class-tab-summary d-flex justify-content-between flex-md-row flex-column mb-4">
                   <div class="d-flex flex-column">
                     <p>'. $classroom->session_total .' Sesi | @ '. $classroom->session_duration .'menit</p>
-                    <span class="mt-2">Rp. '. $classroom->price .'</span>
+                    <span class="mt-2">Rp.'.number_format($classroom->price, 2).'</span>
                   </div>
                   <div class="mt-5 mt-md-0">
                     <a class="btn btn-primary shadow" onclick="'.$this->_is_authenticated($classroom->id, 1).'">Daftar
@@ -673,28 +696,30 @@ class ClassController extends Controller
                           <h3 class="mt-4 ml-2">'. $classroom->name.'</h3>
                         </div>
                         <ul class="row-center-start class-tab mt-5 mt-md-4">
-                          <li class="active tab-detail" href="tab-description">Deskripsi</li>
-                          <li class="tab-detail" href="tab-coach">Coach</li>
-                          <li class="tab-detail" href="tab-tools">Tools</li>
+                          <li class="active tab-detail" data-id="'. $classroom->id .'" href="tab-description">Deskripsi</li>
+                          <li class="tab-detail" data-id="'. $classroom->id .'" href="tab-coach">Coach</li>
+                          <li class="tab-detail" data-id="'. $classroom->id .'" href="tab-tools">Tools</li>
                         </ul>
-                        <div id="tab-description" class="content-tab-detail" style="">
-                          <div class="desc__class-tab my-4">
-                            <p>
-                              '. $classroom->description.'
-                            </p>
-                          </div>
-                        </div>
-                        <div class="class-tab-summary d-flex justify-content-between flex-md-row flex-column mb-4">
-                          <div class="d-flex flex-column">
-                            <p>'. $classroom->session_total .' Sesi | @ '. $classroom->session_duration .'menit</p>
-                            <span class="mt-2">Rp. '. $classroom->price.',-</span>
-                          </div>
-                          <div class="mt-5 mt-md-0">
-                            <a href="#" class="btn btn-primary shadow registerNow">Daftar
-                              Sekarang
-                              <img class="ml-2" src="/cms/assets/img/svg/Sign-in.svg" alt="">
-                            </a>
-                          </div>
+                        <div id="description">
+                            <div id="tab-description" class="content-tab-detail" style="">
+                              <div class="desc__class-tab my-4">
+                                <p>
+                                  '. $classroom->description.'
+                                </p>
+                              </div>
+                            </div>
+                            <div class="class-tab-summary d-flex justify-content-between flex-md-row flex-column mb-4">
+                              <div class="d-flex flex-column">
+                                <p>'. $classroom->session_total .' Sesi | @ '. $classroom->session_duration .'menit</p>
+                                <span class="mt-2">Rp.'.number_format($classroom->price, 2).',-</span>
+                              </div>
+                              <div class="mt-5 mt-md-0">
+                                <a href="#" class="btn btn-primary shadow registerNow">Daftar
+                                  Sekarang
+                                  <img class="ml-2" src="/cms/assets/img/svg/Sign-in.svg" alt="">
+                                </a>
+                              </div>
+                            </div>
                         </div>
                       </li>';
         }
@@ -717,50 +742,6 @@ class ClassController extends Controller
         else
             return 'showModalLoginRequired()';
     }
-
-
-
-
-    // public function _get_classroom_html($classrooms)
-    // {
-    //     $html ="";
-    //     foreach ($classrooms as $key => $classroom) {
-    //         $html .= '<li class="splide__slide px-2 pb-5">
-    //                     <img class="w-100 rounded" src="'. $classroom->image_url .'" alt="">
-    //                     <div class="badge-left">
-    //                       <h3 class="mt-4 ml-2">'. $classroom->name.'</h3>
-    //                     </div>
-    //                     <ul class="row-center-start class-tab mt-5 mt-md-4">
-    //                       <li class="active tab-detail" data-id="'. $classroom->id.'" href="tab-description">Deskripsi</li>
-    //                       <li class="tab-detail" data-id="'. $classroom->id.'" href="tab-coach">Coach</li>
-    //                       <li class="tab-detail" data-id="'. $classroom->id.'" href="tab-tools">Tools</li>
-    //                     </ul>
-    //                     <div id="description">
-    //                         <div class="content-tab-detail" style="">
-    //                           <div class="desc__class-tab my-4">
-    //                             <p>
-    //                               '. $classroom->description.'
-    //                             </p>
-    //                           </div>
-    //                         </div>
-    //                         <div class="class-tab-summary d-flex justify-content-between flex-md-row flex-column mb-4">
-    //                           <div class="d-flex flex-column">
-    //                             <p>'. $classroom->session_total .' Sesi | @ '. $classroom->session_duration .'menit</p>
-    //                             <span class="mt-2">Rp. '. $classroom->price.'</span>
-    //                           </div>
-    //                           <div class="mt-5 mt-md-0">
-    //                             <a href="#" class="btn btn-primary shadow registerNow" onclick="'.$this->_is_authenticated($classroom->id, 1).'">Daftar
-    //                               Sekarang
-    //                               <img class="ml-2" src="/cms/assets/img/svg/Sign-in.svg" alt="">
-    //                             </a>
-    //                           </div>
-    //                         </div>
-    //                     </div>
-    //                   </li>';
-    //     }
-
-    //     return $html;
-    // }
 
 
     public function _get_master_lesson_html($master_lessons)
@@ -793,7 +774,7 @@ class ClassController extends Controller
                             </div>
                             <div class="class-tab-summary d-flex justify-content-between flex-md-row flex-column mt-5 mb-4">
                                 <div class="d-flex flex-column">
-                                    <span class="mt-2">Rp. '.$master_lesson->price.'</span>
+                                    <span class="mt-2">Rp. '.number_format($master_lesson->price, 2).'</span>
                                 </div>
                                 <div class="mt-5 mt-md-0">
                                     <a class="btn btn-primary shadow" onclick="'.$this->_is_authenticated($master_lesson->id, 3).'">Daftar Sekarang

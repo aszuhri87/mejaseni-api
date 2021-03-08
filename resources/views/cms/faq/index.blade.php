@@ -31,29 +31,31 @@
             <h1>FAQ</h1>
             <h3 class="mt-2">Frequently Asked Questions</h3>
             <div class="panel-group mt-4" id="accordion" role="tablist" aria-multiselectable="true">
-                @foreach($faqs as $faq)
-                <div class="panel panel-default mt-3">
-                    <div class="panel-heading" role="tab" id="headingOne">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion"
-                            href="#collapseOne{{ $faq->id }}" aria-expanded="true" aria-controls="collapseOne">
-                            <button class="btn btn-primary w-100 row-center-spacebetween rotate">{{ $faq->title ? $faq->title:'' }}
-                                <img src="{{ asset('cms/assets/img/svg/Angle-down1.svg') }}" alt="">
-                            </button>
-                        </a> 
-                    </h4>
-                </div>
-                <div id="collapseOne{{ $faq->id }}" class="panel-collapse collapse in" role="tabpanel"
-                aria-labelledby="headingOne">
-                <div class="panel-body p-4 mt-3">
-                    <p>{{ $faq->description ? $faq->description:''}}</p>
-                </div>
+                @if($faqs)
+                    @foreach($faqs as $faq)
+                        <div class="panel panel-default mt-3">
+                            <div class="panel-heading" role="tab" id="headingOne">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion"
+                                        href="#collapseOne{{ $faq->id }}" aria-expanded="true" aria-controls="collapseOne">
+                                        <button class="btn btn-primary w-100 row-center-spacebetween rotate">{{ $faq->title ? $faq->title:'' }}
+                                            <img src="{{ asset('cms/assets/img/svg/Angle-down1.svg') }}" alt="">
+                                        </button>
+                                    </a> 
+                                </h4>
+                            </div>
+                            <div id="collapseOne{{ $faq->id }}" class="panel-collapse collapse in" role="tabpanel"
+                            aria-labelledby="headingOne">
+                                <div class="panel-body p-4 mt-3">
+                                    <p>{{ $faq->description ? $faq->description:''}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                @endif
             </div>
         </div>
-        @endforeach
     </div>
-</div>
-</div>
 </section>
 @endsection
 @push('script')
