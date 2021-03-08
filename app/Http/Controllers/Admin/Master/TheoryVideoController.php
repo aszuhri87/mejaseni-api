@@ -37,46 +37,48 @@ class TheoryVideoController extends BaseMenu
     public function store(Request $request)
     {
         try {
-            
 
             $result = DB::transaction(function () use($request){
                 $result = TheoryVideo::create([
                     'session_video_id' => $request->session_video_id,
                     'name' => $request->name,
+                    'number' => $request->number,
                     'is_youtube' => isset($request->is_youtube) ? true : false,
+                    'youtube_url' => isset($request->is_youtube) ? $request->url : null,
+                    'is_public' => isset($request->is_public) ? true : false,
                 ]);
 
+                if(!isset($request->is_youtube)){
+                    $path = Storage::disk('s3')->url('/');
+                    $video_converter_hook = config('app.url')."api/video-converter/".$result->id."/hook";
+                    $url = $path . $request->file;
 
+                    $client = new Client([
+                        'base_uri' => config('app.video_converter_host'),
+                    ]);
 
-                $path = Storage::disk('s3')->url('/');
-                $video_converter_hook = config('app.url')."api/video-converter/".$result->id."/hook";
-                $url = $path . $request->file;
+                    $response = $client->request('POST', '/video',[
+                        "multipart" => [
+                            [
+                                "name" => "video",
+                                "contents" => file_get_contents($url),
+                                "filename" => $url
+                            ]
+                        ],
+                        "query" => [
+                            "video_converter_hook" => $video_converter_hook
+                        ],
+                    ]);
 
-                $client = new Client([
-                    'base_uri' => config('app.video_converter_host'),
-                ]);
+                    $status_created = 201;
+                    if($response->getStatusCode() == $status_created){
+                        return $result;
+                    }
 
-                $response = $client->request('POST', '/video',[
-                    "multipart" => [
-                        [
-                            "name" => "video",
-                            "contents" => file_get_contents($url),
-                            "filename" => $url
-                        ]
-                    ],
-                    "query" => [
-                        "video_converter_hook" => $video_converter_hook
-                    ],
-                ]);
-
-                $status_created = 201;
-                if($response->getStatusCode() == $status_created){
-                    return $result;
+                    return response([
+                        "message"=> "Internal Server Error",
+                    ], $response->status());
                 }
-
-                return response([
-                    "message"=> "Internal Server Error",
-                ], $response->status());
 
             });
 
@@ -99,8 +101,10 @@ class TheoryVideoController extends BaseMenu
                 $result = TheoryVideo::find($id)->update([
                     'session_video_id' => $request->session_video_id,
                     'name' => $request->name,
+                    'number' => $request->number,
                     'is_youtube' => isset($request->is_youtube) ? true : false,
-                    'url' => isset($request->is_youtube) ? $request->url : $request->file,
+                    'youtube_url' => isset($request->is_youtube) ? $request->url : null,
+                    'is_public' => isset($request->is_public) ? true : false,
                 ]);
 
                 return $result;
@@ -244,7 +248,7 @@ class TheoryVideoController extends BaseMenu
                         'url' => $resolution['url']
                     ]);
                 }
-                
+
 
                 $result = TheoryVideo::find($id)->update([
                     'duration' => $request->duration,

@@ -51,8 +51,8 @@
                             render : function(data, type, full, meta) {
                                 if(full.is_youtube)
                                     return `<span class="label label-lg label-light-info label-inline font-weight-bold py-4">Ready</span>`
-                                
-                                return data  ? 
+
+                                return data  ?
                                     `<span class="label label-lg label-light-info label-inline font-weight-bold py-4">Ready</span>`:
                                     `<span class="label label-lg label-light-warning label-inline font-weight-bold py-4">Pending</span>`
                             }
@@ -230,6 +230,10 @@
                     $('#form-session-video-detail').attr('method','POST');
 
                     $('#form-session-video-detail').find('input[name="name"]').val(data.name);
+
+                    if(data.is_public){
+                        $('#switch-public').attr('checked', true);
+                    }
 
                     if(data.is_youtube){
                         $('#form-session-video-detail').find('input[name="url"]').val(data.url);

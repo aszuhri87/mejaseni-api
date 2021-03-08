@@ -19,9 +19,13 @@ class TheoryVideo extends Model
         'session_video_id',
         'name',
         'is_youtube',
-        'url',
+        'youtube_url',
+        'file_name',
+        'file_name_original',
         'is_converter_complete',
-        'duration'
+        'duration',
+        'number',
+        'is_public'
     ];
 
     protected $dates = ['deleted_at'];

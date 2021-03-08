@@ -19,6 +19,13 @@
                         <input required type="text" name="name" class="form-control" placeholder="Nama"/>
                     </div>
                     <div class="form-group">
+                        <label>
+                            Nomor Video
+                            <span class="text-danger">*</span>
+                        </label>
+                        <input required type="number" min="0" name="number" class="form-control" placeholder="Nomor Video"/>
+                    </div>
+                    <div class="form-group">
                         <span class="switch switch-sm">
                             <label>
                                 <input type="checkbox" id="switch-youtube" name="is_youtube"/>
@@ -44,6 +51,15 @@
                             <span class="text-danger">*</span>
                         </label>
                         <input type="text" name="url" id="i-url" class="form-control" placeholder="Youtube Embed Url"/>
+                    </div>
+                    <div class="form-group">
+                        <span class="switch switch-sm">
+                            <label>
+                                <input type="checkbox" id="switch-public" name="is_public"/>
+                                <span></span>
+                            </label>
+                            Video Free
+                        </span>
                     </div>
                 </div>
                 <div class="modal-footer">
