@@ -42,12 +42,15 @@ class StudentController extends BaseMenu
                     'transactions.total',
                     'transactions.number',
                     'transactions.datetime',
-                    'transactions.status',
                     'transactions.confirmed',
-                    'students.name'
+                    'students.name',
+                    DB::raw("CASE
+                        WHEN transactions.deleted_at IS NOT NULL AND transactions.status = 0
+                            THEN 0
+                        ELSE transactions.status
+                    END as status")
                 ])
                 ->leftJoin('students', 'students.id','=','transactions.student_id')
-                ->whereNull('transactions.deleted_at')
                 ->get();
 
             return DataTables::of($data)->addIndexColumn()->make(true);
@@ -62,81 +65,38 @@ class StudentController extends BaseMenu
     public function detail($id)
     {
         try{
-            $classroom = DB::table('classrooms')
-                ->select([
-                    'classrooms.id',
-                    'classrooms.name as classroom_name',
-                    'classrooms.package_type',
-                ])
-                ->whereNull('classrooms.deleted_at');
-
-            $session_video = DB::table('session_videos')
-                ->select([
-                    'session_videos.id',
-                    'session_videos.name as session_video_name',
-                ])
-                ->whereNull('session_videos.deleted_at');
-
-            $master_lesson = DB::table('master_lessons')
-                ->select([
-                    'master_lessons.id',
-                    'master_lessons.name as master_lesson_name',
-                ])
-                ->whereNull('master_lessons.deleted_at');
-
-            $theory = DB::table('theories')
-                ->select([
-                    'theories.id',
-                    'theories.name as theory_name',
-                ])
-                ->whereNull('theories.deleted_at');
-
-            $cart = DB::table('carts')
-                ->select([
-                    'carts.id',
-                    'carts.classroom_id',
-                    'carts.session_video_id',
-                    'carts.master_lesson_id',
-                    'carts.theory_id',
-                    'classrooms.classroom_name',
-                    'session_videos.session_video_name',
-                    'master_lessons.master_lesson_name',
-                    'theories.theory_name',
-                    'classrooms.package_type',
-                ])
-                ->leftJoinSub($classroom, 'classrooms', function ($join) {
-                    $join->on('carts.classroom_id', '=', 'classrooms.id');
-                })
-                ->leftJoinSub($session_video, 'session_videos', function ($join) {
-                    $join->on('carts.session_video_id', '=', 'session_videos.id');
-                })
-                ->leftJoinSub($master_lesson, 'master_lessons', function ($join) {
-                    $join->on('carts.master_lesson_id', '=', 'master_lessons.id');
-                })
-                ->leftJoinSub($theory, 'theories', function ($join) {
-                    $join->on('carts.theory_id', '=', 'theories.id');
-                });
-
             $data = DB::table('transaction_details')
                 ->select([
-                    'transaction_details.transaction_id',
-                    'transaction_details.cart_id',
-                    'transaction_details.price',
-                    'carts.classroom_id',
-                    'carts.session_video_id',
-                    'carts.master_lesson_id',
-                    'carts.theory_id',
-                    'carts.classroom_name',
-                    'carts.session_video_name',
-                    'carts.master_lesson_name',
-                    'carts.theory_name',
-                    'carts.package_type',
+                    'carts.id',
+                    DB::raw("CASE
+                        WHEN carts.theory_id IS NOT NULL THEN theories.name
+                        WHEN carts.master_lesson_id IS NOT NULL THEN master_lessons.name
+                        WHEN carts.session_video_id IS NOT NULL THEN session_videos.name
+                        WHEN carts.classroom_id IS NOT NULL THEN classrooms.name
+                        WHEN carts.event_id IS NOT NULL THEN events.title
+                    END as name"),
+
+                    DB::raw("CASE
+                        WHEN carts.theory_id IS NOT NULL THEN theories.price::integer
+                        WHEN carts.master_lesson_id IS NOT NULL THEN master_lessons.price::integer
+                        WHEN carts.session_video_id IS NOT NULL THEN session_videos.price::integer
+                        WHEN carts.classroom_id IS NOT NULL THEN classrooms.price::integer
+                        WHEN carts.event_id IS NOT NULL THEN events.total::integer
+                    END as price"),
+
+                    DB::raw("CASE
+                        WHEN master_lessons.id IS NOT NULL THEN 'Master Lesson'
+                        WHEN events.id IS NOT NULL THEN 'Event'
+                        ELSE 'Regular Class'
+                    END as type"),
                 ])
-                ->leftJoinSub($cart, 'carts', function ($join) {
-                    $join->on('transaction_details.cart_id', '=', 'carts.id');
-                })
-                ->whereNull('transaction_details.deleted_at')
-                ->where('transaction_details.transaction_id',$id)
+                ->leftJoin('carts','carts.id','transaction_details.cart_id')
+                ->leftJoin('theories','theories.id','carts.theory_id')
+                ->leftJoin('master_lessons','master_lessons.id','carts.master_lesson_id')
+                ->leftJoin('session_videos','session_videos.id','carts.session_video_id')
+                ->leftJoin('classrooms','classrooms.id','carts.classroom_id')
+                ->leftJoin('events','events.id','carts.event_id')
+                ->where('transaction_details.transaction_id', $id)
                 ->get();
 
             return response([
