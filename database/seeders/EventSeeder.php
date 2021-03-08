@@ -75,7 +75,7 @@ class EventSeeder extends Seeder
                         'total' => $seeder['total'],
                         'location' => $seeder['location'],
                         'quota' => $seeder['quota'],
-                        'classroom_category_id' => $classroom_category->id
+                        'classroom_category_id' => $classroom_category ? $classroom_category->id : null
                     ]);
                 }
             }
