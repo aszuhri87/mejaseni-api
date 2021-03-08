@@ -34,6 +34,7 @@
                     columns: [
                         { data: 'DT_RowIndex' },
                         { data: 'name' },
+                        { data: 'is_converter_complete' },
                         { defaultContent: '' }
                         ],
                     columnDefs: [
@@ -42,6 +43,19 @@
                             searchable: false,
                             orderable: false,
                             className: "text-center"
+                        },
+                        {
+                            targets: -2,
+                            className: "text-center",
+                            data: "is_converter_complete",
+                            render : function(data, type, full, meta) {
+                                if(full.is_youtube)
+                                    return `<span class="label label-lg label-light-info label-inline font-weight-bold py-4">Ready</span>`
+                                
+                                return data  ? 
+                                    `<span class="label label-lg label-light-info label-inline font-weight-bold py-4">Ready</span>`:
+                                    `<span class="label label-lg label-light-warning label-inline font-weight-bold py-4">Pending</span>`
+                            }
                         },
                         {
                             targets: -1,

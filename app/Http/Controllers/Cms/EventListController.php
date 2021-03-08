@@ -43,7 +43,7 @@ class EventListController extends Controller
     					'events.description',
     					'events.start_at as date',
                         'classroom_categories.name as category',
-    					 DB::raw("CONCAT('{$path}',image) as image_url"),
+    					 DB::raw("CONCAT('{$path}',events.image) as image_url"),
     				])
                     ->leftJoin('classroom_categories','classroom_categories.id','events.classroom_category_id')
     				->whereNull('events.deleted_at')

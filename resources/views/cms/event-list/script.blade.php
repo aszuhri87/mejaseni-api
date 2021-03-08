@@ -23,6 +23,10 @@
         $('.input-daterange input').each(function () {
             $(this).datepicker('clearDates',{ dateFormat: 'Y-m-d' });
         });
+
+        $( window ).scroll(function() {
+          $( "span" ).css( "display", "inline" ).fadeOut( "slow" );
+        });
     </script>
 
     <script type="text/javascript">

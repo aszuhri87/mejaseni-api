@@ -5,12 +5,16 @@ namespace App\Http\Controllers\Admin\Master;
 use App\Http\Controllers\BaseMenu;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use GuzzleHttp\Client;
 
 use App\Models\TheoryVideo;
 use App\Models\TheoryVideoFile;
+use App\Models\TheoryVideoResolution;
 
 use DataTables;
 use Storage;
+use Http;
+use Log;
 
 class TheoryVideoController extends BaseMenu
 {
@@ -21,7 +25,7 @@ class TheoryVideoController extends BaseMenu
         $data = DB::table('theory_videos')
             ->select([
                 'theory_videos.*',
-                DB::raw("CONCAT('{$path}',url) as file_url"),
+                //DB::raw("CONCAT('{$path}',url) as file_url"),
             ])
             ->whereNull("theory_videos.deleted_at")
             ->where('theory_videos.session_video_id', $id)
@@ -33,15 +37,47 @@ class TheoryVideoController extends BaseMenu
     public function store(Request $request)
     {
         try {
+            
+
             $result = DB::transaction(function () use($request){
                 $result = TheoryVideo::create([
                     'session_video_id' => $request->session_video_id,
                     'name' => $request->name,
                     'is_youtube' => isset($request->is_youtube) ? true : false,
-                    'url' => isset($request->is_youtube) ? $request->url : $request->file,
                 ]);
 
-                return $result;
+
+
+                $path = Storage::disk('s3')->url('/');
+                $video_converter_hook = config('app.url')."api/video-converter/".$result->id."/hook";
+                $url = $path . $request->file;
+
+                $client = new Client([
+                    'base_uri' => config('app.video_converter_host'),
+                ]);
+
+                $response = $client->request('POST', '/video',[
+                    "multipart" => [
+                        [
+                            "name" => "video",
+                            "contents" => file_get_contents($url),
+                            "filename" => $url
+                        ]
+                    ],
+                    "query" => [
+                        "video_converter_hook" => $video_converter_hook
+                    ],
+                ]);
+
+                $status_created = 201;
+                if($response->getStatusCode() == $status_created){
+                    return $result;
+                }
+
+                return response([
+                    "message"=> "Internal Server Error",
+                ], $response->status());
+
             });
 
             return response([
@@ -186,6 +222,42 @@ class TheoryVideoController extends BaseMenu
                     "message"   => 'Successfully deleted!'
                 ], 200);
             }
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
+
+    public function video_converter_hook(Request $request, $id)
+    {
+        try {
+            $result = DB::transaction(function () use($request, $id){
+
+                TheoryVideoResolution::where('theory_video_id',$id)->delete();
+                foreach ($request->resolutions as $key => $resolution) {
+                    $video_resolution = TheoryVideoResolution::updateOrCreate([
+                        'theory_video_id' => $id,
+                        'name' => $resolution['resolution'],
+                        'url' => $resolution['url']
+                    ]);
+                }
+                
+
+                $result = TheoryVideo::find($id)->update([
+                    'duration' => $request->duration,
+                    'is_converter_complete' => true
+                ]);
+
+                return $result;
+            });
+
+            return response([
+                "data"      => $result,
+                "message"   => 'Successfully updated!'
+            ], 200);
         } catch (Exception $e) {
             throw new Exception($e);
             return response([

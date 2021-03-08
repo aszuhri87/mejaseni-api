@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Transaction\PaymentController;
+use App\Http\Controllers\Admin\Master\TheoryVideoController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +18,4 @@ use App\Http\Controllers\Transaction\PaymentController;
 */
 
 Route::post('/notifications/payments', [PaymentController::class, 'notification']);
+Route::put('/video-converter/{id}/hook',[TheoryVideoController::class, 'video_converter_hook']);

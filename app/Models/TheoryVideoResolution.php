@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\Uuid;
 
-class TheoryVideo extends Model
+class TheoryVideoResolution extends Model
 {
     use HasFactory, Uuid, SoftDeletes;
 
@@ -16,12 +16,9 @@ class TheoryVideo extends Model
     public $keyType = 'string';
 
     protected $fillable = [
-        'session_video_id',
+        'theory_video_id',
         'name',
-        'is_youtube',
-        'url',
-        'is_converter_complete',
-        'duration'
+        'url'
     ];
 
     protected $dates = ['deleted_at'];

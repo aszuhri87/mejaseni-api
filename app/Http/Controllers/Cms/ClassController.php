@@ -30,9 +30,10 @@ class ClassController extends Controller
             ->get();
 
         $selected_category = DB::table('classroom_categories')
-            ->select(['id','name'])
+            ->select(['classroom_categories.id','classroom_categories.name'])
+            ->leftJoin('sub_classroom_categories','sub_classroom_categories.classroom_category_id','=','classroom_categories.id')
             ->whereNull([
-                'deleted_at'
+                'classroom_categories.deleted_at'
             ])
             ->first();
 

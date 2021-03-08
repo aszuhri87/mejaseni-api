@@ -63,7 +63,8 @@
             <thead>
                 <tr>
                     <th>No</th>
-                    <th width="90%">Name</th>
+                    <th width="75%">Name</th>
+                    <th width="15%">Status</th>
                     <th width="10%">Actions</th>
                 </tr>
             </thead>

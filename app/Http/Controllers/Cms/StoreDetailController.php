@@ -25,16 +25,48 @@ class StoreDetailController extends Controller
         $company = Company::first();
         $branchs = Branch::all();
         $path = Storage::disk('s3')->url('/');
+        $social_medias = DB::table('social_media')
+            ->select([
+                'url',
+                DB::raw("CONCAT('{$path}',image) as image_url"),
+            ])
+            ->whereNull([
+                'deleted_at'
+            ])
+            ->get();
 
 
         $video_course_items = DB::table('theory_videos')
             ->select([
-                'theory_videos.*'
+                'theory_videos.*',
+                'theory_video_resolutions.url',
+                'theory_video_resolutions.name'
             ])
+            ->leftJoin('theory_video_resolutions','theory_video_resolutions.theory_video_id','=','theory_videos.id')
             ->where('theory_videos.session_video_id',$video_course_id)
             ->whereNull("theory_videos.deleted_at")
             ->get();
 
+        $video_course_item_open = DB::table('theory_videos')
+            ->select([
+                'theory_videos.*',
+            ])
+            ->leftJoin('theory_video_resolutions','theory_video_resolutions.theory_video_id','=','theory_videos.id')
+            ->where('theory_videos.session_video_id',$video_course_id)
+            ->whereNull("theory_videos.deleted_at")
+            ->whereNull("theory_video_resolutions.deleted_at")
+            ->first();
+
+
+        $video_course_item_open_videos = DB::table('theory_video_resolutions')
+            ->select([
+                'theory_video_resolutions.url',
+                'theory_video_resolutions.name'
+            ])
+            ->where('theory_video_resolutions.theory_video_id',$video_course_item_open->id)
+            ->whereNull("theory_video_resolutions.deleted_at")
+            ->get();
+            
 
         $video_course = DB::table('session_videos')
             ->select([
@@ -51,15 +83,7 @@ class StoreDetailController extends Controller
             ])
             ->first();
 
-        $social_medias = DB::table('social_media')
-            ->select([
-                'url',
-                DB::raw("CONCAT('{$path}',image) as image_url"),
-            ])
-            ->whereNull([
-                'deleted_at'
-            ])
-            ->get();
+        
 
         return view('cms.store-detail.index', [
             "company" => $company, 
