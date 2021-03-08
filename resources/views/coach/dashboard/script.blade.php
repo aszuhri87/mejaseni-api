@@ -231,7 +231,7 @@
                                                         <ul class="navi navi-hover">
                                                             <li class="navi-item">
                                                                 <a href="{{ url('/coach/dashboard/cancle/schedule') }}/${data.id}" class="navi-link text-danger cancle-schedule-btn">
-                                                                    Cancle Kelas
+                                                                    Cancel Kelas
                                                                 </a>
                                                             </li>
                                                         </ul>
@@ -248,14 +248,14 @@
                                                         <ul class="navi navi-hover">
                                                             <li class="navi-item">
                                                                 <a href="{{ url('/coach/dashboard/cancle/schedule') }}/${data.id}" class="navi-link text-danger cancle-schedule-btn">
-                                                                    Cancle Kelas
+                                                                    Cancel Kelas
                                                                 </a>
                                                             </li>
                                                         </ul>
                                                         <!--end::Navigation-->
                                                     </div>`;
                                 } else{
-                                    status +=  `<span class="text-danger font-weight-bolder">Cancle</span>`;
+                                    status +=  `<span class="text-danger font-weight-bolder">Cancel</span>`;
                                 }
 
                                 element += `<!--begin::Item-->
@@ -332,7 +332,7 @@
                                                             <ul class="navi navi-hover">
                                                                 <li class="navi-item">
                                                                     <a href="#" class="navi-link text-danger">
-                                                                        Cancle Kelas
+                                                                        Cancel Kelas
                                                                     </a>
                                                                 </li>
                                                             </ul>
@@ -460,7 +460,7 @@
                                         var status =  `Completed`;
                                         var color = `success`;
                                     } else{
-                                        var status =  `Cancle`;
+                                        var status =  `Cancel`;
                                         var color = `danger`;
                                     }
 
@@ -698,12 +698,12 @@
                         btn_loading_class(
                             id_name,
                             'start',
-                            `Cancle`
+                            `Cancel`
                         );
 
                         Swal.fire({
-                            title: 'Cancle Schedule?',
-                            text: "Schedule Can be Cancle!",
+                            title: 'Cancel Schedule?',
+                            text: "Schedule Can be Cancel!",
                             icon: 'warning',
                             showCancelButton: true,
                             confirmButtonColor: '#7F16A7',
@@ -724,7 +724,7 @@
                                         btn_loading_class(
                                             id_name,
                                             'stop',
-                                            `Cancle`
+                                            `Cancel`
                                         );
                                     })
                                     .fail(function(res, error) {
