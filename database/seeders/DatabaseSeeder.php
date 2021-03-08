@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
             NewsSeeder::class,
             PrivacyPolicySeeder::class,
             ProgramSeeder::class,
-            Question::class,
+            // Question::class,
             SocialMediaSeeder::class,
             TeamSeeder::class,
             WorkHourSeeder::class,
