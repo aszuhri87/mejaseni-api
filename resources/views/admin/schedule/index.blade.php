@@ -18,15 +18,15 @@
 
 <div class="card">
     <div class="card-body">
-        {{-- <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex justify-content-between align-items-center">
             <div style="width: 45%">
                 <div class="separator separator-solid"></div>
             </div>
-            <button class="btn btn-outline-primary btn-sm" style="border-radius: 10px">View List</button>
+            <a href="{{url('admin/schedule-list')}}" class="btn btn-outline-primary btn-sm btn-list-view" style="border-radius: 10px">View List</a>
             <div style="width: 45%">
                 <div class="separator separator-solid"></div>
             </div>
-        </div> --}}
+        </div>
         <div class="mt-10" id="calendar" style="height: 400px; border: none;"></div>
     </div>
 </div>

@@ -278,7 +278,7 @@ class ScheduleController extends BaseMenu
 
             return response([
                 "data"      => $result,
-                "message"   => 'Successfully saved!'
+                "message"   => 'OK'
             ], 200);
         } catch (Exception $e) {
             throw new Exception($e);

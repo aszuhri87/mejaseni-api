@@ -42,6 +42,7 @@ use App\Http\Controllers\Admin\Master\ProfileVideoCoachController;
 use App\Http\Controllers\Admin\Transaction\StudentController as TransactionStudentController;
 use App\Http\Controllers\Admin\Transaction\CoachController as TransactionCoachController;
 use App\Http\Controllers\Admin\Schedule\ScheduleController;
+use App\Http\Controllers\Admin\Schedule\ListController;
 use App\Http\Controllers\Admin\Reporting\Review\Coach\CoachController as AdminCoachController;
 use App\Http\Controllers\Admin\Reporting\Review\Coach\Detail\CoachDetailController;
 use App\Http\Controllers\Admin\Reporting\Review\Student\StudentController as AdminStudentController;
@@ -407,6 +408,9 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::post('schedule/update/{id}', [ScheduleController::class, 'update_time']);
         Route::post('schedule/confirm/{id}', [ScheduleController::class, 'confirm']);
         Route::post('schedule/delete/{id}', [ScheduleController::class, 'delete']);
+
+        Route::get('schedule-list', [ListController::class, 'index']);
+        Route::post('schedule-list/dt', [ListController::class, 'dt']);
 
         Route::group(['prefix' => 'report'], function () {
 
