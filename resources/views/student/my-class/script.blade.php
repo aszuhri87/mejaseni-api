@@ -1,7 +1,7 @@
 <script type="text/javascript">
     var Page = function() {
         var _componentPage = function(){
-            var init_table,init_table2;
+            var init_table,init_table2,init_input_star;
 
             $(document).ready(function() {
                 initTable();
@@ -12,13 +12,13 @@
                 totalClassStudent();
                 getClass();
 
-                $('#input-id').rating({
+                init_input_star = $('#input-id').rating({
                     hoverOnClear: false,
                     theme: 'krajee-svg',
                     showCaption: false,
                     showClear:false,
                     showCaptionAsTitle:false,
-                    step:1
+                    step:1,
                 });
 
                 $('#input-rating-class').rating({
@@ -342,6 +342,18 @@
                     $('#review-coach-name').html(data.coach_name);
                     $('#review-time').html(moment(data.datetime).format('HH:mm'));
 
+                    if(init_input_star){
+                        init_input_star.rating('destroy');
+                    }
+                    init_input_star = $('#input-id').rating({
+                        hoverOnClear: false,
+                        theme: 'krajee-svg',
+                        showCaption: false,
+                        showClear:false,
+                        showCaptionAsTitle:false,
+                        step:1,
+                    });
+
                     $('#btn-send-review').show();
 
                     showModal('modal-review');
@@ -428,7 +440,19 @@
                             $('#review-date').html(moment(res.data.datetime).format('DD MMMM YYYY'));
                             $('#review-coach-name').html(res.data.coach_name);
                             $('#review-time').html(moment(res.data.datetime).format('HH:mm'));
-
+                            if(init_input_star){
+                                init_input_star.rating('destroy');
+                            }
+                            init_input_star = $('#input-id').rating({
+                                hoverOnClear: false,
+                                theme: 'krajee-svg',
+                                showCaption: false,
+                                showClear:false,
+                                showCaptionAsTitle:false,
+                                step:1,
+                                disabled:true,
+                                readonly:true,
+                            });
                             $('#input-id').rating('update', res.data.star);
                             $('#commentar').val(res.data.description);
 

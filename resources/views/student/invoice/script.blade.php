@@ -166,7 +166,11 @@
                                         }
                                         else if(data.theory_id){
                                             element += `<span>${data.theory_name}</span>`;
-                                        }else{
+                                        }
+                                        else if(data.event_id){
+                                            element += `<span>${data.event_name}</span>`;
+                                        }
+                                        else{
                                             element += `<span>${data.session_video_name}</span>`;
                                         }
                                         element += `

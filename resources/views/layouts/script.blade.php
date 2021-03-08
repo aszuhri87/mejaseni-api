@@ -232,6 +232,18 @@
         }
     }
 
+    function btn_loading_profile_coach(action, text) {
+        if (action == 'start') {
+            $('.btn-loading-profile-coach').html('<div id="loading" class="mr-1"></div> Loading...');
+            $('.btn-loading-profile-coach').addClass('d-flex align-items-center');
+            $('.btn-loading-profile-coach').attr('disabled', true);
+        } else {
+            $('.btn-loading-profile-coach').html(text);
+            $('.btn-loading-profile-coach').removeClass('d-flex align-items-center');
+            $('.btn-loading-profile-coach').attr('disabled', false);
+        }
+    }
+
     function btn_loading_basic(action, text) {
         if (action == 'start') {
             $('.btn-loading-basic').html('<div id="loading" class="mr-1"></div> Loading...');

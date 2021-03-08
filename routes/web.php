@@ -59,6 +59,8 @@ use App\Http\Controllers\Admin\ReportTransaction\TransactionStudentController as
 |--------------------------------------------------------------------------
 */
 use App\Http\Controllers\Coach\DashboardController;
+use App\Http\Controllers\Coach\ProfileController as CoachProfileController;
+use App\Http\Controllers\Coach\BankAccountController as CoachBankAccountController;
 use App\Http\Controllers\Coach\TransactionController as CoachTransactionController;
 use App\Http\Controllers\Coach\TheoryController as CoachTheoryController;
 use App\Http\Controllers\Coach\Schedule\ScheduleController as CoachScheduleController;
@@ -586,6 +588,15 @@ Route::group(['middleware' => ['auth-handling']], function () {
 
         Route::get('/notification', [CoachNotificationController::class, 'index']);
         Route::post('/notification/dt', [CoachNotificationController::class, 'dt']);
+
+        Route::post('profile/{id}', [CoachProfileController::class,'update']);
+        Route::post('profile/change-password/{id}', [CoachProfileController::class,'change_password']);
+        Route::get('profile', [CoachProfileController::class,'index']);
+
+        Route::group(['prefix' => 'bank-account'], function () {
+            Route::get('/', [CoachBankAccountController::class, 'index']);
+            Route::post('{id}', [CoachBankAccountController::class, 'update']);
+        });
     });
 
     /*

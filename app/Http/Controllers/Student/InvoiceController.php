@@ -40,7 +40,13 @@ class InvoiceController extends BaseMenu
                     'transactions.confirmed',
                 ])
                 ->where('transactions.student_id',Auth::guard('student')->user()->id)
-                ->whereNull('transactions.deleted_at')
+                ->where(function($query){
+                    $query->where(function($sub_query){
+                        $sub_query->whereNotNull('transactions.deleted_at')
+                        ->where('transactions.status',0);
+                    })
+                    ->orWhereNull('transactions.deleted_at');
+                })
                 ->get();
 
             return DataTables::of($data)->addIndexColumn()->make(true);
@@ -84,6 +90,13 @@ class InvoiceController extends BaseMenu
                 ])
                 ->whereNull('theories.deleted_at');
 
+            $event = DB::table('events')
+                ->select([
+                    'events.id',
+                    'events.title as event_name',
+                ])
+                ->whereNull('events.deleted_at');
+
             $cart = DB::table('carts')
                 ->select([
                     'carts.id',
@@ -91,11 +104,13 @@ class InvoiceController extends BaseMenu
                     'carts.session_video_id',
                     'carts.master_lesson_id',
                     'carts.theory_id',
+                    'carts.event_id',
                     'classrooms.classroom_name',
                     'session_videos.session_video_name',
                     'master_lessons.master_lesson_name',
                     'theories.theory_name',
                     'classrooms.package_type',
+                    'events.event_name',
                 ])
                 ->leftJoinSub($classroom, 'classrooms', function ($join) {
                     $join->on('carts.classroom_id', '=', 'classrooms.id');
@@ -109,8 +124,10 @@ class InvoiceController extends BaseMenu
                 ->leftJoinSub($theory, 'theories', function ($join) {
                     $join->on('carts.theory_id', '=', 'theories.id');
                 })
-                ->where('carts.student_id', Auth::guard('student')->user()->id)
-                ->whereNull('carts.deleted_at');
+                ->leftJoinSub($event, 'events', function ($join) {
+                    $join->on('carts.event_id', '=', 'events.id');
+                })
+                ->where('carts.student_id', Auth::guard('student')->user()->id);
 
             $data = DB::table('transaction_details')
                 ->select([
@@ -121,16 +138,17 @@ class InvoiceController extends BaseMenu
                     'carts.session_video_id',
                     'carts.master_lesson_id',
                     'carts.theory_id',
+                    'carts.event_id',
                     'carts.classroom_name',
                     'carts.session_video_name',
                     'carts.master_lesson_name',
                     'carts.theory_name',
                     'carts.package_type',
+                    'carts.event_name',
                 ])
                 ->leftJoinSub($cart, 'carts', function ($join) {
                     $join->on('transaction_details.cart_id', '=', 'carts.id');
                 })
-                ->whereNull('transaction_details.deleted_at')
                 ->where('transaction_details.transaction_id',$id)
                 ->get();
 

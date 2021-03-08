@@ -97,7 +97,7 @@
             <div class="col-lg-2 text-center">
                 <p>Sisa Pertemuan</p>
                 <div>
-                    <span class="display-3">3</span>
+                    <span class="display-3" id="last-meeting">0</span>
                 </div>
             </div>
         </div>
@@ -270,7 +270,7 @@
                                 </tr>
                             </thead>
                             <tbody id="table-body">
-                                
+
                             </tbody>
                         </table>
                     </div>
