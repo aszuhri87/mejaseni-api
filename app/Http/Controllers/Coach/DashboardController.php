@@ -379,6 +379,15 @@ class DashboardController extends BaseMenu
                 ->whereNull('student_schedules.deleted_at')
                 ->where('coach_schedules.coach_id',Auth::guard('coach')->user()->id)
                 ->whereRaw("(coach_schedules.datetime::timestamp) >= now()")
+                ->whereRaw("
+                    (SELECT EXTRACT(WEEK FROM current_date)) = (SELECT EXTRACT(WEEK FROM coach_schedules.datetime))
+                ")
+                ->whereRaw("
+                    (SELECT EXTRACT(MONTH FROM current_date)) = (SELECT EXTRACT(MONTH FROM coach_schedules.datetime))
+                ")
+                ->whereRaw("
+                    (SELECT EXTRACT(YEAR FROM current_date)) = (SELECT EXTRACT(YEAR FROM coach_schedules.datetime))
+                ")
                 ->count();
 
             // $total_riwayat_booking = DB::table('transactions')
@@ -413,6 +422,15 @@ class DashboardController extends BaseMenu
                 ->whereNull('student_schedules.deleted_at')
                 ->where('coach_schedules.coach_id',Auth::guard('coach')->user()->id)
                 ->whereRaw("(coach_schedules.datetime::timestamp) <= now()")
+                ->whereRaw("
+                    (SELECT EXTRACT(WEEK FROM current_date)) = (SELECT EXTRACT(WEEK FROM coach_schedules.datetime))
+                ")
+                ->whereRaw("
+                    (SELECT EXTRACT(MONTH FROM current_date)) = (SELECT EXTRACT(MONTH FROM coach_schedules.datetime))
+                ")
+                ->whereRaw("
+                    (SELECT EXTRACT(YEAR FROM current_date)) = (SELECT EXTRACT(YEAR FROM coach_schedules.datetime))
+                ")
                 ->count();
 
             $result = [
@@ -647,6 +665,7 @@ class DashboardController extends BaseMenu
                 }
             })
             ->where('coach_classrooms.coach_id',Auth::guard('coach')->user()->id)
+            ->whereRaw('coach_schedules.datetime::timestamp <= now()')
             ->orderby('coach_schedules.created_at', 'desc')
             ->get();
 
@@ -661,36 +680,112 @@ class DashboardController extends BaseMenu
 
             $path = Storage::disk('s3')->url('/');
 
-            $coaches = DB::table('coaches')
-                ->select(
-                    'coaches.id',
-                )
-                ->where([
-                    ['coaches.id', Auth::guard('coach')->id()],
-                ])
-                ->WhereNull('coaches.deleted_at');
+            // $coaches = DB::table('coaches')
+            //     ->select(
+            //         'coaches.id',
+            //     )
+            //     ->where([
+            //         ['coaches.id', Auth::guard('coach')->id()],
+            //     ])
+            //     ->WhereNull('coaches.deleted_at');
 
-            $coach_classrooms = DB::table('coach_classrooms')
-                ->select(
-                    'coach_classrooms.id',
-                    'coach_classrooms.classroom_id',
-                )
-                ->JoinSub($coaches, 'coaches', function ($join) {
-                    $join->on('coach_classrooms.coach_id', '=', 'coaches.id');
-                })
-                ->WhereNull('coach_classrooms.deleted_at');
+            // $coach_classrooms = DB::table('coach_classrooms')
+            //     ->select(
+            //         'coach_classrooms.id',
+            //         'coach_classrooms.classroom_id',
+            //     )
+            //     ->JoinSub($coaches, 'coaches', function ($join) {
+            //         $join->on('coach_classrooms.coach_id', '=', 'coaches.id');
+            //     })
+            //     ->WhereNull('coach_classrooms.deleted_at');
 
-            $classrooms = DB::table('classrooms')
-                ->select(
-                    'classrooms.id',
-                    'classrooms.session_duration',
-                    'classrooms.name as class_name',
-                    'classrooms.package_type',
-                )
-                ->JoinSub($coach_classrooms, 'coach_classrooms', function ($join) {
-                    $join->on('classrooms.id', '=', 'coach_classrooms.classroom_id');
-                })
-                ->WhereNull('classrooms.deleted_at');
+            // $classrooms = DB::table('classrooms')
+            //     ->select(
+            //         'classrooms.id',
+            //         'classrooms.session_duration',
+            //         'classrooms.name as class_name',
+            //         'classrooms.package_type',
+            //     )
+            //     ->JoinSub($coach_classrooms, 'coach_classrooms', function ($join) {
+            //         $join->on('classrooms.id', '=', 'coach_classrooms.classroom_id');
+            //     })
+            //     ->WhereNull('classrooms.deleted_at');
+
+            // $students = DB::table('students')
+            //     ->select(
+            //         'students.id',
+            //         'students.name as student_name',
+            //         'students.image as student_image'
+            //     )
+            //     ->WhereNull('students.deleted_at');
+
+            // $student_classrooms = DB::table('student_classrooms')
+            //     ->select(
+            //         'student_classrooms.id',
+            //         'student_classrooms.classroom_id',
+            //         'students.student_name',
+            //         'students.student_image',
+            //         'classrooms.session_duration',
+            //         'classrooms.class_name',
+            //         'classrooms.package_type'
+            //     )
+            //     ->JoinSub($students, 'students', function ($join) {
+            //         $join->on('student_classrooms.student_id', '=', 'students.id');
+            //     })
+            //     ->JoinSub($classrooms, 'classrooms', function ($join) {
+            //         $join->on('student_classrooms.classroom_id', '=', 'classrooms.id');
+            //     })
+            //     ->WhereNull('student_classrooms.deleted_at');
+
+            // $student_schedules = DB::table('student_schedules')
+            //     ->select(
+            //         'student_schedules.id',
+            //         'student_schedules.check_in',
+            //         'student_schedules.coach_schedule_id',
+            //         'student_classrooms.session_duration',
+            //         'student_classrooms.class_name',
+            //         'student_classrooms.student_name',
+            //         'student_classrooms.package_type',
+            //         'student_classrooms.student_image',
+            //     )
+            //     ->JoinSub($student_classrooms, 'student_classrooms', function ($join) {
+            //         $join->on('student_schedules.student_classroom_id', '=', 'student_classrooms.id');
+            //     })
+            //     ->WhereNull('student_schedules.deleted_at');
+
+            // $result = DB::table('coach_schedules')
+            //     ->select(
+            //         'coach_schedules.*',
+            //         'student_schedules.id as student_schedule_id',
+            //         'student_schedules.session_duration',
+            //         'student_schedules.class_name',
+            //         'student_schedules.student_name',
+            //         'student_schedules.check_in',
+            //         DB::raw("CONCAT('{$path}',student_schedules.student_image) as image_url"),
+            //         DB::raw("CASE WHEN student_schedules.package_type = 1 THEN 'Spacial Class' ELSE 'Regular class' END package_type"),
+            //         DB::raw("CASE
+            //                     WHEN student_schedules.check_in IS NOT NULL THEN 'Complete'
+            //                     WHEN coach_schedules.deleted_at IS NOT NULL THEN 'Complete'
+            //                     ELSE 'Cancel'
+            //                 END status"),
+            //         DB::raw("CASE
+            //                     WHEN student_schedules.check_in IS NOT NULL THEN 'success'
+            //                     WHEN coach_schedules.deleted_at IS NOT NULL THEN 'success'
+            //                     ELSE 'danger'
+            //                 END color_status"),
+            //         DB::raw("to_char(coach_schedules.datetime, 'Day, DD Month YYYY') as date_class"),
+            //         DB::raw("to_char(coach_schedules.datetime, 'HH24:MI') as start_datetime"),
+            //         DB::raw("to_char(coach_schedules.datetime::timestamp + INTERVAL '1 MINUTES' * student_schedules.session_duration, 'HH24:MI AM') as end_datetime"),
+            //     )
+            //     ->JoinSub($student_schedules, 'student_schedules', function ($join) {
+            //         $join->on('coach_schedules.id', '=', 'student_schedules.coach_schedule_id');
+            //     })
+            //     ->where([
+            //         ['accepted', true]
+            //     ])
+            //     ->orderby('coach_schedules.created_at', 'desc')
+            //     ->take(5)
+            //     ->get();
 
             $students = DB::table('students')
                 ->select(
@@ -706,15 +801,9 @@ class DashboardController extends BaseMenu
                     'student_classrooms.classroom_id',
                     'students.student_name',
                     'students.student_image',
-                    'classrooms.session_duration',
-                    'classrooms.class_name',
-                    'classrooms.package_type'
                 )
                 ->JoinSub($students, 'students', function ($join) {
                     $join->on('student_classrooms.student_id', '=', 'students.id');
-                })
-                ->JoinSub($classrooms, 'classrooms', function ($join) {
-                    $join->on('student_classrooms.classroom_id', '=', 'classrooms.id');
                 })
                 ->WhereNull('student_classrooms.deleted_at');
 
@@ -723,10 +812,7 @@ class DashboardController extends BaseMenu
                     'student_schedules.id',
                     'student_schedules.check_in',
                     'student_schedules.coach_schedule_id',
-                    'student_classrooms.session_duration',
-                    'student_classrooms.class_name',
                     'student_classrooms.student_name',
-                    'student_classrooms.package_type',
                     'student_classrooms.student_image',
                 )
                 ->JoinSub($student_classrooms, 'student_classrooms', function ($join) {
@@ -734,20 +820,52 @@ class DashboardController extends BaseMenu
                 })
                 ->WhereNull('student_schedules.deleted_at');
 
+            $classroom = DB::table('classrooms')
+                ->select([
+                    'classrooms.id',
+                    'classrooms.name as class_name',
+                    'classrooms.session_duration',
+                    'classrooms.package_type',
+                ]);
+
+            $coach = DB::table('coaches')
+                ->select([
+                    'coaches.id',
+                    'coaches.name as coach_name',
+                ])
+                ->where('coaches.id',Auth::guard('coach')->user()->id)
+                ->whereNull('deleted_at');
+
+            $coach_classroom = DB::table('coach_classrooms')
+                ->select([
+                    'coach_classrooms.id',
+                    'classrooms.class_name',
+                    'classrooms.session_duration',
+                    'coaches.coach_name',
+                    'classrooms.package_type',
+                ])
+                ->JoinSub($classroom, 'classrooms', function ($join) {
+                    $join->on('coach_classrooms.classroom_id', '=', 'classrooms.id');
+                })
+                ->JoinSub($coach, 'coaches', function ($join) {
+                    $join->on('coach_classrooms.coach_id', '=', 'coaches.id');
+                })
+                ->whereNull('coach_classrooms.deleted_at');
+
             $result = DB::table('coach_schedules')
-                ->select(
+                ->select([
                     'coach_schedules.*',
                     'student_schedules.id as student_schedule_id',
-                    'student_schedules.session_duration',
-                    'student_schedules.class_name',
                     'student_schedules.student_name',
                     'student_schedules.check_in',
+                    'coach_classrooms.session_duration',
+                    'coach_classrooms.class_name',
                     DB::raw("CONCAT('{$path}',student_schedules.student_image) as image_url"),
-                    DB::raw("CASE WHEN student_schedules.package_type = 1 THEN 'Spacial Class' ELSE 'Regular class' END package_type"),
+                    DB::raw("CASE WHEN coach_classrooms.package_type = 1 THEN 'Spacial Class' ELSE 'Regular class' END package_type"),
                     DB::raw("CASE
                                 WHEN student_schedules.check_in IS NOT NULL THEN 'Complete'
                                 WHEN coach_schedules.deleted_at IS NOT NULL THEN 'Complete'
-                                ELSE 'Cancle'
+                                ELSE 'Cancel'
                             END status"),
                     DB::raw("CASE
                                 WHEN student_schedules.check_in IS NOT NULL THEN 'success'
@@ -756,15 +874,16 @@ class DashboardController extends BaseMenu
                             END color_status"),
                     DB::raw("to_char(coach_schedules.datetime, 'Day, DD Month YYYY') as date_class"),
                     DB::raw("to_char(coach_schedules.datetime, 'HH24:MI') as start_datetime"),
-                    DB::raw("to_char(coach_schedules.datetime::timestamp + INTERVAL '1 MINUTES' * student_schedules.session_duration, 'HH24:MI AM') as end_datetime"),
-                )
+                    DB::raw("to_char(coach_schedules.datetime::timestamp + INTERVAL '1 MINUTES' * coach_classrooms.session_duration, 'HH24:MI AM') as end_datetime"),
+                ])
                 ->JoinSub($student_schedules, 'student_schedules', function ($join) {
                     $join->on('coach_schedules.id', '=', 'student_schedules.coach_schedule_id');
                 })
-                ->where([
-                    ['accepted', true]
-                ])
-                ->orderby('coach_schedules.created_at', 'desc')
+                ->JoinSub($coach_classroom, 'coach_classrooms', function ($join) {
+                    $join->on('coach_schedules.coach_classroom_id', '=', 'coach_classrooms.id');
+                })
+                ->whereNull('coach_schedules.deleted_at')
+                ->orderBy('coach_schedules.datetime','desc')
                 ->take(5)
                 ->get();
 

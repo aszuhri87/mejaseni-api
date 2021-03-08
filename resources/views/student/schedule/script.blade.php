@@ -252,16 +252,18 @@
                 .done(function(res, xhr, meta) {
                     if(res.status == 200){
                         $.each(res.data, function(index, data){
-                            calendar_special.addEvent({
-                                "coach_schedule_id": data.id,
-                                "classroom_id": data.classroom_id,
-                                "title": data.title,
-                                "start": data.start,
-                                "className": `bg-${data.color} border-${data.color} p-1 ${data.color == 'primary' ? 'text-white' : ''}`,
-                                "allDay": false,
-                                "status": data.status,
-                                "tanggal" : data.start
-                            });
+                            if(data.show){
+                                calendar_special.addEvent({
+                                    "coach_schedule_id": data.id,
+                                    "classroom_id": data.classroom_id,
+                                    "title": data.title,
+                                    "start": data.start,
+                                    "className": `bg-${data.color} border-${data.color} p-1 ${data.color == 'primary' ? 'text-white' : ''}`,
+                                    "allDay": false,
+                                    "status": data.status,
+                                    "tanggal" : data.start
+                                });
+                            }
                         })
                     }
                 })
@@ -381,16 +383,18 @@
                 .done(function(res, xhr, meta) {
                     if(res.status == 200){
                         $.each(res.data, function(index, data){
-                            calendar_regular.addEvent({
-                                "coach_schedule_id": data.id,
-                                "classroom_id": data.classroom_id,
-                                "title": data.title,
-                                "start": data.start,
-                                "className": `bg-${data.color} border-${data.color} p-1 ${data.color == 'primary' ? 'text-white' : ''}`,
-                                "allDay": false,
-                                "status": data.status,
-                                "tanggal" : data.start
-                            });
+                            if(data.show == 1){
+                                calendar_regular.addEvent({
+                                    "coach_schedule_id": data.id,
+                                    "classroom_id": data.classroom_id,
+                                    "title": data.title,
+                                    "start": data.start,
+                                    "className": `bg-${data.color} border-${data.color} p-1 ${data.color == 'primary' ? 'text-white' : ''}`,
+                                    "allDay": false,
+                                    "status": data.status,
+                                    "tanggal" : data.start
+                                });
+                            }
                         })
                     }
                 })

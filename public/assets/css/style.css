@@ -246,6 +246,7 @@ ul.ui-autocomplete {
     justify-content: center;
     align-items: center;
     align-content: center;
+    z-index: 12 !important;
 }
 
 .class-owned__wrapper {
@@ -358,4 +359,8 @@ ul.ui-autocomplete {
     overflow: hidden;
     margin-top: 14px;
     cursor: pointer;
+}
+
+.class-owned{
+    z-index: 11 !important;
 }
