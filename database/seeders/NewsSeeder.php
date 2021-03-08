@@ -21,7 +21,7 @@ class NewsSeeder extends Seeder
                     'title' => 'Mejaseni Virtual Festival 1',
                     'description' => 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Reprehenderit facere facilis consequuntur inventore velit suscipit distinctio quod iure, repellendus ad. Alias, rerum!',
                     'image' => "media/master-lesson__banner.jpg",
-                    
+
                 ],
                 [
                     'title' => 'Mejaseni Virtual Festival 2',
@@ -46,7 +46,7 @@ class NewsSeeder extends Seeder
                         'title' => $seeder['title'],
                         'description' => $seeder['description'],
                         'image' => $seeder['image'],
-                        'classroom_category_id' => $classroom_category->id
+                        'classroom_category_id' => $classroom_category ? $classroom_category->id : null
                     ]);
                 }
             }
