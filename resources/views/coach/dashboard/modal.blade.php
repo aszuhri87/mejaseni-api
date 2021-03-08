@@ -56,7 +56,7 @@
                             </div>
                         </div>
                     </div>
-                    <hr>
+                    {{-- <hr>
                     <div class="row">
                         <div class="col-12">
                             <div class="row mb-5 overflow-auto feedback" style="height:200px !important">
@@ -65,7 +65,7 @@
                                 adipisci veritatis, nesciunt consequatur voluptatem nostrum aspernatur?
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <hr>
                     <div class="row">
                         <div class="col-12">
@@ -93,12 +93,12 @@
                                 </div>
                                 <div class="col-12 col-sm-12 col-lg-12 col-xl-12 mt-5">
                                     <blockquote class="blockquote text-center text-dark-50 font-weight-normal">
-                                        <p class="mb-0">Masukkan komentar Anda tentang "pertemuan ke 5"</p>
+                                        <p class="mb-0">Masukkan komentar Anda</p>
                                     </blockquote>
                                 </div>
                                 <div class="col-12 col-sm-12 col-lg-12 col-xl-12">
                                     <div class="form-group mb-1">
-                                        <textarea class="form-control" name="feedback" rows="8"></textarea>
+                                        <textarea class="form-control" name="feedback" id="t-feedback" rows="8" placeholder="Tulis disini..."></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -108,7 +108,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary btn-loading">Kirim Exercise</button>
+                    <button type="submit" class="btn btn-primary btn-loading">Submit</button>
                 </div>
             </form>
         </div>
@@ -128,12 +128,46 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="row mb-5 overflow-auto feedback-student" style="height:200px !important">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="row py-5">
+                                <div class="col-12 col-sm-12 col-lg-12 col-xl-12"
+                                    style="display: grid;justify-content: center;">
+                                    <div class="container">
+                                        <div class="star-widget text-center">
+                                            <input type="radio" disabled value="5" name="student_rate" id="student-rate-5">
+                                            <label for="student-rate-5" class="fas fa-star"></label>
+
+                                            <input type="radio" disabled value="4" name="student_rate" id="student-rate-4">
+                                            <label for="student-rate-4" class="fas fa-star"></label>
+
+                                            <input type="radio" disabled value="3" name="student_rate" id="student-rate-3">
+                                            <label for="student-rate-3" class="fas fa-star"></label>
+
+                                            <input type="radio" disabled value="2" name="student_rate" id="student-rate-2">
+                                            <label for="student-rate-2" class="fas fa-star"></label>
+
+                                            <input type="radio" disabled value="1" name="student_rate" id="student-rate-1">
+                                            <label for="student-rate-1" class="fas fa-star"></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-12 col-lg-12 col-xl-12 mt-5">
+                                    <blockquote class="blockquote text-center text-dark-50 font-weight-normal">
+                                        <p class="mb-0">Diskripsi</p>
+                                    </blockquote>
+                                </div>
+                                <div class="col-12 col-sm-12 col-lg-12 col-xl-12">
+                                    <div class="form-group mb-1">
+                                        <textarea class="form-control" disabled id="t-student-feedback" rows="8"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary btn-loading">Kirim Exercise</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
                 </div>
             </form>
         </div>

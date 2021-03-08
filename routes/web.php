@@ -526,7 +526,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::post('closest-schedule', [DashboardController::class, 'closest_schedule']);
             Route::get('coach-show-review-last-class/{id}/{student_schedule_id}', [DashboardController::class, 'coach_show_review_last_class']);
             Route::get('show-last-class/{id}/{student_schedule_id}', [DashboardController::class, 'show_last_class']);
-            Route::put('review-last-class/{id}/{student_schedule_id}', [DashboardController::class, 'review_last_class']);
+            Route::post('review-last-class/{id}&{student_schedule_id}', [DashboardController::class, 'review_last_class']);
             Route::delete('cancle/schedule/{id}', [DashboardController::class, 'cancle_schedule']);
             Route::resource('review-assignment', ReviewAssignmentController::class);
             Route::resource('/', DashboardController::class);

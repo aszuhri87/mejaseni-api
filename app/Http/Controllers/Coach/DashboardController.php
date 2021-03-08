@@ -844,7 +844,6 @@ class DashboardController extends BaseMenu
     public function review_last_class(Request $request, $id, $student_schedule_id)
     {
         try {
-
             $studentSchedule = StudentSchedule::select(
                 'student_schedules.id',
                 'students.id as student_id'
@@ -855,19 +854,18 @@ class DashboardController extends BaseMenu
             ->join('coach_classrooms', 'coach_classrooms.classroom_id', 'classrooms.id')
             ->join('coaches', 'coaches.id', 'coach_classrooms.coach_id')
             ->where([
-                ['coaches.id', Auth::guard('coach')->id()],
-                ['coach_schedule_id', $id],
                 ['student_schedules.id', $student_schedule_id]
             ])
             ->WhereNull('student_schedules.deleted_at')
             ->first();
 
             DB::transaction(function () use ($request, $studentSchedule) {
-                StudentFeedback::create([
+                StudentFeedback::updateOrCreate([
                     'coach_id' => Auth::guard('coach')->id(),
+                    'student_schedule_id' => $studentSchedule->id,
+                ],[
                     'star' => $request->rate,
                     'description' => $request->feedback,
-                    'student_schedule_id' => $studentSchedule->id,
                 ]);
             });
 
