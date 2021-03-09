@@ -9,7 +9,6 @@
             dataType: 'json',
         })
         .done(function(res, xhr, meta) {
-            console.log(res);
             const apexChart = "#chart_3";
             var options = {
                 series: [{
