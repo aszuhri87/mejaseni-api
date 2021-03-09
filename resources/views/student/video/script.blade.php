@@ -46,14 +46,14 @@
             },
             getSubClassroomCategory = () => {
                 $.ajax({
-                    url: `{{ url('public/get-sub-classroom-category') }}`,
+                    url: `{{ url('student/theory/video-class/get-sub-classroom-category') }}`,
                     type: 'GET',
                 })
                 .done(function(res, xhr, meta) {
                     element = `<option value="">Pilih Sub Kategori Kelas</option>`;
 
                     $.each(res.data, function(index, data){
-                        element += `<option value="${data.id}">${data.name}</option>`;
+                        element += `<option value="${data.sub_classroom_category_id}">${data.name}</option>`;
                     });
 
                     $('#filter').html(element);

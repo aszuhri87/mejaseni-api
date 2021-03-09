@@ -124,7 +124,7 @@ class ScheduleController extends BaseMenu
                             THEN
                                 1
                             WHEN
-                                coach_schedules.datetime::timestamp > now()::timestamp AND
+                                coach_schedules.datetime::timestamp <= now()::timestamp AND
                                 student_schedules.coach_schedule_id IS NOT NULL AND
                                 student_classrooms.student_id = '$student_id'
                             THEN
@@ -243,7 +243,7 @@ class ScheduleController extends BaseMenu
                             THEN
                                 1
                             WHEN
-                                coach_schedules.datetime::timestamp > now()::timestamp AND
+                                coach_schedules.datetime::timestamp <= now()::timestamp AND
                                 student_schedules.coach_schedule_id IS NOT NULL AND
                                 student_classrooms.student_id = '$student_id'
                             THEN
@@ -771,8 +771,8 @@ class ScheduleController extends BaseMenu
                 ->select([
                     DB::raw("(
                         CASE
-                            WHEN round(AVG(student_feedback.star),2) IS NOT NULL THEN
-                                round(AVG(student_feedback.star),2)
+                            WHEN round(AVG(student_feedback.star),1) IS NOT NULL THEN
+                                round(AVG(student_feedback.star),1)
                             ELSE
                                 0
                         END

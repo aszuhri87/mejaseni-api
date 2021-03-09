@@ -693,6 +693,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::group(['prefix' => 'video-class'], function () {
                 Route::get('/', [StudentVideoController::class, 'index']);
                 Route::get('get-video', [StudentVideoController::class, 'get_video']);
+                Route::get('get-sub-classroom-category', [StudentVideoController::class, 'get_sub_classroom_category']);
                 Route::get('video-detail/{session_video_id}', [StudentVideoController::class, 'video_detail']);
             });
         });

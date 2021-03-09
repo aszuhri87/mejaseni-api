@@ -354,6 +354,8 @@
                         step:1,
                     });
 
+                    $('#commentar').attr('disabled',false);
+
                     $('#btn-send-review').show();
 
                     showModal('modal-review');
@@ -455,6 +457,7 @@
                             });
                             $('#input-id').rating('update', res.data.star);
                             $('#commentar').val(res.data.description);
+                            $('#commentar').attr('disabled',true);
 
                             showModal('modal-review');
                         }
@@ -562,11 +565,17 @@
                 })
                 .done(function(res, xhr, meta) {
                     if(res.status == 200){
-                        if(res.data[0].star == null){
-                            $('#total-rating').html(0);
+                        if(res.data.length > 0)
+                        {
+                            if(res.data[0].star == null){
+                                $('#total-rating').html(0);
+                            }
+                            else{
+                                $('#total-rating').html(res.data[0].star);
+                            }
                         }
                         else{
-                            $('#total-rating').html(res.data[0].star);
+                            $('#total-rating').html(0);
                         }
                     }
                 })

@@ -25,7 +25,7 @@ class Student extends Authenticatable
         'phone',
         'image',
         'expertise',
-        'actived',
+        'active',
         'verified',
         'provider',
         'token_verification',

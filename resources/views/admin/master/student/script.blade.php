@@ -75,7 +75,7 @@
                                 className: "text-center",
                                 render: function(data, type, full, meta) {
 
-                                    if (full.actived == true) {
+                                    if (full.active == true) {
                                         return `
                                         <div class="d-flex justify-content-center">
                                             <span class="switch switch-sm switch-outline switch-icon switch-success">
@@ -348,7 +348,7 @@
 
                         setChecked($(this).attr('href'));
                     });
-                    
+
                     $(document).on('click', '.btn-active', function(event) {
                         var data = init_table.row($(this).parents('tr')).data();
 

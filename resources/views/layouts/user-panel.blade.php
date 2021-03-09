@@ -31,7 +31,21 @@
         <!--begin::Header-->
         <div class="d-flex align-items-center mt-5">
             <div class="symbol symbol-100 mr-5">
-                <div class="symbol-label" style="background-image:url('assets/media/users/300_21.jpg')"></div>
+                @if (Auth::guard('student')->check())
+                    @if(Auth::guard('student')->user()->image)
+                        <div class="symbol-label" style="background-image:url('https://mejaseni.yk1.s3.gmedia.id/{{Auth::guard('student')->user()->image}}')"></div>
+                    @else
+                        <div class="symbol-label" style="background-image:url('{{ asset('assets/images/ava-student.png') }}')"></div>
+                    @endif
+                @elseif(Auth::guard('coach')->check())
+                    @if(Auth::guard('coach')->user()->image)
+                        <div class="symbol-label" style="background-image:url('https://mejaseni.yk1.s3.gmedia.id/{{Auth::guard('coach')->user()->image}}')"></div>
+                    @else
+                        <div class="symbol-label" style="background-image:url('{{ asset('assets/images/ava-coach.png') }}')"></div>
+                    @endif
+                @else
+                    <div class="symbol-label" style="background-image:url('{{ asset('assets/images/ava-admin.png') }}')"></div>
+                @endif
                 <i class="symbol-badge bg-success"></i>
             </div>
             <div class="d-flex flex-column">

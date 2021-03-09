@@ -242,7 +242,7 @@ class StudentController extends BaseMenu
 
                 $student = Student::find($id);
                 $update = [
-                    'actived' => $request->actived,
+                    'active' => $request->actived,
                 ];
                 $student->update($update);
 

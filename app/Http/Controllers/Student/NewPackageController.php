@@ -49,8 +49,7 @@ class NewPackageController extends BaseMenu
                 ->where([
                     'carts.student_id' => Auth::guard('student')->user()->id
                 ])
-                ->whereNull('carts.deleted_at')
-                ->whereNotNull('transaction_details.id');
+                ->whereNull('carts.deleted_at');
 
             $result = DB::table('classrooms')
                 ->select([
@@ -64,7 +63,7 @@ class NewPackageController extends BaseMenu
                     DB::raw("CONCAT('{$path}',classrooms.image) as image_url"),
                     DB::raw("(
                         CASE
-                            WHEN carts.transaction_detail_id IS NOT NULL THEN
+                            WHEN carts.transaction_detail_id IS NOT NULL OR carts.classroom_id IS NOT NULL THEN
                                 1
                             ELSE
                                 0
@@ -141,8 +140,7 @@ class NewPackageController extends BaseMenu
                 ->where([
                     'carts.student_id' => Auth::guard('student')->user()->id
                 ])
-                ->whereNull('carts.deleted_at')
-                ->whereNotNull('transaction_details.id');
+                ->whereNull('carts.deleted_at');
 
             $result = DB::table('classrooms')
                 ->select([
@@ -157,7 +155,7 @@ class NewPackageController extends BaseMenu
                     DB::raw("CONCAT('{$path}',classrooms.image) as image_url"),
                     DB::raw("(
                         CASE
-                            WHEN carts.transaction_detail_id IS NOT NULL THEN
+                            WHEN carts.transaction_detail_id IS NOT NULL OR carts.classroom_id IS NOT NULL THEN
                                 1
                             ELSE
                                 0
@@ -332,8 +330,7 @@ class NewPackageController extends BaseMenu
                 ->where([
                     'carts.student_id' => Auth::guard('student')->user()->id
                 ])
-                ->whereNull('carts.deleted_at')
-                ->whereNotNull('transaction_details.id');
+                ->whereNull('carts.deleted_at');
 
             $result = DB::table('classrooms')
                 ->select([
@@ -349,7 +346,7 @@ class NewPackageController extends BaseMenu
                     DB::raw("CONCAT('{$path}',classrooms.image) as image_url"),
                     DB::raw("(
                         CASE
-                            WHEN carts.transaction_detail_id IS NOT NULL THEN
+                            WHEN carts.transaction_detail_id IS NOT NULL OR carts.classroom_id IS NOT NULL THEN
                                 1
                             ELSE
                                 0

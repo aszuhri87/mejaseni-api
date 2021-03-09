@@ -39,19 +39,6 @@
 
                 $(document).on('click','.class-owned__item',function(event){
                     event.preventDefault();
-                    // let image = $(this).find('.class-image').attr('src');
-                    // let name = $(this).find('.class-name').text();
-                    // let subtraction = $(this).data('subtraction');
-                    // let is_rating = $(this).data('is_rating');
-                    // let classroom_id = $(this).data('classroom_id');
-
-                    // $('.class-owned').removeClass('fade-in-down');
-                    // $('.class-owned').addClass('fade-out-up');
-                    // $('.class-owned').css('display', 'none');
-                    // $('#class-name-selected').html(name);
-                    // $('#class-image-selected').attr('src', image);
-                    // $('#last-meeting').html(subtraction);
-                    // $('#rating-classroom-id').val(classroom_id);
                     let image = $(this).find('.class-image').attr('src');
                     let name = $(this).find('.class-name').text();
                     let subtraction = $(this).data('subtraction');
@@ -618,11 +605,16 @@
                 })
                 .done(function(res, xhr, meta) {
                     if(res.status == 200){
-                        if(res.data[0].star == null){
-                            $('#total-rating').html(0);
+                        if(res.data.length>0){
+                            if(res.data[0].star == null){
+                                $('#total-rating').html(0);
+                            }
+                            else{
+                                $('#total-rating').html(res.data[0].star);
+                            }
                         }
                         else{
-                            $('#total-rating').html(res.data[0].star);
+                            $('#total-rating').html(0);
                         }
                     }
                 })

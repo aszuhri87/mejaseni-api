@@ -113,7 +113,7 @@
 
                     $('#form-sub-classroom-category').trigger("reset");
                     $('#form-sub-classroom-category').attr('action', $(this).attr('href'));
-                    $('#form-sub-classroom-category').attr('method','PUT');
+                    $('#form-sub-classroom-category').attr('method','POST');
 
                     $('#form-sub-classroom-category').find('input[name="name"]').val(data.name);
 

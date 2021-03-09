@@ -238,4 +238,75 @@ class VideoController extends BaseMenu
             'data'          => $result
         ]);
     }
+
+    public function get_sub_classroom_category()
+    {
+        try {
+            $sub_classroom_category = DB::table('sub_classroom_categories')
+                ->select([
+                    'sub_classroom_categories.id',
+                    'sub_classroom_categories.name',
+                ])
+                ->whereNull('sub_classroom_categories.deleted_at');
+
+            $session_video = DB::table('session_videos')
+                ->select([
+                    'session_videos.id',
+                    'session_videos.sub_classroom_category_id',
+                    'sub_classroom_categories.name',
+                ])
+                ->leftJoinSub($sub_classroom_category, 'sub_classroom_categories', function ($join) {
+                    $join->on('session_videos.sub_classroom_category_id','=','sub_classroom_categories.id');
+                })
+                ->whereNull('session_videos.deleted_at');
+
+            $cart = DB::table('carts')
+                ->select([
+                    'carts.id',
+                    'session_videos.sub_classroom_category_id',
+                    'session_videos.name',
+                ])
+                ->leftJoinSub($session_video, 'session_videos', function ($join) {
+                    $join->on('carts.session_video_id','=','session_videos.id');
+                })
+                ->whereNotNull('carts.session_video_id')
+                ->whereNull('carts.deleted_at');
+
+            $transaction_detail = DB::table('transaction_details')
+                ->select([
+                    'transaction_details.transaction_id',
+                    'carts.sub_classroom_category_id',
+                    'carts.name',
+                ])
+                ->leftJoinSub($cart, 'carts', function ($join) {
+                    $join->on('transaction_details.cart_id', '=', 'carts.id');
+                })
+                ->whereNull('transaction_details.deleted_at');
+
+            $result = DB::table('transactions')
+                ->select([
+                    'transaction_details.sub_classroom_category_id',
+                    'transaction_details.name',
+                ])
+                ->leftJoinSub($transaction_detail, 'transaction_details', function ($join) {
+                    $join->on('transactions.id', '=', 'transaction_details.transaction_id');
+                })
+                ->where('transactions.status',2)
+                ->where('transactions.student_id',Auth::guard('student')->user()->id)
+                ->whereNull('transactions.deleted_at')
+                ->distinct('transaction_details.sub_classroom_category_id')
+                ->get();
+
+            return response([
+                "status" => 200,
+                "data"      => $result,
+                "message"   => 'OK'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
 }
