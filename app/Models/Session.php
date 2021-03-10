@@ -22,18 +22,18 @@ class Session extends Model
     ];
 
     protected $cascadeDeletes = [
-        'assignment',
-        'theory',
+        'assignments',
+        'theories',
     ];
 
     protected $dates = ['deleted_at'];
 
-    public function assignment()
+    public function assignments()
     {
         return $this->hasMany(Assignment::class, 'session_id', 'id');
     }
 
-    public function theory()
+    public function theories()
     {
         return $this->hasMany(Theory::class, 'session_id', 'id');
     }

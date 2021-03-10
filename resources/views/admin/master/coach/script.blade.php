@@ -429,6 +429,8 @@
                     let init_package_type = 0;
                     let package_type_1,package_type_2;
                     let increment = 0;
+                    data1 = [];
+                    data2 = [];
                     $.ajax({
                         url: `{{ url('admin/master/coach/class') }}/${data.id}`,
                         type: `GET`,

@@ -23,12 +23,12 @@ class StudentClassroom extends Model
     ];
 
     protected $cascadeDeletes = [
-        'student_schedule',
+        'student_schedules',
     ];
 
     protected $dates = ['deleted_at'];
 
-    public function student_schedule()
+    public function student_schedules()
     {
         return $this->hasMany(StudentSchedule::class, 'student_classroom_id', 'id');
     }

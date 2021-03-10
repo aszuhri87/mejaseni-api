@@ -32,15 +32,15 @@ class Coach extends Authenticatable
 
     protected $cascadeDeletes = [
         'classrooms',
-        'student_feedback',
+        'student_feedbacks',
         'income_transactions',
         'guest_star',
         'bank_account',
-        'coach_notification',
-        'coach_sosmed',
+        'coach_notifications',
+        'coach_sosmeds',
         'profile_coach_video',
-        'session_video',
-        'income',
+        'session_videos',
+        'incomes',
     ];
 
     protected $dates = ['deleted_at'];
@@ -54,7 +54,7 @@ class Coach extends Authenticatable
     {
         return $this->hasMany(CoachClassroom::class, 'coach_id', 'id');
     }
-    public function student_feedback()
+    public function student_feedbacks()
     {
         return $this->hasMany(StudentFeedback::class, 'coach_id', 'id');
     }
@@ -70,11 +70,11 @@ class Coach extends Authenticatable
     {
         return $this->hasOne(GuestStar::class, 'coach_id', 'id');
     }
-    public function coach_notification()
+    public function coach_notifications()
     {
         return $this->hasMany(CoachNotification::class, 'coach_id', 'id');
     }
-    public function coach_sosmed()
+    public function coach_sosmeds()
     {
         return $this->hasMany(CoachSosmed::class, 'coach_id', 'id');
     }
@@ -82,11 +82,11 @@ class Coach extends Authenticatable
     {
         return $this->hasOne(ProfileCoachVideo::class, 'coach_id', 'id');
     }
-    public function session_video()
+    public function session_videos()
     {
         return $this->hasMany(SessionVideo::class, 'coach_id', 'id');
     }
-    public function income()
+    public function incomes()
     {
         return $this->hasMany(Income::class, 'coach_id', 'id');
     }

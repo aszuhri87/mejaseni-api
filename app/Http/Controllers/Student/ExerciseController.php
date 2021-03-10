@@ -78,7 +78,7 @@ class ExerciseController extends BaseMenu
                     'assignments.name',
                     'assignments.description',
                     'assignments.upload_date',
-                    'assignments.due_date',
+                    'assignments.due_time',
                     DB::raw("CONCAT('{$path}',assignments.file_url) as file_url"),
                 ])
                 ->whereNull('assignments.deleted_at');
@@ -104,6 +104,7 @@ class ExerciseController extends BaseMenu
             $coach_schedule = DB::table('coach_schedules')
                 ->select([
                     'coach_schedules.id',
+                    'coach_schedules.datetime',
                     'coach_classrooms.coach_name',
                 ])
                 ->whereNull('coach_schedules.deleted_at')
@@ -121,9 +122,10 @@ class ExerciseController extends BaseMenu
                     'assignments.name',
                     'assignments.description',
                     'assignments.upload_date',
-                    'assignments.due_date',
                     'assignments.file_url',
                     'coach_schedules.coach_name',
+                    'coach_schedules.datetime',
+                    'assignments.due_time',
                 ])
                 ->joinSub($assignment, 'assignments', function ($join) {
                     $join->on('student_schedules.session_id', '=', 'assignments.session_id');
@@ -167,8 +169,9 @@ class ExerciseController extends BaseMenu
                     'student_schedules.name',
                     'student_schedules.description',
                     'student_schedules.upload_date',
-                    'student_schedules.due_date',
+                    'student_schedules.due_time',
                     'student_schedules.file_url',
+                    'student_schedules.datetime',
                     'classrooms.name as classroom_name',
                     'student_schedules.coach_name',
                     'collections.id as collection_id',
@@ -187,6 +190,9 @@ class ExerciseController extends BaseMenu
                             ELSE
                                 0
                         END AS status_collection_feedback
+                    "),
+                    DB::raw("
+                        (student_schedules.datetime::timestamp + (student_schedules.due_time * INTERVAL '1 days')) AS due_date
                     "),
                 ])
                 ->leftJoinSub($student_schedule, 'student_schedules', function ($join) {
@@ -210,6 +216,7 @@ class ExerciseController extends BaseMenu
                         $query->whereBetween('student_schedules.upload_date',[$date_start,$date_end]);
                     }
                 })
+                ->whereRaw('student_schedules.datetime::timestamp <= now()::timestamp')
                 ->whereNull('student_classrooms.deleted_at')
                 ->whereNotNull('student_schedules.assignment_id')
                 ->get();

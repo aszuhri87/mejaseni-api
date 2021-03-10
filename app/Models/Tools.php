@@ -21,12 +21,12 @@ class Tools extends Model
     ];
 
     protected $cascadeDeletes = [
-        'classroom_tool',
+        'classroom_tools',
     ];
 
     protected $dates = ['deleted_at'];
 
-    public function classroom_tool()
+    public function classroom_tools()
     {
         return $this->hasMany(ClassroomTools::class, 'tool_id', 'id');
     }

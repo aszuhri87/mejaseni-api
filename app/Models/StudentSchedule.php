@@ -26,7 +26,7 @@ class StudentSchedule extends Model
     protected $cascadeDeletes = [
         'session_schedule',
         'student_feedback',
-        'student_notification',
+        'student_notifications',
     ];
 
     protected $dates = ['deleted_at'];
@@ -40,8 +40,8 @@ class StudentSchedule extends Model
     {
         return $this->hasMany(StudentFeedback::class, 'student_schedule_id', 'id');
     }
-    
-    public function student_notification()
+
+    public function student_notifications()
     {
         return $this->hasMany(StudentNotification::class, 'student_schedule_id', 'id');
     }

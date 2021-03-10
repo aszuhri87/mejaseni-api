@@ -31,17 +31,17 @@ class Classroom extends Model
     ];
 
     protected $cascadeDeletes = [
-        'student_classroom',
+        'student_classrooms',
         'classroom_tools',
-        'session',
-        'coach_classroom',
-        'classroom_feedback',
-        'cart',
+        'sessions',
+        'coach_classrooms',
+        'classroom_feedbacks',
+        'carts',
     ];
 
     protected $dates = ['deleted_at'];
 
-    public function student_classroom()
+    public function student_classrooms()
     {
         return $this->hasMany(StudentClassroom::class, 'classroom_id', 'id');
     }
@@ -51,22 +51,22 @@ class Classroom extends Model
         return $this->hasMany(ClassroomTools::class, 'classroom_id', 'id');
     }
 
-    public function session()
+    public function sessions()
     {
         return $this->hasMany(Session::class, 'classroom_id', 'id');
     }
 
-    public function coach_classroom()
+    public function coach_classrooms()
     {
         return $this->hasMany(CoachClassroom::class, 'classroom_id', 'id');
     }
 
-    public function classroom_feedback()
+    public function classroom_feedbacks()
     {
         return $this->hasMany(ClassroomFeedback::class, 'classroom_id', 'id');
     }
 
-    public function cart()
+    public function carts()
     {
         return $this->hasMany(Cart::class, 'classroom_id', 'id');
     }

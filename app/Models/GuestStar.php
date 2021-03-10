@@ -25,12 +25,12 @@ class GuestStar extends Model
     ];
 
     protected $cascadeDeletes = [
-        'guest_star_master_lesson',
+        'guest_star_master_lessons',
     ];
 
     protected $dates = ['deleted_at'];
 
-    public function guest_star_master_lesson()
+    public function guest_star_master_lessons()
     {
         return $this->hasMany(GuestStarMasterLesson::class, 'guest_star_id', 'id');
     }

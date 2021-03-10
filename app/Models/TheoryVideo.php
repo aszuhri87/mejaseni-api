@@ -31,11 +31,11 @@ class TheoryVideo extends Model
     ];
 
     protected $cascadeDeletes = [
-        'video_metadata',
+        'video_metadatas',
     ];
 
     protected $dates = ['deleted_at'];
-    public function video_metadata()
+    public function video_metadatas()
     {
         return $this->hasMany(VideoMetadata::class, 'theory_video_id', 'id');
     }

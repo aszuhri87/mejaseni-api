@@ -29,12 +29,12 @@ class Theory extends Model
     ];
 
     protected $cascadeDeletes = [
-        'cart',
+        'carts',
     ];
 
     protected $dates = ['deleted_at'];
 
-    public function cart()
+    public function carts()
     {
         return $this->hasMany(Cart::class, 'theory_id', 'id');
     }

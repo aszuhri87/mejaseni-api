@@ -105,10 +105,11 @@ class TheoryController extends BaseMenu
             $coach_schedule = DB::table('coach_schedules')
                 ->select([
                     'coach_schedules.id',
+                    'coach_schedules.datetime',
                     'coach_schedules.coach_classroom_id',
                     'coach_classrooms.coach_name',
-                ])
-                ->joinSub($coach_classroom, 'coach_classrooms', function ($join) {
+                    ])
+                    ->joinSub($coach_classroom, 'coach_classrooms', function ($join) {
                     $join->on('coach_schedules.coach_classroom_id', '=', 'coach_classrooms.id');
                 })
                 ->whereNull('coach_schedules.deleted_at');
@@ -118,6 +119,7 @@ class TheoryController extends BaseMenu
                     'student_schedules.student_classroom_id',
                     'student_schedules.coach_schedule_id',
                     'coach_schedules.coach_name',
+                    'coach_schedules.datetime',
                 ])
                 ->joinSub($coach_schedule, 'coach_schedules', function ($join) {
                     $join->on('student_schedules.coach_schedule_id', '=', 'coach_schedules.id');
@@ -140,6 +142,7 @@ class TheoryController extends BaseMenu
                     'classrooms.upload_date',
                     'classrooms.price',
                     'student_schedules.coach_name',
+                    'student_schedules.datetime',
                     DB::raw("CONCAT('{$path}',classrooms.url) as file_url"),
                 ])
                 ->joinSub($classroom, 'classrooms', function ($join) {
@@ -154,7 +157,6 @@ class TheoryController extends BaseMenu
                     if(!empty($request->classroom_id)){
                         $query->where('classrooms.id',$request->classroom_id);
                     }
-
                     if(!empty($request->date_start) && !empty($request->date_end)){
                         $date_start = date('Y-m-d',strtotime($request->date_start));
                         $date_end = date('Y-m-d',strtotime($request->date_end));
@@ -162,6 +164,7 @@ class TheoryController extends BaseMenu
                         $query->whereBetween('classrooms.upload_date',[$date_start,$date_end]);
                     }
                 })
+                ->whereRaw('student_schedules.datetime::timestamp <= now()::timestamp')
                 ->get();
 
             foreach ($result as $key => $value) {
@@ -326,6 +329,7 @@ class TheoryController extends BaseMenu
                 ->select([
                     'coach_schedules.id',
                     'coach_schedules.coach_classroom_id',
+                    'coach_schedules.datetime',
                     'coach_classrooms.coach_name',
                 ])
                 ->joinSub($coach_classroom, 'coach_classrooms', function ($join) {
@@ -338,6 +342,7 @@ class TheoryController extends BaseMenu
                     'student_schedules.student_classroom_id',
                     'student_schedules.coach_schedule_id',
                     'coach_schedules.coach_name',
+                    'coach_schedules.datetime',
                 ])
                 ->joinSub($coach_schedule, 'coach_schedules', function ($join) {
                     $join->on('student_schedules.coach_schedule_id', '=', 'coach_schedules.id');
@@ -360,6 +365,7 @@ class TheoryController extends BaseMenu
                     'classrooms.upload_date',
                     'classrooms.price',
                     'student_schedules.coach_name',
+                    'student_schedules.datetime',
                     DB::raw("CONCAT('{$path}',classrooms.url) as file_url"),
                 ])
                 ->joinSub($classroom, 'classrooms', function ($join) {
@@ -382,6 +388,7 @@ class TheoryController extends BaseMenu
                         }
                     }
                 })
+                ->whereRaw('student_schedules.datetime::timestamp <= now()::timestamp')
                 ->get();
 
             foreach ($result as $key => $value) {

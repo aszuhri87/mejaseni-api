@@ -27,16 +27,16 @@ class SessionVideo extends Model
     ];
 
     protected $cascadeDeletes = [
-        'theory_video',
+        'theory_videos',
         'session_video_feedback',
-        'cart',
-        'theory_video_file',
-        'income',
+        'carts',
+        'theory_video_files',
+        'incomes',
     ];
 
     protected $dates = ['deleted_at'];
 
-    public function theory_video()
+    public function theory_videos()
     {
         return $this->hasMany(TheoryVideo::class, 'session_video_id', 'id');
     }
@@ -44,15 +44,15 @@ class SessionVideo extends Model
     {
         return $this->hasMany(SessionVideoFeedback::class, 'session_video_id', 'id');
     }
-    public function theory_video_file()
+    public function theory_video_files()
     {
         return $this->hasMany(TheoryVideoFile::class, 'session_video_id', 'id');
     }
-    public function cart()
+    public function carts()
     {
         return $this->hasMany(Cart::class, 'session_video_id', 'id');
     }
-    public function income()
+    public function incomes()
     {
         return $this->hasMany(Income::class, 'session_video_id', 'id');
     }

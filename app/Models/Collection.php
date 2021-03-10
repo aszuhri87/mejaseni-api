@@ -25,13 +25,13 @@ class Collection extends Model
     ];
 
     protected $cascadeDeletes = [
-        'collection_file',
+        'collection_files',
         'collection_feedback',
     ];
 
     protected $dates = ['deleted_at'];
 
-    public function collection_file()
+    public function collection_files()
     {
         return $this->hasMany(CollectionFile::class, 'collection_id', 'id');
     }

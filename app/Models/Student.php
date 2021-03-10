@@ -36,13 +36,13 @@ class Student extends Authenticatable
     ];
 
     protected $cascadeDeletes = [
-        'transaction',
-        'student_classroom',
+        'transactions',
+        'student_classrooms',
         'classroom_feedback',
-        'cart',
+        'carts',
         'session_feedback',
-        'student_notification',
-        'collection',
+        'student_notifications',
+        'collections',
     ];
 
     protected $dates = ['deleted_at'];
@@ -53,12 +53,12 @@ class Student extends Authenticatable
         return $path . $this->image;
     }
 
-    public function transaction()
+    public function transactions()
     {
         return $this->hasMany(Transaction::class, 'student_id', 'id');
     }
 
-    public function student_classroom()
+    public function student_classrooms()
     {
         return $this->hasMany(StudentClassroom::class, 'student_id', 'id');
     }
@@ -68,12 +68,12 @@ class Student extends Authenticatable
         return $this->hasMany(ClassroomFeedback::class, 'student_id', 'id');
     }
 
-    public function collection()
+    public function collections()
     {
         return $this->hasMany(Collection::class, 'student_id', 'id');
     }
 
-    public function cart()
+    public function carts()
     {
         return $this->hasMany(Cart::class, 'student_id', 'id');
     }
@@ -83,7 +83,7 @@ class Student extends Authenticatable
         return $this->hasMany(SessionFeedback::class, 'student_id', 'id');
     }
 
-    public function student_notification()
+    public function student_notifications()
     {
         return $this->hasMany(StudentNotification::class, 'student_id', 'id');
     }

@@ -24,24 +24,24 @@ class SubClassroomCategory extends Model
     ];
 
     protected $cascadeDeletes = [
-        'master_lesson',
-        'session_video',
-        'classroom',
+        'master_lessons',
+        'session_videos',
+        'classrooms',
     ];
 
     protected $dates = ['deleted_at'];
 
-    public function master_lesson()
+    public function master_lessons()
     {
         return $this->hasMany(MasterLesson::class, 'sub_classroom_category_id', 'id');
     }
 
-    public function session_video()
+    public function session_videos()
     {
         return $this->hasMany(SessionVideo::class, 'sub_classroom_category_id', 'id');
     }
 
-    public function classroom()
+    public function classrooms()
     {
         return $this->hasMany(Classroom::class, 'sub_classroom_category_id', 'id');
     }

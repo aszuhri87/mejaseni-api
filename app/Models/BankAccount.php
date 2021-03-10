@@ -24,12 +24,12 @@ class BankAccount extends Model
     ];
 
     protected $cascadeDeletes = [
-        'income_transaction',
+        'income_transactions',
     ];
 
     protected $dates = ['deleted_at'];
 
-    public function income_transaction()
+    public function income_transactions()
     {
         return $this->hasMany(IncomeTransaction::class, 'bank_id', 'id');
     }

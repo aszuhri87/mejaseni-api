@@ -17,7 +17,7 @@ class Assignment extends Model
     public $keyType = 'string';
 
     protected $cascadeDeletes = [
-        'collection',
+        'collections',
     ];
 
     protected $fillable = [
@@ -31,7 +31,7 @@ class Assignment extends Model
 
     protected $dates = ['deleted_at'];
 
-    public function collection()
+    public function collections()
     {
         return $this->hasMany(Collection::class, 'assignment_id', 'id');
     }
