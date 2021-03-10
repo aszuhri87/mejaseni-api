@@ -36,6 +36,7 @@
         <datalist id="datalistOptions">
         </datalist>
         </div>
+        @if(!$classroom_categories->isEmpty())
         <div class="splide mb-4" id="category-splide">
           <div class="splide__track">
             <ul class="splide__list">
@@ -104,6 +105,18 @@
 
           </div>
         </div>
+
+        @else
+          <div class="mb-5 empty-store">
+            <div class="row my-5 py-5">
+                <div class="col-12 pr-0 pr-lg-4 column-center">
+                    <img style="width: 200px;" src="/cms/assets/img/svg/empty-store.svg" alt="">
+                    <h4 class="mt-3 text-center">Wah, video course yang kamu cari <br />belum dibuat nih</h4>
+                </div>
+            </div>
+        </div>
+        @endif
+
       </div>
     </div>
   </section>

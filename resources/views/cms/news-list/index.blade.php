@@ -4,13 +4,6 @@
   @include('cms.layouts.banner')
 @endpush
 
-@php
-    function FunctionName($date)
-    {
-        return date('l', strtotime($date));
-    }
-@endphp
-
 @section('content')
 <section>
         <div class="row py-4 my-lg-5 my-0 mt-md-0 column-center">
@@ -70,7 +63,7 @@
 
                     </div>
                 </div>
-                <div class="lds-dual-ring mt-4"></div>
+                {{-- <div class="lds-dual-ring mt-4"></div> --}}
             </div>
         </div>
     </section>

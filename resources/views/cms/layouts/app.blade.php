@@ -61,6 +61,36 @@
 
 
   <script src="{{ asset('cms/assets/js/script.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.min.js"></script>
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  <script type="text/javascript">
+    var showLoader = ()=>{
+      $.blockUI({
+        css: { 
+          padding:        0, 
+          margin:         0, 
+          width:          '30%', 
+          top:            '25%', 
+          left:           '40%', 
+          textAlign:      'center', 
+          color:          '#000', 
+          border:         null, 
+          backgroundColor:null, 
+          cursor:         'wait' 
+        },
+        overlayCSS:  { 
+          backgroundColor: '#000', 
+          opacity:         0.7, 
+          cursor:          'wait' 
+        },
+        message: '<lottie-player src="https://assets3.lottiefiles.com/packages/lf20_o3kcs3sk.json" background="transparent" speed="1" style="width: 500px; height: 500px;" loop autoplay></lottie-player>' 
+      }); 
+    }
+
+    var hideLoader = ()=>{
+      $.unblockUI();
+    }
+  </script>
 
   <script type="text/javascript">
    $.ajaxSetup({
@@ -78,43 +108,43 @@
   });
 </script>
 <script>
-    $(".see-all").click(function () {
-      $(".class-owned").removeClass("fade-out-up");
-      $(".class-owned").addClass("fade-in-down");
-      $(".class-owned").toggle();
-    });
+  $(".see-all").click(function () {
+    $(".class-owned").removeClass("fade-out-up");
+    $(".class-owned").addClass("fade-in-down");
+    $(".class-owned").toggle();
+  });
 
-    $("#class-owned1").click(function () {
-      $(".class-owned").removeClass("fade-in-down");
-      $(".class-owned").addClass("fade-out-up");
-      $(".class-owned").css("display", "none");
-      $("#class-name-selected").html("Basic Piano");
-      $("#class-image-selected").attr("src", "././assets/img/master-lesson__banner2.jpg");
-    });
+  $("#class-owned1").click(function () {
+    $(".class-owned").removeClass("fade-in-down");
+    $(".class-owned").addClass("fade-out-up");
+    $(".class-owned").css("display", "none");
+    $("#class-name-selected").html("Basic Piano");
+    $("#class-image-selected").attr("src", "././assets/img/master-lesson__banner2.jpg");
+  });
 
-  </script>
-  <script>
-    $("#profile-mobile").click(function () {
-      $(".menu-overlay").css("display", "block");
-    });
-    $(".menu-overlay__close").click(function () {
-      $(".menu-overlay").css("display", "none");
-    });
-  </script>
+</script>
+<script>
+  $("#profile-mobile").click(function () {
+    $(".menu-overlay").css("display", "block");
+  });
+  $(".menu-overlay__close").click(function () {
+    $(".menu-overlay").css("display", "none");
+  });
+</script>
 
-  <script type="text/javascript">
-    window.searchDelay = function(callback, ms) {
-        var timer = 0;
-        return function() {
-            var context = this,
-                args = arguments;
-            clearTimeout(timer);
-            timer = setTimeout(function() {
-                callback.apply(context, args);
-            }, ms || 0);
-        };
-    }
-  </script>
+<script type="text/javascript">
+  window.searchDelay = function(callback, ms) {
+    var timer = 0;
+    return function() {
+      var context = this,
+      args = arguments;
+      clearTimeout(timer);
+      timer = setTimeout(function() {
+        callback.apply(context, args);
+      }, ms || 0);
+    };
+  }
+</script>
 @stack('script')
 
 </body>

@@ -52,37 +52,47 @@
 
 
     <div class="col-lg-7 col-xl-8 col-12 px-0 mt-0 mt-md-5 mt-lg-0">
-      <div class="splide pb-md-5 pb-3 mb-5 w-100" id="splide1">
-        <div class="splide__track">
-          <ul class="splide__list">
-            @foreach($events as $event)
-              <li class="splide__slide pb-md-0 pb-5">
-                <div class="content-embed__wrapper">
-                  <img src="{{ $event->image_url ? $event->image_url:''}}" data-splide-lazy="path-to-the-image" alt="">
-                  <div class="px-3 px-md-0 pt-3 pt-md-0 pb-1  ">
-                    <div class="badge-left">
-                      <h3 class="mt-3 ml-2">{{ $event->title ? $event->title:''}}</h3>
+      @if(!$events->isEmpty())
+        <div class="splide pb-md-5 pb-3 mb-5 w-100" id="splide1">
+          <div class="splide__track">
+            <ul class="splide__list">
+              @foreach($events as $event)
+                <li class="splide__slide pb-md-0 pb-5">
+                  <div class="content-embed__wrapper">
+                    <img src="{{ $event->image_url ? $event->image_url:''}}" data-splide-lazy="path-to-the-image" alt="">
+                    <div class="px-3 px-md-0 pt-3 pt-md-0 pb-1  ">
+                      <div class="badge-left">
+                        <h3 class="mt-3 ml-2">{{ $event->title ? $event->title:''}}</h3>
+                      </div>
+                      <p class="my-3 desc__slider-content">{{ $event->description ? $event->description:''}}</p>
+                      <a class="link link--arrowed" href="{{ url('event') }}/{{$event->id}}/detail">Selengkapnya
+                        <svg class="arrow-icon ml-1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+                          <g fill="none" stroke="#7F16A7" stroke-width="1.5" stroke-linejoin="round" stroke-miterlimit="10">
+                            <circle class="arrow-icon--circle" cx="16" cy="16" r="15.12"></circle>
+                            <path class="arrow-icon--arrow" d="M16.14 9.93L22.21 16l-6.07 6.07M8.23 16h13.98"></path>
+                          </g>
+                        </svg>
+                      </a>
                     </div>
-                    <p class="my-3 desc__slider-content">{{ $event->description ? $event->description:''}}</p>
-                    <a class="link link--arrowed" href="{{ url('event') }}/{{$event->id}}/detail">Selengkapnya
-                      <svg class="arrow-icon ml-1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-                        <g fill="none" stroke="#7F16A7" stroke-width="1.5" stroke-linejoin="round" stroke-miterlimit="10">
-                          <circle class="arrow-icon--circle" cx="16" cy="16" r="15.12"></circle>
-                          <path class="arrow-icon--arrow" d="M16.14 9.93L22.21 16l-6.07 6.07M8.23 16h13.98"></path>
-                        </g>
-                      </svg>
-                    </a>
                   </div>
-                </div>
-              </li>
-            @endforeach
-          </ul>
+                </li>
+              @endforeach
+            </ul>
+          </div>
         </div>
-      </div>
+
+      @else
+        <div class="col-12 pr-0 pr-lg-4 mt-4 column-center">
+            <img style="width: 200px;" src="/cms/assets/img/svg/empty-store.svg" alt="">
+            <h4 class="mt-3 text-center">Wah, Event belum tersedia</h4>
+        </div>
+      @endif
+
     </div>
   </div>
 </section>
 
+  @if(!$classroom_categories->isEmpty())
   <section id="class-category" class="pb-5">
     <h1 class="color-white mt-3 mb-5 pt-md-0 pt-5 text-center">Temukan Minatmu</h1>
     <div class="row mx-0">
@@ -110,6 +120,7 @@
       </div>
     </div>
   </section>
+  @endif
 
   <section id="program-package">
     <div class="row mx-0 my-5 pb-5 pb-md-0 pb-lg-3 pb-xl-5">

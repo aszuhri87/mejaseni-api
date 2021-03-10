@@ -101,6 +101,15 @@
                 </div>
             </div>
         @endif
+
+        @if($news->isEmpty() && $events->isEmpty())
+            <div class="row py-4 mt-5 mt-md-0">
+                <div class="col-12 pr-0 pr-lg-4 column-center">
+                    <img style="width: 200px;" src="/cms/assets/img/svg/empty-store.svg" alt="">
+                    <h4 class="mt-3 text-center">Wah, News dan Event belum tersedia</h4>
+                </div>
+            </div>
+        @endif
     </section>
 @endsection
 

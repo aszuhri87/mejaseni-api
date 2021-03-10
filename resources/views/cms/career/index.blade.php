@@ -36,7 +36,7 @@
         <p class="my-3">Bergabunglah di Mejaseni</p>
     </div>
 
-    @if($internal_team_careers || $professional_coach_careers)
+    @if(!$internal_team_careers->isEmpty() || !$professional_coach_careers->isEmpty())
         <section id="career" class="mb-5 pb-5">
             <div class="career-item__wrapper">
                 @if($internal_team_careers)

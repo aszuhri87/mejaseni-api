@@ -3,11 +3,14 @@
         var _componentPage = function () {
 
             $(document).ready(function () {
-                splide();
+                @if(!$classroom_categories->isEmpty())
+                    splide();
+                @endif
                 AOS.init();
                 eventCategorySelectedListener()
                 eventSubCategoryChangeListener()
                 eventSearchListener()
+                $('.btn-tertiary').trigger( "click" );
             });
 
             var eventSearchListener = ()=>{
@@ -61,6 +64,7 @@
 
 
             var getSubCategory = (category_id)=>{
+                
                 $.ajax({
                     url: `{{ url('/classroom_category') }}/${category_id}/sub_classroom_category`,
                     type: 'GET',
@@ -83,6 +87,7 @@
             }
 
             var getVideoCourse = (sub_category_id)=>{
+                showLoader()
                 $.ajax({
                     url: `{{ url('/classroom_category/sub_classroom_category') }}/${sub_category_id}/video-course`,
                     type: 'GET',
@@ -94,7 +99,7 @@
                     toastr.error(res.responseJSON.message, 'Failed')
                 })
                 .always(function() {
-                   
+                   hideLoader()
                 });
             }
 

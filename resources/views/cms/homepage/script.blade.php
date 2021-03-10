@@ -29,20 +29,20 @@
 
         $(document).ready(function () {
           splide();
+
+          @if(!$events->isEmpty())
+            initEventSplit()
+          @endif
+
+          @if(!$classroom_categories->isEmpty())
+            initMinatSplide()
+          @endif
+
+
           AOS.init();
         });
 
-        splide = () => {
-          new Splide('#splide1', {
-            lazyLoad: true,
-            autoplay: true,
-            type: 'loop',
-            breakpoints: {
-              640: {
-                perPage: 1,
-              },
-            }
-          }).mount();
+        var initMinatSplide = ()=>{
           new Splide('#splide2', {
             type: 'loop',
             arrow: false,
@@ -67,6 +67,21 @@
               },
             }
           }).mount();
+        },
+        initEventSplit = ()=>{
+          new Splide('#splide1', {
+            lazyLoad: true,
+            autoplay: true,
+            type: 'loop',
+            breakpoints: {
+              640: {
+                perPage: 1,
+              },
+            }
+          }).mount();
+        },
+        splide = () => {
+          
           new Splide('#splide3', {
             breakpoints: {
               991: {

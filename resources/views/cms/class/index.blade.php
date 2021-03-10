@@ -17,57 +17,63 @@
       </div>
 
       <div class="class-filter__wrapper mt-4 mb-5 mb-md-0 p-3 p-md-5">
-        <div class="splide pb-4" id="class-splide">
-          <div class="splide__track">
-            
-            <ul class="splide__list" id="classrooms">
-              @if($regular_classrooms)
-                @foreach($regular_classrooms as $regular_classroom)
-                  <li class="splide__slide px-2 pb-5">
-                    <img class="w-100 rounded" src="{{ $regular_classroom->image_url ? $regular_classroom->image_url : '' }}" alt="">
-                    <div class="badge-left">
-                      <h3 class="mt-4 ml-2">{{ $regular_classroom->name ? $regular_classroom->name : '' }}</h3>
-                    </div>
-                    <ul class="row-center-start class-tab mt-5 mt-md-4">
-                      <li class="active tab-detail" data-id="{{ $regular_classroom->id }}" href="tab-description">Deskripsi</li>
-                      <li class="tab-detail" data-id="{{ $regular_classroom->id }}" href="tab-coach">Coach</li>
-                      <li class="tab-detail" data-id="{{ $regular_classroom->id }}" href="tab-tools">Tools</li>
-                    </ul>
+        <div id="class-content">
+          @if(!$regular_classrooms->isEmpty())
+            <div class="splide pb-4" id="class-splide">
+              <div class="splide__track">
+                <ul class="splide__list" id="classrooms">
+                    @foreach($regular_classrooms as $regular_classroom)
+                      <li class="splide__slide px-2 pb-5">
+                        <img class="w-100 rounded" src="{{ $regular_classroom->image_url ? $regular_classroom->image_url : '' }}" alt="">
+                        <div class="badge-left">
+                          <h3 class="mt-4 ml-2">{{ $regular_classroom->name ? $regular_classroom->name : '' }}</h3>
+                        </div>
+                        <ul class="row-center-start class-tab mt-5 mt-md-4">
+                          <li class="active tab-detail" data-id="{{ $regular_classroom->id }}" href="tab-description">Deskripsi</li>
+                          <li class="tab-detail" data-id="{{ $regular_classroom->id }}" href="tab-coach">Coach</li>
+                          <li class="tab-detail" data-id="{{ $regular_classroom->id }}" href="tab-tools">Tools</li>
+                        </ul>
 
-                    <div id="description">
-                      <div class="content-tab-detail" style="">
-                        <div class="desc__class-tab my-4">
-                          <p>
-                            {{ $regular_classroom->description ? $regular_classroom->description : '' }}
-                          </p>
+                        <div id="description">
+                          <div class="content-tab-detail" style="">
+                            <div class="desc__class-tab my-4">
+                              <p>
+                                {{ $regular_classroom->description ? $regular_classroom->description : '' }}
+                              </p>
+                            </div>
+                          </div>
+                          <div class="class-tab-summary d-flex justify-content-between flex-md-row flex-column mb-4">
+                            <div class="d-flex flex-column">
+                              <p>{{ $regular_classroom->session_total ? $regular_classroom->session_total : '' }} Sesi | @ {{ $regular_classroom->session_duration ? $regular_classroom->session_duration : '' }}menit</p>
+                              <span class="mt-2">Rp.@convert($regular_classroom->price)</span>
+                            </div>
+                            <div class="mt-5 mt-md-0">
+                            @if(!$regular_classroom->is_registered)
+                              <a class="btn btn-primary shadow" onclick="@if (Auth::guard('student')->user()){{'showModalRegisterClassroom("'.$regular_classroom->id.'")'}}@else{{'showModalLoginRequired()'}}@endif">Daftar
+                                Sekarang
+                                <img class="ml-2" src="{{ asset('cms/assets/img/svg/Sign-in.svg') }}" alt="">
+                              </a>
+                            @else
+                              <a class="btn btn-primary shadow" href="{{ url('student/my-class') }}" > Lihat Kelas
+                                <img class="ml-2" src="{{ asset('cms/assets/img/svg/Sign-in.svg') }}" alt="">
+                              </a>
+                            @endif
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                      <div class="class-tab-summary d-flex justify-content-between flex-md-row flex-column mb-4">
-                        <div class="d-flex flex-column">
-                          <p>{{ $regular_classroom->session_total ? $regular_classroom->session_total : '' }} Sesi | @ {{ $regular_classroom->session_duration ? $regular_classroom->session_duration : '' }}menit</p>
-                          <span class="mt-2">Rp.@convert($regular_classroom->price)</span>
-                        </div>
-                        <div class="mt-5 mt-md-0">
-                        @if(!$regular_classroom->is_registered)
-                          <a class="btn btn-primary shadow" onclick="@if (Auth::guard('student')->user()){{'showModalRegisterClassroom("'.$regular_classroom->id.'")'}}@else{{'showModalLoginRequired()'}}@endif">Daftar
-                            Sekarang
-                            <img class="ml-2" src="{{ asset('cms/assets/img/svg/Sign-in.svg') }}" alt="">
-                          </a>
-                        @else
-                          <a class="btn btn-primary shadow" href="{{ url('student/my-class') }}" > Lihat Kelas
-                            <img class="ml-2" src="{{ asset('cms/assets/img/svg/Sign-in.svg') }}" alt="">
-                          </a>
-                        @endif
-                        </div>
-                      </div>
-                    </div>
 
-                  </li>
-              @endforeach
-              @endif
-              
-            </ul>
-          </div>
+                      </li>
+                  @endforeach
+                  
+                </ul>
+              </div>
+            </div>
+          @else
+            <div class="col-12 pr-0 pr-lg-4 column-center">
+                <img style="width: 200px;" src="/cms/assets/img/svg/empty-store.svg" alt="">
+                <h4 class="mt-3 text-center">Wah, Class belum tersedia</h4>
+            </div>
+          @endif
         </div>
       </div>
     </div>

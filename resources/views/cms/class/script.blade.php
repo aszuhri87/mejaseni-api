@@ -1,5 +1,3 @@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.min.js"></script>
-<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 <script type="text/javascript">
     $('.btn-register-classroom').click(function () {
         $('#classRegisterModal').modal('show')
@@ -109,9 +107,20 @@
             var splide_classroom;
             var splide_class;
             $(document).ready(function () {
-                splideCategory()
-                splide();
-                splideSubCategory()
+                
+                @if(!$regular_classrooms->isEmpty())
+                    splide();
+                @endif
+
+                @if(!$classroom_categories->isEmpty())
+                    splideCategory()
+                @endif
+
+                @if(!$sub_categories->isEmpty())
+                    splideSubCategory()
+                @endif
+
+                
                 AOS.init();
                 // selectPackage();
 
@@ -156,23 +165,32 @@
             }
 
             var getPackage = (category_id, sub_category_id, package)=>{
+                showLoader()
                 $.ajax({
                     url: `/class/${category_id}/sub_classroom_category/${sub_category_id}/package/${package}`,
                     type: 'GET',
                 })
                 .done(function(res, xhr, meta) {
-                    $("#classrooms").html(res.data.classroom_html)
-                    TabDetailListener()
-                    eventCategorySelectedListener()
-                    eventSubCategoryChangeListener()
-                    packageListener()
-                    splide()
+                    if(res.data.classroom_html){
+                        $("#classrooms").html(res.data.classroom_html)
+                        TabDetailListener()
+                        eventCategorySelectedListener()
+                        eventSubCategoryChangeListener()
+                        packageListener()
+                        splide()
+                    }else{
+                        $("#class-content").html(`
+                            <div class="col-12 pr-0 pr-lg-4 column-center">
+                                <img style="width: 200px;" src="/cms/assets/img/svg/empty-store.svg" alt="">
+                                <h4 class="mt-3 text-center">Wah, Class belum tersedia</h4>
+                            </div>`)
+                    }
                 })
                 .fail(function(res, error) {
                     toastr.error(res.responseJSON.message, 'Failed')
                 })
                 .always(function() {
-                   
+                    hideLoader()
                 });
             }
 
@@ -242,6 +260,7 @@
             }
 
             var getCoach = (classroom_id)=>{
+                showLoader()
                 $.ajax({
                     url: `/class/${classroom_id}/coachs`,
                     type: 'GET',
@@ -255,11 +274,12 @@
                     toastr.error(res.responseJSON.message, 'Failed')
                 })
                 .always(function() {
-                   
+                   hideLoader()
                 });
             }
 
             var getTools = (classroom_id)=>{
+                showLoader()
                 $.ajax({
                     url: `/class/${classroom_id}/tools`,
                     type: 'GET',
@@ -273,11 +293,12 @@
                     toastr.error(res.responseJSON.message, 'Failed')
                 })
                 .always(function() {
-                   
+                   showLoader()
                 });
             }
 
             var getGuests = (master_lession_id)=>{
+                showLoader()
                 $.ajax({
                     url: `/master-lesson/${master_lession_id}/guest-star`,
                     type: 'GET',
@@ -291,7 +312,7 @@
                     toastr.error(res.responseJSON.message, 'Failed')
                 })
                 .always(function() {
-                   
+                    hideLoader()
                 });
             }
 
@@ -340,26 +361,7 @@
                     // $(".tab-detail").removeClass("active" );
                     // $("#tab-coach").find('content-tab-detail').replaceWith('content-tab-detail-selected')
                     // event.preventDefault()
-                    // $.blockUI({
-                    //     css: { 
-                    //         padding:        0, 
-                    //         margin:         0, 
-                    //         width:          '30%', 
-                    //         top:            '25%', 
-                    //         left:           '40%', 
-                    //         textAlign:      'center', 
-                    //         color:          '#000', 
-                    //         border:         null, 
-                    //         backgroundColor:null, 
-                    //         cursor:         'wait' 
-                    //     },
-                    //     overlayCSS:  { 
-                    //         backgroundColor: '#000', 
-                    //         opacity:         0.7, 
-                    //         cursor:          'wait' 
-                    //     },
-                    //     message: '<lottie-player src="https://assets3.lottiefiles.com/packages/lf20_o3kcs3sk.json" background="transparent" speed="1" style="width: 500px; height: 500px;" loop autoplay></lottie-player>' 
-                    // }); 
+                    
             // test();
                     // $("#tab-coach").removeClass("content-tab-detail");
                     // $("#tab-coach").addClass("content-tab-detail-selected")
@@ -369,6 +371,7 @@
                     
                 })
             }
+
 
             var selectPackage = ()=>{
                 $('.package').click(function(e){

@@ -211,8 +211,6 @@ class ClassController extends Controller
                 ])
                 ->get();
 
-            dd($coachs);
-
             $coach_html = $this->_get_coach_html($coachs);
 
             return response([
