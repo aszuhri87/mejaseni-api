@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\Uuid;
+use Dyrynda\Database\Support\CascadeSoftDeletes;
 
 class Collection extends Model
 {
-    use HasFactory, Uuid, SoftDeletes;
+    use HasFactory, Uuid, SoftDeletes, CascadeSoftDeletes;
 
     public $incrementing = false;
 
@@ -23,5 +24,20 @@ class Collection extends Model
         'name',
     ];
 
+    protected $cascadeDeletes = [
+        'collection_file',
+        'collection_feedback',
+    ];
+
     protected $dates = ['deleted_at'];
+
+    public function collection_file()
+    {
+        return $this->hasMany(CollectionFile::class, 'collection_id', 'id');
+    }
+
+    public function collection_feedback()
+    {
+        return $this->hasOne(CollectionFeedback::class, 'collection_id', 'id');
+    }
 }

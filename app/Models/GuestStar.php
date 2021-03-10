@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\Uuid;
+use Dyrynda\Database\Support\CascadeSoftDeletes;
 
 class GuestStar extends Model
 {
-    use HasFactory, Uuid, SoftDeletes;
+    use HasFactory, Uuid, SoftDeletes, CascadeSoftDeletes;
 
     public $incrementing = false;
 
@@ -23,5 +24,14 @@ class GuestStar extends Model
         'description'
     ];
 
+    protected $cascadeDeletes = [
+        'guest_star_master_lesson',
+    ];
+
     protected $dates = ['deleted_at'];
+
+    public function guest_star_master_lesson()
+    {
+        return $this->hasMany(GuestStarMasterLesson::class, 'guest_star_id', 'id');
+    }
 }

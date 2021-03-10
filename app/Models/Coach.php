@@ -8,10 +8,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use App\Traits\Uuid;
+use Dyrynda\Database\Support\CascadeSoftDeletes;
 
 class Coach extends Authenticatable
 {
-    use HasFactory, Notifiable, Uuid, SoftDeletes, HasRoles;
+    use HasFactory, Notifiable, Uuid, SoftDeletes, HasRoles, CascadeSoftDeletes;
 
     public $incrementing = false;
 
@@ -29,7 +30,18 @@ class Coach extends Authenticatable
         'suspend',
     ];
 
-    protected $cascadeDeletes = ['classrooms'];
+    protected $cascadeDeletes = [
+        'classrooms',
+        'student_feedback',
+        'income_transactions',
+        'guest_star',
+        'bank_account',
+        'coach_notification',
+        'coach_sosmed',
+        'profile_coach_video',
+        'session_video',
+        'income',
+    ];
 
     protected $dates = ['deleted_at'];
 
@@ -41,5 +53,41 @@ class Coach extends Authenticatable
     public function classrooms()
     {
         return $this->hasMany(CoachClassroom::class, 'coach_id', 'id');
+    }
+    public function student_feedback()
+    {
+        return $this->hasMany(StudentFeedback::class, 'coach_id', 'id');
+    }
+    public function income_transactions()
+    {
+        return $this->hasMany(IncomeTransaction::class, 'coach_id', 'id');
+    }
+    public function bank_account()
+    {
+        return $this->hasOne(BankAccount::class, 'coach_id', 'id');
+    }
+    public function guest_star()
+    {
+        return $this->hasOne(GuestStar::class, 'coach_id', 'id');
+    }
+    public function coach_notification()
+    {
+        return $this->hasMany(CoachNotification::class, 'coach_id', 'id');
+    }
+    public function coach_sosmed()
+    {
+        return $this->hasMany(CoachSosmed::class, 'coach_id', 'id');
+    }
+    public function profile_coach_video()
+    {
+        return $this->hasOne(ProfileCoachVideo::class, 'coach_id', 'id');
+    }
+    public function session_video()
+    {
+        return $this->hasMany(SessionVideo::class, 'coach_id', 'id');
+    }
+    public function income()
+    {
+        return $this->hasMany(Income::class, 'coach_id', 'id');
     }
 }

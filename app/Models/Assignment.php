@@ -6,14 +6,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\Uuid;
+use Dyrynda\Database\Support\CascadeSoftDeletes;
 
 class Assignment extends Model
 {
-    use HasFactory, Uuid, SoftDeletes;
+    use HasFactory, Uuid, SoftDeletes, CascadeSoftDeletes;
 
     public $incrementing = false;
 
     public $keyType = 'string';
+
+    protected $cascadeDeletes = [
+        'collection',
+    ];
 
     protected $fillable = [
         'session_id',
@@ -25,4 +30,9 @@ class Assignment extends Model
     ];
 
     protected $dates = ['deleted_at'];
+
+    public function collection()
+    {
+        return $this->hasMany(Collection::class, 'assignment_id', 'id');
+    }
 }

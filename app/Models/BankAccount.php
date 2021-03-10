@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\Uuid;
+use Dyrynda\Database\Support\CascadeSoftDeletes;
 
 class BankAccount extends Model
 {
-    use HasFactory, Uuid, SoftDeletes;
+    use HasFactory, Uuid, SoftDeletes, CascadeSoftDeletes;
 
     public $incrementing = false;
 
@@ -22,5 +23,14 @@ class BankAccount extends Model
         'name_account'
     ];
 
+    protected $cascadeDeletes = [
+        'income_transaction',
+    ];
+
     protected $dates = ['deleted_at'];
+
+    public function income_transaction()
+    {
+        return $this->hasMany(IncomeTransaction::class, 'bank_id', 'id');
+    }
 }

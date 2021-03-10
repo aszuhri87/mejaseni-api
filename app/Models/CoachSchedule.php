@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\Uuid;
+use Dyrynda\Database\Support\CascadeSoftDeletes;
 
 class CoachSchedule extends Model
 {
-    use HasFactory, Uuid, SoftDeletes;
+    use HasFactory, Uuid, SoftDeletes, CascadeSoftDeletes;
 
     public $incrementing = false;
 
@@ -24,5 +25,14 @@ class CoachSchedule extends Model
         'datetime'
     ];
 
+    protected $cascadeDeletes = [
+        'master_lesson',
+    ];
+
     protected $dates = ['deleted_at'];
+
+    public function master_lesson()
+    {
+        return $this->hasOne(StudentSchedule::class, 'coach_schedule_id', 'id');
+    }
 }
