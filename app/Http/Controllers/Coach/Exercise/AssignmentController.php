@@ -48,18 +48,13 @@ class AssignmentController extends BaseMenu
             }
 
             $result = DB::transaction(function () use ($request) {
-                $session = Session::firstOrCreate([
-                    'name' => $request->session_id,
-                    'classroom_id' => $request->classroom_id,
-                ]);
-
                 $result = Assignment::create([
-                    'session_id' => $session->id,
+                    'session_id' => $request->session_id,
                     'name' => $request->name,
                     'file_url' => $request->file,
                     'description' => $request->description,
                     'upload_date' => Carbon::now()->format('Y-m-d'),
-                    'due_date' => Carbon::parse($request->due_date)->format('Y-m-d H:i:s'),
+                    'due_time' => $request->due_time,
                 ]);
 
                 return $result;
@@ -160,7 +155,6 @@ class AssignmentController extends BaseMenu
                     'coaches.name as coach_name',
                     DB::raw("CONCAT('{$path}',assignments.file_url) as file_url"),
                     DB::raw("to_char(assignments.upload_date, 'DD Month YYYY') as upload_at"),
-                    DB::raw("to_char(assignments.due_date, 'DD Month YYYY') as due_date")
 
                 )
                 ->join('sessions', 'sessions.id', 'assignments.session_id')
@@ -169,7 +163,7 @@ class AssignmentController extends BaseMenu
                 ->join('coaches', 'coaches.id', 'coach_classrooms.coach_id')
                 ->where([
                     ['classrooms.id', $classroom_id],
-                    ['sessions.name', $session_id],
+                    ['sessions.id', $session_id],
                     ['coaches.id', Auth::guard('coach')->id()],
                 ])
                 ->whereNull([
@@ -179,11 +173,12 @@ class AssignmentController extends BaseMenu
                 ->get();
 
             $classroom = Classroom::find($classroom_id);
+            $session = Session::find($session_id);
 
             $result = [
                 'assignment' => $assignments,
                 'classroom' => $classroom->name,
-                'session' => $session_id,
+                'session' => $session->name,
             ];
 
             return response([

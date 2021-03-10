@@ -29,7 +29,7 @@ class BankAccountController extends BaseMenu
         return view('coach.bank_account.index', [
             'title' => 'Bank Account',
             'navigation' => $navigation,
-            'list_menu' => $this->menu_student(),
+            'list_menu' => $this->menu_coach(),
             'bank_account' => $bank_account
         ]);
     }

@@ -545,7 +545,7 @@ class BaseMenu extends Controller
                         'permission' => 'assignment'
                     ],
                     [
-                        'key' => 'review_assignment',
+                        'key' => 'review-assignment',
                         'title' => 'Review Assignment',
                         'url' => 'coach/exercise/review-assignment',
                         'permission' => 'review_assignment'

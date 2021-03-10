@@ -37,48 +37,44 @@
 
 @section('content')
 
-    <div class="card">
-        <div class="card-body">
-            <div class="d-flex justify-content-between align-items-beetween row">
-                <div class="col-sm-8">
-                    <div class="row text-left">
-                        <div class="col-md-2 col-sm-2">
-                            <div class="form-group">
-                                <h6 class="m-0 p-0">Filter Category</h6>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-sm-12 select-classroom-coach">
-                            <div class="form-group">
-                                <select name="classroom_coach_id" id="classroom"></select>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-sm-12 select-session-coach">
-                            <div class="form-group">
-                                <select name="session_coach_id" class="form-control" id="session"></select>
-                            </div>
-                        </div>
-                    </div>
+<div class="row" id="filter-place">
+    <div class="col-md-5 col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="form-group">
+                    <h6 class="m-0 p-0">Filter Materi</h6>
                 </div>
-                <div class="col-sm-4">
-                    <div class="row text-right">
-                        <div class="col-md-12 col-sm-12 select-session-coach">
-                            <div class="form-group">
-                                <button type="button" id="show-table"
-                                    class="btn btn-primary btn-icon w-auto px-2 waves-effect width-md waves-light ml-1 text-center btn-loading-basic">
-                                    Tampilkan
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                <div class="form-group">
+                    <label>
+                        Kelas
+                        <span class="text-danger">*</span>
+                    </label>
+                    <select name="classroom_coach_id" id="classroom"></select>
+                </div>
+                <div class="form-group">
+                    <label>
+                        Sesi
+                        <span class="text-danger">*</span>
+                    </label>
+                    <select name="session_coach_id" class="form-control" id="session"></select>
+                </div>
+                <div class="form-group">
+                    <button type="button" id="show-table"
+                        class="btn btn-primary btn-icon w-auto px-2 waves-effect width-md waves-light text-center btn-loading-basic">
+                        Tampilkan
+                    </button>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
     <!--begin::Advance Table Widget 4-->
     <div class="card card-custom gutter-b  mt-5" id="card-review-assignment" style="display: none">
         <!--begin::Header-->
         <div class="card-header border-0 py-5">
-            <h3 class="card-title align-items-start flex-column">
+            <h3 class="card-title d-flex align-items-center">
+                <button class="btn btn-outline-danger mr-3" id="back-btn">Kembali</button>
                 <span class="card-label font-weight-bolder text-dark">Review</span>
             </h3>
             <div class="card-toolbar">

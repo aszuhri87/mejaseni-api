@@ -42,7 +42,6 @@ class ReviewAssignmentController extends BaseMenu
                 'collections.id',
                 'students.name',
                 DB::raw("to_char(collections.upload_date, 'DD Month YYYY') as upload_date"),
-                DB::raw("to_char(assignments.due_date, 'DD Month YYYY') as due_date"),
                 DB::raw("COUNT(collection_feedback.id) AS status"),
             )
             ->leftJoin('collection_feedback', 'collection_feedback.collection_id', 'collections.id')
@@ -76,7 +75,7 @@ class ReviewAssignmentController extends BaseMenu
             ->whereNull([
                 'students.deleted_at'
             ])
-            ->groupBy('collections.id', 'assignments.due_date', 'students.name')
+            ->groupBy('collections.id', 'students.name')
             ->get();
 
         return DataTables::of($data)
@@ -127,7 +126,6 @@ class ReviewAssignmentController extends BaseMenu
         $assignment = DB::table('assignments')
             ->select([
                 'assignments.id',
-                'assignments.due_date',
                 'assignments.upload_date',
                 'sessions.coach_id'
             ])
@@ -157,7 +155,6 @@ class ReviewAssignmentController extends BaseMenu
                 'assignments.coach_id',
                 'students.name',
                 DB::raw("to_char(collections.upload_date, 'DD Month YYYY') as upload_date"),
-                DB::raw("to_char(assignments.due_date, 'DD Month YYYY') as due_date"),
                 DB::raw('(
                     CASE
                         WHEN collection_feedback.status IS NOT NULL THEN
@@ -186,7 +183,7 @@ class ReviewAssignmentController extends BaseMenu
                 }
             })
             ->get();
-        
+
         return DataTables::of($data)
             ->addIndexColumn()
             ->make(true);
@@ -323,8 +320,8 @@ class ReviewAssignmentController extends BaseMenu
                     DB::raw("to_char(collections.upload_date, 'DD Month YYYY') as upload_date"),
                     DB::raw("CONCAT('{$path}',students.image) as image_url"),
                 )
-                ->leftjoin('collection_feedback', 'collection_feedback.collection_id', 'collections.id')
-                ->leftjoin('collection_files', 'collection_files.collection_id', 'collections.id')
+                ->leftJoin('collection_feedback', 'collection_feedback.collection_id', 'collections.id')
+                ->leftJoin('collection_files', 'collection_files.collection_id', 'collections.id')
                 ->join('assignments', 'assignments.id', 'collections.assignment_id')
                 ->join('sessions', 'sessions.id', 'assignments.session_id')
                 ->join('students', 'students.id', 'collections.student_id')
@@ -343,7 +340,6 @@ class ReviewAssignmentController extends BaseMenu
                 ->groupBy(
                     'collections.id',
                     'students.id',
-                    'assignments.due_date',
                     'students.name',
                     'classrooms.name',
                     'collection_files.url',

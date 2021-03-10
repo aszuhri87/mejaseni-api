@@ -556,7 +556,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
 
             Route::post('assignment/file', [AssignmentController::class, 'assignment_file']);
             Route::delete('assignment/file/{id}', [AssignmentController::class, 'assignment_file_delete']);
-            Route::get('assignment/list/{classroom_id}/{session_id}', [AssignmentController::class, 'assignment_list']);
+            Route::get('assignment/list/{classroom_id}&{session_id}', [AssignmentController::class, 'assignment_list']);
             Route::get('assignment/download/{id}', [AssignmentController::class, 'assignment_download']);
             Route::resource('assignment', AssignmentController::class);
 

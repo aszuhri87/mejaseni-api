@@ -47,29 +47,59 @@ class LoginController extends Controller
 
             return redirect('/admin/dashboard');
         }else if (Auth::guard('coach')->attempt($login)) {
-            activity()->withProperties([
-                'method'=> request()->method(),
-                'ip'    => request()->ip(),
-                'username' => $request->username,
-                'password' => $request->password,
-                'guard' => 'coach',
-                'status' => 'success'
-            ])
-            ->log(request()->path());
+            if(Auth::guard('coach')->user()->suspend == true){
+                activity()->withProperties([
+                    'method'=> request()->method(),
+                    'ip'    => request()->ip(),
+                    'username' => $request->username,
+                    'password' => $request->password,
+                    'guard' => 'coach',
+                    'status' => 'success'
+                ])
+                ->log(request()->path());
 
-            return redirect('/coach/dashboard');
+                return redirect('/coach/dashboard');
+            }else{
+                Auth::guard('coach')->logout();
+                activity()->withProperties([
+                    'method'=> request()->method(),
+                    'ip'    => request()->ip(),
+                    'username' => $request->username,
+                    'password' => $request->password,
+                    'guard' => 'coach',
+                    'status' => 'failed'
+                ])
+                ->log(request()->path());
+
+                return Redirect::back()->withErrors(['message' => 'Login gagal!, Akun tidak aktif.']);
+            }
         }else if (Auth::guard('student')->attempt($login)) {
-            activity()->withProperties([
-                'method'=> request()->method(),
-                'ip'    => request()->ip(),
-                'username' => $request->username,
-                'password' => $request->password,
-                'guard' => 'student',
-                'status' => 'success'
-            ])
-            ->log(request()->path());
+            if(Auth::guard('student')->user()->active == true && Auth::guard('student')->user()->verified == true){
+                activity()->withProperties([
+                    'method'=> request()->method(),
+                    'ip'    => request()->ip(),
+                    'username' => $request->username,
+                    'password' => $request->password,
+                    'guard' => 'student',
+                    'status' => 'success'
+                ])
+                ->log(request()->path());
 
-            return redirect('/student/dashboard');
+                return redirect('/student/dashboard');
+            }else{
+                Auth::guard('student')->logout();
+                activity()->withProperties([
+                    'method'=> request()->method(),
+                    'ip'    => request()->ip(),
+                    'username' => $request->username,
+                    'password' => $request->password,
+                    'guard' => 'student',
+                    'status' => 'failed'
+                ])
+                ->log(request()->path());
+
+                return Redirect::back()->withErrors(['message' => 'Login gagal!, Akun tidak aktif.']);
+            }
         }else{
             activity()->withProperties([
                 'method'=> request()->method(),

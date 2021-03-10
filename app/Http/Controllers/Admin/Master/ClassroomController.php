@@ -100,6 +100,13 @@ class ClassroomController extends BaseMenu
                     }
                 }
 
+                for ($i=0; $i < (int)$request->session; $i++) {
+                    Session::create([
+                        'classroom_id' => $classroom->id,
+                        'name' => $i + 1
+                    ]);
+                }
+
                 return $classroom;
             });
 
@@ -166,6 +173,22 @@ class ClassroomController extends BaseMenu
                         ClassroomTools::create([
                             'classroom_id' => $classroom->id,
                             'tool_id' => $data_tools->id,
+                        ]);
+                    }
+                }
+
+                $session = Session::where('classroom_id',$classroom->id)->get();
+
+                if(count($session) > $request->session){
+                    Session::where('classroom_id',$classroom->id)
+                        ->whereRaw("name::integer > $request->session")
+                        ->delete();
+                }else{
+                    $diff = $request->session - count($session);
+                    for ($i=0; $i < $diff; $i++) {
+                        Session::create([
+                            'classroom_id' => $classroom->id,
+                            'name' => count($session) + ($i + 1)
                         ]);
                     }
                 }

@@ -10,27 +10,8 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6 col-sm-12 select-classroom">
-                            <div class="form-group">
-                                <label>
-                                    Class
-                                    <span class="text-danger">*</span>
-                                </label>
-                                <select name="classroom_id" id="classroom_coach"></select>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-sm-12 select-session">
-                            <div class="form-group">
-                                <label>
-                                    Session
-                                    <span class="text-danger">*</span>
-                                </label>
-                                <select name="session_id" class="form-control" id="session_coach"></select>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
+                    <input type="hidden" name="classroom_id" id="classroom-id">
+                    <input type="hidden" name="session_id" id="session-id">
                     <div class="row">
                         <div class="col-12 col-sm-12 col-lg-6 col-xl-6">
                             <div class="form-group">
@@ -42,18 +23,12 @@
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-lg-6 col-xl-6">
-                            <div class="form-group row">
-                                <label>Due Date</label>
-                                <div class="input-group date" id="due_date" data-target-input="nearest">
-                                    <input type="text" name="due_date" class="form-control datetimepicker-input"
-                                        placeholder="Select date &amp; time" data-target="#due_date" />
-                                    <div class="input-group-append" data-target="#due_date"
-                                        data-toggle="datetimepicker">
-                                        <span class="input-group-text">
-                                            <i class="ki ki-calendar"></i>
-                                        </span>
-                                    </div>
-                                </div>
+                            <div class="form-group">
+                                <label>
+                                    Durasi Pengerjaan / Hari
+                                    <span class="text-danger d-none">*</span>
+                                </label>
+                                <input required type="number" min="1" name="due_time" class="form-control" placeholder="Durasi Pengerjaan" />
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-lg-12 col-xl-12">

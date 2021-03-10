@@ -33,7 +33,7 @@ class ProfileController extends BaseMenu
         return view('coach.profile.index', [
             'title' => 'Profile',
             'navigation' => $navigation,
-            'list_menu' => $this->menu_student(),
+            'list_menu' => $this->menu_coach(),
             'path'  => $path,
             'expertises' => $expertises
         ]);

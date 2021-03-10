@@ -81,13 +81,9 @@ class TheoryController extends BaseMenu
             }
 
             $result = DB::transaction(function () use($request){
-                $session = Session::firstOrCreate([
-                    'name' => $request->session_id,
-                    'classroom_id' => $request->classroom_id,
-                ]);
 
                 $result = Theory::create([
-                    'session_id' => $session->id,
+                    'session_id' => $request->session_id,
                     'name' => $request->name,
                     'is_premium' => isset($request->is_premium) ? true : false,
                     'is_video' => isset($request->is_video) ? true : false,
@@ -117,10 +113,6 @@ class TheoryController extends BaseMenu
     {
         try {
             $result = DB::transaction(function () use($request, $id){
-                $session = Session::firstOrCreate([
-                    'name' => $request->session_id,
-                    'classroom_id' => $request->classroom_id,
-                ]);
 
                 $theory = Theory::find($id);
 
@@ -131,7 +123,7 @@ class TheoryController extends BaseMenu
                 }
 
                 $theory->update([
-                    'session_id' => $session->id,
+                    'session_id' => $request->session_id,
                     'name' => $request->name,
                     'is_premium' => isset($request->is_premium) ? true : false,
                     'is_video' => isset($request->is_video) ? true : false,

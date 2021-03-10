@@ -3,6 +3,7 @@
         var _componentPage = function() {
             var init_table, init_classroom_category, init_sub_classroom_category, init_classroom, docsDropzone;
             var arr_path = [];
+            var classroom_id, session_id;
 
             $(document).ready(function() {
                 formSubmit();
@@ -12,14 +13,6 @@
 
                 init_classroom = new SlimSelect({
                     select: '#classroom'
-                })
-
-                init_classroom_coach = new SlimSelect({
-                    select: '#classroom_coach'
-                })
-
-                init_session_coach = new SlimSelect({
-                    select: '#session_coach'
                 })
 
                 get_classroom();
@@ -34,8 +27,8 @@
                         $('#form-theory').attr('action', '{{ url('coach/theory') }}');
                         $('#form-theory').attr('method', 'POST');
 
-                        get_classroom_coach();
-                        get_session_coach();
+                        // get_classroom_coach();
+                        // get_session_coach();
 
                         $('#is-premium').attr('checked', false);
                         $('#i-price').prop('required', false);
@@ -113,7 +106,13 @@
 
                         get_theory_list(classroom,session)
 
+                    });
 
+                    $(document).on('click', '#back-btn', function(event) {
+                        event.preventDefault();
+
+                        $('#filter-place').show();
+                        $('#card-theory').hide();
                     });
 
                     $(document).on('change', '#is-premium', function() {
@@ -146,28 +145,28 @@
 
                         btn_loading('start')
                         $.ajax({
-                                url: $(this).attr('action'),
-                                type: $(this).attr('method'),
-                                data: form_data,
-                                contentType: false,
-                                cache: false,
-                                processData: false,
-                            })
-                            .done(function(res, xhr, meta) {
-                                toastr.success(res.message, 'Success')
-                                arr_path = [];
-                                hideModal('modal-theory');
-                                var classroom = $('#classroom').val();
-                                var session = $('#session').val();
+                            url: $(this).attr('action'),
+                            type: $(this).attr('method'),
+                            data: form_data,
+                            contentType: false,
+                            cache: false,
+                            processData: false,
+                        })
+                        .done(function(res, xhr, meta) {
+                            toastr.success(res.message, 'Success')
+                            arr_path = [];
+                            hideModal('modal-theory');
+                            var classroom = $('#classroom').val();
+                            var session = $('#session').val();
 
-                                get_theory_list(classroom,session)
-                            })
-                            .fail(function(res, error) {
-                                toastr.error(res.responseJSON.message, 'Failed')
-                            })
-                            .always(function() {
-                                btn_loading('stop')
-                            });
+                            get_theory_list(classroom,session)
+                        })
+                        .fail(function(res, error) {
+                            toastr.error(res.responseJSON.message, 'Failed')
+                        })
+                        .always(function() {
+                            btn_loading('stop')
+                        });
                     });
                 }
 
@@ -200,33 +199,36 @@
                     btn_loading_basic('start','Tampilkan')
                     disable_action('session','start')
 
+                    if(id == ''){
+                        id = undefined;
+                    }
+
                     $.ajax({
-                            url: '{{ url('public/get-session-name-coach') }}/' + id,
-                            type: 'GET',
-                            dataType: 'json',
-                        })
-                        .done(function(res, xhr, meta) {
-                            let element = `<option value="">Select Session</option>`
+                        url: '{{url('public/get-session')}}/'+id,
+                        type: 'GET',
+                        dataType: 'json',
+                    })
+                    .done(function(res, xhr, meta) {
+                        let element = `<option value="">Select Session</option>`
 
-                            if (res.data) {
-                                for (let index = 0; index < parseInt(res.data.session_total); index++) {
-                                    if (index + 1 == select_id) {
-                                        element +=
-                                            `<option value="${index + 1}" selected>Session ${index + 1}</option>`;
-                                    } else {
-                                        element +=
-                                            `<option value="${index + 1}">Session ${index + 1}</option>`;
-                                    }
-                                }
+                        $.each(res.data, function(index, data){
+                            if(data.id == select_id){
+                                element += `<option value="${data.id}" selected>Session ${data.name}</option>`;
+                            }else{
+                                element += `<option value="${data.id}">Session ${data.name}</option>`;
                             }
+                        });
 
-                            disable_action('session','stop')
-                            btn_loading_basic('stop', 'Tampilkan')
+                        $('#session').html(element);
 
-                            $('#session').html(element);
-                        })
+                    }).always(function(){
+                        disable_action('session','stop')
+                        btn_loading_basic('stop', 'Tampilkan')
+                    })
                 },
                 get_theory_list = (classroom, session) => {
+                    $('#classroom-id').val(classroom)
+                    $('#session-id').val(session)
 
                     $.ajax({
                             url: '{{ url('coach/theory/list') }}/' + classroom + '/' + session,
@@ -237,7 +239,7 @@
                             if (res.status == 200) {
                                 let element = ``
 
-                                if (res.data.theory.length >= 0) {
+                                if (res.data.theory.length > 0) {
 
                                     $.each(res.data.theory, function(index, data) {
 
@@ -360,7 +362,7 @@
                                 } else {
                                 element = `
                                 <div class="col-12">
-                                    <div class="card" style="width:100%">
+                                    <div class="card" style="width:100%; border:none;">
                                         <div class="card-body text-center">
                                             <h4 class="text-muted">Theory Not Available</h4>
                                         </div>
@@ -371,7 +373,10 @@
 
                                 $('.my-title').html('<h3>Materi ' + res.data.classroom + ' - ' + res.data.session + '</h3>');
                                 $('#theory-list').html(element);
-                                $('#card-theory').css('display', '');
+
+                                $('#card-theory').show();
+                                $('#filter-place').hide();
+
                                 btn_loading_basic('stop','Tampilkan')
                             }
                         })

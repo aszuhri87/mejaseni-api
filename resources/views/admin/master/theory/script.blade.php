@@ -213,21 +213,30 @@
                         $('.i-price').hide();
                     }
 
-                    get_classroom_category(data.classroom_category_id);
-                    get_sub_classroom_category(data.classroom_category_id, data.sub_classroom_category_id, false);
+                    get_classroom_category(data.classroom_category_id)
+                    get_sub_classroom_category(data.classroom_category_id, data.sub_classroom_category_id, false)
                     get_classroom_edit(data.classroom_category_id, data.sub_classroom_category_id, data.classroom_id)
-                    get_session(data.classroom_id, data.session)
+                    get_session(data.classroom_id, data.session_id)
 
                     docsDropzone.removeAllFiles( true );
 
+                    let extension = data.file_url.match(/\.[0-9a-z]+$/i)[0];
+                    let thumbnail;
+
+                    if(extension != '.jpg' || extension != '.png' || extension != '.svg' || extension != '.jpeg'){
+                        thumbnail = "{{asset('assets/images/file-icon/file.png')}}";
+                    }else{
+                        thumbnail = data.file_url;
+                    }
+
                     var mockFile = {
-                        name: data.url,
+                        name: data.file_url,
                         accepted: true
                     };
 
                     docsDropzone.files.push(mockFile);
                     docsDropzone.emit("addedfile", mockFile);
-                    docsDropzone.emit("thumbnail", mockFile, data.file_url);
+                    docsDropzone.emit("thumbnail", mockFile, thumbnail);
                     docsDropzone.emit("complete", mockFile);
 
                     showModal('modal-theory');
@@ -386,7 +395,6 @@
 
                         $('#sub-classroom-category').html(element);
                         $('.parent-sub-category').addClass('col-md-6');
-                        get_classroom()
                     }else{
                         $('.select-sub-category').hide();
                         $('.parent-sub-category').removeClass('col-md-6');
@@ -470,15 +478,13 @@
                 .done(function(res, xhr, meta) {
                     let element = `<option value="">Select Session</option>`
 
-                    if(res.data){
-                        for (let index = 0; index < parseInt(res.data.session_total); index++) {
-                            if(index + 1 == select_id){
-                                element += `<option value="${index + 1}" selected>Session ${index + 1}</option>`;
-                            }else{
-                                element += `<option value="${index + 1}">Session ${index + 1}</option>`;
-                            }
+                    $.each(res.data, function(index, data){
+                        if(data.id == select_id){
+                            element += `<option value="${data.id}" selected>Session ${data.name}</option>`;
+                        }else{
+                            element += `<option value="${data.id}">Session ${data.name}</option>`;
                         }
-                    }
+                    });
 
                     $('#session').html(element);
                 })

@@ -3,6 +3,7 @@
         var _componentPage = function() {
             var init_table, init_classroom, docsDropzone;
             var arr_path = [];
+            var classroom_id, session_id;
 
             $(document).ready(function() {
                 formSubmit();
@@ -14,13 +15,7 @@
                     select: '#classroom'
                 })
 
-                init_classroom_coach = new SlimSelect({
-                    select: '#classroom_coach'
-                })
-
                 get_classroom();
-
-                $('#due_date').datetimepicker();
 
             });
 
@@ -32,8 +27,8 @@
                         $('#form-assignment').attr('action', '{{ url('coach/exercise/assignment') }}');
                         $('#form-assignment').attr('method', 'POST');
 
-                        get_classroom_coach();
-                        get_session_coach();
+                        // get_classroom_coach();
+                        // get_session_coach();
 
                         $('#is-premium').attr('checked', false);
                         $('#i-price').prop('required', false);
@@ -113,6 +108,13 @@
 
                     });
 
+                    $(document).on('click', '#back-btn', function(event) {
+                        event.preventDefault();
+
+                        $('#filter-place').show();
+                        $('#card-assignment').hide();
+                    });
+
                     $(document).on('change', '#classroom', function() {
                         get_session($('#classroom').val())
                     })
@@ -133,29 +135,29 @@
 
                         btn_loading('start')
                         $.ajax({
-                                url: $(this).attr('action'),
-                                type: $(this).attr('method'),
-                                data: form_data,
-                                contentType: false,
-                                cache: false,
-                                processData: false,
-                            })
-                            .done(function(res, xhr, meta) {
-                                toastr.success(res.message, 'Success')
+                            url: $(this).attr('action'),
+                            type: $(this).attr('method'),
+                            data: form_data,
+                            contentType: false,
+                            cache: false,
+                            processData: false,
+                        })
+                        .done(function(res, xhr, meta) {
+                            toastr.success(res.message, 'Success')
 
-                                var classroom = $('#classroom').val();
-                                var session = $('#session').val();
-                                get_assignment_list(classroom, session)
+                            var classroom = $('#classroom').val();
+                            var session = $('#session').val();
+                            get_assignment_list(classroom, session)
 
-                                arr_path = [];
-                                hideModal('modal-assignment');
-                            })
-                            .fail(function(res, error) {
-                                toastr.error(res.responseJSON.message, 'Failed')
-                            })
-                            .always(function() {
-                                btn_loading('stop')
-                            });
+                            arr_path = [];
+                            hideModal('modal-assignment');
+                        })
+                        .fail(function(res, error) {
+                            toastr.error(res.responseJSON.message, 'Failed')
+                        })
+                        .always(function() {
+                            btn_loading('stop')
+                        });
                     });
                 }
 
@@ -184,46 +186,50 @@
                         })
                 },
                 get_session = (id, select_id) => {
+
                     btn_loading_basic('start','Tampilkan')
                     disable_action('session','start')
 
+                    if(id == ''){
+                        id = undefined;
+                    }
+
                     $.ajax({
-                            url: '{{ url('public/get-session-name-coach') }}/' + id,
-                            type: 'GET',
-                            dataType: 'json',
-                        })
-                        .done(function(res, xhr, meta) {
-                            let element = `<option value="">Select Session</option>`
+                        url: '{{url('public/get-session')}}/'+id,
+                        type: 'GET',
+                        dataType: 'json',
+                    })
+                    .done(function(res, xhr, meta) {
+                        let element = `<option value="">Select Session</option>`
 
-                            if (res.data) {
-                                for (let index = 0; index < parseInt(res.data.session_total); index++) {
-                                    if (index + 1 == select_id) {
-                                        element +=
-                                            `<option value="${index + 1}" selected>Session ${index + 1}</option>`;
-                                    } else {
-                                        element +=
-                                            `<option value="${index + 1}">Session ${index + 1}</option>`;
-                                    }
-                                }
+                        $.each(res.data, function(index, data){
+                            if(data.id == select_id){
+                                element += `<option value="${data.id}" selected>Session ${data.name}</option>`;
+                            }else{
+                                element += `<option value="${data.id}">Session ${data.name}</option>`;
                             }
+                        });
 
-                            disable_action('session','stop')
-                            btn_loading_basic('stop', 'Tampilkan')
+                        $('#session').html(element);
 
-                            $('#session').html(element);
-                        })
+                    }).always(function(){
+                        disable_action('session','stop')
+                        btn_loading_basic('stop', 'Tampilkan')
+                    })
                 },
                 get_assignment_list = (classroom_coach, session_coach) => {
+                    $('#classroom-id').val(classroom_coach)
+                    $('#session-id').val(session_coach)
 
                     $.ajax({
-                            url: '{{ url('coach/exercise/assignment/list') }}/' + classroom_coach + '/' + session_coach,
+                            url: '{{ url('coach/exercise/assignment/list') }}/' + classroom_coach + '&' + session_coach,
                             type: 'GET',
                             dataType: 'json',
                         })
                         .done(function(res, xhr, meta) {
                             if (res.status == 200) {
                                 let element = ``
-                                if (res.data.assignment.length >= 0) {
+                                if (res.data.assignment.length > 0) {
 
                                     $.each(res.data.assignment, function(index, data) {
 
@@ -336,24 +342,27 @@
                             </div>
                             `;
                                     });
-                                } else {
-                                    element = `
-                                    <div class="col-12">
-                                        <div class="card" style="width:100%">
-                                            <div class="card-body text-center">
-                                                <h4 class="text-muted">Assignment Not Available</h4>
-                                            </div>
+                            } else {
+                                element = `
+                                <div class="col-12">
+                                    <div class="card" style="width:100%; border:none;">
+                                        <div class="card-body text-center">
+                                            <h4 class="text-muted">Assignment Not Available</h4>
                                         </div>
-                                    </div>`
-                                }
-
-                                $('.my-title').html('<h3>Exercise ' + res.data.classroom + ' - Pertemuan ' + res.data.session + '</h3>');
-                                $('#assignment-list').html(element);
-                                $('#card-assignment').css('display', '');
-                                btn_loading_basic('stop', 'Tampilkan')
-
+                                    </div>
+                                </div>`
                             }
-                        })
+
+                            $('.my-title').html('<h3>Exercise ' + res.data.classroom + ' - Pertemuan ' + res.data.session + '</h3>');
+                            $('#assignment-list').html(element);
+
+                            $('#card-assignment').show();
+                            $('#filter-place').hide();
+
+                            btn_loading_basic('stop', 'Tampilkan')
+
+                        }
+                    })
                 }
 
             const get_classroom_coach = () => {

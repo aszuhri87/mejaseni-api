@@ -80,7 +80,7 @@
                                 return `
                                     <div class="d-flex flex-column font-weight-bold">
                                         <p class="mb-1 font-size-lg">Rp ${numeral(data).format('0,0')}</p>
-                                        <span class="text-muted">Per Package</span>
+                                        <span class="text-muted">${full.session_total} Sesi</span>
                                     </div>
                                 `;
                             }
@@ -115,7 +115,7 @@
                                             </svg>
                                         </span>
                                     </a>
-                                    `
+                                `
                             }
                         },
                     ],

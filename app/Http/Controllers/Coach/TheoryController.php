@@ -50,13 +50,9 @@ class TheoryController extends BaseMenu
             }
 
             $result = DB::transaction(function () use ($request) {
-                $session = Session::firstOrCreate([
-                    'name' => $request->session_id,
-                    'classroom_id' => $request->classroom_id,
-                ]);
 
                 $result = Theory::create([
-                    'session_id' => $session->id,
+                    'session_id' => $request->session_id,
                     'name' => $request->name,
                     'is_premium' => isset($request->is_premium) ? true : false,
                     'is_video' => isset($request->is_video) ? true : false,
@@ -64,7 +60,8 @@ class TheoryController extends BaseMenu
                     'description' => $request->description,
                     'price' => isset($request->is_premium) ? $request->price : 0,
                     'upload_date' => date('Y-m-d'),
-                    'confirmed' => true
+                    'created_by' => Auth::guard('coach')->id(),
+                    'confirmed' => false
                 ]);
 
                 $result = CoachClassroom::create([
@@ -91,10 +88,6 @@ class TheoryController extends BaseMenu
     {
         try {
             $result = DB::transaction(function () use ($request, $id) {
-                $session = Session::firstOrCreate([
-                    'name' => $request->session_id,
-                    'classroom_id' => $request->classroom_id,
-                ]);
 
                 $theory = Theory::find($id);
 
@@ -105,7 +98,7 @@ class TheoryController extends BaseMenu
                 }
 
                 $theory->update([
-                    'session_id' => $session->id,
+                    'session_id' => $session->session_id,
                     'name' => $request->name,
                     'is_premium' => isset($request->is_premium) ? true : false,
                     'is_video' => isset($request->is_video) ? true : false,
@@ -208,7 +201,6 @@ class TheoryController extends BaseMenu
                     'coaches.name as coaches_name',
                     DB::raw("CONCAT('{$path}',theories.url) as file_url"),
                     DB::raw("to_char(theories.upload_date, 'DD Month YYYY') as upload_at")
-
                 )
                 ->join('sessions', 'sessions.id', 'theories.session_id')
                 ->join('classrooms', 'classrooms.id', 'sessions.classroom_id')
@@ -216,7 +208,7 @@ class TheoryController extends BaseMenu
                 ->join('coaches', 'coaches.id', 'coach_classrooms.coach_id')
                 ->where([
                     ['classrooms.id', $classroom_id],
-                    ['sessions.name', $session_id],
+                    ['sessions.id', $session_id],
                     ['coaches.id', Auth::guard('coach')->id()],
                 ])
                 ->whereNull([
@@ -224,12 +216,14 @@ class TheoryController extends BaseMenu
                 ])
                 ->distinct()
                 ->get();
+
             $classroom = Classroom::find($classroom_id);
+            $session = Session::find($session_id);
 
             $result = [
                 'theory' => $theory,
                 'classroom' => $classroom->name,
-                'session' => $session_id,
+                'session' => $session->name,
             ];
 
             return response([

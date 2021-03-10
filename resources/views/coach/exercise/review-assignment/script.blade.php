@@ -29,8 +29,16 @@
                         event.preventDefault();
                         btn_loading_basic('start', 'Tampilkan')
                         initTable();
-                        $('#card-review-assignment').css('display', '');
+                        $('#card-review-assignment').show();
+                        $('#filter-place').hide();
                         btn_loading_basic('stop', 'Tampilkan')
+                    });
+
+                    $(document).on('click', '#back-btn', function(event) {
+                        event.preventDefault();
+
+                        $('#filter-place').show();
+                        $('#card-review-assignment').hide();
                     });
 
                     $(document).on('click', '.show-review', function(event) {
@@ -444,7 +452,7 @@
                                 data: 'DT_RowIndex'
                             },
                             {
-                                data: 'due_date'
+                                data: 'due_time'
                             },
                             {
                                 data: 'upload_date'
@@ -461,24 +469,6 @@
                         ],
                         columnDefs: [{
                                 targets: 0,
-                                searchable: false,
-                                orderable: false,
-                                className: "text-center"
-                            },
-                            {
-                                targets: 1,
-                                searchable: false,
-                                orderable: false,
-                                className: "text-center"
-                            },
-                            {
-                                targets: 2,
-                                searchable: false,
-                                orderable: false,
-                                className: "text-center"
-                            },
-                            {
-                                targets: 3,
                                 searchable: false,
                                 orderable: false,
                                 className: "text-center"
@@ -530,7 +520,7 @@
                                                 </g>
                                             </svg>
                                         </span>
-                                         Lihat Detail
+                                        Lihat Detail
                                     </a>`
                                 }
                             },

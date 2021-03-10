@@ -26,7 +26,7 @@ class Assignment extends Model
         'file_url',
         'description',
         'upload_date',
-        'due_date'
+        'due_time'
     ];
 
     protected $dates = ['deleted_at'];

@@ -366,20 +366,22 @@ class PublicController extends Controller
     public function get_session($classroom_id)
     {
         try {
-            if($classroom_id == 'undefined'){
+            if(!$classroom_id || $classroom_id == 'undefined'){
                 return response([
                     "data"      => null,
                     "message"   => 'OK'
                 ], 200);
             }
 
-            $result = DB::table('classrooms')
+            $result = DB::table('sessions')
                 ->select([
                     'id',
-                    'session_total',
+                    'name',
                 ])
-                ->where('id', $classroom_id)
-                ->first();
+                ->where('classroom_id', $classroom_id)
+                ->orderBy(DB::raw('name::integer'), 'asc')
+                ->whereNull('deleted_at')
+                ->get();
 
             return response([
                 "data"      => $result,

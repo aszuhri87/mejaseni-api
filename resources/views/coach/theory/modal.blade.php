@@ -10,27 +10,8 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6 col-sm-12 select-classroom">
-                            <div class="form-group">
-                                <label>
-                                    Class
-                                    <span class="text-danger">*</span>
-                                </label>
-                                <select name="classroom_id" id="classroom_coach"></select>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-sm-12 select-session">
-                            <div class="form-group">
-                                <label>
-                                    Session
-                                    <span class="text-danger">*</span>
-                                </label>
-                                <select name="session_id" id="session_coach"></select>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
+                    <input type="hidden" name="classroom_id" id="classroom-id">
+                    <input type="hidden" name="session_id" id="session-id">
                     <div class="form-group">
                         <label>
                             Name
