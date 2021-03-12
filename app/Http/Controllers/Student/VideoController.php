@@ -255,7 +255,7 @@ class VideoController extends BaseMenu
                     'session_videos.sub_classroom_category_id',
                     'sub_classroom_categories.name',
                 ])
-                ->leftJoinSub($sub_classroom_category, 'sub_classroom_categories', function ($join) {
+                ->joinSub($sub_classroom_category, 'sub_classroom_categories', function ($join) {
                     $join->on('session_videos.sub_classroom_category_id','=','sub_classroom_categories.id');
                 })
                 ->whereNull('session_videos.deleted_at');
@@ -266,7 +266,7 @@ class VideoController extends BaseMenu
                     'session_videos.sub_classroom_category_id',
                     'session_videos.name',
                 ])
-                ->leftJoinSub($session_video, 'session_videos', function ($join) {
+                ->joinSub($session_video, 'session_videos', function ($join) {
                     $join->on('carts.session_video_id','=','session_videos.id');
                 })
                 ->whereNotNull('carts.session_video_id')
@@ -278,7 +278,7 @@ class VideoController extends BaseMenu
                     'carts.sub_classroom_category_id',
                     'carts.name',
                 ])
-                ->leftJoinSub($cart, 'carts', function ($join) {
+                ->joinSub($cart, 'carts', function ($join) {
                     $join->on('transaction_details.cart_id', '=', 'carts.id');
                 })
                 ->whereNull('transaction_details.deleted_at');
@@ -288,7 +288,7 @@ class VideoController extends BaseMenu
                     'transaction_details.sub_classroom_category_id',
                     'transaction_details.name',
                 ])
-                ->leftJoinSub($transaction_detail, 'transaction_details', function ($join) {
+                ->joinSub($transaction_detail, 'transaction_details', function ($join) {
                     $join->on('transactions.id', '=', 'transaction_details.transaction_id');
                 })
                 ->where('transactions.status',2)

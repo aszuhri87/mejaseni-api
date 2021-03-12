@@ -87,7 +87,7 @@
                                     <div class="form-group">
                                         <label>Profil Singkat<span class="text-danger">*</span></label>
                                         <div class="profil_description">
-                                            <textarea name="profil_description" class="form-control" placeholder="Profil Singkat" id="profil_description" cols="30" rows="5"></textarea>
+                                            <textarea name="profil_description" class="form-control" placeholder="Profil Singkat" id="profil_description" cols="30" rows="5" required></textarea>
                                         </div>
                                     </div>
                                 </div>

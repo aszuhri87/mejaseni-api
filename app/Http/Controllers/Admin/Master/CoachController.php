@@ -314,16 +314,15 @@ class CoachController extends BaseMenu
     public function config(Request $request, $id)
     {
         try {
-            $result = DB::table('coach_classrooms')
-                ->where('coach_id', $id)
-                ->whereNull('deleted_at')
-                ->delete();
+            $result = CoachClassroom::where('coach_id', $id)->delete();
 
-            foreach ($request->select as $key => $value) {
-                $insert = CoachClassroom::create([
-                    'coach_id' => $id,
-                    'classroom_id' => $value
-                ]);
+            if(!empty($request->select)){
+                foreach ($request->select as $key => $value) {
+                    $insert = CoachClassroom::create([
+                        'coach_id' => $id,
+                        'classroom_id' => $value
+                    ]);
+                }
             }
             return response([
                 "status"=>200,

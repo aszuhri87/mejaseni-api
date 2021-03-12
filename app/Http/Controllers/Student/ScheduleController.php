@@ -71,7 +71,7 @@ class ScheduleController extends BaseMenu
                     'classrooms.name as classroom_name',
                     'classrooms.price',
                 ])
-                ->leftJoinSub($classroom, 'classrooms', function ($join) {
+                ->joinSub($classroom, 'classrooms', function ($join) {
                     $join->on('coach_classrooms.classroom_id', '=', 'classrooms.id');
                 })
                 ->whereNull('coach_classrooms.deleted_at');
@@ -120,6 +120,11 @@ class ScheduleController extends BaseMenu
                         CASE
                             WHEN
                                 coach_schedules.datetime::timestamp > now()::timestamp AND
+                                student_schedules.coach_schedule_id IS NULL
+                            THEN
+                                1
+                            WHEN
+                                coach_schedules.datetime::timestamp <= now()::timestamp AND
                                 student_schedules.coach_schedule_id IS NULL
                             THEN
                                 1
@@ -245,6 +250,11 @@ class ScheduleController extends BaseMenu
                         CASE
                             WHEN
                                 coach_schedules.datetime::timestamp > now()::timestamp AND
+                                student_schedules.coach_schedule_id IS NULL
+                            THEN
+                                1
+                            WHEN
+                                coach_schedules.datetime::timestamp <= now()::timestamp AND
                                 student_schedules.coach_schedule_id IS NULL
                             THEN
                                 1

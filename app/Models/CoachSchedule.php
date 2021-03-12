@@ -26,12 +26,12 @@ class CoachSchedule extends Model
     ];
 
     protected $cascadeDeletes = [
-        'master_lesson',
+        'student_schedule',
     ];
 
     protected $dates = ['deleted_at'];
 
-    public function master_lesson()
+    public function student_schedule()
     {
         return $this->hasOne(StudentSchedule::class, 'coach_schedule_id', 'id');
     }
