@@ -11,16 +11,31 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-6 col-sm-12">
+                        <div class="col-12 select-classroom">
+                            <div class="form-group">
+                                <label>
+                                    Class
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <select name="classroom_id" id="classroom"></select>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-12">
                             <div class="form-group">
                                 <label>Tanggal<span class="text-danger">*</span></label>
                                 <input type="text" name="date" class="form-control datepicker" required placeholder="Date" style="width: 100% !important">
                             </div>
                         </div>
-                        <div class="col-md-6 col-sm-12">
+                        <div class="col-md-4 col-sm-12">
                             <div class="form-group">
-                                <label>Waktu<span class="text-danger">*</span></label>
+                                <label>Waktu Mulai<span class="text-danger">*</span></label>
                                 <input type="text" name="time" class="form-control timepicker" required placeholder="Time" style="width: 100% !important">
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-12">
+                            <div class="form-group">
+                                <label>Durasi<span class="text-danger">*</span></label>
+                                <input type="text" disabled class="form-control" id="duration" value="-" style="width: 100% !important">
                             </div>
                         </div>
                     </div>
@@ -41,15 +56,6 @@
                     </div>
                     <hr>
                     <div class="row form-package">
-                        <div class="col-12 select-classroom">
-                            <div class="form-group">
-                                <label>
-                                    Class
-                                    <span class="text-danger">*</span>
-                                </label>
-                                <select name="classroom_id" id="classroom"></select>
-                            </div>
-                        </div>
                         <div class="col-12">
                             <div class="form-group">
                                 <label>

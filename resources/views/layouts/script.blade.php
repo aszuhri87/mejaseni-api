@@ -82,6 +82,7 @@
 <!--end::Page Vendors-->
 
 <!--begin::Page Scripts(used by this page)-->
+<script src="assets/js/select-validation.js"></script>
 <script src="assets/js/pages/widgets.js"></script>
 <!--end::Page Scripts-->
 

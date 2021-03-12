@@ -65,6 +65,12 @@ class MasterLessonController extends BaseMenu
                 ], 400);
             }
 
+            if(!isset($request->guests)){
+                return response([
+                    "message"   => 'Guest Star harus diisi!'
+                ], 400);
+            }
+
             $sub_category_check = DB::table('sub_classroom_categories')
                 ->select([
                     'id',
@@ -94,7 +100,7 @@ class MasterLessonController extends BaseMenu
                     'description' => $request->description,
                 ]);
 
-                if(count($request->guests) > 0){
+                if(isset($request->guests) && count($request->guests) > 0){
                     foreach ($request->guests as $key => $value) {
                         GuestStarMasterLesson::create([
                             'master_lesson_id' => $result->id,
@@ -141,7 +147,7 @@ class MasterLessonController extends BaseMenu
                     'description' => $request->description,
                 ]);
 
-                if(count($request->guests) > 0){
+                if(isset($request->guests) && count($request->guests) > 0){
                     foreach ($request->guests as $key => $value) {
                         GuestStarMasterLesson::create([
                             'master_lesson_id' => $master_lesson->id,

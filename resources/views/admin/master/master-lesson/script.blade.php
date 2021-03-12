@@ -382,6 +382,16 @@
                 $('#form-master-lesson').submit(function(event){
                     event.preventDefault();
 
+                    var validate = ss_validate([
+                        'classroom-category',
+                        'sub-classroom-category',
+                        'platform',
+                    ]);
+
+                    if(!validate){
+                        return false;
+                    }
+
                     let form_data = new FormData(this)
 
                     if(arr_path.length > 0){

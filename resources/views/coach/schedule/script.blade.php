@@ -138,6 +138,14 @@
                 });
             },
             initAction = () => {
+                $(document).on('change', '#classroom', function(){
+                    if($(this).val() != ''){
+                        classroom_detail($(this).val())
+                    }else{
+                        classroom_detail();
+                    }
+                })
+
                 $(document).on('click', '.btn-edit', function(){
                     event.preventDefault();
 
@@ -191,6 +199,19 @@
 
                     $('.swal2-title').addClass('justify-content-center')
                 })
+            },
+            classroom_detail = (id) => {
+                $.ajax({
+                    url: "{{url('public/get-classroom-detail')}}/"+id,
+                    type: 'GET',
+                })
+                .done(function(res, xhr, meta) {
+                    if(res.data){
+                        $('#duration').val(res.data.session_duration + ' Menit')
+                    }else{
+                        $('#duration').val('-')
+                    }
+                });
             },
             formSubmit = () => {
                 $('#form-schedule').submit(function(event){
