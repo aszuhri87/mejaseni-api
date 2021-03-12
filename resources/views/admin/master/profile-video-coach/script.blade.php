@@ -200,6 +200,14 @@
                 $('#form-profile-video-coach').submit(function(event){
                     event.preventDefault();
 
+                    let validate = ss_validate([
+                        'coach-select',
+                    ]);
+
+                    if(!validate){
+                        return false;
+                    }
+
                     let form_data = new FormData(this)
 
                     if(arr_path.length > 0){

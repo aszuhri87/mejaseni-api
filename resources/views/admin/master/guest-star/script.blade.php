@@ -248,6 +248,24 @@
                 $('#form-guest-star').submit(function(event){
                     event.preventDefault();
 
+                    if($('input[name="is_coach"]:checked').length == 1){
+                        let validate = ss_validate([
+                            'coach-select'
+                        ]);
+
+                        if(!validate){
+                            return false;
+                        }
+                    }else{
+                        let validate = ss_validate([
+                            'expertise-select',
+                        ]);
+
+                        if(!validate){
+                            return false;
+                        }
+                    }
+
                     btn_loading('start')
                     $.ajax({
                         url: $(this).attr('action'),

@@ -232,6 +232,17 @@
                 $('#form-session-video').submit(function(event){
                     event.preventDefault();
 
+                    let validate = ss_validate([
+                        'classroom-category',
+                        'sub-classroom-category',
+                        'coach-select',
+                        'expertise-select'
+                    ]);
+
+                    if(!validate){
+                        return false;
+                    }
+
                     btn_loading('start')
                     $.ajax({
                         url: $(this).attr('action'),

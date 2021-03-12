@@ -442,8 +442,12 @@
                 $('#form-classroom').submit(function(event){
                     event.preventDefault();
 
-                    if($('#classroom-category').val() == ""){
-                        $('.required-classroom-category').show();
+                    let validate = ss_validate([
+                        'classroom-category',
+                        'sub-classroom-category'
+                    ]);
+
+                    if(!validate){
                         return false;
                     }
 
