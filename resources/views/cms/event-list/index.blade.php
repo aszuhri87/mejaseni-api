@@ -46,7 +46,7 @@
                         @foreach($events as $event)
                         <div class="row mb-4 pr-0 pr-lg-5 pb-3">
                             <div class="col-xl-4 mb-3 mb-md-0">
-                                <a href="event-detail.html">
+                                <a href="{{ url('event') }}/{{$event->id}}/detail">
                                     <figure><img src="{{ $event->image_url ? $event->image_url:'' }}" /></figure>
                                 </a>
                             </div>
@@ -71,7 +71,7 @@
                     </div>
                 </div>
                 <div id="loading-scroll">
-                    
+
                 </div>
             </div>
         </div>

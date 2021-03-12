@@ -129,7 +129,7 @@
                                 <!--end::Svg Icon--></span>
                         </span>
 
-                        <span class="nav-text font-size-lg">Reguler Class</span>
+                        <span class="nav-text font-size-lg">Regular Class</span>
                     </a>
                 </li>
                 {{-- end reguler class --}}

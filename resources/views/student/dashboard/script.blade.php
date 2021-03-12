@@ -60,7 +60,6 @@
                                 categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Des'],
                             },
                             yaxis: {
-                                min: -30,
                                 max: 30,
                                 title: {
                                     text: 'Total'

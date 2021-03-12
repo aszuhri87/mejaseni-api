@@ -124,6 +124,12 @@ class ScheduleController extends BaseMenu
                             THEN
                                 1
                             WHEN
+                                coach_schedules.datetime::timestamp > now()::timestamp AND
+                                student_schedules.coach_schedule_id IS NOT NULL AND
+                                student_classrooms.student_id = '$student_id'
+                            THEN
+                                1
+                            WHEN
                                 coach_schedules.datetime::timestamp <= now()::timestamp AND
                                 student_schedules.coach_schedule_id IS NOT NULL AND
                                 student_classrooms.student_id = '$student_id'
@@ -240,6 +246,12 @@ class ScheduleController extends BaseMenu
                             WHEN
                                 coach_schedules.datetime::timestamp > now()::timestamp AND
                                 student_schedules.coach_schedule_id IS NULL
+                            THEN
+                                1
+                            WHEN
+                                coach_schedules.datetime::timestamp > now()::timestamp AND
+                                student_schedules.coach_schedule_id IS NOT NULL AND
+                                student_classrooms.student_id = '$student_id'
                             THEN
                                 1
                             WHEN
