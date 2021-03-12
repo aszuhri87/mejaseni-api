@@ -42,8 +42,8 @@ class AdminController extends BaseMenu
     public function dt()
     {
         $data = DB::table('admins')
-            ->join('model_has_roles', 'model_has_roles.model_id', 'admins.id')
-            ->join('roles', 'roles.id', 'model_has_roles.role_id')
+            ->leftJoin('model_has_roles', 'model_has_roles.model_id', 'admins.id')
+            ->leftJoin('roles', 'roles.id', 'model_has_roles.role_id')
             ->select([
                 'admins.*',
                 'roles.name as tipe_admin',
@@ -69,7 +69,7 @@ class AdminController extends BaseMenu
     {
 
         try {
-            
+
             $result = DB::transaction(function () use ($request) {
 
                 $admin = Admin::create([
@@ -133,7 +133,7 @@ class AdminController extends BaseMenu
                     $role = Role::where('id', $request->tipe_admin)->first();
                     $result->syncRoles($role->name);
                 }
-                
+
                 return $result;
             });
 
