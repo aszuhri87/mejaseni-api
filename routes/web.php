@@ -752,6 +752,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
     */
 
     Route::group(['prefix' => 'public'], function () {
+        Route::get('get-classroom-detail/{id}', [PublicController::class, 'classroom_detail']);
         Route::get('get-classroom-category', [PublicController::class, 'get_classroom_category']);
         Route::get('get-has-classroom-category', [PublicController::class, 'get_has_classroom_category']);
         Route::get('get-sub-classroom-category', [PublicController::class, 'get_sub_classroom_category']);

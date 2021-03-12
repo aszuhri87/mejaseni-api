@@ -11,36 +11,6 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-6 col-sm-12">
-                            <div class="form-group">
-                                <label>Tanggal<span class="text-danger">*</span></label>
-                                <input type="text" name="date" class="form-control datepicker" required placeholder="Date" style="width: 100% !important">
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-sm-12">
-                            <div class="form-group">
-                                <label>Waktu<span class="text-danger">*</span></label>
-                                <input type="text" name="time" class="form-control timepicker" required placeholder="Time" style="width: 100% !important">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group d-none">
-                        <label>Tipe Kelas</label>
-                        <div class="radio-inline mt-2">
-                            <label class="radio radio-lg">
-                                <input type="radio" value="1" checked name="type_class" class="type-class"/>
-                                <span></span>
-                                Package
-                            </label>
-                            <label class="radio radio-lg">
-                                <input type="radio" value="2" name="type_class" class="type-class"/>
-                                <span></span>
-                                Master Lesson
-                            </label>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row form-package">
                         <div class="col-sm-12 parent-sub-category">
                             <div class="form-group">
                                 <label>
@@ -69,6 +39,42 @@
                                 <select name="classroom_id" id="classroom"></select>
                             </div>
                         </div>
+                        <div class="col-md-4 col-sm-12">
+                            <div class="form-group">
+                                <label>Tanggal<span class="text-danger">*</span></label>
+                                <input type="text" name="date" class="form-control datepicker" required placeholder="Date" style="width: 100% !important">
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-12">
+                            <div class="form-group">
+                                <label>Waktu Mulai<span class="text-danger">*</span></label>
+                                <input type="text" name="time" class="form-control timepicker" required placeholder="Time" style="width: 100% !important">
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-12">
+                            <div class="form-group">
+                                <label>Durasi<span class="text-danger">*</span></label>
+                                <input type="text" disabled class="form-control" id="duration" value="-" style="width: 100% !important">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group d-none">
+                        <label>Tipe Kelas</label>
+                        <div class="radio-inline mt-2">
+                            <label class="radio radio-lg">
+                                <input type="radio" value="1" checked name="type_class" class="type-class"/>
+                                <span></span>
+                                Package
+                            </label>
+                            <label class="radio radio-lg">
+                                <input type="radio" value="2" name="type_class" class="type-class"/>
+                                <span></span>
+                                Master Lesson
+                            </label>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row form-package">
                         <div class="col-12">
                             <div class="form-group">
                                 <label>

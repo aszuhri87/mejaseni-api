@@ -55,6 +55,32 @@ class PublicController extends Controller
         }
     }
 
+    public function classroom_detail($id)
+    {
+        try {
+            if($id == 'undefined'){
+                return response([
+                    "data"      => null,
+                    "message"   => 'OK'
+                ], 200);
+            }
+
+            $result = DB::table('classrooms')
+                ->where('id', $id)
+                ->first();
+
+            return response([
+                "data"      => $result,
+                "message"   => 'OK'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
     public function get_guest_star()
     {
         try {
