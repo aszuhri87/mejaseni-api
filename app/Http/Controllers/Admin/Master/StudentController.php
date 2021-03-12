@@ -41,12 +41,12 @@ class StudentController extends BaseMenu
         $path = Storage::disk('s3')->url('/');
 
         $data = DB::table('students')
-            ->join('student_classrooms', 'student_classrooms.student_id', 'students.id')
             ->select([
                 'students.*',
                 DB::raw("CONCAT('{$path}',students.image) as image_url"),
                 DB::raw("COUNT(student_classrooms.id) AS class"),
             ])
+            ->leftJoin('student_classrooms', 'student_classrooms.student_id', 'students.id')
             ->whereNull([
                 'students.deleted_at'
             ])
