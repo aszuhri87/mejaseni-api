@@ -779,6 +779,10 @@ Route::get('redirect-blank', function () {
     return view('cms.transaction.payment-success.redirect');
 });
 
+Route::get('redirect-failed', function () {
+    return view('cms.transaction.waiting-payment.failed');
+});
+
 Route::get('video', function () {
     return view('video');
 });

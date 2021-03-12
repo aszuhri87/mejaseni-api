@@ -207,7 +207,7 @@ class CartController extends Controller
                     $number = sprintf("%04d", (int)$str[1] + 1);
                     $number = "MJSN".date('Y').$number;
                 }else{
-                    $number = "MJSN".date('Y').'0040';
+                    $number = "MJSN".date('Y').'0123';
                 }
 
                 $trans = Transaction::create([
