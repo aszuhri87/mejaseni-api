@@ -89,7 +89,11 @@ class ScheduleController extends BaseMenu
                     'student_schedules.id',
                     'student_schedules.coach_schedule_id',
                     'student_schedules.student_classroom_id',
+                    'student_classrooms.student_id',
                 ])
+                ->leftJoinSub($student_classroom, 'student_classrooms', function ($join) {
+                    $join->on('student_schedules.student_classroom_id', '=', 'student_classrooms.id');
+                })
                 ->whereNull('student_schedules.deleted_at');
 
             $result = DB::table('coach_schedules')
@@ -131,13 +135,15 @@ class ScheduleController extends BaseMenu
                             WHEN
                                 coach_schedules.datetime::timestamp > now()::timestamp AND
                                 student_schedules.coach_schedule_id IS NOT NULL AND
-                                student_classrooms.student_id = '$student_id'
+                                student_classrooms.student_id = '$student_id' AND
+                                student_schedules.student_id = '$student_id'
                             THEN
                                 1
                             WHEN
                                 coach_schedules.datetime::timestamp <= now()::timestamp AND
                                 student_schedules.coach_schedule_id IS NOT NULL AND
-                                student_classrooms.student_id = '$student_id'
+                                student_classrooms.student_id = '$student_id' AND
+                                student_schedules.student_id = '$student_id'
                             THEN
                                 1
                             ELSE
@@ -220,7 +226,11 @@ class ScheduleController extends BaseMenu
                     'student_schedules.id',
                     'student_schedules.coach_schedule_id',
                     'student_schedules.student_classroom_id',
+                    'student_classrooms.student_id',
                 ])
+                ->leftJoinSub($student_classroom, 'student_classrooms', function ($join) {
+                    $join->on('student_schedules.student_classroom_id', '=', 'student_classrooms.id');
+                })
                 ->whereNull('student_schedules.deleted_at');
 
             $result = DB::table('coach_schedules')
@@ -231,6 +241,7 @@ class ScheduleController extends BaseMenu
                     'coach_classrooms.classroom_id',
                     'student_classrooms.id as student_classroom_id',
                     'student_classrooms.student_id',
+                    'student_schedules.id as student_schedule_id',
                     DB::raw("CASE
                         WHEN coach_schedules.datetime::timestamp < now()::timestamp THEN 'secondary'
                         WHEN
@@ -261,13 +272,15 @@ class ScheduleController extends BaseMenu
                             WHEN
                                 coach_schedules.datetime::timestamp > now()::timestamp AND
                                 student_schedules.coach_schedule_id IS NOT NULL AND
-                                student_classrooms.student_id = '$student_id'
+                                student_classrooms.student_id = '$student_id' AND
+                                student_schedules.student_id = '$student_id'
                             THEN
                                 1
                             WHEN
                                 coach_schedules.datetime::timestamp <= now()::timestamp AND
                                 student_schedules.coach_schedule_id IS NOT NULL AND
-                                student_classrooms.student_id = '$student_id'
+                                student_classrooms.student_id = '$student_id' AND
+                                student_schedules.student_id = '$student_id'
                             THEN
                                 1
                             ELSE
@@ -714,7 +727,7 @@ class ScheduleController extends BaseMenu
                     $join->on('coach_classrooms.classroom_id', '=', 'classrooms.id');
                 })
                 ->whereNull('coach_classrooms.deleted_at')
-                ->groupBy('coach_classrooms.id');
+                ->groupBy('coach_classrooms.coach_id');
 
             $result = DB::table('coaches')
                 ->select([
