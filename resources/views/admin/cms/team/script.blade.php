@@ -41,9 +41,7 @@
                             className: "text-center",
                             data: "image_url",
                             render : function(data, type, full, meta) {
-                                return `
-                                    <img src="${data}" class="h-25 align-self-end" alt="">
-                                    `
+                                return `<img src="${data}" class="viewer-img rounded" width="50" height="50">`
                             }
                         },
                         {
