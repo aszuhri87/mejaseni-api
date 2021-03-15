@@ -18,12 +18,12 @@ class SuperAdminSeeder extends Seeder
     {
         $admin = Admin::where('username', 'admin')->first();
 
-        $role = Role::firstOrCreate([
-            'name' => 'Super Admin',
-            'guard_name' => 'admin'
-        ],[
-            'id' => Uuid::uuid4()->toString(),
-        ]);
+        // $role = Role::firstOrCreate([
+        //     'name' => 'Super Admin',
+        //     'guard_name' => 'admin'
+        // ],[
+        //     'id' => Uuid::uuid4()->toString(),
+        // ]);
 
         $admin->assignRole('Super Admin');
     }
