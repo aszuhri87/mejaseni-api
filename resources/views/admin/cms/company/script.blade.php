@@ -22,8 +22,8 @@
                     columns: [
                         { data: 'DT_RowIndex' },
                         { data: 'name' },
-                        { data: 'telephone' },
                         { data: 'email' },
+                        { data: 'telephone' },
                         { data: 'address' },
                         { defaultContent: '' }
                         ],

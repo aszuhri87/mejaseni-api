@@ -225,6 +225,7 @@
                     $('#form-event').attr('method','POST');
 
                     get_classroom_category();
+                    $('.required-date-range').hide();
 
                     $('#image').html('<input type="file" name="image" class="dropify image"/>');
                     $('.dropify').dropify();
@@ -246,7 +247,6 @@
                     $('#form-event').trigger("reset");
                     $('#form-event').attr('action', $(this).attr('href'));
                     $('#form-event').attr('method','POST');
-                    console.log(data.classroom_category_id)
                     get_classroom_category(data.classroom_category_id)
                     $('#form-event').find('input[name="title"]').val(data.title);
                     $('#form-event').find('input[name="date"]').val(date);
@@ -366,6 +366,16 @@
                 $('#form-event').submit(function(event){
                     event.preventDefault();
 
+                    if($('#classroom-category').val() == ""){
+                        $('.required-classroom-category').show();
+                        return false;
+                    }
+
+                    if($('#date-range').val() == ""){
+                        $('.required-date-range').show();
+                        return false;
+                    }
+
                     let data = new FormData(this)
                     let date = $("#form-event").find('input[name=date]').val()
 
@@ -403,7 +413,7 @@
                     buttonClasses: ' btn',
                     applyClass: 'btn-primary',
                     cancelClass: 'btn-secondary',
-
+                    minDate: new Date(),
                     timePicker: true,
                     timePickerIncrement: 30,
                     locale: {

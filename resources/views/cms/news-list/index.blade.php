@@ -21,11 +21,11 @@
                                 <div class="input-group input-daterange d-flex flex-column">
                                     <div class="mb-4">
                                         <label for="">Dari Tanggal</label>
-                                        <input type="text" name="start_at" class="form-control w-100 mt-3 text-left" required>
+                                        <input type="text" name="start_at" class="form-control w-100 mt-3 text-left" required readonly>
                                     </div>
                                     <div>
                                         <label for="">Sampai Tanggal</label>
-                                        <input type="text" name="end_at" class="form-control w-100 mt-3 text-left" required>
+                                        <input type="text" name="end_at" class="form-control w-100 mt-3 text-left" required readonly>
                                     </div>
                                 </div>
                                 <button type="submit" class="btn btn-primary mt-4 w-100">Terapkan Filter</button>

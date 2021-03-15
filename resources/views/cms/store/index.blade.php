@@ -66,11 +66,11 @@
         </div>
         <div class="sub-category py-4" id="sub-category">
           @foreach($sub_categories as $sub_category)
-          @if($loop->index == 0)
-          <button class="btn btn-tertiary mr-2 mb-2 active" data-id="{{$sub_category->id}}">{{ $sub_category->name ? $sub_category->name:''}}</button>
-          @else
-          <button class="btn btn-tertiary mr-2 mb-2" data-id="{{$sub_category->id}}">{{ $sub_category->name ? $sub_category->name:''}}</button>
-          @endif
+            @if($loop->index == 0)
+              <button class="btn btn-tertiary mr-2 mb-2 active" data-id="{{$sub_category->id}}">{{ $sub_category->name ? $sub_category->name:''}}</button>
+            @else
+              <button class="btn btn-tertiary mr-2 mb-2" data-id="{{$sub_category->id}}">{{ $sub_category->name ? $sub_category->name:''}}</button>
+            @endif
           @endforeach
 
         </div>

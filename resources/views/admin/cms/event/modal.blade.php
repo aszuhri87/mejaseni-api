@@ -27,7 +27,8 @@
                     </div>
                     <div class="form-group">
                         <label>Date<span class="text-danger">*</span></label>
-                        <input type="text" name="date" class="form-control select_daterange" readonly required placeholder="Date" style="width: 100% !important">
+                        <input type="text" name="date" id="date-range" class="form-control select_daterange" readonly required placeholder="Date" style="width: 100% !important">
+                        <span class="text-small ml-1 text-danger required-date-range" style="display: none">&#8226; Harus diisi</span>
                     </div>
                     <div class="form-group">
                         <label>

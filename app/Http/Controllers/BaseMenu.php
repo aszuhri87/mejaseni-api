@@ -254,6 +254,13 @@ class BaseMenu extends Controller
                 ],
             ],
             [
+                'key' => 'event',
+                'title' => 'Event',
+                'url' => 'admin/event',
+                'permission' => 'event',
+                'icon' => $this->icon('master'),
+            ],
+            [
                 'key' => 'schedule',
                 'title' => 'Schedule',
                 'url' => 'admin/schedule',

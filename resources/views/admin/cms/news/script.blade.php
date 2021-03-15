@@ -192,6 +192,10 @@
 
                     data.append('json_description', json_description)
                     data.append('quill_description', description)
+                    if($('#classroom-category').val() == ""){
+                        $('.required-classroom-category').show();
+                        return false;
+                    }
 
                     btn_loading('start')
                     $.ajax({
