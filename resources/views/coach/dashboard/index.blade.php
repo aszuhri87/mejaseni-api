@@ -47,7 +47,7 @@
                         <h3 class="card-label">
                             <span class="d-block text-dark font-weight-bolder">Summary Course</span>
                             <span class="d-block text-muted mt-2 font-size-sm">
-                                Lebih dari 2000 siswa melakukan booking untuk minggu ini
+                                <span class="total-booking"></span> siswa melakukan booking untuk minggu ini
                             </span>
                         </h3>
                     </div>
@@ -55,7 +55,7 @@
                         <span class="mr-5 d-flex align-items-center font-weight-bold">
                             <i class="label label-dot label-xl label-primary mr-2"></i>Kelas dihadiri</span>
                         <span class="d-flex align-items-center font-weight-bold">
-                            <i class="label label-dot label-xl label-warning mr-2"></i>kelas dibooking</span>
+                            <i class="label label-dot label-xl label-warning mr-2"></i>Kelas dibooking</span>
                     </div>
                 </div>
                 <!--end::Header-->
@@ -79,7 +79,7 @@
                 <div class="card-header border-0 pt-5">
                     <div class="card-title font-weight-bolder">
                         <div class="card-label">Summary Course
-                        <div class="font-size-sm text-muted mt-2">Lebih dari 2000 siswa melakukan booking untuk minggu ini</div></div>
+                        <div class="font-size-sm text-muted mt-2"><span class="total-booking"></span> siswa melakukan booking untuk minggu ini</div></div>
                     </div>
                 </div>
                 <!--end::Header-->
@@ -349,8 +349,9 @@
                     </div>
 
                     <!--begin::Chart-->
-                    {{-- <div id="kt_tiles_widget_8_chart" class="card-rounded-bottom" data-color="danger" style="height: 100px">
-                    </div> --}}
+                    <div id="incomes-chart" class="card-rounded-bottom" data-color="danger" style="height: 100px">
+                        <div class="spinner spinner-primary spinner-lg spinner-center"></div>
+                    </div>
                     <!--end::Chart-->
                 </div>
                 <!--end::Body-->

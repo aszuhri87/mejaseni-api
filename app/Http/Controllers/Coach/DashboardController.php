@@ -8,6 +8,7 @@ use App\Models\CoachClassroom;
 use App\Models\CoachSchedule;
 use App\Models\StudentFeedback;
 use App\Models\StudentSchedule;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -140,7 +141,7 @@ class DashboardController extends BaseMenu
                     'coach_classrooms.id',
                     'coach_classrooms.coach_id'
                 ])
-                ->leftJoin('coaches','coach_classrooms.coach_id','=','coaches.id')
+                ->leftJoin('coaches', 'coach_classrooms.coach_id', '=', 'coaches.id')
                 ->whereNull('coach_classrooms.deleted_at');
 
             $coach_schedule = DB::table('coach_schedules')
@@ -164,7 +165,7 @@ class DashboardController extends BaseMenu
                     $join->on('student_schedules.coach_schedule_id', '=', 'coach_schedules.id');
                 })
                 ->whereNull('student_schedules.deleted_at')
-                ->where('coach_schedules.coach_id',Auth::guard('coach')->user()->id)
+                ->where('coach_schedules.coach_id', Auth::guard('coach')->user()->id)
                 ->whereRaw("
                     (SELECT EXTRACT(WEEK FROM current_date)) = (SELECT EXTRACT(WEEK FROM coach_schedules.datetime))
                 ")
@@ -234,49 +235,49 @@ class DashboardController extends BaseMenu
                 // }
 
                 if (date('N', strtotime($value->datetime)) == 1) {
-                    if (date('Y-m-d H:i:s',strtotime($value->datetime)) >= date('Y-m-d H:i:s')) {
+                    if (date('Y-m-d H:i:s', strtotime($value->datetime)) >= date('Y-m-d H:i:s')) {
                         $kelas_booking[0]++;
                     }
                     if ($value->check_in == null) {
                         $kelas_dihadiri[0]++;
                     }
                 } elseif (date('N', strtotime($value->datetime)) == 2) {
-                    if (date('Y-m-d H:i:s',strtotime($value->datetime)) >= date('Y-m-d H:i:s')) {
+                    if (date('Y-m-d H:i:s', strtotime($value->datetime)) >= date('Y-m-d H:i:s')) {
                         $kelas_booking[1]++;
                     }
                     if ($value->check_in == null) {
                         $kelas_dihadiri[1]++;
                     }
                 } elseif (date('N', strtotime($value->datetime)) == 3) {
-                    if (date('Y-m-d H:i:s',strtotime($value->datetime)) >= date('Y-m-d H:i:s')) {
+                    if (date('Y-m-d H:i:s', strtotime($value->datetime)) >= date('Y-m-d H:i:s')) {
                         $kelas_booking[2]++;
                     }
                     if ($value->check_in == null) {
                         $kelas_dihadiri[2]++;
                     }
                 } elseif (date('N', strtotime($value->datetime)) == 4) {
-                    if (date('Y-m-d H:i:s',strtotime($value->datetime)) >= date('Y-m-d H:i:s')) {
+                    if (date('Y-m-d H:i:s', strtotime($value->datetime)) >= date('Y-m-d H:i:s')) {
                         $kelas_booking[3]++;
                     }
                     if ($value->check_in == null) {
                         $kelas_dihadiri[3]++;
                     }
                 } elseif (date('N', strtotime($value->datetime)) == 5) {
-                    if (date('Y-m-d H:i:s',strtotime($value->datetime)) >= date('Y-m-d H:i:s')) {
+                    if (date('Y-m-d H:i:s', strtotime($value->datetime)) >= date('Y-m-d H:i:s')) {
                         $kelas_booking[4]++;
                     }
                     if ($value->check_in == null) {
                         $kelas_dihadiri[4]++;
                     }
                 } elseif (date('N', strtotime($value->datetime)) == 6) {
-                    if (date('Y-m-d H:i:s',strtotime($value->datetime)) >= date('Y-m-d H:i:s')) {
+                    if (date('Y-m-d H:i:s', strtotime($value->datetime)) >= date('Y-m-d H:i:s')) {
                         $kelas_booking[5]++;
                     }
                     if ($value->check_in == null) {
                         $kelas_dihadiri[5]++;
                     }
                 } elseif (date('N', strtotime($value->datetime)) == 7) {
-                    if (date('Y-m-d H:i:s',strtotime($value->datetime)) >= date('Y-m-d H:i:s')) {
+                    if (date('Y-m-d H:i:s', strtotime($value->datetime)) >= date('Y-m-d H:i:s')) {
                         $kelas_booking[6]++;
                     }
                     if ($value->check_in == null) {
@@ -288,7 +289,8 @@ class DashboardController extends BaseMenu
             $result = [
                 'range_time' => $range_time,
                 'kelas_booking' => $kelas_booking,
-                'kelas_dihadiri' => $kelas_dihadiri
+                'kelas_dihadiri' => $kelas_dihadiri,
+                'total_booking' => $data->count()
             ];
             return response([
                 "status" => 200,
@@ -387,7 +389,7 @@ class DashboardController extends BaseMenu
                     $join->on('student_schedules.coach_schedule_id', '=', 'coach_schedules.id');
                 })
                 ->whereNull('student_schedules.deleted_at')
-                ->where('coach_schedules.coach_id',Auth::guard('coach')->user()->id)
+                ->where('coach_schedules.coach_id', Auth::guard('coach')->user()->id)
                 ->whereRaw("(coach_schedules.datetime::timestamp) >= now()")
                 ->whereRaw("
                     (SELECT EXTRACT(WEEK FROM current_date)) = (SELECT EXTRACT(WEEK FROM coach_schedules.datetime))
@@ -430,7 +432,7 @@ class DashboardController extends BaseMenu
                     $join->on('student_schedules.coach_schedule_id', '=', 'coach_schedules.id');
                 })
                 ->whereNull('student_schedules.deleted_at')
-                ->where('coach_schedules.coach_id',Auth::guard('coach')->user()->id)
+                ->where('coach_schedules.coach_id', Auth::guard('coach')->user()->id)
                 ->whereRaw("(coach_schedules.datetime::timestamp) <= now()")
                 ->whereRaw("
                     (SELECT EXTRACT(WEEK FROM current_date)) = (SELECT EXTRACT(WEEK FROM coach_schedules.datetime))
@@ -668,13 +670,13 @@ class DashboardController extends BaseMenu
                 $join->on('coach_schedules.coach_classroom_id', '=', 'coach_classrooms.id');
             })
             ->where('coach_schedules.accepted', true)
-            ->where(function($query) use($request){
-                if(!empty($request->date_start)){
-                    $query->whereDate('coach_schedules.datetime','>=',$request->date_start)
-                        ->whereDate('coach_schedules.datetime','<=',$request->date_end);
+            ->where(function ($query) use ($request) {
+                if (!empty($request->date_start)) {
+                    $query->whereDate('coach_schedules.datetime', '>=', $request->date_start)
+                        ->whereDate('coach_schedules.datetime', '<=', $request->date_end);
                 }
             })
-            ->where('coach_classrooms.coach_id',Auth::guard('coach')->user()->id)
+            ->where('coach_classrooms.coach_id', Auth::guard('coach')->user()->id)
             ->whereRaw('coach_schedules.datetime::timestamp <= now()')
             ->orderby('coach_schedules.created_at', 'desc')
             ->get();
@@ -843,7 +845,7 @@ class DashboardController extends BaseMenu
                     'coaches.id',
                     'coaches.name as coach_name',
                 ])
-                ->where('coaches.id',Auth::guard('coach')->user()->id)
+                ->where('coaches.id', Auth::guard('coach')->user()->id)
                 ->whereNull('deleted_at');
 
             $coach_classroom = DB::table('coach_classrooms')
@@ -893,7 +895,7 @@ class DashboardController extends BaseMenu
                     $join->on('coach_schedules.coach_classroom_id', '=', 'coach_classrooms.id');
                 })
                 ->whereNull('coach_schedules.deleted_at')
-                ->orderBy('coach_schedules.datetime','desc')
+                ->orderBy('coach_schedules.datetime', 'desc')
                 ->take(5)
                 ->get();
 
@@ -946,11 +948,11 @@ class DashboardController extends BaseMenu
                     'student_schedules.coach_schedule_id',
                     DB::raw("CONCAT('{$path}',students.image) as image_url")
                 )
-                ->join('student_schedules','student_schedules.id','student_feedback.student_schedule_id')
-                ->join('student_classrooms','student_classrooms.id','student_schedules.student_classroom_id')
-                ->join('students','students.id','student_classrooms.student_id')
-                ->where('coach_id',Auth::guard('coach')->id())
-                ->where('student_schedule_id',$student_schedule_id)
+                ->join('student_schedules', 'student_schedules.id', 'student_feedback.student_schedule_id')
+                ->join('student_classrooms', 'student_classrooms.id', 'student_schedules.student_classroom_id')
+                ->join('students', 'students.id', 'student_classrooms.student_id')
+                ->where('coach_id', Auth::guard('coach')->id())
+                ->where('student_schedule_id', $student_schedule_id)
                 ->WhereNull('student_feedback.deleted_at')
                 ->get();
 
@@ -977,22 +979,22 @@ class DashboardController extends BaseMenu
                 'student_schedules.id',
                 'students.id as student_id'
             )
-            ->join('student_classrooms', 'student_classrooms.id', 'student_schedules.student_classroom_id')
-            ->join('students', 'students.id', 'student_classrooms.student_id')
-            ->join('classrooms', 'classrooms.id', 'student_classrooms.classroom_id')
-            ->join('coach_classrooms', 'coach_classrooms.classroom_id', 'classrooms.id')
-            ->join('coaches', 'coaches.id', 'coach_classrooms.coach_id')
-            ->where([
-                ['student_schedules.id', $student_schedule_id]
-            ])
-            ->WhereNull('student_schedules.deleted_at')
-            ->first();
+                ->join('student_classrooms', 'student_classrooms.id', 'student_schedules.student_classroom_id')
+                ->join('students', 'students.id', 'student_classrooms.student_id')
+                ->join('classrooms', 'classrooms.id', 'student_classrooms.classroom_id')
+                ->join('coach_classrooms', 'coach_classrooms.classroom_id', 'classrooms.id')
+                ->join('coaches', 'coaches.id', 'coach_classrooms.coach_id')
+                ->where([
+                    ['student_schedules.id', $student_schedule_id]
+                ])
+                ->WhereNull('student_schedules.deleted_at')
+                ->first();
 
             DB::transaction(function () use ($request, $studentSchedule) {
                 StudentFeedback::updateOrCreate([
                     'coach_id' => Auth::guard('coach')->id(),
                     'student_schedule_id' => $studentSchedule->id,
-                ],[
+                ], [
                     'star' => $request->rate,
                     'description' => $request->feedback,
                 ]);
@@ -1067,6 +1069,48 @@ class DashboardController extends BaseMenu
             throw new Exception($e);
             return response([
                 "status" => 400,
+                "message" => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function incomes_chart()
+    {
+        try {
+            $incomes = DB::table('incomes')
+                ->select(
+                    'amount',
+                    'created_at',
+                )
+                ->whereRaw("
+                    (SELECT EXTRACT(MONTH FROM current_date)) = (SELECT EXTRACT(MONTH FROM incomes.created_at))
+                ")
+                ->whereRaw("
+                    (SELECT EXTRACT(YEAR FROM current_date)) = (SELECT EXTRACT(YEAR FROM incomes.created_at))
+                ")
+                ->where('coach_id', Auth::guard('coach')->user()->id)
+                ->whereNull('deleted_at')
+                ->get();
+
+            $total = [];
+            $date = [];
+
+            foreach ($incomes as $data) {
+                $total []= $data->amount;
+                $date []= Carbon::parse($data->created_at)->format('d M Y');
+            }
+
+            return response([
+                "data" => [
+                    "total" => $total,
+                    "date" => $date,
+                ],
+                "status" => 200,
+                "message"   => 'OK'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
                 "message" => $e->getMessage(),
             ]);
         }
