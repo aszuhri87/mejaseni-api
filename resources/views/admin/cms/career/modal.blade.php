@@ -77,7 +77,7 @@
                             <div class="form-group">
                             <div class="input-group">
                                 <input required type="hidden" name="career_id"/>
-                                <input type="text" class="form-control" name="description" placeholder="Keterangan "/>
+                                <input type="text" class="form-control" name="description" placeholder="Keterangan " required />
                                 <div class="input-group-append">
                                     <button class="btn btn-primary btn-loading" type="submit">Tambah</button>
                                 </div>
@@ -123,7 +123,7 @@
                             <div class="form-group">
                             <div class="input-group">
                                 <input required type="hidden" name="career_id"/>
-                                <input type="text" class="form-control" name="description" placeholder="Keterangan "/>
+                                <input type="text" class="form-control" name="description" placeholder="Keterangan " required />
                                 <div class="input-group-append">
                                     <button class="btn btn-primary btn-loading" type="submit">Tambah</button>
                                 </div>

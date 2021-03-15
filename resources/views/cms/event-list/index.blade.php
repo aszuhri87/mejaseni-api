@@ -26,11 +26,11 @@
                                 <div class="input-group input-daterange d-flex flex-column">
                                     <div class="mb-4">
                                         <label for="">Dari Tanggal</label>
-                                        <input type="text" name="start_at" class="form-control w-100 mt-3 text-left" >
+                                        <input type="text" name="start_at" class="form-control w-100 mt-3 text-left" readonly >
                                     </div>
                                     <div>
                                         <label for="">Sampai Tanggal</label>
-                                        <input type="text" name="end_at" class="form-control w-100 mt-3 text-left">
+                                        <input type="text" name="end_at" class="form-control w-100 mt-3 text-left" readonly>
                                     </div>
                                 </div>
                                 <button type="submit" class="btn btn-primary mt-4 w-100">Terapkan Filter</button>
@@ -86,16 +86,15 @@
         <h3 class="mb-5">Filter Data Event</h3>
         <label>Pilih Kategori Seni</label>
         <select class="mt-3 mb-4" name="select-event-categories" id="select-event-categories">
-            <option>asdasdasdsa</option>
         </select>
         <div class="input-group input-daterange d-flex flex-column">
           <div class="mb-4">
             <label for="">Dari Tanggal</label>
-            <input type="text" class="form-control w-100 mt-3 text-left" value="2012-04-05">
+            <input type="text" class="form-control w-100 mt-3 text-left" readonly required>
         </div>
         <div>
             <label for="">Sampai Tanggal</label>
-            <input type="text" class="form-control w-100 mt-3 text-left" value="2012-04-19">
+            <input type="text" class="form-control w-100 mt-3 text-left" readonly required>
         </div>
     </div>
     <button class="btn btn-primary mt-4 w-100">Terapkan Filter</button>

@@ -491,6 +491,9 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::post('career/{career_id}/job-description/dt', [JobDescriptionController::class, 'dt']);
             Route::resource('job-description', JobDescriptionController::class);
 
+            Route::post('career/{career_id}/job-requirement/dt', [JobRequirementController::class, 'dt']);
+            Route::resource('job-requirement', JobRequirementController::class);
+
             Route::post('working-hour/dt', [WorkingHourController::class, 'dt']);
             Route::resource('working-hour', WorkingHourController::class);
 

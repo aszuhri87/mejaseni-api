@@ -492,9 +492,6 @@ class ClassController extends Controller
                 $classroom_html = $this->_get_classroom_html($classrooms);
             }
 
-            $classroom_html = $this->_get_classroom_html($classrooms);
-
-
 
             return response([
                 "data"      => [
@@ -542,6 +539,16 @@ class ClassController extends Controller
     {
         $html = '<div class="desc__class-tab my-4">
                     <p>'.$master_lesson->description.'</p>
+                </div>
+                <div class="row master-lesson__details">
+                    <div class="col-6 d-flex flex-column">
+                        <label>Slot</label>
+                        <span>'.$master_lesson->slot.' Partisipan</span>
+                    </div>
+                    <div class="col-6 d-flex flex-column">
+                        <label>Platform</label>
+                        <span>'.$master_lesson->platform.'</span>
+                    </div>
                 </div>
                 <div class="class-tab-summary d-flex justify-content-between flex-md-row flex-column mt-5 mb-4">
                     <div class="d-flex flex-column">
@@ -686,8 +693,16 @@ class ClassController extends Controller
 
     public function _get_classroom_html($classrooms)
     {
-        $html ="";
+
+        if($classrooms->isEmpty())
+            return "";
+        
+        $html ='<div class="splide pb-4" id="class-splide">
+              <div class="splide__track">
+                <ul class="splide__list" id="classrooms">';
         foreach ($classrooms as $key => $classroom) {
+            $session_total = isset($classroom->session_total) ? $classroom->session_total:0;
+            $session_duration = isset($classroom->session_duration) ? $classroom->session_duration:0;
             $html .= '<li class="splide__slide px-2 pb-5">
                         <img class="w-100 rounded" src="'. $classroom->image_url .'" alt="">
                         <div class="badge-left">
@@ -708,7 +723,7 @@ class ClassController extends Controller
                             </div>
                             <div class="class-tab-summary d-flex justify-content-between flex-md-row flex-column mb-4">
                               <div class="d-flex flex-column">
-                                <p>'. $classroom->session_total .' Sesi | @ '. $classroom->session_duration .'menit</p>
+                                <p>'. $session_total .' Sesi | @ '. $session_duration .'menit</p>
                                 <span class="mt-2">Rp.'.number_format($classroom->price, 2).',-</span>
                               </div>
                               <div class="mt-5 mt-md-0">
@@ -721,6 +736,10 @@ class ClassController extends Controller
                         </div>
                       </li>';
         }
+
+        $html .= '</ul>
+              </div>
+            </div>';
 
         return $html;
 
@@ -744,7 +763,13 @@ class ClassController extends Controller
 
     public function _get_master_lesson_html($master_lessons)
     {
-        $html = "";
+        if($master_lessons->isEmpty()){
+            return "";
+        }
+
+        $html = '<div class="splide pb-4" id="class-splide">
+                  <div class="splide__track">
+                    <ul class="splide__list" id="classrooms">';
 
         foreach ($master_lessons as $key => $master_lesson) {
             $html .= '<li class="splide__slide px-2 pb-5">
@@ -782,6 +807,10 @@ class ClassController extends Controller
                         </div>
                     </li>';
         }
+
+        $html .= '</ul>
+              </div>
+            </div>';
 
         return $html;
     }

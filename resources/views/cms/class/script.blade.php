@@ -172,7 +172,7 @@
                 })
                 .done(function(res, xhr, meta) {
                     if(res.data.classroom_html){
-                        $("#classrooms").html(res.data.classroom_html)
+                        $("#class-content").html(res.data.classroom_html)
                         TabDetailListener()
                         eventCategorySelectedListener()
                         eventSubCategoryChangeListener()
@@ -293,7 +293,7 @@
                     toastr.error(res.responseJSON.message, 'Failed')
                 })
                 .always(function() {
-                   showLoader()
+                   hideLoader()
                 });
             }
 

@@ -33,10 +33,10 @@
                     </div>
                     <div class="form-group">
                         <label>
-                            Maps URL
+                            Embeded Map URL
                             <span class="text-danger">*</span>
                         </label>
-                        <textarea required name="maps_url" class="form-control" placeholder="Maps URL" rows="4"></textarea>
+                        <textarea required name="maps_url" class="form-control" placeholder="https://www.google.com/maps/embed?pb=<source>" rows="4"></textarea>
                     </div>
                     <div class="form-group">
                         <label>
