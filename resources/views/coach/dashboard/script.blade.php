@@ -28,7 +28,6 @@
                                 $.each(res.data.total_booking, function(index, value) {
                                     data = data + value;
                                 });
-
                                 var options = {
                                     series: [{
                                         name: 'Kelas Hadir',
@@ -39,21 +38,14 @@
                                     }],
                                     chart: {
                                         type: 'bar',
-                                        stacked: true,
-                                        height: 350,
-                                        toolbar: {
-                                            show: false
-                                        }
+                                        height: 350
                                     },
                                     plotOptions: {
                                         bar: {
                                             horizontal: false,
-                                            columnWidth: ['5%'],
+                                            columnWidth: '23%',
                                             endingShape: 'rounded'
                                         },
-                                    },
-                                    legend: {
-                                        show: false
                                     },
                                     dataLabels: {
                                         enabled: false
@@ -65,64 +57,16 @@
                                     },
                                     xaxis: {
                                         categories: res.data.range_time,
-                                        axisBorder: {
-                                            show: false,
-                                        },
-                                        axisTicks: {
-                                            show: false
-                                        },
-                                        labels: {
-                                            style: {
-                                                colors: KTApp.getSettings()['colors']['gray'][
-                                                    'gray-500'
-                                                ],
-                                                fontSize: '12px',
-                                                fontFamily: KTApp.getSettings()['font-family']
-                                            }
-                                        }
                                     },
                                     yaxis: {
-                                        min: -30,
-                                        max: 30,
-                                        labels: {
-                                            style: {
-                                                colors: KTApp.getSettings()['colors']['gray'][
-                                                    'gray-500'
-                                                ],
-                                                fontSize: '12px',
-                                                fontFamily: KTApp.getSettings()['font-family']
-                                            }
+                                        title: {
+                                            text: 'Penjualan'
                                         }
                                     },
                                     fill: {
                                         opacity: 1
                                     },
-                                    states: {
-                                        normal: {
-                                            filter: {
-                                                type: 'none',
-                                                value: 0
-                                            }
-                                        },
-                                        hover: {
-                                            filter: {
-                                                type: 'none',
-                                                value: 0
-                                            }
-                                        },
-                                        active: {
-                                            allowMultipleDataPointsSelection: false,
-                                            filter: {
-                                                type: 'none',
-                                                value: 0
-                                            }
-                                        }
-                                    },
-                                    tooltip: {
-                                        style: {
-                                            fontSize: '12px',
-                                            fontFamily: KTApp.getSettings()['font-family']
-                                        },
+                                    tooltip: {  
                                         y: {
                                             formatter: function(val) {
                                                 return val + " student"
@@ -130,16 +74,7 @@
                                         }
                                     },
                                     colors: ['#7F16A7', '#FFA800'],
-                                    grid: {
-                                        borderColor: KTApp.getSettings()['colors']['gray']['gray-200'],
-                                        strokeDashArray: 4,
-                                        yaxis: {
-                                            lines: {
-                                                show: true
-                                            }
-                                        }
-                                    }
-                                }
+                                };
 
                                 var chart = new ApexCharts(document.querySelector("#summary_course_chart"),
                                     options);
