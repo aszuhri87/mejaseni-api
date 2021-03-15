@@ -79,6 +79,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/js/dropify.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/numeral.js/1.0.3/numeral.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.9.0/viewer.min.js"></script>
 <!--end::Page Vendors-->
 
 <!--begin::Page Scripts(used by this page)-->
@@ -166,6 +167,19 @@
 
         $('.swal2-title').addClass('justify-content-center')
     })
+
+    $(document).on('click', '.viewer-img', function(){
+        var image = new Image();
+        image.src = $(this).prop('src');
+        var viewer = new Viewer(image,{
+            hidden: function () {
+                viewer.destroy();
+            },
+            navbar: false,
+            toolbar: false,
+        });
+        viewer.show();
+    });
 
     function unescapeHtml(text) {
         return text

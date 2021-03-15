@@ -14,62 +14,70 @@
         <ul class="menu-nav ">
             @foreach ($list_menu as $menu)
                 @if (isset($menu['children']))
-                <li class="menu-item  menu-item-submenu @if($segment2 == $menu['key']){{'menu-item-here menu-item-open'}}@endif" aria-haspopup="true" data-menu-toggle="hover">
-                    <a href="javascript:;" class="menu-link menu-toggle">
-                        {!!$menu['icon']!!}
-                        <span class="menu-text">{{$menu['title']}}</span>
-                        <i class="menu-arrow"></i>
-                    </a>
-                    <div class="menu-submenu">
-                        <i class="menu-arrow"></i>
-                        <ul class="menu-subnav">
-                            @foreach ($menu['children'] as $children)
-                                @if (isset($children['children']))
-                                    <li class="menu-item  menu-item-submenu @if($segment3 == $children['key']){{'menu-item-here menu-item-open'}}@endif" aria-haspopup="true" data-menu-toggle="hover">
-                                        <a href="javascript:;" class="menu-link menu-toggle">
-                                            <i class="menu-bullet menu-bullet-dot">
-                                                <span></span>
-                                            </i>
-                                            <span class="menu-text">{{$children['title']}}</span>
-                                            <i class="menu-arrow"></i>
-                                        </a>
-                                        <div class="menu-submenu">
-                                            <i class="menu-arrow"></i>
-                                            <ul class="menu-subnav">
-                                                @foreach ($children['children'] as $item)
-                                                <li class="menu-item  @if($segment4 == $item['key']){{'menu-item-active'}}@endif" aria-haspopup="true">
-                                                    <a href="{{$item['url']}}" class="menu-link ">
-                                                        <i class="menu-bullet menu-bullet-dot">
-                                                            <span></span>
-                                                        </i>
-                                                        <span class="menu-text">{{$item['title']}}</span>
-                                                    </a>
-                                                </li>
-                                                @endforeach
-                                            </ul>
-                                        </div>
-                                    </li>
-                                @else
-                                    <li class="menu-item @if($segment3 == $children['key']){{'menu-item-active'}}@endif" aria-haspopup="true">
-                                        <a href="{{$children['url']}}" class="menu-link ">
-                                            <i class="menu-bullet menu-bullet-dot">
-                                                <span></span>
-                                            </i>
-                                            <span class="menu-text">{{$children['title']}}</span>
-                                        </a>
-                                    </li>
-                                @endif
-                            @endforeach
-                        </ul>
-                    </div>
-                </li>
+                    @can($menu['permission'])
+                    <li class="menu-item  menu-item-submenu @if($segment2 == $menu['key']){{'menu-item-here menu-item-open'}}@endif" aria-haspopup="true" data-menu-toggle="hover">
+                        <a href="javascript:;" class="menu-link menu-toggle">
+                            {!!$menu['icon']!!}
+                            <span class="menu-text">{{$menu['title']}}</span>
+                            <i class="menu-arrow"></i>
+                        </a>
+                        <div class="menu-submenu">
+                            <i class="menu-arrow"></i>
+                            <ul class="menu-subnav">
+                                @foreach ($menu['children'] as $children)
+                                    @if (isset($children['children']))
+                                        @can($children['permission'])
+                                        <li class="menu-item  menu-item-submenu @if($segment3 == $children['key']){{'menu-item-here menu-item-open'}}@endif" aria-haspopup="true" data-menu-toggle="hover">
+                                            <a href="javascript:;" class="menu-link menu-toggle">
+                                                <i class="menu-bullet menu-bullet-dot">
+                                                    <span></span>
+                                                </i>
+                                                <span class="menu-text">{{$children['title']}}</span>
+                                                <i class="menu-arrow"></i>
+                                            </a>
+                                            <div class="menu-submenu">
+                                                <i class="menu-arrow"></i>
+                                                <ul class="menu-subnav">
+                                                    @foreach ($children['children'] as $item)
+                                                    <li class="menu-item  @if($segment4 == $item['key']){{'menu-item-active'}}@endif" aria-haspopup="true">
+                                                        <a href="{{$item['url']}}" class="menu-link ">
+                                                            <i class="menu-bullet menu-bullet-dot">
+                                                                <span></span>
+                                                            </i>
+                                                            <span class="menu-text">{{$item['title']}}</span>
+                                                        </a>
+                                                    </li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        @endcan
+                                    @else
+                                        @can($children['permission'])
+                                        <li class="menu-item @if($segment3 == $children['key']){{'menu-item-active'}}@endif" aria-haspopup="true">
+                                            <a href="{{$children['url']}}" class="menu-link ">
+                                                <i class="menu-bullet menu-bullet-dot">
+                                                    <span></span>
+                                                </i>
+                                                <span class="menu-text">{{$children['title']}}</span>
+                                            </a>
+                                        </li>
+                                        @endcan
+                                    @endif
+                                @endforeach
+                            </ul>
+                        </div>
+                    </li>
+                    @endcan
                 @else
-                <li class="menu-item @if($segment2 == $menu['key']){{'menu-item-here menu-item-open'}}@endif" aria-haspopup="true">
-                    <a href="{{$menu['url']}}" class="menu-link ">
-                        {!!$menu['icon']!!}
-                        <span class="menu-text">{{$menu['title']}}</span>
-                    </a>
-                </li>
+                    @can($menu['permission'])
+                    <li class="menu-item @if($segment2 == $menu['key']){{'menu-item-here menu-item-open'}}@endif" aria-haspopup="true">
+                        <a href="{{$menu['url']}}" class="menu-link ">
+                            {!!$menu['icon']!!}
+                            <span class="menu-text">{{$menu['title']}}</span>
+                        </a>
+                    </li>
+                    @endcan
                 @endif
             @endforeach
         </ul>

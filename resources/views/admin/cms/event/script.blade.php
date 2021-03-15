@@ -163,12 +163,9 @@
                             targets: 1,
                             searchable: false,
                             orderable: false,
-                            className: "text-center",
                             data: "image_url",
                             render : function(data, type, full, meta) {
-                                return `
-                                    <img src="${data}" class="w-75 align-self-end" alt="">
-                                    `
+                                return `<img src="${data}" class="viewer-img rounded" width="50" height="50">`
                             }
                         },
                         {
@@ -258,7 +255,7 @@
                     if(!data.is_free){
                         $("#form-event input[name='total']").removeAttr('disabled')
                         $("#form-event input[name='total']").attr("min","5000")
-                        $("#form-event input[name='total']").val(data.total)   
+                        $("#form-event input[name='total']").val(data.total)
                     }
                     $('#image').empty();
 
@@ -360,7 +357,7 @@
                     })
                     $('.swal2-title').addClass('justify-content-center')
                 });
-                
+
             },
             formSubmit = () => {
                 $('#form-event').submit(function(event){

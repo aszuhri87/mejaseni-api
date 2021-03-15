@@ -38,12 +38,9 @@
                             targets: 1,
                             searchable: false,
                             orderable: false,
-                            className: "text-center",
                             data: "image_url",
                             render : function(data, type, full, meta) {
-                                return `
-                                    <img src="${data}" class="w-50 align-self-end" alt="">
-                                    `
+                                return `<img src="${data}" class="viewer-img rounded" width="50" height="50">`
                             }
                         },
                         {
