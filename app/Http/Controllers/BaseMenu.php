@@ -135,7 +135,7 @@ class BaseMenu extends Controller
                 'key' => 'master',
                 'title' => 'Master Data',
                 'url' => '#',
-                'permission' => 'division',
+                'permission' => 'master_data',
                 'icon' => $this->icon('master'),
                 'children' => [
                     [
@@ -144,12 +144,6 @@ class BaseMenu extends Controller
                         'url' => '#',
                         'permission' => 'courses',
                         'children' => [
-                            // [
-                            //     'key' => 'package',
-                            //     'title' => 'Package',
-                            //     'url' => 'admin/master/courses/package',
-                            //     'permission' => 'package'
-                            // ],
                             [
                                 'key' => 'classroom-category',
                                 'title' => 'Kategori Kelas',
@@ -339,91 +333,91 @@ class BaseMenu extends Controller
                         'key' => 'branch',
                         'title' => 'Branch',
                         'url' => 'admin/cms/branch',
-                        'permission' => 'branch'
+                        'permission' => 'cms'
                     ],
                     [
                         'key' => 'career',
                         'title' => 'Career',
                         'url' => 'admin/cms/career',
-                        'permission' => 'career'
+                        'permission' => 'cms'
                     ],
                     [
                         'key' => 'company',
                         'title' => 'Company',
                         'url' => 'admin/cms/company',
-                        'permission' => 'company'
+                        'permission' => 'cms'
                     ],
                     [
                         'key' => 'coach-review',
                         'title' => 'Coach Review',
                         'url' => 'admin/cms/coach-review',
-                        'permission' => 'coach-review'
+                        'permission' => 'cms'
                     ],
                     [
                         'key' => 'event',
                         'title' => 'Event',
                         'url' => 'admin/cms/event',
-                        'permission' => 'event'
+                        'permission' => 'cms'
                     ],
                     [
                         'key' => 'faq',
                         'title' => 'FAQ',
                         'url' => 'admin/cms/faq',
-                        'permission' => 'faq'
+                        'permission' => 'cms'
                     ],
                     [
                         'key' => 'galery',
                         'title' => 'Galery',
                         'url' => 'admin/cms/galery',
-                        'permission' => 'galery'
+                        'permission' => 'cms'
                     ],
                     [
                         'key' => 'marketplace',
                         'title' => 'Market Place',
                         'url' => 'admin/cms/marketplace',
-                        'permission' => 'marketplace'
+                        'permission' => 'cms'
                     ],
                     [
                         'key' => 'news',
                         'title' => 'News',
                         'url' => 'admin/cms/news',
-                        'permission' => 'news'
+                        'permission' => 'cms'
                     ],
                     [
                         'key' => 'privacy-policy',
                         'title' => 'Privacy Policy',
                         'url' => 'admin/cms/privacy-policy',
-                        'permission' => 'privacy-policy'
+                        'permission' => 'cms'
                     ],
                     [
                         'key' => 'program',
                         'title' => 'Program',
                         'url' => 'admin/cms/program',
-                        'permission' => 'program'
+                        'permission' => 'cms'
                     ],
                     [
                         'key' => 'team',
                         'title' => 'Team',
                         'url' => 'admin/cms/team',
-                        'permission' => 'team'
+                        'permission' => 'cms'
                     ],
                     [
                         'key' => 'social-media',
                         'title' => 'Social Media',
                         'url' => 'admin/cms/social-media',
-                        'permission' => 'social-media'
+                        'permission' => 'cms'
                     ],
                     [
                         'key' => 'working-hour',
                         'title' => 'Working Hour',
                         'url' => 'admin/cms/working-hour',
-                        'permission' => 'working-hour'
+                        'permission' => 'cms'
                     ],
                     [
                         'key' => 'question',
                         'title' => 'Question',
                         'url' => 'admin/cms/question',
-                        'permission' => 'question'
+                        'permission' => 'cms'
                     ],
 
                 ],
