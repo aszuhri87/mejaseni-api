@@ -45,6 +45,7 @@
                         </span>
                     </div>
                 </div>
+                @can('class_insert')
                 <div class="form-group ml-1">
                     <button type="button" id="add-btn" class="btn btn-primary btn-icon w-auto px-2 waves-effect width-md waves-light ml-1">
                         <span class="svg-icon svg-icon-white svg-icon-2x"><!--begin::Svg Icon | path:C:\wamp64\www\keenthemes\themes\metronic\theme\html\demo10\dist/../src/media/svg/icons\Code\Plus.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -57,6 +58,7 @@
                         Add
                     </button>
                 </div>
+                @endcan
             </div>
         </div>
         <table class="table table-separate table-head-custom mb-0 pb-0" width="100%" id="init-table">

@@ -188,7 +188,6 @@ class AdminController extends BaseMenu
     public function set_permission(Request $request, $id)
     {
         try {
-
             $admin = Admin::find($id);
             $admin->syncPermissions($request->permissions);
 

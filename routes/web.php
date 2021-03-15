@@ -256,48 +256,60 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::get('dashboard', [AdminDashboard::class, 'index']);
         Route::get('cart-dashboard', [AdminDashboard::class, 'cart_data']);
 
-        Route::group(['prefix' => 'master'], function () {
-            Route::group(['prefix' => 'courses'], function () {
+        Route::group(['prefix' => 'master','middleware' => 'can:master_data'], function () {
+            Route::group(['prefix' => 'courses','middleware' => 'can:courses'], function () {
                 Route::post('package/dt', [PackageController::class, 'dt']);
                 Route::resource('package', PackageController::class);
 
-                Route::post('classroom-category/dt', [ClassroomCategoryController::class, 'dt']);
-                Route::post('classroom-category/update/{id}', [ClassroomCategoryController::class, 'update']);
-                Route::resource('classroom-category', ClassroomCategoryController::class);
+                Route::group(['middleware' => 'can:category_class'], function () {
+                    Route::post('classroom-category/dt', [ClassroomCategoryController::class, 'dt']);
+                    Route::post('classroom-category/update/{id}', [ClassroomCategoryController::class, 'update']);
+                    Route::resource('classroom-category', ClassroomCategoryController::class);
+                });
 
-                Route::post('sub-classroom-category/dt', [SubClassroomCategoryController::class, 'dt']);
-                Route::post('sub-classroom-category/update/{id}', [SubClassroomCategoryController::class, 'update']);
-                Route::resource('sub-classroom-category', SubClassroomCategoryController::class);
+                Route::group(['middleware' => 'can:sub_category_class'], function () {
+                    Route::post('sub-classroom-category/dt', [SubClassroomCategoryController::class, 'dt']);
+                    Route::post('sub-classroom-category/update/{id}', [SubClassroomCategoryController::class, 'update']);
+                    Route::resource('sub-classroom-category', SubClassroomCategoryController::class);
+                });
 
-                Route::get('classroom/tools/ac', [ClassroomController::class, 'ac']);
-                Route::get('classroom/tools/{id}', [ClassroomController::class, 'get_tools']);
-                Route::delete('classroom/tools/{id}', [ClassroomController::class, 'delete_tools']);
-                Route::post('classroom/dt', [ClassroomController::class, 'dt']);
-                Route::post('classroom/update/{id}', [ClassroomController::class, 'update']);
-                Route::resource('classroom', ClassroomController::class);
+                Route::group(['middleware' => 'can:class'], function () {
+                    Route::get('classroom/tools/ac', [ClassroomController::class, 'ac']);
+                    Route::get('classroom/tools/{id}', [ClassroomController::class, 'get_tools']);
+                    Route::delete('classroom/tools/{id}', [ClassroomController::class, 'delete_tools']);
+                    Route::post('classroom/dt', [ClassroomController::class, 'dt']);
+                    Route::post('classroom/update/{id}', [ClassroomController::class, 'update']);
+                    Route::resource('classroom', ClassroomController::class);
+                });
 
-                Route::post('session-video/detail/dt/{id}', [TheoryVideoController::class, 'dt']);
-                Route::post('session-video/detail/update/{id}', [TheoryVideoController::class, 'update']);
-                Route::post('session-video/detail/store', [TheoryVideoController::class, 'store']);
-                Route::delete('session-video/detail/{id}', [TheoryVideoController::class, 'destroy']);
+                Route::group(['middleware' => 'can:video'], function () {
+                    Route::post('session-video/detail/dt/{id}', [TheoryVideoController::class, 'dt']);
+                    Route::post('session-video/detail/update/{id}', [TheoryVideoController::class, 'update']);
+                    Route::post('session-video/detail/store', [TheoryVideoController::class, 'store']);
+                    Route::delete('session-video/detail/{id}', [TheoryVideoController::class, 'destroy']);
 
-                Route::post('session-video/file/dt/{id}', [TheoryVideoController::class, 'file_dt']);
-                Route::post('session-video/file/update/{id}', [TheoryVideoController::class, 'file_update']);
-                Route::post('session-video/file/store', [TheoryVideoController::class, 'file_store']);
-                Route::delete('session-video/file/{id}', [TheoryVideoController::class, 'file_destroy']);
+                    Route::post('session-video/file/dt/{id}', [TheoryVideoController::class, 'file_dt']);
+                    Route::post('session-video/file/update/{id}', [TheoryVideoController::class, 'file_update']);
+                    Route::post('session-video/file/store', [TheoryVideoController::class, 'file_store']);
+                    Route::delete('session-video/file/{id}', [TheoryVideoController::class, 'file_destroy']);
 
-                Route::post('session-video/dt', [SessionVideoController::class, 'dt']);
-                Route::resource('session-video', SessionVideoController::class);
+                    Route::post('session-video/dt', [SessionVideoController::class, 'dt']);
+                    Route::resource('session-video', SessionVideoController::class);
+                });
 
-                Route::get('master-lesson/guest-star/{id}', [MasterLessonController::class, 'get_guest_star']);
-                Route::delete('master-lesson/guest-star/{id}', [MasterLessonController::class, 'destroy_guest_star']);
-                Route::post('master-lesson/update/{id}', [MasterLessonController::class, 'update']);
-                Route::post('master-lesson/dt', [MasterLessonController::class, 'dt']);
-                Route::resource('master-lesson', MasterLessonController::class);
+                Route::group(['middleware' => 'can:master_lesson'], function () {
+                    Route::get('master-lesson/guest-star/{id}', [MasterLessonController::class, 'get_guest_star']);
+                    Route::delete('master-lesson/guest-star/{id}', [MasterLessonController::class, 'destroy_guest_star']);
+                    Route::post('master-lesson/update/{id}', [MasterLessonController::class, 'update']);
+                    Route::post('master-lesson/dt', [MasterLessonController::class, 'dt']);
+                    Route::resource('master-lesson', MasterLessonController::class);
+                });
             });
 
-            Route::post('guest-star/dt', [GuestStarController::class, 'dt']);
-            Route::resource('guest-star', GuestStarController::class);
+            Route::group(['middleware' => 'can:guest_star'], function () {
+                Route::post('guest-star/dt', [GuestStarController::class, 'dt']);
+                Route::resource('guest-star', GuestStarController::class);
+            });
 
             Route::group(['prefix' => 'coach'], function () {
                 Route::get('coach-sosmed/{id}', [CoachController::class, 'coach_sosmed']);
@@ -326,28 +338,38 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::get('admin/permission/{id}', [AdminController::class, 'get_permission']);
             Route::post('admin/permission/{id}', [AdminController::class, 'set_permission']);
 
-            Route::post('student/dt', [StudentController::class, 'dt']);
-            Route::post('student/update/{id}', [StudentController::class, 'update']);
-            Route::post('student/actived/{id}', [StudentController::class, 'actived']);
-            Route::post('student/verified/{id}', [StudentController::class, 'verified']);
-            Route::resource('student', StudentController::class);
+            Route::group(['middleware' => 'can:student'], function () {
+                Route::post('student/dt', [StudentController::class, 'dt']);
+                Route::post('student/update/{id}', [StudentController::class, 'update']);
+                Route::post('student/actived/{id}', [StudentController::class, 'actived']);
+                Route::post('student/verified/{id}', [StudentController::class, 'verified']);
+                Route::resource('student', StudentController::class);
+            });
+            
+            Route::group(['middleware' => 'can:media_conference'], function () {
+                Route::post('media-conference/dt', [PlatformController::class, 'dt']);
+                Route::post('media-conference/update/{id}', [PlatformController::class, 'update']);
+                Route::resource('media-conference', PlatformController::class);
+            });
 
-            Route::post('media-conference/dt', [PlatformController::class, 'dt']);
-            Route::post('media-conference/update/{id}', [PlatformController::class, 'update']);
-            Route::resource('media-conference', PlatformController::class);
+            Route::group(['middleware' => 'can:theory'], function () {
+                Route::get('theory', [TheoryController::class, 'index']);
+                Route::post('theory', [TheoryController::class, 'store']);
+                Route::delete('theory/{id}', [TheoryController::class, 'destroy']);
+                Route::post('theory/dt', [TheoryController::class, 'dt']);
+                Route::post('theory/update/{id}', [TheoryController::class, 'update']);
+            });
 
-            Route::get('theory', [TheoryController::class, 'index']);
-            Route::post('theory', [TheoryController::class, 'store']);
-            Route::delete('theory/{id}', [TheoryController::class, 'destroy']);
-            Route::post('theory/dt', [TheoryController::class, 'dt']);
-            Route::post('theory/update/{id}', [TheoryController::class, 'update']);
+            Route::group(['middleware' => 'can:profile_video_coach'], function () {
+                Route::post('profile-video-coach/dt', [ProfileVideoCoachController::class, 'dt']);
+                Route::post('profile-video-coach/update/{id}', [ProfileVideoCoachController::class, 'update']);
+                Route::resource('profile-video-coach', ProfileVideoCoachController::class);
+            });
 
-            Route::post('profile-video-coach/dt', [ProfileVideoCoachController::class, 'dt']);
-            Route::post('profile-video-coach/update/{id}', [ProfileVideoCoachController::class, 'update']);
-            Route::resource('profile-video-coach', ProfileVideoCoachController::class);
-
-            Route::post('expertise/dt', [ExpertiseController::class, 'dt']);
-            Route::resource('expertise', ExpertiseController::class);
+            Route::group(['middleware' => 'can:expertise'], function () {
+                Route::post('expertise/dt', [ExpertiseController::class, 'dt']);
+                Route::resource('expertise', ExpertiseController::class);
+            });
         });
 
         Route::group(['prefix' => 'report'], function () {
