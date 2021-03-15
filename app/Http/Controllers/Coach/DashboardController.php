@@ -19,6 +19,15 @@ class DashboardController extends BaseMenu
 {
     public function index()
     {
+        $bank_account = DB::table('bank_accounts')
+            ->select([
+                'bank',
+                'bank_number',
+                'name_account'
+            ])
+            ->where('coach_id', Auth::guard('coach')->user()->id)
+            ->first();
+
         $navigation = [
             [
                 'title' => 'Coach'
@@ -32,6 +41,7 @@ class DashboardController extends BaseMenu
             'title' => 'Dashboard',
             'navigation' => $navigation,
             'list_menu' => $this->menu_coach(),
+            'bank_account' => $bank_account
         ]);
     }
 

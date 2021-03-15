@@ -1,6 +1,6 @@
 <!-- Modal-->
 <div class="modal" id="modal-news" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <form id="form-news" autocomplete="off">
                 <div class="modal-header">
@@ -27,17 +27,24 @@
                     </div>
                     <div class="form-group">
                         <label>
-                            Description
-                            <span class="text-danger">*</span>
-                        </label>
-                        <textarea required name="description" class="form-control" placeholder="Description" rows="4"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>
                             Picture
                             <span class="text-danger">*</span>
                         </label>
                         <div id="image"></div>
+                    </div>
+                    {{-- <div class="form-group">
+                        <label>
+                            Description
+                            <span class="text-danger">*</span>
+                        </label>
+                        <textarea required name="description" class="form-control" placeholder="Description" rows="4"></textarea>
+                    </div> --}}
+                    <div class="form-group">
+                        <label>
+                            Deskripsi
+                            <span class="text-danger">*</span>
+                        </label>
+                        <div id="kt_quil_2" style="min-height: 325px"></div>
                     </div>
                 </div>
                 <div class="modal-footer">

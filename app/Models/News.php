@@ -19,7 +19,9 @@ class News extends Model
         'title',
         'description',
         'image',
-        'classroom_category_id'
+        'classroom_category_id',
+        'quill_description',
+        'json_description'
     ];
 
     protected $dates = ['deleted_at'];

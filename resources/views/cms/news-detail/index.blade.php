@@ -6,6 +6,11 @@
 @include('cms.layouts.banner')
 @endpush
 
+@push('style')
+<link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<link href="//cdn.quilljs.com/1.3.6/quill.bubble.css" rel="stylesheet">
+@endpush
+
 @section('content')
 <section id="news-wrapper">
         <div class="row column-center">
@@ -13,13 +18,13 @@
                 <img class="w-100 news-img__wrapper" src="{{ $news->image_url ? $news->image_url:'' }}" alt="">
             </div>
             <div class="col-12 col-lg-8 column-center mb-0 pb-0">
-                <div class="news-detail mb-0 pb-0">
-                    <div class="news-detail__overlay p-5">
+                <div class="w-100 news-detail mb-0 pb-0">
+                    <div class="w-100 news-detail__overlay p-5">
                         <h3>{{ $news->title ? $news->title:'' }}</h3>
                         <h5 class="pt-4 mt-2 pb-4">{{ $news->date ? date_format(date_create($news->date), "l, d F Y"):''}}</h5>
-                        <p>
-                            {{ $news->description ? $news->description:'' }}
-                        </p>
+                        <div class="ql-editor">
+                            {!! $news->quill_description !!}
+                        </div>
                     </div>
                 </div>
             </div>

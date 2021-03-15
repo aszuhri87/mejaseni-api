@@ -27,6 +27,7 @@ class NewsDetailController extends Controller
                         'title',
                         'description',
                         'created_at as date',
+                        'quill_description',
                          DB::raw("CONCAT('{$path}',image) as image_url"),
                     ])
                     ->whereNull('deleted_at')

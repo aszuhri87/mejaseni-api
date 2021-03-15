@@ -12,6 +12,7 @@
   <title>Mejaseni</title>
   <meta name="description" content="Mejaseni" />
   <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}" />
+  @stack('style')
 </head>
 
 <body>
@@ -66,25 +67,25 @@
   <script type="text/javascript">
     var showLoader = ()=>{
       $.blockUI({
-        css: { 
-          padding:        0, 
-          margin:         0, 
-          width:          '30%', 
-          top:            '25%', 
-          left:           '40%', 
-          textAlign:      'center', 
-          color:          '#000', 
-          border:         null, 
-          backgroundColor:null, 
-          cursor:         'wait' 
+        css: {
+          padding:        0,
+          margin:         0,
+          width:          '30%',
+          top:            '25%',
+          left:           '40%',
+          textAlign:      'center',
+          color:          '#000',
+          border:         null,
+          backgroundColor:null,
+          cursor:         'wait'
         },
-        overlayCSS:  { 
-          backgroundColor: '#000', 
-          opacity:         0.7, 
-          cursor:          'wait' 
+        overlayCSS:  {
+          backgroundColor: '#000',
+          opacity:         0.7,
+          cursor:          'wait'
         },
-        message: '<lottie-player src="https://assets3.lottiefiles.com/packages/lf20_o3kcs3sk.json" background="transparent" speed="1" style="width: 500px; height: 500px;" loop autoplay></lottie-player>' 
-      }); 
+        message: '<lottie-player src="https://assets3.lottiefiles.com/packages/lf20_o3kcs3sk.json" background="transparent" speed="1" style="width: 500px; height: 500px;" loop autoplay></lottie-player>'
+      });
     }
 
     var hideLoader = ()=>{

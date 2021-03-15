@@ -76,7 +76,6 @@
                                                 <div class="col-3"></div>
                                                 <div class="col-9">
                                                     <div class="d-flex">
-                                                        <a href="javascript:void(0)" class="btn btn-clean font-weight-bold">Batal</a>
                                                         <button type="submit" class="btn btn-primary btn-icon w-auto px-2 waves-effect width-md waves-light btn-loading-profile-coach ml-1">Simpan Perubahan</button>
                                                     </div>
                                                 </div>
