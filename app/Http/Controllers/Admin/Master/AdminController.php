@@ -46,8 +46,8 @@ class AdminController extends BaseMenu
             ->leftJoin('roles', 'roles.id', 'model_has_roles.role_id')
             ->select([
                 'admins.*',
-                'roles.name as tipe_admin',
                 'roles.id as role_id',
+                DB::raw("CASE WHEN roles.id IS NOT NULL THEN 'Super Admin' ELSE 'Admin' END admin_type")
             ])
             ->whereNull([
                 'admins.deleted_at'
@@ -62,6 +62,13 @@ class AdminController extends BaseMenu
     public function store(Request $request)
     {
         try {
+            if($request->password != $request->c_password){
+                return response([
+                    "status" => 400,
+                    "message" => 'Konfirmasi Password Salah'
+                ], 400);
+            }
+
             $result = DB::transaction(function () use ($request) {
 
                 $admin = Admin::create([
@@ -71,9 +78,8 @@ class AdminController extends BaseMenu
                     'password' => Hash::make($request->password),
                 ]);
 
-                if (!empty($request->tipe_admin)) {
-                    $role = Role::where('id', $request->tipe_admin)->get();
-                    $admin->assignRole($role);
+                if (isset($request->super_admin)) {
+                    $admin->syncRoles('Super Admin');
                 }
 
                 return $admin;
@@ -94,6 +100,13 @@ class AdminController extends BaseMenu
     public function update(Request $request, $id)
     {
         try {
+            if($request->password != $request->c_password){
+                return response([
+                    "status" => 400,
+                    "message" => 'Konfirmasi Password Salah'
+                ], 400);
+            }
+
             $result = DB::transaction(function () use ($request, $id) {
                 $result = Admin::find($id)->update([
                     'name' => $request->name,
@@ -109,9 +122,8 @@ class AdminController extends BaseMenu
 
                 $admin = Admin::find($id);
 
-                if (isset($request->tipe_admin)) {
-                    $role = Role::where('id', $request->tipe_admin)->first();
-                    $admin->syncRoles($role->name);
+                if (isset($request->super_admin)) {
+                    $admin->syncRoles('Super Admin');
                 }else{
                     $admin->removeRole('Super Admin');
                 }

@@ -9,64 +9,38 @@
                         <i aria-hidden="true" class="ki ki-close"></i>
                     </button>
                 </div>
-                <div class="modal-body row">
-                    <div class="form-group col-12">
+                <div class="modal-body">
+                    <div class="form-group">
                         <label>
                             Name
-                            <span class="text-danger d-none">*</span>
+                            <span class="text-danger">*</span>
                         </label>
                         <input required type="text" name="name" class="form-control" placeholder="Name" />
                     </div>
-                    <div class="form-group col-12">
+                    <div class="form-group">
                         <label>
                             Username
-                            <span class="text-danger d-none">*</span>
+                            <span class="text-danger">*</span>
                         </label>
                         <input required type="text" name="username" class="form-control" placeholder="Username" />
                     </div>
-                    <div class="form-group col-12">
+                    <div class="form-group">
                         <label>
                             Email
-                            <span class="text-danger d-none">*</span>
+                            <span class="text-danger">*</span>
                         </label>
                         <input required type="email" name="email" class="form-control" placeholder="Email" />
                     </div>
-                    <div class="form-group col-12 change_password">
+                    <div class="change-password"></div>
+                    <div class="input-password"></div>
+                    <div class="form-group">
                         <span class="switch switch-sm switch-outline switch-icon switch-primary">
-                            <label>
-                                <input type="checkbox" class="btn-change-password" name="change_password"
-                                    id="change_password" />
+                            <label class="mr-1">
+                                <input type="checkbox" class="btn-change-role" name="super_admin" id="super-admin"/>
                                 <span></span>
-                                Change password!
                             </label>
+                            <p class="m-0 p-0">Super Admin</p>
                         </span>
-                    </div>
-                    <div id="password" class="form-group col-12">
-                        <label>
-                            Password
-                            <span class="text-danger d-none">*</span>
-                        </label>
-                        <input required type="password" name="password" class="form-control" placeholder="Password" />
-                    </div>
-                    <div id="password_confirmation" class="form-group col-12">
-                        <label>
-                            Confirm Password
-                            <span class="text-danger d-none">*</span>
-                        </label>
-                        <input type="password" name="password_confirmation" parsley-trigger="change" required
-                            placeholder="Konfirmasi Password" class="form-control">
-                    </div>
-                    <div class="form-group col-12 tipe_admin">
-                        @foreach ($role as $key => $item)
-                            <span class="switch switch-sm switch-outline switch-icon switch-primary">
-                                <label>
-                                    <input type="checkbox" value="{{ $key }}" class="btn-change-role"
-                                        name="tipe_admin" id="tipe_admin_{{ $key }}" />
-                                    <span></span>
-                                    {{ $item }}
-                                </label>
-                            </span>
-                        @endforeach
                     </div>
                 </div>
                 <div class="modal-footer">
