@@ -39,14 +39,16 @@
                                                 <i class="menu-arrow"></i>
                                                 <ul class="menu-subnav">
                                                     @foreach ($children['children'] as $item)
-                                                    <li class="menu-item  @if($segment4 == $item['key']){{'menu-item-active'}}@endif" aria-haspopup="true">
-                                                        <a href="{{$item['url']}}" class="menu-link ">
-                                                            <i class="menu-bullet menu-bullet-dot">
-                                                                <span></span>
-                                                            </i>
-                                                            <span class="menu-text">{{$item['title']}}</span>
-                                                        </a>
-                                                    </li>
+                                                        @can($item['permission'])
+                                                        <li class="menu-item  @if($segment4 == $item['key']){{'menu-item-active'}}@endif" aria-haspopup="true">
+                                                            <a href="{{$item['url']}}" class="menu-link ">
+                                                                <i class="menu-bullet menu-bullet-dot">
+                                                                    <span></span>
+                                                                </i>
+                                                                <span class="menu-text">{{$item['title']}}</span>
+                                                            </a>
+                                                        </li>
+                                                        @endcan
                                                     @endforeach
                                                 </ul>
                                             </div>

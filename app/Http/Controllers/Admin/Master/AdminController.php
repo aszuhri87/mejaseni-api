@@ -59,17 +59,9 @@ class AdminController extends BaseMenu
             ->make(true);
     }
 
-    public function create()
-    {
-        //
-    }
-
-
     public function store(Request $request)
     {
-
         try {
-
             $result = DB::transaction(function () use ($request) {
 
                 $admin = Admin::create([
@@ -99,18 +91,6 @@ class AdminController extends BaseMenu
         }
     }
 
-
-    public function show($id)
-    {
-        //
-    }
-
-
-    public function edit($id)
-    {
-    }
-
-
     public function update(Request $request, $id)
     {
         try {
@@ -127,11 +107,13 @@ class AdminController extends BaseMenu
                     ]);
                 }
 
-                if (!empty($request->tipe_admin)) {
+                $admin = Admin::find($id);
 
-                    $result = Admin::find($id);
+                if (isset($request->tipe_admin)) {
                     $role = Role::where('id', $request->tipe_admin)->first();
-                    $result->syncRoles($role->name);
+                    $admin->syncRoles($role->name);
+                }else{
+                    $admin->removeRole('Super Admin');
                 }
 
                 return $result;
@@ -148,7 +130,6 @@ class AdminController extends BaseMenu
             ]);
         }
     }
-
 
     public function destroy($id)
     {
