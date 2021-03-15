@@ -1082,12 +1082,12 @@ class DashboardController extends BaseMenu
                     'amount',
                     'created_at',
                 )
-                ->whereRaw("
-                    (SELECT EXTRACT(MONTH FROM current_date)) = (SELECT EXTRACT(MONTH FROM incomes.created_at))
-                ")
-                ->whereRaw("
-                    (SELECT EXTRACT(YEAR FROM current_date)) = (SELECT EXTRACT(YEAR FROM incomes.created_at))
-                ")
+                // ->whereRaw("
+                //     (SELECT EXTRACT(MONTH FROM current_date)) = (SELECT EXTRACT(MONTH FROM incomes.created_at))
+                // ")
+                // ->whereRaw("
+                //     (SELECT EXTRACT(YEAR FROM current_date)) = (SELECT EXTRACT(YEAR FROM incomes.created_at))
+                // ")
                 ->where('coach_id', Auth::guard('coach')->user()->id)
                 ->whereNull('deleted_at')
                 ->get();

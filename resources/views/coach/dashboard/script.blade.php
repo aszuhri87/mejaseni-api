@@ -110,7 +110,7 @@
 
                                 var options = {
                                     series: [{
-                                        name: 'Withdraw',
+                                        name: 'Income',
                                         data: res.data.total
                                     }],
                                     chart: {
