@@ -783,6 +783,6 @@ Route::get('redirect-failed', function () {
     return view('cms.transaction.waiting-payment.failed');
 });
 
-Route::get('video', function () {
-    return view('video');
+Route::get('--version', function () {
+    return '1.0.0';
 });

@@ -90,7 +90,9 @@ class NewsController extends BaseMenu
                     'classroom_category_id' => $request->classroom_category_id,
                     'title' => $request->title,
                     'description' => $request->description,
-                    'image' => $path
+                    'image' => $path,
+                    'quill_description' => $request->quill_description,
+                    'json_description' => $request->json_description,
                 ]);
 
                 return $result;
@@ -153,7 +155,9 @@ class NewsController extends BaseMenu
                     'classroom_category_id' => $request->classroom_category_id,
                     'title' => $request->title,
                     'description' => $request->description,
-                    'image' => $path ? $path:$result->image
+                    'image' => $path ? $path:$result->image,
+                    'quill_description' => $request->quill_description,
+                    'json_description' => $request->json_description,
                 ]);
 
                 return $result;

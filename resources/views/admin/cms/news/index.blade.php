@@ -1,5 +1,10 @@
 @extends('layouts.app')
 
+@push('style')
+<link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<link href="//cdn.quilljs.com/1.3.6/quill.bubble.css" rel="stylesheet">
+@endpush
+
 @section('content')
 <div class="card">
     <div class="card-body">
@@ -64,8 +69,7 @@
                 <tr>
                     <th>No</th>
                     <th width="15%">Image</th>
-                    <th width="25%">Name</th>
-                    <th width="50%">Description</th>
+                    <th width="70%">Name</th>
                     <th width="15%">Actions</th>
                 </tr>
             </thead>
@@ -79,5 +83,7 @@
 @endsection
 
 @push('script')
+    <script src="//cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script src="//cdn.quilljs.com/1.3.6/quill.min.js"></script>
     @include('admin.cms.news.script')
 @endpush

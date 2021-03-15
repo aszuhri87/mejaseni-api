@@ -2,12 +2,13 @@
     var Page = function() {
         var _componentPage = function(){
             var init_table, init_classroom_category, init_profile_coach_video;
-            var init_classroom_category;
+            var init_classroom_category, quill;
 
             $(document).ready(function() {
                 initTable();
                 formSubmit();
                 initAction();
+                initQuil();
             });
 
             const initTable = () => {
@@ -24,7 +25,6 @@
                         { data: 'DT_RowIndex' },
                         { data: 'image_url' },
                         { data: 'title' },
-                        { data: 'description' },
                         { defaultContent: '' }
                         ],
                     columnDefs: [
@@ -42,7 +42,7 @@
                             data: "image_url",
                             render : function(data, type, full, meta) {
                                 return `
-                                    <img src="${data}" class="w-75 align-self-end" alt="">
+                                    <img src="${data}" class="w-50 align-self-end" alt="">
                                     `
                             }
                         },
@@ -134,6 +134,8 @@
                     $('#form-news').find('textarea[name="description"]').val(data.description);
                     $('#image').empty();
 
+                    quill.setContents(JSON.parse(unescapeHtml(data.json_description)));
+
                     if(data.image_url){
                         element = `<input type="file" name="image" class="dropify image"  data-default-file="${data.image_url}"/>`;
                     }else{
@@ -183,11 +185,19 @@
                 $('#form-news').submit(function(event){
                     event.preventDefault();
 
+                    let data = new FormData(this)
+
+                    let description = quill.container.firstChild.innerHTML;
+                    let json_description = JSON.stringify(quill.getContents());
+
+                    data.append('json_description', json_description)
+                    data.append('quill_description', description)
+
                     btn_loading('start')
                     $.ajax({
                         url: $(this).attr('action'),
                         type: $(this).attr('method'),
-                        data: new FormData(this),
+                        data: data,
                         contentType: false,
                         cache: false,
                         processData: false,
@@ -231,6 +241,16 @@
 
                     $('#classroom-category').html(element);
                 })
+            },
+            initQuil = () => {
+                var Delta = Quill.import('delta');
+                quill = new Quill('#kt_quil_2', {
+                    modules: {
+                        toolbar: true
+                    },
+                    placeholder: 'Type your text here...',
+                    theme: 'snow'
+                });
             }
         };
 
