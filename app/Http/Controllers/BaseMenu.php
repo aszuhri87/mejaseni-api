@@ -154,19 +154,19 @@ class BaseMenu extends Controller
                                 'key' => 'classroom-category',
                                 'title' => 'Kategori Kelas',
                                 'url' => 'admin/master/courses/classroom-category',
-                                'permission' => 'class_category'
+                                'permission' => 'category_class'
                             ],
                             [
                                 'key' => 'sub-classroom-category',
                                 'title' => 'Sub Kategori Kelas',
                                 'url' => 'admin/master/courses/sub-classroom-category',
-                                'permission' => 'sub_class_category'
+                                'permission' => 'sub_category_class'
                             ],
                             [
                                 'key' => 'classroom',
                                 'title' => 'Kelas',
                                 'url' => 'admin/master/courses/classroom',
-                                'permission' => 'classroom'
+                                'permission' => 'class'
                             ],
                             [
                                 'key' => 'session-video',
@@ -236,20 +236,20 @@ class BaseMenu extends Controller
                 'key' => 'transaction',
                 'title' => 'Data Transaksi',
                 'url' => '#',
-                'permission' => 'transaction',
+                'permission' => 'data_transaction',
                 'icon' => $this->icon('master'),
                 'children' => [
                     [
                         'key' => 'coach',
                         'title' => 'Coach',
                         'url' => 'admin/transaction/coach',
-                        'permission' => 'coach'
+                        'permission' => 'data_transaction_coach'
                     ],
                     [
                         'key' => 'student',
                         'title' => 'Student',
                         'url' => 'admin/transaction/student',
-                        'permission' => 'student'
+                        'permission' => 'data_transaction_student'
                     ],
                 ],
             ],
@@ -271,38 +271,38 @@ class BaseMenu extends Controller
                 'key' => 'report',
                 'title' => 'Reporting',
                 'url' => '#',
-                'permission' => 'report',
+                'permission' => 'reporting',
                 'icon' => $this->icon('master'),
                 'children' => [
                     [
                         'key' => 'review',
                         'title' => 'Review',
                         'url' => '#',
-                        'permission' => 'review',
+                        'permission' => 'reporting_review',
                         'children' => [
                             [
                                 'key' => 'coach',
                                 'title' => 'Coach',
                                 'url' => 'admin/report/review/coach',
-                                'permission' => 'coach'
+                                'permission' => 'reporting_review_coach'
                             ],
                             [
                                 'key' => 'student',
                                 'title' => 'Student',
                                 'url' => 'admin/report/review/student',
-                                'permission' => 'student'
+                                'permission' => 'reporting_review_student'
                             ],
                             [
                                 'key' => 'class',
                                 'title' => 'Kelas',
                                 'url' => 'admin/report/review/class',
-                                'permission' => 'class'
+                                'permission' => 'reporting_review_class'
                             ],
                             [
                                 'key' => 'video',
                                 'title' => 'Video',
                                 'url' => 'admin/report/review/video',
-                                'permission' => 'video'
+                                'permission' => 'reporting_review_video'
                             ],
                         ]
                     ],
@@ -310,19 +310,19 @@ class BaseMenu extends Controller
                         'key' => 'transaction-report',
                         'title' => 'Transaksi',
                         'url' => '#',
-                        'permission' => 'transaction',
+                        'permission' => 'reporting_transaction',
                         'children' => [
                             [
                                 'key' => 'coach',
                                 'title' => 'Coach',
                                 'url' => 'admin/report/transaction/coach',
-                                'permission' => 'coach'
+                                'permission' => 'reporting_transaction_coach'
                             ],
                             [
                                 'key' => 'student',
                                 'title' => 'Student',
                                 'url' => 'admin/report/transaction-report/student',
-                                'permission' => 'student'
+                                'permission' => 'reporting_transaction_student'
                             ],
                         ]
                     ],

@@ -11,7 +11,44 @@
                 "title": "Courses",
                 "expanded": false,
                 "folder": false,
-                "crud": false
+                "crud": false,
+                "children": [
+                    {
+                        "key": "category_class",
+                        "title": "Kategori Kelas",
+                        "expanded": false,
+                        "folder": false,
+                        "crud": true
+                    },
+                    {
+                        "key": "sub_category_class",
+                        "title": "Sub Kategori Kelas",
+                        "expanded": false,
+                        "folder": false,
+                        "crud": true
+                    },
+                    {
+                        "key": "class",
+                        "title": "Kelas",
+                        "expanded": false,
+                        "folder": false,
+                        "crud": true
+                    },
+                    {
+                        "key": "video",
+                        "title": "Video",
+                        "expanded": false,
+                        "folder": false,
+                        "crud": true
+                    },
+                    {
+                        "key": "master_lesson",
+                        "title": "Master Lesson",
+                        "expanded": false,
+                        "folder": false,
+                        "crud": true
+                    }
+                ]
             },
             {
                 "key": "media_conference",
@@ -21,7 +58,7 @@
                 "crud": true
             },
             {
-                "key": "materi",
+                "key": "theory",
                 "title": "Materi",
                 "expanded": true,
                 "folder": false,
@@ -49,8 +86,22 @@
                 "crud": true
             },
             {
+                "key": "guest_star",
+                "title": "Guest Star",
+                "expanded": true,
+                "folder": false,
+                "crud": true
+            },
+            {
                 "key": "student",
                 "title": "Student",
+                "expanded": true,
+                "folder": false,
+                "crud": true
+            },
+            {
+                "key": "profile_video_coach",
+                "title": "Profile Video Coach",
                 "expanded": true,
                 "folder": false,
                 "crud": true
@@ -81,11 +132,19 @@
         ]
     },
     {
+        "key": "event",
+        "title": "Event",
+        "expanded": true,
+        "folder": false,
+        "crud": true,
+        "children": false
+    },
+    {
         "key": "schedule",
         "title": "Schedule",
         "expanded": true,
         "folder": false,
-        "crud": false,
+        "crud": true,
         "children": false
     },
     {
@@ -158,33 +217,10 @@
         ]
     },
     {
-        "key": "notification_setting",
-        "title": "Notification Setting",
+        "key": "cms",
+        "title": "CMS",
         "expanded": true,
         "folder": false,
-        "crud": false,
-        "children": [
-            {
-                "key": "notification_setting_general",
-                "title": "Notification Setting General",
-                "expanded": true,
-                "folder": false,
-                "crud": true
-            },
-            {
-                "key": "notification_setting_coach",
-                "title": "Notification Setting Coach",
-                "expanded": true,
-                "folder": false,
-                "crud": true
-            },
-            {
-                "key": "notification_setting_student",
-                "title": "Notification Setting Student",
-                "expanded": true,
-                "folder": false,
-                "crud": true
-            }
-        ]
+        "crud": false
     }
 ]
