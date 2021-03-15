@@ -28,7 +28,7 @@
                                 data: 'name'
                             },
                             {
-                                data: 'tipe_admin'
+                                data: 'admin_type'
                             },
                             {
                                 data: 'username'
@@ -122,11 +122,24 @@
                         $('#form-admin').trigger("reset");
                         $('#form-admin').attr('action', '{{ url('admin/master/admin') }}');
                         $('#form-admin').attr('method', 'POST');
-                        
-                        $('.change_password').hide();
-                        $('input[type=password]').attr('required');
-                        $('#password').css('display', '');
-                        $('#password_confirmation').css('display', '');
+
+                        $('.input-password').html(`
+                            <div class="form-group">
+                                <label>
+                                    Password
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input required type="password" name="password" class="form-control" placeholder="Password" />
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    Confirm Password
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input type="password" name="password_confirmation" parsley-trigger="change" required
+                                    placeholder="Konfirmasi Password" class="form-control">
+                            </div>
+                        `);
 
                         showModal('modal-admin');
                     });
@@ -145,12 +158,24 @@
                         $('#form-admin').find('input[name="email"]').val(data.email);
                         $(`#tipe_admin_${data.role_id}`).attr('checked', true);
 
-                        $('.change_password').show();
-                        $('#change_password').attr('checked', true)
+                        if(data.admin_type == 'Super Admin'){
+                            $('#super-admin').attr('checked', true)
+                        }else{
+                            $('#super-admin').attr('checked', false)
+                        }
 
-                        $('input[type=password]').attr('required');
-                        $('#password').css('display', '');
-                        $('#password_confirmation').css('display', '');
+                        $('.input-password').empty();
+                        $('.change-password').html(`
+                            <div class="form-group">
+                                <span class="switch switch-sm switch-outline switch-icon switch-primary">
+                                    <label>
+                                        <input type="checkbox" class="btn-change-role" name="change_password" id="change-pass"/>
+                                        <span></span>
+                                    </label>
+                                    <p class="m-0 p-0">Ubah Password</p>
+                                </span>
+                            </div>
+                        `);
 
                         showModal('modal-admin');
                     });
@@ -272,13 +297,38 @@
                         showModal('modal-config');
                     });
 
+                    $(document).on('change', '#change-pass', function(event){
+                        event.preventDefault();
+                        if($(this).is(':checked')){
+                            $('.input-password').html(`
+                                <div class="form-group">
+                                    <label>
+                                        Password
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <input required type="password" name="password" class="form-control" placeholder="Password" />
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        Confirm Password
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="password" name="password_confirmation" parsley-trigger="change" required
+                                        placeholder="Konfirmasi Password" class="form-control">
+                                </div>
+                            `);
+                        }else{
+                            $('.input-password').empty()
+                        }
+                    });
+
                     $(document).on('click', '.btn-change-password', function(event) {
 
                         if ($(this).prop('checked') == true) {
 
                             $('input[type=password]').attr('required');
 
-                            $('#password').css('display', '');                            
+                            $('#password').css('display', '');
                             $('#password_confirmation').css('display', '');
                         } else {
                             $('input[type=password]').removeAttr('required');

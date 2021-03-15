@@ -46,8 +46,8 @@ class AdminController extends BaseMenu
             ->leftJoin('roles', 'roles.id', 'model_has_roles.role_id')
             ->select([
                 'admins.*',
-                'roles.name as tipe_admin',
                 'roles.id as role_id',
+                DB::raw("CASE WHEN roles.id IS NOT NULL THEN 'Super Admin' ELSE 'Admin' END admin_type")
             ])
             ->whereNull([
                 'admins.deleted_at'
@@ -71,9 +71,8 @@ class AdminController extends BaseMenu
                     'password' => Hash::make($request->password),
                 ]);
 
-                if (!empty($request->tipe_admin)) {
-                    $role = Role::where('id', $request->tipe_admin)->get();
-                    $admin->assignRole($role);
+                if (isset($request->super_admin)) {
+                    $admin->syncRoles('Super Admin');
                 }
 
                 return $admin;
@@ -109,9 +108,8 @@ class AdminController extends BaseMenu
 
                 $admin = Admin::find($id);
 
-                if (isset($request->tipe_admin)) {
-                    $role = Role::where('id', $request->tipe_admin)->first();
-                    $admin->syncRoles($role->name);
+                if (isset($request->super_admin)) {
+                    $admin->syncRoles('Super Admin');
                 }else{
                     $admin->removeRole('Super Admin');
                 }
