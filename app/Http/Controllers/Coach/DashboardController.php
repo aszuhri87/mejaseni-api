@@ -228,49 +228,49 @@ class DashboardController extends BaseMenu
                         $kelas_booking[0]++;
                     }
                     if ($value->check_in == null) {
-                        $kelas_dihadiri[0]--;
+                        $kelas_dihadiri[0]++;
                     }
                 } elseif (date('N', strtotime($value->datetime)) == 2) {
                     if (date('Y-m-d H:i:s',strtotime($value->datetime)) >= date('Y-m-d H:i:s')) {
                         $kelas_booking[1]++;
                     }
                     if ($value->check_in == null) {
-                        $kelas_dihadiri[1]--;
+                        $kelas_dihadiri[1]++;
                     }
                 } elseif (date('N', strtotime($value->datetime)) == 3) {
                     if (date('Y-m-d H:i:s',strtotime($value->datetime)) >= date('Y-m-d H:i:s')) {
                         $kelas_booking[2]++;
                     }
                     if ($value->check_in == null) {
-                        $kelas_dihadiri[2]--;
+                        $kelas_dihadiri[2]++;
                     }
                 } elseif (date('N', strtotime($value->datetime)) == 4) {
                     if (date('Y-m-d H:i:s',strtotime($value->datetime)) >= date('Y-m-d H:i:s')) {
                         $kelas_booking[3]++;
                     }
                     if ($value->check_in == null) {
-                        $kelas_dihadiri[3]--;
+                        $kelas_dihadiri[3]++;
                     }
                 } elseif (date('N', strtotime($value->datetime)) == 5) {
                     if (date('Y-m-d H:i:s',strtotime($value->datetime)) >= date('Y-m-d H:i:s')) {
                         $kelas_booking[4]++;
                     }
                     if ($value->check_in == null) {
-                        $kelas_dihadiri[4]--;
+                        $kelas_dihadiri[4]++;
                     }
                 } elseif (date('N', strtotime($value->datetime)) == 6) {
                     if (date('Y-m-d H:i:s',strtotime($value->datetime)) >= date('Y-m-d H:i:s')) {
                         $kelas_booking[5]++;
                     }
                     if ($value->check_in == null) {
-                        $kelas_dihadiri[5]--;
+                        $kelas_dihadiri[5]++;
                     }
                 } elseif (date('N', strtotime($value->datetime)) == 7) {
                     if (date('Y-m-d H:i:s',strtotime($value->datetime)) >= date('Y-m-d H:i:s')) {
                         $kelas_booking[6]++;
                     }
                     if ($value->check_in == null) {
-                        $kelas_dihadiri[6]--;
+                        $kelas_dihadiri[6]++;
                     }
                 }
             }
