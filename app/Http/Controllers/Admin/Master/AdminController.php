@@ -62,6 +62,13 @@ class AdminController extends BaseMenu
     public function store(Request $request)
     {
         try {
+            if($request->password != $request->c_password){
+                return response([
+                    "status" => 400,
+                    "message" => 'Konfirmasi Password Salah'
+                ], 400);
+            }
+
             $result = DB::transaction(function () use ($request) {
 
                 $admin = Admin::create([
@@ -93,6 +100,13 @@ class AdminController extends BaseMenu
     public function update(Request $request, $id)
     {
         try {
+            if($request->password != $request->c_password){
+                return response([
+                    "status" => 400,
+                    "message" => 'Konfirmasi Password Salah'
+                ], 400);
+            }
+
             $result = DB::transaction(function () use ($request, $id) {
                 $result = Admin::find($id)->update([
                     'name' => $request->name,

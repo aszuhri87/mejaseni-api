@@ -123,6 +123,9 @@
                         $('#form-admin').attr('action', '{{ url('admin/master/admin') }}');
                         $('#form-admin').attr('method', 'POST');
 
+                        $('#super-admin').attr('checked', false)
+
+                        $('.change-password').empty();
                         $('.input-password').html(`
                             <div class="form-group">
                                 <label>
@@ -136,7 +139,7 @@
                                     Confirm Password
                                     <span class="text-danger">*</span>
                                 </label>
-                                <input type="password" name="password_confirmation" parsley-trigger="change" required
+                                <input type="password" name="c_password" parsley-trigger="change" required
                                     placeholder="Konfirmasi Password" class="form-control">
                             </div>
                         `);
