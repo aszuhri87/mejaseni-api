@@ -212,7 +212,8 @@ class DashboardController extends BaseMenu
                 ->select([
                     'coach_classrooms.id',
                     'coach_classrooms.coach_id',
-                ]);
+                ])
+                ->whereNull('coach_classrooms.deleted_at');
 
             $coach_schedule = DB::table('coach_schedules')
                 ->select([

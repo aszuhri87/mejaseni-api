@@ -314,15 +314,65 @@ class CoachController extends BaseMenu
     public function config(Request $request, $id)
     {
         try {
-            $result = CoachClassroom::where('coach_id', $id)->delete();
-
+            // $data = \App\Models\ClassroomCategory::where('id', '7a9bc86c-0fb1-4635-8290-0e8231e9a67b')->withTrashed()->first();
+            // return $data->{'sub_classroom_categories'}()->where('deleted_at', $data->deleted_at)->withTrashed()->update([
+            //     'deleted_at' => null
+            // ]);
+            
+            $result = CoachClassroom::where('coach_id', $id)
+            ->whereNotIn('classroom_id',$request->select ? $request->select : [])
+            ->delete();
+            
             if(!empty($request->select)){
                 foreach ($request->select as $key => $value) {
-                    $insert = CoachClassroom::create([
-                        'coach_id' => $id,
-                        'classroom_id' => $value
-                    ]);
+                    $coach_classroom = DB::table('coach_classrooms')
+                        ->where('coach_id',$id)
+                        ->where('classroom_id',$value)
+                        ->first();
+                    
+                    if(!empty($coach_classroom) && $coach_classroom->deleted_at != null){
+                        $coach_schedule = DB::table('coach_schedules')
+                            ->where('coach_schedules.coach_classroom_id',$coach_classroom->id)
+                            ->whereDate('coach_schedules.deleted_at',$coach_classroom->deleted_at)
+                            ->whereRaw("(SELECT EXTRACT(HOUR FROM coach_schedules.deleted_at)) = (SELECT EXTRACT(HOUR FROM TIMESTAMP '$coach_classroom->deleted_at'))")
+                            ->whereRaw("(SELECT EXTRACT(MINUTE FROM coach_schedules.deleted_at)) = (SELECT EXTRACT(MINUTE FROM TIMESTAMP '$coach_classroom->deleted_at'))")
+                            ->get();
+
+                            foreach ($coach_schedule as $index => $data) {
+                                $update_student_schedule = DB::table('student_schedules')
+                                    ->where('coach_schedule_id',$data->id)
+                                    ->whereDate('coach_schedules.deleted_at',$coach_classroom->deleted_at)
+                                    ->whereRaw("(SELECT EXTRACT(HOUR FROM student_schedules.deleted_at)) = (SELECT EXTRACT(HOUR FROM TIMESTAMP '$coach_classroom->deleted_at'))")
+                                    ->whereRaw("(SELECT EXTRACT(MINUTE FROM student_schedules.deleted_at)) = (SELECT EXTRACT(MINUTE FROM TIMESTAMP '$coach_classroom->deleted_at'))")
+                                    ->update([
+                                        'deleted_at'=>null
+                                    ]);
+
+                                $update_coach_schedule = DB::table('coach_schedules')
+                                    ->where('coach_schedules.coach_classroom_id',$coach_classroom->id)
+                                    ->whereDate('coach_schedules.deleted_at',$coach_classroom->deleted_at)
+                                    ->whereRaw("(SELECT EXTRACT(HOUR FROM coach_schedules.deleted_at)) = (SELECT EXTRACT(HOUR FROM TIMESTAMP '$coach_classroom->deleted_at'))")
+                                    ->whereRaw("(SELECT EXTRACT(MINUTE FROM coach_schedules.deleted_at)) = (SELECT EXTRACT(MINUTE FROM TIMESTAMP '$coach_classroom->deleted_at'))")
+                                    ->update([
+                                        'deleted_at'=>null
+                                    ]);
+                            }
+
+                        $update_coach_classroom = DB::table('coach_classrooms')
+                            ->where('coach_id',$id)
+                            ->where('classroom_id',$value)
+                            ->update([
+                                'deleted_at' => null
+                            ]);
+                    }
+                    elseif(empty($coach_classroom)){
+                        $create = CoachClassroom::create([
+                            'coach_id' => $id,
+                            'classroom_id' => $value,
+                        ]);
+                    }
                 }
+                    
             }
             return response([
                 "status"=>200,
