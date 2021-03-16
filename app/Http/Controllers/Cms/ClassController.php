@@ -47,13 +47,13 @@ class ClassController extends Controller
             ])
             ->first();
 
-        
+
 
         $sub_categories = null;
         $selected_sub_category = null;
         $classrooms = null;
         $regular_classrooms = null;
-        
+
         if($selected_category){
             $sub_categories = DB::table('sub_classroom_categories')
                     ->select(['id','name'])
@@ -62,7 +62,7 @@ class ClassController extends Controller
                         'deleted_at'
                     ])
                     ->get();
-            
+
             $selected_sub_category = DB::table('sub_classroom_categories')
                 ->select(['id','name'])
                 ->where('classroom_category_id',$selected_category->id)
@@ -105,7 +105,7 @@ class ClassController extends Controller
                 ])
                 ->where('classrooms.package_type',$regular_class_type)
                 ->where('classrooms.classroom_category_id',$selected_category->id);
-            
+
             if($selected_sub_category){
                 $classrooms = $classrooms->where('sub_classroom_category_id', $selected_sub_category->id);
 
@@ -116,7 +116,7 @@ class ClassController extends Controller
             $regular_classrooms = $regular_classrooms->get();
 
         }
-        
+
 
 
     	return view('cms.class.index', [
@@ -696,7 +696,7 @@ class ClassController extends Controller
 
         if($classrooms->isEmpty())
             return "";
-        
+
         $html ='<div class="splide pb-4" id="class-splide">
               <div class="splide__track">
                 <ul class="splide__list" id="classrooms">';
