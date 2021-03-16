@@ -37,28 +37,74 @@ class CoachController extends BaseMenu
     {
         $path = Storage::disk('s3')->url('/');
 
+        $classroom = DB::table('classrooms')
+            ->select([
+                'classrooms.id',
+                'classrooms.name',
+            ])
+            ->whereNull('classrooms.deleted_at');
+
+        $coach_classroom = DB::table('coach_classrooms')
+            ->select([
+                'coach_classrooms.id',
+                'coach_classrooms.coach_id',
+                'classrooms.name',
+            ])
+            ->joinSub($classroom, 'classrooms', function ($join) {
+                $join->on('coach_classrooms.classroom_id', '=', 'classrooms.id');
+            })
+            ->whereNull('coach_classrooms.deleted_at');
+
+        $session_feedback = DB::table('session_feedback')
+            ->select([
+                'session_feedback.student_schedule_id',
+                'session_feedback.star'
+            ])
+            ->whereNull('session_feedback.deleted_at');
+
+        $student_schedule = DB::table('student_schedules')
+            ->select([
+                'student_schedules.id',
+                'student_schedules.coach_schedule_id',
+                'session_feedback.star'
+            ])
+            ->leftJoinSub($session_feedback, 'session_feedback', function ($join) {
+                $join->on('student_schedules.id', '=', 'session_feedback.student_schedule_id');
+            })
+            ->whereNull('student_schedules.deleted_at');
+
+        $coach_schedule = DB::table('coach_schedules')
+            ->select([
+                'coach_schedules.id',
+                'coach_schedules.coach_classroom_id',
+                'student_schedules.star',
+            ])
+            ->joinSub($student_schedule, 'student_schedules', function ($join) {
+                $join->on('coach_schedules.id', '=', 'student_schedules.coach_schedule_id');
+            })
+            ->whereNull('coach_schedules.deleted_at');
+
         $data = DB::table('coaches')
             ->select([
                 'coaches.id',
                 'coaches.name',
-                'classrooms.name as class_name',
+                'coach_classrooms.name as class_name',
                 'expertises.name as expertise_name',
                 DB::raw("CONCAT('{$path}',coaches.image) as image_url"),
-                DB::raw("COUNT(classrooms.id) as total_class"),
-                DB::raw("ROUND(AVG(session_feedback.star), 1) as total_rate"),
+                DB::raw("COUNT(coach_classrooms.name) as total_class"),
+                DB::raw("ROUND(AVG(coach_schedules.star), 1) as total_rate"),
             ])
-            ->leftJoin('coach_classrooms', 'coach_classrooms.coach_id', 'coaches.id')
-            ->leftJoin('classrooms', 'classrooms.id', 'coach_classrooms.classroom_id')
-            ->leftJoin('coach_schedules', 'coach_schedules.coach_classroom_id', 'coach_classrooms.id')
-            ->leftJoin('student_schedules', 'student_schedules.coach_schedule_id', 'coach_schedules.id')
-            ->leftJoin('session_feedback', 'session_feedback.student_schedule_id', 'student_schedules.id')
+            ->leftJoinSub($coach_classroom, 'coach_classrooms', function ($join) {
+                $join->on('coaches.id', '=', 'coach_classrooms.coach_id');
+            })
+            ->leftJoinSub($coach_schedule, 'coach_schedules', function ($join) {
+                $join->on('coach_classrooms.id', '=', 'coach_schedules.coach_classroom_id');
+            })
             ->leftJoin('expertises', 'expertises.id', 'coaches.expertise_id')
-            // ->Join('classroom_categories', 'classroom_categories.id', '=', 'classrooms.classroom_category_id')
-            // ->Join('sub_classroom_categories', 'sub_classroom_categories.id', '=', 'classrooms.sub_classroom_category_id')
             ->whereNull([
                 'coaches.deleted_at'
             ])
-            ->groupBy('coaches.id', 'coaches.name', 'classrooms.name', 'expertises.name')
+            ->groupBy('coaches.id', 'coaches.name', 'coach_classrooms.name', 'expertises.name')
             ->get();
 
         return DataTables::of($data)->addIndexColumn()->make(true);

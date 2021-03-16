@@ -165,6 +165,7 @@ class TheoryController extends BaseMenu
                     }
                 })
                 ->whereRaw('student_schedules.datetime::timestamp <= now()::timestamp')
+                ->orderBy('classrooms.upload_date','asc')
                 ->get();
 
             foreach ($result as $key => $value) {
@@ -389,6 +390,7 @@ class TheoryController extends BaseMenu
                     }
                 })
                 ->whereRaw('student_schedules.datetime::timestamp <= now()::timestamp')
+                ->orderBy('classrooms.upload_date','asc')
                 ->get();
 
             foreach ($result as $key => $value) {

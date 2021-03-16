@@ -213,6 +213,7 @@ class VideoController extends BaseMenu
             ])
             ->where('theory_videos.session_video_id',$result->id)
             ->whereNull('theory_videos.deleted_at')
+            ->orderBy('theory_videos.created_at','asc')
             ->get();
 
         $file_video = DB::table('theory_video_files')
@@ -226,6 +227,7 @@ class VideoController extends BaseMenu
             ])
             ->where('theory_video_files.session_video_id',$result->id)
             ->whereNull('theory_video_files.deleted_at')
+            ->orderBy('theory_video_files.created_at','asc')
             ->get();
 
         $result->video = $video;

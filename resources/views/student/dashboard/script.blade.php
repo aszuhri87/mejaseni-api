@@ -44,8 +44,8 @@
                             plotOptions: {
                                 bar: {
                                     horizontal: false,
-                                    endingShape: 'rounded',
-                                    columnWidth: '30px',
+                                    columnWidth: '30%',
+                                    endingShape: 'rounded'
                                 },
                             },
                             dataLabels: {

@@ -59,7 +59,7 @@
                                             <img src="${full.image_url}" class="rounded" width="50" height="50"/>
                                         </div>
                                         <div class="d-flex flex-column font-weight-bold">
-                                            <a href="{{ url('admin/master/coach/view-calendar') }}/${full.id}">${data}</a>
+                                            ${data}
                                         </div>
                                     </div>
                                 `;
