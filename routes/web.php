@@ -564,6 +564,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::group(['prefix' => 'dashboard'], function () {
 
             Route::get('summary-course-chart', [DashboardController::class, 'summary_course_chart']);
+            Route::get('incomes-chart', [DashboardController::class, 'incomes_chart']);
             Route::get('side-summary-course', [DashboardController::class, 'side_summary_course']);
             Route::post('dt-last-class', [DashboardController::class, 'dt_last_class']);
             Route::post('closest-schedule', [DashboardController::class, 'closest_schedule']);

@@ -3,11 +3,19 @@
         var _componentPage = function() {
             var init_table;
 
+            const primary = '#7F16A7';
+            const success = '#1BC5BD';
+            const info = '#8950FC';
+            const warning = '#FFA800';
+            const danger = '#F64E60';
+            const light_danger = '#FFE2E5';
+
             $(document).ready(function() {
                 initAction();
                 formSubmit();
                 getBalance();
                 summary_course_chart();
+                incomes_chart();
                 side_summary_course();
                 closestScheduleTable();
                 latestComplateClassTable();
@@ -24,10 +32,9 @@
                         })
                         .done(function(res, xhr, meta) {
                             if (res.status == 200) {
-                                let data = 0;
-                                $.each(res.data.total_booking, function(index, value) {
-                                    data = data + value;
-                                });
+
+                                $('.total-booking').text(res.data.total_booking)
+
                                 var options = {
                                     series: [{
                                         name: 'Kelas Hadir',
@@ -38,12 +45,12 @@
                                     }],
                                     chart: {
                                         type: 'bar',
-                                        height: 350
+                                        height: 400
                                     },
                                     plotOptions: {
                                         bar: {
                                             horizontal: false,
-                                            columnWidth: '23%',
+                                            columnWidth: ['20%'],
                                             endingShape: 'rounded'
                                         },
                                     },
@@ -59,21 +66,15 @@
                                         categories: res.data.range_time,
                                     },
                                     yaxis: {
+                                        max: res.data.total_booking + 20,
                                         title: {
-                                            text: 'Penjualan'
+                                            text: 'Total'
                                         }
                                     },
                                     fill: {
                                         opacity: 1
                                     },
-                                    tooltip: {  
-                                        y: {
-                                            formatter: function(val) {
-                                                return val + " student"
-                                            }
-                                        }
-                                    },
-                                    colors: ['#7F16A7', '#FFA800'],
+                                    colors: [primary, warning]
                                 };
 
                                 var chart = new ApexCharts(document.querySelector("#summary_course_chart"),
@@ -88,6 +89,159 @@
                         .always(function() {
 
                         });
+                },
+                incomes_chart = () =>{
+                    $('#incomes-chart').empty();
+                    $.ajax({
+                            url: `{{ url('coach/dashboard/incomes-chart') }}`,
+                            type: 'GET',
+                            dataType: 'json',
+                        })
+                        .done(function(res, xhr, meta) {
+                            if (res.status == 200) {
+
+                                var element = document.getElementById("incomes-chart");
+                                var height = parseInt(KTUtil.css(element, 'height'));
+                                var color = KTUtil.hasAttr(element, 'data-color') ? KTUtil.attr(element, 'data-color') : 'danger';
+
+                                if (!element) {
+                                    return;
+                                }
+
+                                var options = {
+                                    series: [{
+                                        name: 'Income',
+                                        data: res.data.total
+                                    }],
+                                    chart: {
+                                        type: 'area',
+                                        height: 150,
+                                        toolbar: {
+                                            show: false
+                                        },
+                                        zoom: {
+                                            enabled: false
+                                        },
+                                        sparkline: {
+                                            enabled: true
+                                        }
+                                    },
+                                    plotOptions: {},
+                                    legend: {
+                                        show: false
+                                    },
+                                    dataLabels: {
+                                        enabled: false
+                                    },
+                                    fill: {
+                                        type: 'solid'
+                                    },
+                                    stroke: {
+                                        curve: 'smooth',
+                                        show: true,
+                                        width: 3,
+                                        colors: [KTApp.getSettings()['colors']['theme']['base'][color]]
+                                    },
+                                    xaxis: {
+                                        categories: res.data.date,
+                                        axisBorder: {
+                                            show: false,
+                                        },
+                                        axisTicks: {
+                                            show: false
+                                        },
+                                        labels: {
+                                            show: false,
+                                            style: {
+                                                colors: KTApp.getSettings()['colors']['gray']['gray-500'],
+                                                fontSize: '12px',
+                                                fontFamily: KTApp.getSettings()['font-family']
+                                            }
+                                        },
+                                        crosshairs: {
+                                            show: false,
+                                            position: 'front',
+                                            stroke: {
+                                                color: KTApp.getSettings()['colors']['gray']['gray-300'],
+                                                width: 1,
+                                                dashArray: 3
+                                            }
+                                        },
+                                        tooltip: {
+                                            enabled: true,
+                                            formatter: undefined,
+                                            offsetY: 0,
+                                            style: {
+                                                fontSize: '12px',
+                                                fontFamily: KTApp.getSettings()['font-family']
+                                            }
+                                        }
+                                    },
+                                    yaxis: {
+                                        min: 0,
+                                        labels: {
+                                            show: false,
+                                            style: {
+                                                colors: KTApp.getSettings()['colors']['gray']['gray-500'],
+                                                fontSize: '12px',
+                                                fontFamily: KTApp.getSettings()['font-family']
+                                            }
+                                        }
+                                    },
+                                    states: {
+                                        normal: {
+                                            filter: {
+                                                type: 'none',
+                                                value: 0
+                                            }
+                                        },
+                                        hover: {
+                                            filter: {
+                                                type: 'none',
+                                                value: 0
+                                            }
+                                        },
+                                        active: {
+                                            allowMultipleDataPointsSelection: false,
+                                            filter: {
+                                                type: 'none',
+                                                value: 0
+                                            }
+                                        }
+                                    },
+                                    tooltip: {
+                                        style: {
+                                            fontSize: '12px',
+                                            fontFamily: KTApp.getSettings()['font-family']
+                                        },
+                                        y: {
+                                            formatter: function (val) {
+                                                return "Rp. " + val
+                                            }
+                                        }
+                                    },
+                                    colors: [KTApp.getSettings()['colors']['theme']['light'][color]],
+                                    markers: {
+                                        colors: [KTApp.getSettings()['colors']['theme']['light'][color]],
+                                        strokeColor: [KTApp.getSettings()['colors']['theme']['base'][color]],
+                                        strokeWidth: 3
+                                    },
+                                    padding: {
+                                        top: 0,
+                                        bottom: 0
+                                    }
+                                };
+
+                                var chart = new ApexCharts(element, options);
+                                chart.render();
+                            }
+                        })
+                        .fail(function(res, error) {
+                            toastr.error(res.responseJSON.message, 'Failed')
+                        })
+                        .always(function() {
+
+                        });                    
                 },
                 initDatePicker = () => {
                     if (KTUtil.isRTL()) {
