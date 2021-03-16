@@ -71,6 +71,7 @@
                         </span>
                     </div>
                 </div>
+                @can('reporting_review_class_print')
                 <div class="form-group ml-1">
                     <div class="btn-group dropdown">
                         <button class="btn btn-sm btn-primary font-weight-bold dropdown-toggle py-3 px-5" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -88,6 +89,7 @@
                         </div>
                     </div>
                 </div>
+                @endcan
             </div>
         </div>
         </form>

@@ -330,13 +330,17 @@ Route::group(['middleware' => ['auth-handling']], function () {
                 });
             });
 
-            Route::post('coach/dt', [CoachController::class, 'dt']);
-            Route::resource('coach', CoachController::class);
+            Route::group(['middleware' => 'can:coach'], function () {
+                Route::post('coach/dt', [CoachController::class, 'dt']);
+                Route::resource('coach', CoachController::class);
+            });
 
-            Route::resource('admin', AdminController::class);
-            Route::post('admin/dt', [AdminController::class, 'dt']);
-            Route::get('admin/permission/{id}', [AdminController::class, 'get_permission']);
-            Route::post('admin/permission/{id}', [AdminController::class, 'set_permission']);
+            Route::group(['middleware' => 'can:admin'], function () {
+                Route::post('admin/dt', [AdminController::class, 'dt']);
+                Route::get('admin/permission/{id}', [AdminController::class, 'get_permission']);
+                Route::post('admin/permission/{id}', [AdminController::class, 'set_permission']);
+                Route::resource('admin', AdminController::class);
+            });
 
             Route::group(['middleware' => 'can:student'], function () {
                 Route::post('student/dt', [StudentController::class, 'dt']);
@@ -372,9 +376,9 @@ Route::group(['middleware' => ['auth-handling']], function () {
             });
         });
 
-        Route::group(['prefix' => 'report'], function () {
-            Route::group(['prefix' => 'review'], function () {
-                Route::group(['prefix' => 'video'], function () {
+        Route::group(['prefix' => 'report','middleware' => 'can:reporting'], function () {
+            Route::group(['prefix' => 'review','middleware' => 'can:reporting_review'], function () {
+                Route::group(['prefix' => 'video','middleware' => 'can:reporting_review_video'], function () {
                     Route::get('/', [VideoController::class, 'index']);
                     Route::get('{id}', [VideoController::class, 'detail']);
                     Route::post('dt', [VideoController::class, 'dt']);
@@ -384,7 +388,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
                     Route::post('print-pdf/{id}', [VideoController::class, 'print_pdf']);
                 });
 
-                Route::group(['prefix' => 'class'], function () {
+                Route::group(['prefix' => 'class','middleware' => 'can:reporting_review_class'], function () {
                     Route::get('/', [ReviewClassController::class, 'index']);
                     Route::get('{id}', [ReviewClassController::class, 'detail']);
                     Route::post('dt', [ReviewClassController::class, 'dt']);
@@ -394,8 +398,8 @@ Route::group(['middleware' => ['auth-handling']], function () {
                 });
             });
 
-            Route::group(['prefix' => 'transaction'], function () {
-                Route::group(['prefix' => 'coach'], function () {
+            Route::group(['prefix' => 'transaction','middleware' => 'can:reporting_transaction'], function () {
+                Route::group(['prefix' => 'coach','middleware' => 'can:reporting_transaction_coach'], function () {
                     Route::get('/', [ReportTransactionCoachController::class, 'index']);
                     Route::post('dt', [ReportTransactionCoachController::class, 'dt']);
                     Route::post('print-pdf', [ReportTransactionCoachController::class, 'print_pdf']);
@@ -403,8 +407,8 @@ Route::group(['middleware' => ['auth-handling']], function () {
                 });
             });
 
-            Route::group(['prefix' => 'transaction-report'], function () {
-                Route::group(['prefix' => 'student'], function () {
+            Route::group(['prefix' => 'transaction-report','middleware' => 'can:reporting_transaction'], function () {
+                Route::group(['prefix' => 'student','middleware' => 'can:reporting_transaction_student'], function () {
                     Route::get('/', [ReviewTransactionStudentController::class, 'index']);
                     Route::post('dt', [ReviewTransactionStudentController::class, 'dt']);
                     Route::post('print-pdf', [ReviewTransactionStudentController::class, 'print_pdf']);
@@ -413,15 +417,22 @@ Route::group(['middleware' => ['auth-handling']], function () {
             });
         });
 
-        Route::group(['prefix' => 'transaction'], function () {
-            Route::get('coach', [TransactionCoachController::class, 'index']);
-            Route::post('coach/dt', [TransactionCoachController::class, 'dt']);
-            Route::post('coach/confirm/{id}', [TransactionCoachController::class, 'confirm']);
-
-            Route::get('student', [TransactionStudentController::class, 'index']);
-            Route::post('student/dt', [TransactionStudentController::class, 'dt']);
-            Route::get('student/detail/{id}', [TransactionStudentController::class, 'detail']);
+        Route::group(['middleware' => 'can:data_transaction'], function () {    
+            Route::group(['prefix' => 'transaction'], function () {
+                Route::group(['middleware' => 'can:data_transaction_coach'], function () {
+                    Route::get('coach', [TransactionCoachController::class, 'index']);
+                    Route::post('coach/dt', [TransactionCoachController::class, 'dt']);
+                    Route::post('coach/confirm/{id}', [TransactionCoachController::class, 'confirm']);
+                });
+    
+                Route::group(['middleware' => 'can:data_transaction_student'], function () {
+                    Route::get('student', [TransactionStudentController::class, 'index']);
+                    Route::post('student/dt', [TransactionStudentController::class, 'dt']);
+                    Route::get('student/detail/{id}', [TransactionStudentController::class, 'detail']);
+                });
+            });
         });
+
 
         Route::get('schedule/master-lesson/{id}', [ScheduleController::class, 'show_master_lesson']);
         Route::post('schedule/master-lesson/update/{id}', [ScheduleController::class, 'update_time_master_lesson']);
@@ -439,11 +450,11 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::get('schedule-list', [ListController::class, 'index']);
         Route::post('schedule-list/dt', [ListController::class, 'dt']);
 
-        Route::group(['prefix' => 'report'], function () {
+        Route::group(['prefix' => 'report','middleware' => 'can:reporting'], function () {
 
-            Route::group(['prefix' => 'review'], function () {
+            Route::group(['prefix' => 'review', 'middleware' => 'can:reporting_review'], function () {
 
-                Route::group(['prefix' => 'coach'], function () {
+                Route::group(['prefix' => 'coach','middleware' => 'can:reporting_review_coach'], function () {
                     Route::get('/', [AdminCoachController::class, 'index']);
                     Route::post('dt', [AdminCoachController::class, 'dt']);
                     Route::get('admin/report/review/coach/details/{id}', [AdminCoachController::class, 'dt']);
@@ -454,7 +465,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
                     });
                 });
 
-                Route::group(['prefix' => 'student'], function () {
+                Route::group(['prefix' => 'student','middleware' => 'can:reporting_review_student'], function () {
                     Route::get('/', [AdminStudentController::class, 'index']);
                     Route::post('dt', [AdminStudentController::class, 'dt']);
                     Route::group(['prefix' => 'detail'], function () {

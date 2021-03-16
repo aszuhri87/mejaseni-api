@@ -85,6 +85,7 @@
                             </span>
                         </div>
                     </div>
+                    @can('reporting_review_coach_print')
                     <div class="form-group ml-1">
                         <button type="button" id="export-btn"
                             class="btn btn-primary btn-icon w-auto px-2 waves-effect width-md waves-light ml-1">
@@ -108,6 +109,7 @@
                             Eksport Data
                         </button>
                     </div>
+                    @endcan
                 </div>
             </div>
             <table class="table table-separate table-head-custom mb-0 pb-0" width="100%" id="init-table">

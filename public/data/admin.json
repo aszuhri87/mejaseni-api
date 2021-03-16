@@ -76,7 +76,10 @@
                 "title": "Admin",
                 "expanded": true,
                 "folder": false,
-                "crud": true
+                "crud": true,
+                "other":{
+                    "admin_permission": "Admin Permission"
+                }
             },
             {
                 "key": "coach",

@@ -77,6 +77,7 @@
                         </span>
                     </div>
                 </div>
+                @can('reporting_transaction_student_print')
                 <div class="form-group ml-1">
                     <div class="btn-group dropdown">
                         <button class="btn btn-sm btn-primary font-weight-bold dropdown-toggle py-3 px-5" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -94,6 +95,7 @@
                         </div>
                     </div>
                 </div>
+                @endcan
             </div>
         </div>
         <table class="table table-separate table-head-custom mb-0 pb-0" width="100%" id="init-table">
