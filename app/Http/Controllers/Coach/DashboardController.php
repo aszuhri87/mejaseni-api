@@ -2,19 +2,22 @@
 
 namespace App\Http\Controllers\Coach;
 
+use Illuminate\Http\Request;
 use App\Http\Controllers\BaseMenu;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+
 use App\Models\Coach;
+use App\Models\Income;
 use App\Models\CoachClassroom;
 use App\Models\CoachSchedule;
 use App\Models\StudentFeedback;
 use App\Models\StudentSchedule;
+
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
-use Yajra\DataTables\Facades\DataTables;
+use DataTables;
 
 class DashboardController extends BaseMenu
 {
@@ -50,91 +53,6 @@ class DashboardController extends BaseMenu
     {
         try {
             date_default_timezone_set("Asia/Jakarta");
-
-            // $coaches = DB::table('coaches')
-            //     ->select(
-            //         'coaches.*',
-            //     )
-            //     ->where([
-            //         ['coaches.id', Auth::guard('coach')->id()],
-            //     ])
-            //     ->WhereNull('coaches.deleted_at');
-
-            // $coach_classrooms = DB::table('coach_classrooms')
-            //     ->select(
-            //         'coach_classrooms.*'
-            //     )
-            //     ->WhereNull('coach_classrooms.deleted_at')
-            //     ->leftJoinSub($coaches, 'coaches', function ($join) {
-            //         $join->on('coach_classrooms.coach_id', '=', 'coaches.id');
-            //     });
-
-            // $classrooms = DB::table('classrooms')
-            //     ->select(
-            //         'classrooms.id',
-            //         'classrooms.name as classroom_name',
-            //         'classrooms.session_duration as classroom_session_duration',
-            //         'classrooms.package_type'
-            //     )
-            //     ->WhereNull('classrooms.deleted_at')
-            //     ->leftJoinSub($coach_classrooms, 'coach_classrooms', function ($join) {
-            //         $join->on('classrooms.id', '=', 'coach_classrooms.classroom_id');
-            //     });
-
-            // $transactions = DB::table('transactions')
-            //     ->select(
-            //         'transactions.id',
-            //         'transactions.status',
-            //         'transactions.student_id',
-            //     )
-            //     ->where('status', 2);
-
-            // $students = DB::table('students')
-            //     ->select(
-            //         'students.id',
-            //         'transactions.status',
-            //     )
-            //     ->JoinSub($transactions, 'transactions', function ($join) {
-            //         $join->on('students.id', '=', 'transactions.student_id');
-            //     })
-            //     ->WhereNull('students.deleted_at');
-
-            // $student_classrooms = DB::table('student_classrooms')
-            //     ->select(
-            //         'student_classrooms.id',
-            //         'student_classrooms.student_id',
-            //         'student_classrooms.classroom_id',
-            //         'students.status',
-            //     )
-            //     ->leftJoinSub($classrooms, 'classrooms', function ($join) {
-            //         $join->on('student_classrooms.classroom_id', '=', 'classrooms.id');
-            //     })
-            //     ->leftJoinSub($students, 'students', function ($join) {
-            //         $join->on('student_classrooms.student_id', '=', 'students.id');
-            //     })
-            //     ->WhereNull('student_classrooms.deleted_at');
-
-            // $data = DB::table('student_schedules')
-            //     ->select(
-            //         'student_schedules.check_in',
-            //         'student_schedules.created_at',
-            //         'student_classrooms.status'
-            //     )
-            //     ->leftJoinSub($student_classrooms, 'student_classrooms', function ($join) {
-            //         $join->on('student_schedules.student_classroom_id', '=', 'student_classrooms.id');
-            //     })
-            //     ->whereRaw("
-            //         (SELECT EXTRACT(WEEK FROM current_date)) = (SELECT EXTRACT(WEEK FROM student_schedules.created_at))
-            //     ")
-            //     ->whereRaw("
-            //         (SELECT EXTRACT(MONTH FROM current_date)) = (SELECT EXTRACT(MONTH FROM student_schedules.created_at))
-            //     ")
-            //     ->whereRaw("
-            //         (SELECT EXTRACT(YEAR FROM current_date)) = (SELECT EXTRACT(YEAR FROM student_schedules.created_at))
-            //     ")
-            //     ->WhereNull('student_schedules.deleted_at')
-            //     ->orderBy('student_schedules.created_at', 'asc')
-            //     ->get();
 
             $coach_classroom = DB::table('coach_classrooms')
                 ->select([
@@ -182,57 +100,6 @@ class DashboardController extends BaseMenu
             $kelas_booking = [0, 0, 0, 0, 0, 0, 0];
             $kelas_dihadiri = [0, 0, 0, 0, 0, 0, 0];
             foreach ($data as $key => $value) {
-                // if (date('N', strtotime($value->created_at)) == 1) {
-                //     if ($value->status == 2) { //2 kelas booking success
-                //         $kelas_booking[0]++;
-                //     }
-                //     if ($value->check_in == null) { //check in not null is "Hadir"
-                //         $kelas_dihadiri[0]--;
-                //     }
-                // } elseif (date('N', strtotime($value->created_at)) == 2) {
-                //     if ($value->status == 2) { //2 kelas booking success
-                //         $kelas_booking[1]++;
-                //     }
-                //     if ($value->check_in == null) { //check in not null is "Hadir"
-                //         $kelas_dihadiri[1]--;
-                //     }
-                // } elseif (date('N', strtotime($value->created_at)) == 3) {
-                //     if ($value->status == 2) { //2 kelas booking success
-                //         $kelas_booking[2]++;
-                //     }
-                //     if ($value->check_in == null) { //check in not null is "Hadir"
-                //         $kelas_dihadiri[2]--;
-                //     }
-                // } elseif (date('N', strtotime($value->created_at)) == 4) {
-                //     $kelas_booking[3]++;
-                //     if ($value->status == 2) { //2 kelas booking success
-                //         $kelas_booking[3]++;
-                //     }
-                //     if ($value->check_in == null) { //check in not null is "Hadir"
-                //         $kelas_dihadiri[3]--;
-                //     }
-                // } elseif (date('N', strtotime($value->created_at)) == 5) {
-                //     if ($value->status == 2) { //2 kelas booking success
-                //         $kelas_booking[4]++;
-                //     }
-                //     if ($value->check_in == null) { //check in not null is "Hadir"
-                //         $kelas_dihadiri[5]--;
-                //     }
-                // } elseif (date('N', strtotime($value->created_at)) == 6) {
-                //     if ($value->status == 2) { //2 kelas booking success
-                //         $kelas_booking[5]++;
-                //     }
-                //     if ($value->check_in == null) { //check in not null is "Hadir"
-                //         $kelas_dihadiri[5]--;
-                //     }
-                // } elseif (date('N', strtotime($value->created_at)) == 7) {
-                //     if ($value->status == 2) { //2 kelas booking success
-                //         $kelas_booking[6]++;
-                //     }
-                //     if ($value->check_in == null) { //check in not null is "Hadir"
-                //         $kelas_dihadiri[6]--;
-                //     }
-                // }
 
                 if (date('N', strtotime($value->datetime)) == 1) {
                     if (date('Y-m-d H:i:s', strtotime($value->datetime)) >= date('Y-m-d H:i:s')) {
@@ -341,28 +208,6 @@ class DashboardController extends BaseMenu
                 ->WhereNull('theory_videos.deleted_at')
                 ->count();
 
-            // $total_booking = DB::table('transactions')
-            //     ->join('students', 'students.id', 'transactions.student_id')
-            //     ->join('student_classrooms', 'student_classrooms.student_id', 'students.id')
-            //     ->join('classrooms', 'classrooms.id', 'student_classrooms.classroom_id')
-            //     ->join('coach_classrooms', 'coach_classrooms.classroom_id', 'classrooms.id')
-            //     ->join('coaches', 'coaches.id', 'coach_classrooms.coach_id')
-            //     ->whereRaw("
-            //         (SELECT EXTRACT(WEEK FROM current_date)) = (SELECT EXTRACT(WEEK FROM transactions.created_at))
-            //     ")
-            //     ->whereRaw("
-            //         (SELECT EXTRACT(MONTH FROM current_date)) = (SELECT EXTRACT(MONTH FROM transactions.created_at))
-            //     ")
-            //     ->whereRaw("
-            //         (SELECT EXTRACT(YEAR FROM current_date)) = (SELECT EXTRACT(YEAR FROM transactions.created_at))
-            //     ")
-            //     ->where([
-            //         ['transactions.confirmed', true],
-            //         ['coaches.id', Auth::guard('coach')->id()]
-            //     ])
-            //     ->WhereNull('transactions.deleted_at')
-            //     ->count();
-
             $coach_classroom = DB::table('coach_classrooms')
                 ->select([
                     'coach_classrooms.id',
@@ -401,27 +246,6 @@ class DashboardController extends BaseMenu
                     (SELECT EXTRACT(YEAR FROM current_date)) = (SELECT EXTRACT(YEAR FROM coach_schedules.datetime))
                 ")
                 ->count();
-
-            // $total_riwayat_booking = DB::table('transactions')
-            //     ->join('students', 'students.id', 'transactions.student_id')
-            //     ->join('student_classrooms', 'student_classrooms.student_id', 'students.id')
-            //     ->join('classrooms', 'classrooms.id', 'student_classrooms.classroom_id')
-            //     ->join('coach_classrooms', 'coach_classrooms.classroom_id', 'classrooms.id')
-            //     ->join('coaches', 'coaches.id', 'coach_classrooms.coach_id')
-            //     ->whereRaw("
-            //         (SELECT EXTRACT(WEEK FROM current_date)) = (SELECT EXTRACT(WEEK FROM transactions.created_at))
-            //     ")
-            //     ->whereRaw("
-            //         (SELECT EXTRACT(MONTH FROM current_date)) = (SELECT EXTRACT(MONTH FROM transactions.created_at))
-            //     ")
-            //     ->whereRaw("
-            //         (SELECT EXTRACT(YEAR FROM current_date)) = (SELECT EXTRACT(YEAR FROM transactions.created_at))
-            //     ")
-            //     ->where([
-            //         ['coaches.id', Auth::guard('coach')->id()]
-            //     ])
-            //     ->WhereNull('transactions.deleted_at')
-            //     ->count();
 
             $total_riwayat_booking = DB::table('student_schedules')
                 ->select([
@@ -469,113 +293,6 @@ class DashboardController extends BaseMenu
 
     public function dt_last_class(Request $request)
     {
-        // $coaches = DB::table('coaches')
-        //     ->select(
-        //         'coaches.id',
-        //     )
-        //     ->where([
-        //         ['coaches.id', Auth::guard('coach')->id()],
-        //     ])
-        //     ->WhereNull('coaches.deleted_at');
-
-        // $coach_classrooms = DB::table('coach_classrooms')
-        //     ->select(
-        //         'coach_classrooms.id',
-        //         'coach_classrooms.classroom_id',
-        //     )
-        //     ->JoinSub($coaches, 'coaches', function ($join) {
-        //         $join->on('coach_classrooms.coach_id', '=', 'coaches.id');
-        //     })
-        //     ->WhereNull('coach_classrooms.deleted_at');
-
-        // $classrooms = DB::table('classrooms')
-        //     ->select(
-        //         'classrooms.id',
-        //         'classrooms.session_duration',
-        //         'classrooms.name as class_name',
-        //         'classrooms.package_type',
-        //     )
-        //     ->JoinSub($coach_classrooms, 'coach_classrooms', function ($join) {
-        //         $join->on('classrooms.id', '=', 'coach_classrooms.classroom_id');
-        //     })
-        //     ->WhereNull('classrooms.deleted_at');
-
-        // $students = DB::table('students')
-        //     ->select(
-        //         'students.id',
-        //         'students.name as student_name'
-        //     )
-        //     ->WhereNull('students.deleted_at');
-
-        // $student_classrooms = DB::table('student_classrooms')
-        //     ->select(
-        //         'student_classrooms.id',
-        //         'student_classrooms.classroom_id',
-        //         'students.student_name',
-        //         'classrooms.session_duration',
-        //         'classrooms.class_name',
-        //         'classrooms.package_type'
-        //     )
-        //     ->JoinSub($students, 'students', function ($join) {
-        //         $join->on('student_classrooms.student_id', '=', 'students.id');
-        //     })
-        //     ->JoinSub($classrooms, 'classrooms', function ($join) {
-        //         $join->on('student_classrooms.classroom_id', '=', 'classrooms.id');
-        //     })
-        //     ->WhereNull('student_classrooms.deleted_at');
-
-        // $student_schedules = DB::table('student_schedules')
-        //     ->select(
-        //         'student_schedules.id',
-        //         'student_schedules.check_in',
-        //         'student_schedules.coach_schedule_id',
-        //         'student_classrooms.session_duration',
-        //         'student_classrooms.class_name',
-        //         'student_classrooms.student_name',
-        //         'student_classrooms.package_type',
-        //     )
-        //     ->JoinSub($student_classrooms, 'student_classrooms', function ($join) {
-        //         $join->on('student_schedules.student_classroom_id', '=', 'student_classrooms.id');
-        //     })
-        //     ->WhereNull('student_schedules.deleted_at');
-
-        // $data = DB::table('coach_schedules')
-        //     ->select(
-        //         'coach_schedules.*',
-        //         'student_schedules.id as student_schedule_id',
-        //         'student_schedules.session_duration',
-        //         'student_schedules.class_name',
-        //         'student_schedules.student_name',
-        //         DB::raw("CASE WHEN student_schedules.package_type = 1 THEN 'Spacial Class' ELSE 'Regular class' END package_type"),
-        //         DB::raw("CASE
-        //                         WHEN student_schedules.check_in IS NOT NULL THEN 'Complete'
-        //                         WHEN coach_schedules.deleted_at IS NOT NULL THEN 'Cancle'
-        //                         ELSE 'Cancle'
-        //                     END status"),
-        //         DB::raw("CASE
-        //                         WHEN student_schedules.check_in IS NOT NULL THEN 'success'
-        //                         WHEN coach_schedules.deleted_at IS NOT NULL THEN 'danger'
-        //                         ELSE 'danger'
-        //                     END color_status"),
-        //         DB::raw("to_char(coach_schedules.datetime, 'Day, DD Month YYYY') as date_class"),
-        //         DB::raw("to_char(coach_schedules.datetime, 'HH24:MI') as start_datetime"),
-        //         DB::raw("to_char(coach_schedules.datetime::timestamp + INTERVAL '1 MINUTES' * student_schedules.session_duration, 'HH24:MI AM') as end_datetime"),
-        //     )
-        //     ->JoinSub($student_schedules, 'student_schedules', function ($join) {
-        //         $join->on('coach_schedules.id', '=', 'student_schedules.coach_schedule_id');
-        //     })
-        //     ->where([
-        //         ['accepted', true]
-        //     ])
-        //     ->where(function($query) use($request){
-        //         if(!empty($request->date_start)){
-        //             $query->whereDate('coach_schedules.datetime','>=',$request->date_start)
-        //                 ->whereDate('coach_schedules.datetime','<=',$request->date_end);
-        //         }
-        //     })
-        //     ->orderby('coach_schedules.created_at', 'desc')
-        //     ->get();
-
         $students = DB::table('students')
             ->select(
                 'students.id',
@@ -691,113 +408,6 @@ class DashboardController extends BaseMenu
         try {
 
             $path = Storage::disk('s3')->url('/');
-
-            // $coaches = DB::table('coaches')
-            //     ->select(
-            //         'coaches.id',
-            //     )
-            //     ->where([
-            //         ['coaches.id', Auth::guard('coach')->id()],
-            //     ])
-            //     ->WhereNull('coaches.deleted_at');
-
-            // $coach_classrooms = DB::table('coach_classrooms')
-            //     ->select(
-            //         'coach_classrooms.id',
-            //         'coach_classrooms.classroom_id',
-            //     )
-            //     ->JoinSub($coaches, 'coaches', function ($join) {
-            //         $join->on('coach_classrooms.coach_id', '=', 'coaches.id');
-            //     })
-            //     ->WhereNull('coach_classrooms.deleted_at');
-
-            // $classrooms = DB::table('classrooms')
-            //     ->select(
-            //         'classrooms.id',
-            //         'classrooms.session_duration',
-            //         'classrooms.name as class_name',
-            //         'classrooms.package_type',
-            //     )
-            //     ->JoinSub($coach_classrooms, 'coach_classrooms', function ($join) {
-            //         $join->on('classrooms.id', '=', 'coach_classrooms.classroom_id');
-            //     })
-            //     ->WhereNull('classrooms.deleted_at');
-
-            // $students = DB::table('students')
-            //     ->select(
-            //         'students.id',
-            //         'students.name as student_name',
-            //         'students.image as student_image'
-            //     )
-            //     ->WhereNull('students.deleted_at');
-
-            // $student_classrooms = DB::table('student_classrooms')
-            //     ->select(
-            //         'student_classrooms.id',
-            //         'student_classrooms.classroom_id',
-            //         'students.student_name',
-            //         'students.student_image',
-            //         'classrooms.session_duration',
-            //         'classrooms.class_name',
-            //         'classrooms.package_type'
-            //     )
-            //     ->JoinSub($students, 'students', function ($join) {
-            //         $join->on('student_classrooms.student_id', '=', 'students.id');
-            //     })
-            //     ->JoinSub($classrooms, 'classrooms', function ($join) {
-            //         $join->on('student_classrooms.classroom_id', '=', 'classrooms.id');
-            //     })
-            //     ->WhereNull('student_classrooms.deleted_at');
-
-            // $student_schedules = DB::table('student_schedules')
-            //     ->select(
-            //         'student_schedules.id',
-            //         'student_schedules.check_in',
-            //         'student_schedules.coach_schedule_id',
-            //         'student_classrooms.session_duration',
-            //         'student_classrooms.class_name',
-            //         'student_classrooms.student_name',
-            //         'student_classrooms.package_type',
-            //         'student_classrooms.student_image',
-            //     )
-            //     ->JoinSub($student_classrooms, 'student_classrooms', function ($join) {
-            //         $join->on('student_schedules.student_classroom_id', '=', 'student_classrooms.id');
-            //     })
-            //     ->WhereNull('student_schedules.deleted_at');
-
-            // $result = DB::table('coach_schedules')
-            //     ->select(
-            //         'coach_schedules.*',
-            //         'student_schedules.id as student_schedule_id',
-            //         'student_schedules.session_duration',
-            //         'student_schedules.class_name',
-            //         'student_schedules.student_name',
-            //         'student_schedules.check_in',
-            //         DB::raw("CONCAT('{$path}',student_schedules.student_image) as image_url"),
-            //         DB::raw("CASE WHEN student_schedules.package_type = 1 THEN 'Spacial Class' ELSE 'Regular class' END package_type"),
-            //         DB::raw("CASE
-            //                     WHEN student_schedules.check_in IS NOT NULL THEN 'Complete'
-            //                     WHEN coach_schedules.deleted_at IS NOT NULL THEN 'Complete'
-            //                     ELSE 'Cancel'
-            //                 END status"),
-            //         DB::raw("CASE
-            //                     WHEN student_schedules.check_in IS NOT NULL THEN 'success'
-            //                     WHEN coach_schedules.deleted_at IS NOT NULL THEN 'success'
-            //                     ELSE 'danger'
-            //                 END color_status"),
-            //         DB::raw("to_char(coach_schedules.datetime, 'Day, DD Month YYYY') as date_class"),
-            //         DB::raw("to_char(coach_schedules.datetime, 'HH24:MI') as start_datetime"),
-            //         DB::raw("to_char(coach_schedules.datetime::timestamp + INTERVAL '1 MINUTES' * student_schedules.session_duration, 'HH24:MI AM') as end_datetime"),
-            //     )
-            //     ->JoinSub($student_schedules, 'student_schedules', function ($join) {
-            //         $join->on('coach_schedules.id', '=', 'student_schedules.coach_schedule_id');
-            //     })
-            //     ->where([
-            //         ['accepted', true]
-            //     ])
-            //     ->orderby('coach_schedules.created_at', 'desc')
-            //     ->take(5)
-            //     ->get();
 
             $students = DB::table('students')
                 ->select(
@@ -1077,33 +687,67 @@ class DashboardController extends BaseMenu
     public function incomes_chart()
     {
         try {
-            $incomes = DB::table('incomes')
-                ->select(
-                    'amount',
-                    'created_at',
-                )
-                // ->whereRaw("
-                //     (SELECT EXTRACT(MONTH FROM current_date)) = (SELECT EXTRACT(MONTH FROM incomes.created_at))
-                // ")
-                // ->whereRaw("
-                //     (SELECT EXTRACT(YEAR FROM current_date)) = (SELECT EXTRACT(YEAR FROM incomes.created_at))
-                // ")
-                ->where('coach_id', Auth::guard('coach')->user()->id)
-                ->whereNull('deleted_at')
-                ->get();
+            $incomes = Income::select(['created_at', 'amount'])
+                ->where('coach_id', Auth::guard('coach')->id())
+                ->whereYear('created_at', date('Y'))
+                ->get()
+                ->groupBy(function($income) {
+                    return Carbon::parse($income->created_at)->format('m');
+                });
 
-            $total = [];
-            $date = [];
+            $incomeMonthly = [];
+            $totalMonthly = [];
 
-            foreach ($incomes as $data) {
-                $total []= $data->amount;
-                $date []= Carbon::parse($data->created_at)->format('d M Y');
+            foreach ($incomes as $key => $value) {
+                $total = 0;
+                foreach ($value as $item) {
+                    $total += $item->amount;
+                }
+
+                $incomeMonthly[(int)$key] = $total;
+                $totalMonthly[(int)$key] = count($value);
+            }
+
+            $month = (int)date('m');
+            if($month - 3 < 1){
+                $star = 1;
+            }else{
+                $star = $month - 3;
+            }
+
+            if($month + 3 > 12){
+                $end = 12;
+            }else{
+                $end = $month + 3;
+            }
+
+            $monthArr = [];
+            $totalArr = [];
+            $incomeArr = [];
+            $max = 0;
+
+            for($i = $star; $i <= $end; $i++){
+                if(!empty($totalMonthly[$i])){
+                    if($incomeMonthly[$i] > $max){
+                        $max = $incomeMonthly[$i];
+                    }
+
+                    $totalArr[] = $totalMonthly[$i];
+                    $incomeArr[] = $incomeMonthly[$i];
+                }else{
+                    $totalArr[] = 0;
+                    $incomeArr[] = 0;
+                }
+
+                $monthArr[] = date('M', strtotime(date("Y-$i-d")));
             }
 
             return response([
                 "data" => [
-                    "total" => $total,
-                    "date" => $date,
+                    "month" => $monthArr,
+                    "total" => $totalArr,
+                    "income" => $incomeArr,
+                    "max" => $max,
                 ],
                 "status" => 200,
                 "message"   => 'OK'

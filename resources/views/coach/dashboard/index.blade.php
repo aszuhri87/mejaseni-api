@@ -349,7 +349,7 @@
                     </div>
 
                     <!--begin::Chart-->
-                    <div id="incomes-chart" class="card-rounded-bottom" data-color="danger" style="height: 100px">
+                    <div id="incomes-chart" class="card-rounded-bottom" data-color="primary" style="height: 150px">
                         <div class="spinner spinner-primary spinner-lg spinner-center"></div>
                     </div>
                     <!--end::Chart-->
