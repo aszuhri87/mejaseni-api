@@ -16,6 +16,24 @@
            display: block;
         }
     }
+
+    @media only screen and (max-width: 770px) {
+        .splide__track{
+            height: 320px;
+        }
+    }
+
+    @media only screen and (max-width: 1199px) {
+        .splide__track{
+            height: 250px;
+        }
+    }
+
+    @media only screen and (max-width: 1570px) {
+        .splide__track{
+            height: 420px;
+        }
+    }
 </style>
 <section>
     <div class="row mx-0">
@@ -113,25 +131,6 @@
 </section>
 
 @if(!$classroom_categories->isEmpty())
-<style>
-    @media only screen and (max-width: 770px) {
-        .splide__track{
-            height: 320px;
-        }
-    }
-
-    @media only screen and (max-width: 1199px) {
-        .splide__track{
-            height: 250px;
-        }
-    }
-
-    @media only screen and (max-width: 1570px) {
-        .splide__track{
-            height: 420px;
-        }
-    }
-</style>
 <section id="class-category" class="pb-5">
     <h1 class="color-white mt-3 mb-5 pt-md-0 pt-5 text-center">Temukan Minatmu</h1>
     <div class="row mx-0">
