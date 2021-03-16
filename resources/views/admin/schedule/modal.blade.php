@@ -42,7 +42,7 @@
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
                                 <label>Tanggal<span class="text-danger">*</span></label>
-                                <input type="text" name="date" class="form-control datepicker" required placeholder="Date" style="width: 100% !important">
+                                <input type="text" name="date" class="form-control datepicker-with-stardate" required placeholder="Date" style="width: 100% !important">
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-12">

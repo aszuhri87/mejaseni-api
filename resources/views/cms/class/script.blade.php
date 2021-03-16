@@ -57,7 +57,7 @@
             $("#classroom-name").text(res.data.name)
             $("#classroom-session").text(`${res.data.session_total} Sesi | @${res.data.session_duration}Menit`)
             $("#classroom-price").text(`Rp.${nf.format(res.data.price)}.00`)
-            
+
             if(res.data.package_type == 1)
                 $("#classroom-type").text('Special Class')
             else if(res.data.package_type == 2)
@@ -71,7 +71,7 @@
             toastr.error(res.responseJSON.message, 'Failed')
         })
         .always(function() {
-           
+
         });
     }
 
@@ -93,7 +93,7 @@
             toastr.error(res.responseJSON.message, 'Failed')
         })
         .always(function() {
-           
+
         });
     }
 
@@ -107,7 +107,7 @@
             var splide_classroom;
             var splide_class;
             $(document).ready(function () {
-                
+
                 @if(!$regular_classrooms->isEmpty())
                     splide();
                 @endif
@@ -120,7 +120,7 @@
                     splideSubCategory()
                 @endif
 
-                
+
                 AOS.init();
                 // selectPackage();
 
@@ -219,7 +219,7 @@
                     toastr.error(res.responseJSON.message, 'Failed')
                 })
                 .always(function() {
-                   
+
                 });
             }
 
@@ -237,7 +237,7 @@
                     toastr.error(res.responseJSON.message, 'Failed')
                 })
                 .always(function() {
-                   
+
                 });
             }
 
@@ -255,7 +255,7 @@
                     toastr.error(res.responseJSON.message, 'Failed')
                 })
                 .always(function() {
-                   
+
                 });
             }
 
@@ -330,7 +330,7 @@
                     toastr.error(res.responseJSON.message, 'Failed')
                 })
                 .always(function() {
-                   
+
                 });
             }
 
@@ -356,19 +356,19 @@
                     }
 
                     event.preventDefault()
-                    
+
                     // let selected_tab = $(this).attr('href')
                     // $(".tab-detail").removeClass("active" );
                     // $("#tab-coach").find('content-tab-detail').replaceWith('content-tab-detail-selected')
                     // event.preventDefault()
-                    
+
             // test();
                     // $("#tab-coach").removeClass("content-tab-detail");
                     // $("#tab-coach").addClass("content-tab-detail-selected")
                     // $(".content-tab-detail").css("display","none");
                     // $("#tab-coach .content-tab-detail").css('display','block');
                     // $(this).addClass( "active" )
-                    
+
                 })
             }
 
@@ -443,7 +443,7 @@
             }
 
             splide = () => {
-                
+
                 splide_class = new Splide('#class-splide', {
                     lazyLoad: true,
                     perPage: 1,

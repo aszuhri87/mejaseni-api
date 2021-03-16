@@ -109,6 +109,15 @@
         format: 'd MM yyyy'
     });
 
+    $('.datepicker-with-stardate').datepicker({
+        rtl: KTUtil.isRTL(),
+        todayHighlight: true,
+        orientation: "bottom left",
+        templates: arrows,
+        format: 'd MM yyyy',
+        startDate: new Date()
+    });
+
     $('.datepicker').datepicker({
         rtl: KTUtil.isRTL(),
         todayHighlight: true,

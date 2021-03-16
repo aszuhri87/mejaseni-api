@@ -36,18 +36,20 @@
                     selectable: true,
                     height: 750,
                     select: function(info) {
-                        $('#form-schedule').trigger("reset");
+                        if(moment(info.start).format('DD MMMM YYYY') >= moment(new Date()).format('DD MMMM YYYY')){
+                            $('#form-schedule').trigger("reset");
 
-                        $('.timepicker').val(moment(info.start).format('HH:mm:ss') == '00:00:00' ? moment().format('HH:mm:ss') : moment(info.start).format('HH:mm:ss'))
-                        $('.datepicker').val(moment(info.start).format('D MMMM YYYY'))
+                            $('.timepicker').val(moment(info.start).format('HH:mm:ss') == '00:00:00' ? moment().format('HH:mm:ss') : moment(info.start).format('HH:mm:ss'))
+                            $('.datepicker-with-stardate').val(moment(info.start).format('D MMMM YYYY'))
 
-                        get_classroom_category();
-                        get_sub_classroom_category();
+                            get_classroom_category();
+                            get_sub_classroom_category();
 
-                        $('#form-schedule').attr('action','{{url('admin/schedule')}}');
-                        $('#form-schedule').attr('method','POST');
+                            $('#form-schedule').attr('action','{{url('admin/schedule')}}');
+                            $('#form-schedule').attr('method','POST');
 
-                        showModal('modal-schedule');
+                            showModal('modal-schedule');
+                        }
                     },
                     eventDrop: function(info) {
                         if(info.event.extendedProps.source_type == 1){
