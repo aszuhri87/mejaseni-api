@@ -44,13 +44,13 @@
                           </div>
                           <div class="class-tab-summary mb-4">
                             <div class="row">
-                                <div class="col col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                                <div class="col col-12 mt-4">
                                     <div class="d-flex flex-column">
                                       <p>{{ $regular_classroom->session_total ? $regular_classroom->session_total : '' }} Sesi | @ {{ $regular_classroom->session_duration ? $regular_classroom->session_duration : '' }}menit</p>
                                       <span class="mt-2">Rp.@convert($regular_classroom->price)</span>
                                     </div>
                                 </div>
-                                <div class="col col-sm-12 col-md-12 col-lg-6 col-xl-6 justify-content-md-end">
+                                <div class="col col-12 mt-4 justify-content-md-end">
                                     <div class="mt-5 mt-md-0">
                                     @if(!$regular_classroom->is_registered)
                                       <a class="btn btn-primary shadow" onclick="@if (Auth::guard('student')->user()){{'showModalRegisterClassroom("'.$regular_classroom->id.'")'}}@else{{'showModalLoginRequired()'}}@endif">Daftar
