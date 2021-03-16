@@ -663,7 +663,7 @@ class ScheduleController extends BaseMenu
                 ->whereNull('student_schedules.deleted_at')
                 ->where('student_classrooms.student_id',Auth::guard('student')->user()->id)
                 ->whereNotNull('session_feedback.student_schedule_id');
-            // dd($student_schedule->get());
+            
             $coach_schedule = DB::table('coach_schedules')
                 ->select([
                     'coach_schedules.coach_classroom_id',
@@ -674,7 +674,7 @@ class ScheduleController extends BaseMenu
                 })
                 ->whereNull('coach_schedules.deleted_at')
                 ->whereNotNull('student_schedules.coach_schedule_id');
-            // dd($coach_schedule->get());
+            
             // end session star
 
             // classroom star

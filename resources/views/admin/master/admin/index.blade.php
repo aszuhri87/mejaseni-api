@@ -57,6 +57,7 @@
                             </span>
                         </div>
                     </div>
+                    @can('admin_insert')
                     <div class="form-group ml-1">
                         <button type="button" id="add-btn"
                             class="btn btn-primary btn-icon w-auto px-2 waves-effect width-md waves-light ml-1">
@@ -77,6 +78,7 @@
                             Add
                         </button>
                     </div>
+                    @endcan
                 </div>
             </div>
             <table class="table table-separate table-head-custom mb-0 pb-0" width="100%" id="init-table">

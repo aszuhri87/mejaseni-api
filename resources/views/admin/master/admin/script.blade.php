@@ -54,6 +54,7 @@
                                 data: "id",
                                 render: function(data, type, full, meta) {
                                     return `
+                                    @can('admin_permission')
                                     <a class="btn btn-sm btn-permission mr-1 btn-clean btn-icon" title="Permission" href="{{ url('/admin/master/admin/permission') }}/${data}">
                                         <span class="svg-icon svg-icon-md">
                                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -65,6 +66,8 @@
                                             </g>
                                         </svg><!--end::Svg Icon--></span>
                                     </a>
+                                    @endcan
+                                    @can('admin_update')
                                     <a href="{{ url('/admin/master/admin') }}/${data}" title="Edit" class="btn btn-edit btn-sm btn-clean btn-icon mr-2" title="Edit details">
                                         <span class="svg-icon svg-icon-md">
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -76,6 +79,8 @@
                                             </svg>
                                         </span>
                                     </a>
+                                    @endcan
+                                    @can('admin_delete')
                                     <a href="{{ url('/admin/master/admin') }}/${data}" title="Delete" class="btn btn-delete btn-sm btn-clean btn-icon" title="Delete">
                                         <span class="svg-icon svg-icon-md">
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -87,6 +92,7 @@
                                             </svg>
                                         </span>
                                     </a>
+                                    @endcan
                                     `
                                 }
                             },

@@ -61,6 +61,7 @@
                             data: "id",
                             render : function(data, type, full, meta) {
                                 return `
+                                @can('guest_star_update')
                                     <a href="{{url('/admin/master/guest-star')}}/${data}" title="Edit" class="btn btn-edit btn-sm btn-clean btn-icon mr-2" title="Edit details">
                                         <span class="svg-icon svg-icon-md">
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -72,6 +73,8 @@
                                             </svg>
                                         </span>
                                     </a>
+                                @endcan
+                                @can('guest_star_delete')
                                     <a href="{{url('/admin/master/guest-star')}}/${data}" title="Delete" class="btn btn-delete btn-sm btn-clean btn-icon" title="Delete">
                                         <span class="svg-icon svg-icon-md">
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -83,6 +86,7 @@
                                             </svg>
                                         </span>
                                     </a>
+                                @endcan
                                     `
                             }
                         },

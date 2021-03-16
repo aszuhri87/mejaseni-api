@@ -133,9 +133,11 @@
                             render : function(data, type, full, meta) {
                                 if(full.status == 1){
                                     return `
+                                    @can('data_transaction_coach_update')
                                         <a href="{{ url('/waiting-payment') }}/${data}" title="Konfirmasi" data-toogle="tooltip" class="btn btn-confirm btn-primary btn-sm">
                                             Konfirmasi
                                         </a>
+                                    @endcan
                                     `;
                                 }else{
                                     return `

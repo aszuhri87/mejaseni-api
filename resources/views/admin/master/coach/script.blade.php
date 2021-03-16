@@ -119,6 +119,7 @@
                             data: "id",
                             render : function(data, type, full, meta) {
                                 return `
+                                    @can('coach_update')
                                     <a href="{{url('/admin/master/coach/update')}}/${data}" title="Edit" class="btn btn-edit btn-sm btn-clean btn-icon mr-1">
                                         <span class="svg-icon svg-icon-md">
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -130,6 +131,8 @@
                                             </svg>
                                         </span>
                                     </a>
+                                    @endcan
+                                    @can('coach_config')
                                     <a href="{{url('/admin/master/coach/config')}}/${data}" title="Configuration" class="btn btn-config btn-sm btn-clean btn-icon mr-1">
                                         <span class="svg-icon svg-icon-md"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-02-01-052524/theme/html/demo1/dist/../src/media/svg/icons/General/Settings-1.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                             <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -139,6 +142,8 @@
                                             </g>
                                         </svg><!--end::Svg Icon--></span>
                                     </a>
+                                    @endcan
+                                    @can('coach_delete')
                                     <a href="{{url('/admin/master/coach')}}/${data}" title="Delete" class="btn btn-delete btn-sm btn-clean btn-icon" title="Delete">
                                         <span class="svg-icon svg-icon-md">
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -150,6 +155,7 @@
                                             </svg>
                                         </span>
                                     </a>
+                                    @endcan
                                     `
                             }
                         },

@@ -76,12 +76,14 @@
                         </div>
                     </div>
                 </div>
+                @can('reporting_transaction_coach_print')
                 <div class="form-group ml-1">
                     <button type="button" id="btn-excel" class="btn btn-success py-3 px-5">Excel</button>
                 </div>
                 <div class="form-group ml-1">
                     <button type="button" id="btn-pdf" class="btn btn-danger py-3 px-5">PDF</button>
                 </div>
+                @endcan
             </div>
         </div>
         <table class="table table-separate table-head-custom mb-0 pb-0" width="100%" id="init-table">
