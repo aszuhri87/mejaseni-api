@@ -18,7 +18,7 @@ class CareerController extends Controller
     public function index()
     {
         $company = Company::first();
-        $branches = Branch::all();
+        $branchs = Branch::all();
 
         $internal_team = 1;
         $professional_coach = 2;
@@ -74,7 +74,7 @@ class CareerController extends Controller
 
         return view('cms.career.index', [
             "company" => $company,
-            "branches" => $branches,
+            "branchs" => $branchs,
             "fun_creatives" => $fun_creatives,
             'internal_team_careers' => $internal_team_careers,
             'professional_coach_careers' => $professional_coach_careers,

@@ -64,7 +64,7 @@
 
 
             var getSubCategory = (category_id)=>{
-                
+                showLoader()
                 $.ajax({
                     url: `{{ url('/classroom_category') }}/${category_id}/sub_classroom_category`,
                     type: 'GET',
@@ -82,7 +82,7 @@
                     toastr.error(res.responseJSON.message, 'Failed')
                 })
                 .always(function() {
-                   
+                   hideLoader()
                 });
             }
 

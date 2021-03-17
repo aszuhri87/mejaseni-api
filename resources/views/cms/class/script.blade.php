@@ -217,7 +217,7 @@
                     toastr.error(res.responseJSON.message, 'Failed')
                 })
                 .always(function() {
-
+                    hideLoader()
                 });
             }
 
