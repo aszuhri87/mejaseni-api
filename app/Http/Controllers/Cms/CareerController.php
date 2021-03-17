@@ -24,7 +24,17 @@ class CareerController extends Controller
         $professional_coach = 2;
 
         $path = Storage::disk('s3')->url('/');
-        $internal_team_careers = DB::table('careers')
+
+        $fun_creatives = DB::table('fun_creatives')
+            ->select([
+                DB::raw("CONCAT('{$path}',image) as image_url"),
+            ])
+            ->whereNull([
+                'deleted_at'
+            ])
+            ->get();
+
+    	$internal_team_careers = DB::table('careers')
             ->select([
                 'id',
                 'title',
@@ -65,6 +75,7 @@ class CareerController extends Controller
         return view('cms.career.index', [
             "company" => $company,
             "branches" => $branches,
+            "fun_creatives" => $fun_creatives,
             'internal_team_careers' => $internal_team_careers,
             'professional_coach_careers' => $professional_coach_careers,
             "social_medias" => $social_medias

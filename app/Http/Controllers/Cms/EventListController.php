@@ -9,6 +9,7 @@ use Ramsey\Uuid\Uuid;
 use App\Models\Branch;
 use App\Models\Company;
 
+use Auth;
 use DB;
 use Storage;
 
@@ -19,6 +20,19 @@ class EventListController extends Controller
     	$company = Company::first();
     	$branchs = Branch::all();
         $path = Storage::disk('s3')->url('/');
+        $is_registered = Auth::guard('student')->check() ? 'registered':'unregistered';
+        $banner = DB::table('banners')
+            ->select([
+                'title',
+                'description',
+                DB::raw("CONCAT('{$path}',image) as image_url"),
+            ])
+            ->where('type',$is_registered)
+            ->whereNull([
+                'deleted_at'
+            ])
+            ->first();
+
         $classroom_categories = DB::table('classroom_categories')->whereNull('deleted_at')->get();
         $social_medias = DB::table('social_media')
             ->select([
@@ -81,6 +95,7 @@ class EventListController extends Controller
     	return view('cms.event-list.index', [
     		"company" => $company,
     		"branchs" => $branchs,
+            "banner" => $banner,
     		"events" => $events,
             "classroom_categories" => $classroom_categories,
             "social_medias" => $social_medias

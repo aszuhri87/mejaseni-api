@@ -10,7 +10,7 @@ use App\Models\Branch;
 use App\Models\Company;
 use App\Models\Event;
 
-
+use Auth;
 use DB;
 use Storage;
 
@@ -32,6 +32,19 @@ class EventDetailController extends Controller
     	$company = Company::first();
     	$branchs = Branch::all();
         $path = Storage::disk('s3')->url('/');
+
+        $is_registered = Auth::guard('student')->check() ? 'registered':'unregistered';
+        $banner = DB::table('banners')
+            ->select([
+                'title',
+                'description',
+                DB::raw("CONCAT('{$path}',image) as image_url"),
+            ])
+            ->where('type',$is_registered)
+            ->whereNull([
+                'deleted_at'
+            ])
+            ->first();
 
         $is_registered = DB::table('carts')
                 ->whereNull('deleted_at');
@@ -81,6 +94,7 @@ class EventDetailController extends Controller
     	return view('cms.event-detail.index', [
     		"company" => $company,
     		"branchs" => $branchs,
+            "banner" => $banner,
     		"event" => $event,
             "social_medias" => $social_medias
     	]);

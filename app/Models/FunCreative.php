@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\Uuid;
 
-class Banner extends Model
+class FunCreative extends Model
 {
     use HasFactory, Uuid, SoftDeletes;
 
@@ -16,10 +16,7 @@ class Banner extends Model
     public $keyType = 'string';
 
     protected $fillable = [
-        'type',
-        'title',
-        'description',
-        'image',
+        'image'
     ];
 
     protected $dates = ['deleted_at'];

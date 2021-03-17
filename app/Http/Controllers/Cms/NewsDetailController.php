@@ -11,6 +11,7 @@ use App\Models\Company;
 use App\Models\News;
 
 
+use Auth;
 use DB;
 use Storage;
 
@@ -32,6 +33,19 @@ class NewsDetailController extends Controller
     	$company = Company::first();
     	$branchs = Branch::all();
         $path = Storage::disk('s3')->url('/');
+
+        $is_registered = Auth::guard('student')->check() ? 'registered':'unregistered';
+        $banner = DB::table('banners')
+            ->select([
+                'title',
+                'description',
+                DB::raw("CONCAT('{$path}',image) as image_url"),
+            ])
+            ->where('type',$is_registered)
+            ->whereNull([
+                'deleted_at'
+            ])
+            ->first();
 
         $news = DB::table('news')
                     ->select([
@@ -71,6 +85,7 @@ class NewsDetailController extends Controller
     	return view('cms.news-detail.index', [
     		"company" => $company,
     		"branchs" => $branchs,
+            "banner" => $banner,
     		"news" => $news,
     		"list_news" => $list_news,
             "social_medias" => $social_medias

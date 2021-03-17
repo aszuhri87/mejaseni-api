@@ -110,6 +110,8 @@ use App\Http\Controllers\Admin\Cms\MarketPlaceController as MarketPlaceControlle
 use App\Http\Controllers\Admin\Cms\QuestionController as QuestionController;
 use App\Http\Controllers\Admin\Cms\CoachReviewController as CoachReviewController;
 use App\Http\Controllers\Admin\Cms\BannerController as BannerController;
+use App\Http\Controllers\Admin\Cms\FunCreativeController as FunCreativeController;
+
 
 
 /*
@@ -460,6 +462,12 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::get('schedule-list', [ListController::class, 'index']);
         Route::post('schedule-list/dt', [ListController::class, 'dt']);
 
+        Route::post('event/dt', [EventController::class, 'dt']);
+        Route::post('event/{id}/participants/dt',[EventController::class, 'participants_dt']);
+        Route::delete('cart/{id}', [CartController::class, 'destroy']);
+        Route::post('event/update/{id}', [EventController::class, 'update']);
+        Route::resource('event', EventController::class);
+
         Route::group(['prefix' => 'report','middleware' => 'can:reporting'], function () {
 
             Route::group(['prefix' => 'review', 'middleware' => 'can:reporting_review'], function () {
@@ -567,6 +575,12 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::post('banner/dt', [BannerController::class, 'dt']);
             Route::post('banner/update/{id}', [BannerController::class, 'update']);
             Route::resource('banner', BannerController::class);
+
+            Route::post('fun-creative/dt', [FunCreativeController::class, 'dt']);
+            Route::post('fun-creative/update/{id}', [FunCreativeController::class, 'update']);
+            Route::resource('fun-creative', FunCreativeController::class);
+
+
 
 
         });

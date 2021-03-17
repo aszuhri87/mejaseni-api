@@ -9,6 +9,7 @@ use App\Models\Branch;
 use App\Models\Company;
 
 
+use Auth;
 use DB;
 use Storage;
 
@@ -19,6 +20,7 @@ class StoreController extends Controller
     {
     	$company = Company::first();
     	$branchs = Branch::all();
+        $path = Storage::disk('s3')->url('/');
 
     	$classroom_categories = DB::table('classroom_categories')
             ->select([
@@ -30,7 +32,7 @@ class StoreController extends Controller
             ])
             ->get();
 
-        $path = Storage::disk('s3')->url('/');
+        
         $market_places = DB::table('market_places')
             ->select([
                 'market_places.*',
@@ -50,6 +52,19 @@ class StoreController extends Controller
                 'deleted_at'
             ])
             ->get();
+
+        $is_registered = Auth::guard('student')->check() ? 'registered':'unregistered';
+        $banner = DB::table('banners')
+            ->select([
+                'title',
+                'description',
+                DB::raw("CONCAT('{$path}',image) as image_url"),
+            ])
+            ->where('type',$is_registered)
+            ->whereNull([
+                'deleted_at'
+            ])
+            ->first();
 
 
         $selected_category = null;
@@ -94,6 +109,14 @@ class StoreController extends Controller
                                             ->first();
             }
             
+            $is_has_video = DB::table('theory_videos')
+            ->select([
+                'theory_videos.session_video_id',
+                DB::raw("COUNT('theory_videos.session_video_id') as count_public_video")
+            ])
+            ->groupBy("theory_videos.session_video_id")
+            ->where('theory_videos.is_public',true)
+            ->whereNull("theory_videos.deleted_at");
 
             $video_courses = DB::table('session_videos')
                 ->select([
@@ -101,8 +124,13 @@ class StoreController extends Controller
                     'coaches.name as coach',
                 ])
                 ->leftJoin('coaches', 'coaches.id','=','session_videos.coach_id')
+                ->leftJoinSub($is_has_video, 'theory_videos', function($join){
+                    $join->on("session_videos.id", "theory_videos.session_video_id");
+                })
+                ->where('theory_videos.count_public_video','!=',null)
                 ->whereNull([
-                    'session_videos.deleted_at'
+                    'session_videos.deleted_at',
+                    'coaches.deleted_at',
                 ]);
             
             if($selected_sub_categories){
@@ -112,12 +140,13 @@ class StoreController extends Controller
             $video_courses = $video_courses->get();
         }
 
-        
+
 
 
     	return view('cms.store.index', [
             "company" => $company, 
-            "branchs" => $branchs, 
+            "branchs" => $branchs,
+            "banner" => $banner, 
             "classroom_categories" => $classroom_categories,
             "selected_category" => $selected_category,
             "sub_categories" => $sub_categories,
@@ -254,15 +283,30 @@ class StoreController extends Controller
                         </div>
                     </div>';
         $video_courses_html = "";
+
+        $is_has_video = DB::table('theory_videos')
+            ->select([
+                'theory_videos.session_video_id',
+                DB::raw("COUNT('theory_videos.session_video_id') as count_public_video")
+            ])
+            ->groupBy("theory_videos.session_video_id")
+            ->where('theory_videos.is_public',true)
+            ->whereNull("theory_videos.deleted_at");
+
         $video_courses = DB::table('session_videos')
                             ->select([
                                 'session_videos.*',
-                                'coaches.name as coach',
+                                'coaches.name as coach'
                             ])
                             ->leftJoin('coaches', 'coaches.id','=','session_videos.coach_id')
+                            ->leftJoinSub($is_has_video, 'theory_videos', function($join){
+                                $join->on("session_videos.id", "theory_videos.session_video_id");
+                            })
                             ->where('session_videos.sub_classroom_category_id',$selected_sub_category_id)
+                            ->where('theory_videos.count_public_video','!=',null)
                             ->whereNull([
-                                'session_videos.deleted_at'
+                                'session_videos.deleted_at',
+                                'coaches.deleted_at',
                             ])
                             ->get();
 

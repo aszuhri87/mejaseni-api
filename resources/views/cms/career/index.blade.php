@@ -4,33 +4,31 @@
 <section id="career-hero">
     </section>
 
-    <section id="career-gallery" class="pb-5">
-        <div class="row py-5 px-0 mx-0">
-            <div class="col-md-4 text-center text-md-left column-center">
-                <h1 class="color-white text-md-left text-center">Fun & Kreatif!</h1>
-                <p class="pt-2 pb-4 pt-md-0 pb-md-0">Kembangkan potensimu bersama kami</p>
-            </div>
-            <div class="col-md-8">
-                <div class="splide" id="gallery__splide">
-                    <div class="splide__track">
-                        <ul class="splide__list">
-                            <li class="splide__slide px-2 px-md-4">
-                                <div class="content-embed__wrapper">
-                                    <img src="{{ asset('cms/assets/img/gallery1.png') }}" alt="">
-                                </div>
-                            </li>
-                            <li class="splide__slide px-2 px-md-4">
-                                <div class="content-embed__wrapper">
-                                    <img src="{{ asset('cms/assets/img/gallery2.png') }}" alt="">
-                                </div>
-                            </li>
-                        </ul>
+    @if(!$fun_creatives->isEmpty())
+        <section id="career-gallery" class="pb-5">
+            <div class="row py-5 px-0 mx-0">
+                <div class="col-md-4 text-center text-md-left column-center">
+                    <h1 class="color-white text-md-left text-center">Fun & Kreatif!</h1>
+                    <p class="pt-2 pb-4 pt-md-0 pb-md-0">Kembangkan potensimu bersama kami</p>
+                </div>
+                <div class="col-md-8">
+                    <div class="splide" id="gallery__splide">
+                        <div class="splide__track">
+                            <ul class="splide__list">
+                                @foreach($fun_creatives as $fun_creative)
+                                    <li class="splide__slide px-2 px-md-4">
+                                        <div class="content-embed__wrapper">
+                                            <img src="{{ $fun_creative->image_url ? $fun_creative->image_url:'' }}" alt="">
+                                        </div>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-
+        </section>
+    @endif
     <div class="text-center my-5 pt-5 pb-4">
         <h1>We are Hiring!</h1>
         <p class="my-3">Bergabunglah di Mejaseni</p>
@@ -39,7 +37,7 @@
     @if(!$internal_team_careers->isEmpty() || !$professional_coach_careers->isEmpty())
         <section id="career" class="mb-5 pb-5">
             <div class="career-item__wrapper">
-                @if($internal_team_careers)
+                @if(!$internal_team_careers->isEmpty())
                     <div class="row mt-0 mt-lg-3 py-5 px-3 px-md-5">
                         <div class="col-md-12 pt-3 pt-lg-5 pb-3 px-4 px-md-0">
                             <div class="career-badge row-center-start">
@@ -66,8 +64,8 @@
                     </div>
                 @endif
                 
-                @if($professional_coach_careers)
-                    @if($internal_team_careers)
+                @if(!$professional_coach_careers->isEmpty())
+                    @if(!$internal_team_careers->isEmpty())
                         <div class="border-line-bold mt-5 mb-4"></div>
                     @endif
                     <div class="row mt-0 mt-lg-3 py-5 px-3 px-md-5">

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBannersTable extends Migration
+class CreateFunCreativesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,8 @@ class CreateBannersTable extends Migration
      */
     public function up()
     {
-        Schema::create('banners', function (Blueprint $table) {
+        Schema::create('fun_creatives', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('type')->unique();
-            $table->string('title');
-            $table->text('description');
             $table->string('image');
             $table->timestamps();
             $table->softDeletes();
@@ -31,6 +28,6 @@ class CreateBannersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('banners');
+        Schema::dropIfExists('fun_creatives');
     }
 }

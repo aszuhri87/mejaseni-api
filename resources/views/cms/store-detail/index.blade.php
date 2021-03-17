@@ -4,6 +4,39 @@
 @include('cms.layouts.banner')
 @endpush
 
+
+@php
+    function time_elapsed_string($datetime, $full = false) {
+        $now = new DateTime;
+        $ago = new DateTime($datetime);
+        $diff = $now->diff($ago);
+
+        $diff->w = floor($diff->d / 7);
+        $diff->d -= $diff->w * 7;
+
+        $string = array(
+            'y' => 'year',
+            'm' => 'month',
+            'w' => 'week',
+            'd' => 'day',
+            'h' => 'hour',
+            'i' => 'minute',
+            's' => 'second',
+        );
+        foreach ($string as $k => &$v) {
+            if ($diff->$k) {
+                $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
+            } else {
+                unset($string[$k]);
+            }
+        }
+
+        if (!$full) $string = array_slice($string, 0, 1);
+        return $string ? implode(', ', $string) . ' ago' : 'just now';
+    }
+@endphp
+
+
 @section('content')
 <section>
         <div class="row">
@@ -133,38 +166,29 @@
                     <div class="discussion__class-tab my-4" id="class-tab-detail-2">
                         <div class="row">
                             <div class="col-12">
-                                <div class="d-flex flex-column flex-lg-row mb-5">
-                                    <img class="student-img__discussion" src="{{ asset('cms/assets/img/coach2.png') }}" alt="">
-                                    <div class="column-start ml-0 ml-lg-4">
-                                        <p class="student-name__discussion mt-lg-0 mt-3">Bintang Yoga Pamungkas</p>
-                                        <div class="rating__discussion row-center-start mt-2">
-                                            <div class="row-center">
-                                                <div class="rating-holder">
-                                                    <div class="c-rating c-rating--big" data-rating-value="3.5">
-                                                        <button>1</button>
-                                                        <button>2</button>
-                                                        <button>3</button>
-                                                        <button>4</button>
-                                                        <button>5</button>
+                                @foreach($video_course_feedbacks as $video_course_feedback)
+                                    <div class="d-flex flex-column flex-lg-row mb-5">
+                                        <img class="student-img__discussion" src="{{ $video_course_feedback->image_url ? $video_course_feedback->image_url:''}}" alt="">
+                                        <div class="column-start ml-0 ml-lg-4">
+                                            <p class="student-name__discussion mt-lg-0 mt-3">{{ $video_course_feedback->student ? $video_course_feedback->student:''}}</p>
+                                            <div class="rating__discussion row-center-start mt-2">
+                                                <div class="row-center">
+                                                    <div class="rating-holder">
+                                                        <div class="c-rating c-rating--big" data-rating-value="{{ $video_course_feedback->star ? $video_course_feedback->star:0}}">
+                                                            <button>1</button>
+                                                            <button>2</button>
+                                                            <button>3</button>
+                                                            <button>4</button>
+                                                            <button>5</button>
+                                                        </div>
                                                     </div>
                                                 </div>
+                                                <span class="rating-at__discussion ml-3">{{ $video_course_feedback->created_at ? time_elapsed_string($video_course_feedback->created_at):'-' }}</span>
                                             </div>
-                                            <span class="rating-at__discussion ml-3">2 Bulan lalu</span>
+                                            <p class="student-review__discussion mt-2">{{ $video_course_feedback->description ? $video_course_feedback->description:''}}</p>
                                         </div>
-                                        <p class="student-review__discussion mt-2">Lorem ipsum dolor sit amet
-                                            consectetur adipisicing elit. Libero, adipisci sit laboriosam unde obcaecati
-                                            eligendi aut aliquid perspiciatis officia porro. Porro in nisi magni
-                                            necessitatibus repudiandae, nobis dolorem pariatur consequatur temporibus
-                                            quaerat ipsum, deserunt asperiores ea fugit quisquam, sint doloribus.
-                                            Exercitationem, doloremque iure repudiandae dolorem ducimus esse tempora
-                                            nesciunt, optio delectus eos at illo, ullam ex placeat voluptatum facere!
-                                            Vitae consequatur doloremque explicabo neque repudiandae, laudantium odio
-                                            molestiae fugit deserunt quae repellat obcaecati maxime optio harum
-                                            cupiditate quod, est nam reiciendis excepturi quis officia modi
-                                            exercitationem? Recusandae at fugit tempora ratione, officia ullam
-                                            doloremque harum totam minima? Doloremque, ea facilis?</p>
                                     </div>
-                                </div>
+                                @endforeach
 
                             </div>
                         </div>

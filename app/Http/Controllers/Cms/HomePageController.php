@@ -33,6 +33,20 @@ class HomePageController extends Controller
             ])
             ->get();
 
+
+        $is_registered = Auth::guard('student')->check() ? 'registered':'unregistered';
+        $banner = DB::table('banners')
+            ->select([
+                'title',
+                'description',
+                DB::raw("CONCAT('{$path}',image) as image_url"),
+            ])
+            ->where('type',$is_registered)
+            ->whereNull([
+                'deleted_at'
+            ])
+            ->first();
+
         $events = DB::table('events')
                     ->select([
                         'id',
@@ -90,7 +104,8 @@ class HomePageController extends Controller
 
     	return view('cms.homepage.index',[
             "company" => $company, 
-            "branchs" => $branchs, 
+            "branchs" => $branchs,
+            "banner" => $banner, 
             "coachs" => $coachs,
             "programs" => $programs,
             "events" => $events,

@@ -32,6 +32,19 @@ class ClassController extends Controller
             ])
             ->get();
 
+        $is_registered = Auth::guard('student')->check() ? 'registered':'unregistered';
+        $banner = DB::table('banners')
+            ->select([
+                'title',
+                'description',
+                DB::raw("CONCAT('{$path}',image) as image_url"),
+            ])
+            ->where('type',$is_registered)
+            ->whereNull([
+                'deleted_at'
+            ])
+            ->first();
+
     	$classroom_categories = DB::table('classroom_categories')
             ->select(['id', 'name'])
             ->whereNull([
@@ -110,6 +123,7 @@ class ClassController extends Controller
     	return view('cms.class.index', [
             "company" => $company,
             "branchs" => $branchs,
+            "banner" => $banner,
             "classroom_categories" => $classroom_categories,
             "selected_category" => $selected_category,
             "sub_categories" => $sub_categories,

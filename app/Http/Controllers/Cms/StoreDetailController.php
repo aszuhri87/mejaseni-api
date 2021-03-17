@@ -9,6 +9,7 @@ use App\Models\Branch;
 use App\Models\Company;
 
 
+use Auth;
 use DB;
 use Storage;
 
@@ -35,6 +36,19 @@ class StoreDetailController extends Controller
             ])
             ->get();
 
+        $is_registered = Auth::guard('student')->check() ? 'registered':'unregistered';
+        $banner = DB::table('banners')
+            ->select([
+                'title',
+                'description',
+                DB::raw("CONCAT('{$path}',image) as image_url"),
+            ])
+            ->where('type',$is_registered)
+            ->whereNull([
+                'deleted_at'
+            ])
+            ->first();
+
 
         $video_course_items = DB::table('theory_videos')
             ->select([
@@ -52,8 +66,10 @@ class StoreDetailController extends Controller
             ->leftJoin('theory_video_resolutions','theory_video_resolutions.theory_video_id','=','theory_videos.id')
             ->where('theory_videos.session_video_id',$video_course_id)
             ->where('theory_videos.is_public',true)
-            ->whereNull("theory_videos.deleted_at")
-            ->whereNull("theory_video_resolutions.deleted_at")
+            ->whereNull([
+                "theory_videos.deleted_at",
+                "theory_video_resolutions.deleted_at"
+            ])
             ->first();
 
         $video_course_item_open_videos = null;
@@ -106,16 +122,30 @@ class StoreDetailController extends Controller
             ])
             ->first();
 
-        
+
+        $video_course_feedbacks = DB::table('session_video_feedback')
+            ->select([
+                'session_video_feedback.*',
+                'students.name as student',
+                DB::raw("CONCAT('{$path}',students.image) as image_url"),
+            ])
+            ->leftJoin('students', 'students.id','=','session_video_feedback.student_id')
+            ->whereNull([
+                'session_video_feedback.deleted_at',
+                'students.deleted_at'
+            ])
+            ->get();        
 
         return view('cms.store-detail.index', [
             "company" => $company, 
             "branchs" => $branchs,
+            "banner" => $banner,
             "video_course_items" => $video_course_items,
             "video_course" => $video_course,
             "social_medias" => $social_medias,
             "video_course_item_open" => $video_course_item_open,
-            "video_course_item_open_videos" => $video_course_item_open_videos
+            "video_course_item_open_videos" => $video_course_item_open_videos,
+            "video_course_feedbacks" => $video_course_feedbacks
         ]);
     }
 

@@ -367,6 +367,12 @@ class BaseMenu extends Controller
                         'permission' => 'cms'
                     ],
                     [
+                        'key' => 'fun-creative',
+                        'title' => 'Fun & Creative',
+                        'url' => 'admin/cms/fun-creative',
+                        'permission' => 'cms'
+                    ],
+                    [
                         'key' => 'galery',
                         'title' => 'Galery',
                         'url' => 'admin/cms/galery',

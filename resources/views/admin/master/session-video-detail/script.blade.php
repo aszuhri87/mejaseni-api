@@ -34,6 +34,8 @@
                     columns: [
                         { data: 'DT_RowIndex' },
                         { data: 'name' },
+                        { data: 'number', className: "text-center" },
+                        { data: 'is_public' },
                         { data: 'is_converter_complete' },
                         { defaultContent: '' }
                         ],
@@ -43,6 +45,16 @@
                             searchable: false,
                             orderable: false,
                             className: "text-center"
+                        },
+                        {
+                            targets: -3,
+                            className: "text-center",
+                            data: "is_public",
+                            render : function(data, type, full, meta) {
+                                return data  ?
+                                    `<span class="label label-lg label-light-success label-inline font-weight-bold py-4">Yes</span>`:
+                                    `<span class="label label-lg label-light-danger label-inline font-weight-bold py-4">No</span>`
+                            }
                         },
                         {
                             targets: -2,
@@ -91,7 +103,7 @@
                             }
                         },
                     ],
-                    order: [[1, 'asc']],
+                    order: [[2, 'asc']],
                     searching: true,
                     paging:true,
                     lengthChange:false,
@@ -251,13 +263,13 @@
                         docsDropzone.removeAllFiles( true );
 
                         var mockFile = {
-                            name: data.url,
+                            name: data.video_url,
                             accepted: true
                         };
 
                         docsDropzone.files.push(mockFile);
                         docsDropzone.emit("addedfile", mockFile);
-                        docsDropzone.emit("thumbnail", mockFile, data.file_url);
+                        docsDropzone.emit("thumbnail", mockFile, data.video_url);
                         docsDropzone.emit("complete", mockFile);
                     }
 
@@ -440,7 +452,8 @@
                     url: "{{url('media/file')}}",
                     paramName: "file",
                     maxFiles: 1,
-                    maxFilesize: 2,
+                    timeout:60000,
+                    maxFilesize: 100,
                     uploadMultiple: false,
                     addRemoveLinks: true,
                     init: function() {

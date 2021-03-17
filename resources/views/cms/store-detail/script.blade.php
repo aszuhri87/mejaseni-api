@@ -62,22 +62,24 @@
 
                         $("#video-course").attr('src',$(this).data('url'))
                     }else{
-                        console.log($(this).data('url'))
-                        $.ajax({
-                            url: `/video-course/videos/${$(this).data('url')}`,
-                            type: 'GET',
-                        })
-                        .done(function(res, xhr, meta) {
-                            $("#video-content").html(res.data.html)
-                            get_init_video()
-                            initVideoContentEvent()
-                        })
-                        .fail(function(res, error) {
-                            toastr.error(res.responseJSON.message, 'Failed')
-                        })
-                        .always(function() {
-                           
-                        });
+                        let url = $(this).data('url')
+                        if(url){
+                            $.ajax({
+                                url: `/video-course/videos/${url}`,
+                                type: 'GET',
+                            })
+                            .done(function(res, xhr, meta) {
+                                $("#video-content").html(res.data.html)
+                                get_init_video()
+                                initVideoContentEvent()
+                            })
+                            .fail(function(res, error) {
+                                toastr.error(res.responseJSON.message, 'Failed')
+                            })
+                            .always(function() {
+                               
+                            });
+                        }
                     }
                 })
             }

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Branch;
 use App\Models\Company;
 
+use Auth;
 use DB;
 use Storage;
 
@@ -17,10 +18,8 @@ class NewsEventController extends Controller
     {
     	$company = Company::first();
     	$branchs = Branch::all();
-       
-
-
     	$path = Storage::disk('s3')->url('/');
+
     	$events = DB::table('events')
     				->select([
     					'id',
@@ -33,6 +32,19 @@ class NewsEventController extends Controller
     				->orderBy('start_at','desc')
                     ->take(3)
     				->get();
+
+        $is_registered = Auth::guard('student')->check() ? 'registered':'unregistered';
+        $banner = DB::table('banners')
+            ->select([
+                'title',
+                'description',
+                DB::raw("CONCAT('{$path}',image) as image_url"),
+            ])
+            ->where('type',$is_registered)
+            ->whereNull([
+                'deleted_at'
+            ])
+            ->first();
                     
         $news = DB::table('news')
                     ->select([
@@ -58,7 +70,8 @@ class NewsEventController extends Controller
 
     	return view('cms.news-event.index', [
             "company" => $company, 
-            "branchs" => $branchs, 
+            "branchs" => $branchs,
+            "banner" => $banner, 
             "events" => $events,
             "news" => $news,
             "social_medias" => $social_medias

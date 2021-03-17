@@ -38,6 +38,14 @@ class TheoryVideoController extends BaseMenu
     {
         try {
 
+            $is_exist = TheoryVideo::whereNull('deleted_at')->where('number',$request->number)->first();
+
+            if($is_exist){
+                return response([
+                    "message"=> "Nomor Video Sudah Digunakan",
+                ], 400);
+            }
+
             $result = DB::transaction(function () use($request){
                 $result = TheoryVideo::create([
                     'session_video_id' => $request->session_video_id,
@@ -50,7 +58,7 @@ class TheoryVideoController extends BaseMenu
 
                 if(!isset($request->is_youtube)){
                     $path = Storage::disk('s3')->url('/');
-                    $video_converter_hook = config('app.url')."api/video-converter/".$result->id."/hook";
+                    $video_converter_hook = config('app.url')."/api/video-converter/".$result->id."/hook";
                     $url = $path . $request->file;
 
                     $client = new Client([
@@ -98,14 +106,54 @@ class TheoryVideoController extends BaseMenu
     {
         try {
             $result = DB::transaction(function () use($request, $id){
-                $result = TheoryVideo::find($id)->update([
-                    'session_video_id' => $request->session_video_id,
-                    'name' => $request->name,
-                    'number' => $request->number,
-                    'is_youtube' => isset($request->is_youtube) ? true : false,
-                    'youtube_url' => isset($request->is_youtube) ? $request->url : null,
-                    'is_public' => isset($request->is_public) ? true : false,
-                ]);
+                $result = TheoryVideo::find($id);
+
+                $data = [
+                        'name' => $request->name,
+                        'number' => $request->number,
+                        'is_youtube' => isset($request->is_youtube) ? true : false,
+                        'youtube_url' => isset($request->is_youtube) ? $request->url : null,
+                        'is_public' => isset($request->is_public) ? true : false,
+                ];
+
+                if(!$request->is_youtube){
+                    if($result->video_url != $request->url){
+                        $path = Storage::disk('s3')->url('/');
+                        $video_converter_hook = config('app.url')."/api/video-converter/".$result->id."/hook";
+                        $url = $path . $request->file;
+
+                        $client = new Client([
+                            'base_uri' => config('app.video_converter_host'),
+                        ]);
+
+                        $response = $client->request('POST', '/video',[
+                            "multipart" => [
+                                [
+                                    "name" => "video",
+                                    "contents" => file_get_contents($url),
+                                    "filename" => $url
+                                ]
+                            ],
+                            "query" => [
+                                "video_converter_hook" => $video_converter_hook
+                            ],
+                        ]);
+
+                        $status_created = 201;
+                        if($response->getStatusCode() == $status_created){
+                            $data['is_youtube'] = false;
+                            $data['is_converter_complete'] = false;
+                            $data['video_url'] = '';
+                        }else{
+                            return response([
+                                "message"=> "Internal Server Error",
+                            ], $response->status());
+                        }
+
+                    }
+                }
+
+                $result->update($data);
 
                 return $result;
             });
