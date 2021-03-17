@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 
 use App\Models\Branch;
 use App\Models\Company;
+use App\Models\CareerCollection;
+use App\Models\CareerMediaCollection;
 
 use DB;
 use Storage;
@@ -15,14 +17,14 @@ class CareerController extends Controller
 {
     public function index()
     {
-    	$company = Company::first();
-    	$branchs = Branch::all();
+        $company = Company::first();
+        $branches = Branch::all();
 
-    	$internal_team = 1;
-    	$profesional_coach = 2;
+        $internal_team = 1;
+        $professional_coach = 2;
 
         $path = Storage::disk('s3')->url('/');
-    	$internal_team_careers = DB::table('careers')
+        $internal_team_careers = DB::table('careers')
             ->select([
                 'id',
                 'title',
@@ -44,7 +46,7 @@ class CareerController extends Controller
                 'type',
             ])
             ->where('is_closed',false)
-            ->where('type',$profesional_coach)
+            ->where('type',$professional_coach)
             ->whereNull([
                 'deleted_at'
             ])
@@ -60,12 +62,50 @@ class CareerController extends Controller
             ])
             ->get();
 
-    	return view('cms.career.index', [
-    			"company" => $company, 
-    			"branchs" => $branchs, 
-    			'internal_team_careers' => $internal_team_careers, 
-    			'professional_coach_careers' => $professional_coach_careers,
-                "social_medias" => $social_medias
-    		]);
+        return view('cms.career.index', [
+            "company" => $company,
+            "branches" => $branches,
+            'internal_team_careers' => $internal_team_careers,
+            'professional_coach_careers' => $professional_coach_careers,
+            "social_medias" => $social_medias
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        try {
+            if(!isset($request['files'])){
+                return response([
+                    "message"   => 'Lampiran kosong!'
+                ], 400);
+            }
+
+            DB::transaction(function () use($request){
+                $collection = CareerCollection::create([
+                    'career_id' => $request->career_id,
+                    'date' => date('Y-m-d H:i:s'),
+                    'name' => $request->name,
+                    'email' => $request->email,
+                ]);
+
+                if(isset($request['files'])){
+                    foreach ($request['files'] as $key => $value) {
+                        CareerMediaCollection::create([
+                            'career_collection_id' => $collection->id,
+                            'url' => $value,
+                        ]);
+                    }
+                }
+            });
+
+            return response([
+                "message"   => 'Successfully saved!'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
     }
 }

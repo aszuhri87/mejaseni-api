@@ -49,31 +49,44 @@
                         }
                     },
                     eventDrop: function(info) {
-                        Swal.fire({
-                            title: 'Ubah Jadwal?',
-                            icon: 'warning',
-                            showCancelButton: true,
-                            confirmButtonColor: '#7F16A7',
-                            confirmButtonText: 'Ya, Ubah',
-                        }).then(function (result) {
-                            if (result.value) {
-                                $.ajax({
-                                    url: "{{url('coach/schedule/update')}}/"+info.event.id,
-                                    type: 'POST',
-                                    data: {
-                                        date: moment(info.event.start).format('DD MMMM YYYY'),
-                                        time: moment(info.event.start).format('HH:mm:ss')
-                                    },
-                                })
-                                .done(function(res, xhr, meta) {
-                                    renderCalender()
-                                });
-                            }else{
-                                info.revert();
-                            }
-                        })
+                        let old_start = moment(info.oldEvent.start).format('DD MMMM YYYY');
+                        let end = moment(new Date()).format('DD MMMM YYYY');
+                        let start = moment(info.event.start).format('DD MMMM YYYY');
 
-                        $('.swal2-title').addClass('justify-content-center')
+                        if(moment(old_start).isSameOrBefore(end)){
+                            info.revert();
+                            return false;
+                        }
+
+                        if(moment(start).isAfter(end)){
+                            Swal.fire({
+                                title: 'Ubah Jadwal?',
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#7F16A7',
+                                confirmButtonText: 'Ya, Ubah',
+                            }).then(function (result) {
+                                if (result.value) {
+                                    $.ajax({
+                                        url: "{{url('coach/schedule/update')}}/"+info.event.id,
+                                        type: 'POST',
+                                        data: {
+                                            date: moment(info.event.start).format('DD MMMM YYYY'),
+                                            time: moment(info.event.start).format('HH:mm:ss')
+                                        },
+                                    })
+                                    .done(function(res, xhr, meta) {
+                                        renderCalender()
+                                    });
+                                }else{
+                                    info.revert();
+                                }
+                            })
+
+                            $('.swal2-title').addClass('justify-content-center')
+                        }else{
+                            info.revert();
+                        }
                     },
                     eventClick: function(info) {
                         calendarDetail(info.event.id);

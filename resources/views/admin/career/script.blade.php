@@ -17,7 +17,7 @@
                     sScrollY: ($(window).height() < 700) ? $(window).height() - 200 : $(window).height() - 450,
                     ajax: {
                         type: 'POST',
-                        url: "{{ url('admin/cms/career/dt') }}",
+                        url: "{{ url('admin/career/dt') }}",
                     },
                     columns: [
                         { data: 'DT_RowIndex' },
@@ -40,7 +40,7 @@
                             render : function(data, type, full, meta) {
                                 return `
                                     <div class="d-flex flex-column font-weight-bold">
-                                        <a href="{{url('admin/carrer')}}/${full.id}" class="text-primary text-hover-info mb-1 font-size-lg">${data}</a>
+                                        <a href="{{url('admin/career')}}/${full.id}" class="text-primary text-hover-info mb-1 font-size-lg">${data}</a>
                                     </div>
                                 `;
                             }
@@ -73,7 +73,7 @@
                             data: "id",
                             render : function(data, type, full, meta) {
                                 return `
-                                    <a href="{{url('/admin/cms/career')}}/${data}/job-description/dt" title="Job Description" class="btn btn-job-description btn-sm btn-clean btn-icon mr-2" title="Edit details">
+                                    <a href="{{url('/admin/career')}}/${data}/job-description/dt" title="Job Description" class="btn btn-job-description btn-sm btn-clean btn-icon mr-2" title="Edit details">
                                         <span class="svg-icon svg-icon-md">
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -90,7 +90,7 @@
                                             </svg>
                                         </span>
                                     </a>
-                                    <a href="{{url('/admin/cms/career')}}/${data}" title="Job Requirements" class="btn btn-job-requirement btn-sm btn-clean btn-icon mr-2" title="Edit details">
+                                    <a href="{{url('/admin/career')}}/${data}" title="Job Requirements" class="btn btn-job-requirement btn-sm btn-clean btn-icon mr-2" title="Edit details">
                                         <span class="svg-icon svg-icon-md">
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -102,7 +102,7 @@
                                             </svg>
                                         </span>
                                     </a>
-                                    <a href="{{url('/admin/cms/career')}}/${data}" title="Edit" class="btn btn-edit btn-sm btn-clean btn-icon mr-2" title="Edit details">
+                                    <a href="{{url('/admin/career')}}/${data}" title="Edit" class="btn btn-edit btn-sm btn-clean btn-icon mr-2" title="Edit details">
                                         <span class="svg-icon svg-icon-md">
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -113,7 +113,7 @@
                                             </svg>
                                         </span>
                                     </a>
-                                    <a href="{{url('/admin/cms/career')}}/${data}" title="Delete" class="btn btn-delete btn-sm btn-clean btn-icon" title="Delete">
+                                    <a href="{{url('/admin/career')}}/${data}" title="Delete" class="btn btn-delete btn-sm btn-clean btn-icon" title="Delete">
                                         <span class="svg-icon svg-icon-md">
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -158,7 +158,7 @@
                     sScrollY: ($(window).height() < 700) ? $(window).height() - 200 : $(window).height() - 450,
                     ajax: {
                         type: 'POST',
-                        url: `{{ url('admin/cms/career') }}/${career_id}/job-description/dt`,
+                        url: `{{ url('admin/career') }}/${career_id}/job-description/dt`,
                     },
                     columns: [
                         { data: 'DT_RowIndex' },
@@ -180,7 +180,7 @@
                             data: "id",
                             render : function(data, type, full, meta) {
                                 return `
-                                    <a href="{{url('/admin/cms/job-description')}}/${data}" title="Delete" class="btn btn-delete-job-description btn-sm btn-clean btn-icon" title="Delete">
+                                    <a href="{{url('/admin/job-description')}}/${data}" title="Delete" class="btn btn-delete-job-description btn-sm btn-clean btn-icon" title="Delete">
                                         <span class="svg-icon svg-icon-md">
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -217,7 +217,7 @@
                     sScrollY: ($(window).height() < 700) ? $(window).height() - 200 : $(window).height() - 450,
                     ajax: {
                         type: 'POST',
-                        url: `{{ url('admin/cms/career') }}/${career_id}/job-requirement/dt`,
+                        url: `{{ url('admin/career') }}/${career_id}/job-requirement/dt`,
                     },
                     columns: [
                         { data: 'DT_RowIndex' },
@@ -239,7 +239,7 @@
                             data: "id",
                             render : function(data, type, full, meta) {
                                 return `
-                                    <a href="{{url('/admin/cms/job-requirement')}}/${data}" title="Delete" class="btn btn-delete-job-description btn-sm btn-clean btn-icon" title="Delete">
+                                    <a href="{{url('/admin/job-requirement')}}/${data}" title="Delete" class="btn btn-delete-job-requirement btn-sm btn-clean btn-icon" title="Delete">
                                         <span class="svg-icon svg-icon-md">
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -273,7 +273,7 @@
                     event.preventDefault();
 
                     $('#form-career').trigger("reset");
-                    $('#form-career').attr('action','{{url('admin/cms/career')}}');
+                    $('#form-career').attr('action','{{url('admin/career')}}');
                     $('#form-career').attr('method','POST');
 
                     showModal('modal-career');
@@ -336,7 +336,7 @@
                     var data = init_table.row($(this).parents('tr')).data();
 
                     $('#form-job-description').trigger("reset");
-                    $('#form-job-description').attr('action','{{url('admin/cms/job-description')}}');
+                    $('#form-job-description').attr('action','{{url('admin/job-description')}}');
                     $('#form-job-description').attr('method','POST');
 
 
@@ -385,7 +385,7 @@
                     var data = init_table.row($(this).parents('tr')).data();
 
                     $('#form-job-requirement').trigger("reset");
-                    $('#form-job-requirement').attr('action','{{url('admin/cms/job-requirement')}}');
+                    $('#form-job-requirement').attr('action','{{url('admin/job-requirement')}}');
                     $('#form-job-requirement').attr('method','POST');
 
 

@@ -49,6 +49,9 @@ use App\Http\Controllers\Admin\Reporting\Review\Coach\Detail\CoachDetailControll
 use App\Http\Controllers\Admin\Reporting\Review\Student\StudentController as AdminStudentController;
 use App\Http\Controllers\Admin\Reporting\Review\Student\Detail\StudentDetailController;
 use App\Http\Controllers\Admin\Report\Transaction\CoachController as ReportTransactionCoachController;
+use App\Http\Controllers\Admin\Career\CareerController as CareerAdminController;
+use App\Http\Controllers\Admin\Career\JobDescriptionController as JobDescriptionController;
+use App\Http\Controllers\Admin\Career\JobRequirementController as JobRequirementController;
 
 use App\Http\Controllers\Admin\Review\VideoController;
 use App\Http\Controllers\Admin\Review\ClassController as ReviewClassController;
@@ -100,9 +103,6 @@ use App\Http\Controllers\Admin\Cms\NewsController as NewsController;
 use App\Http\Controllers\Admin\Cms\PrivacyPolicyController as PrivacyPolicyAdminController;
 use App\Http\Controllers\Admin\Cms\FaqController as FaqAdminController;
 use App\Http\Controllers\Admin\Cms\TeamController as TeamController;
-use App\Http\Controllers\Admin\Cms\CareerController as CareerAdminController;
-use App\Http\Controllers\Admin\Cms\JobDescriptionController as JobDescriptionController;
-use App\Http\Controllers\Admin\Cms\JobRequirementController as JobRequirementController;
 use App\Http\Controllers\Admin\Cms\WorkingHourController as WorkingHourController;
 use App\Http\Controllers\Admin\Cms\GaleryController as GaleryController;
 use App\Http\Controllers\Admin\Cms\SocialMediaController as SocialMediaController;
@@ -200,6 +200,7 @@ Route::get('/faq', [FaqController::class, 'index']);
 Route::post('/question',[QuestionController::class,'store']);
 
 Route::get('/career', [CareerController::class, 'index']);
+Route::post('/career', [CareerController::class, 'store']);
 Route::get('/career/{id}/detail', [CareerDetailController::class, 'index']);
 Route::post('/notifications/payments', [PaymentController::class, 'notification']);
 
@@ -358,7 +359,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
                 Route::post('student/verified/{id}', [StudentController::class, 'verified']);
                 Route::resource('student', StudentController::class);
             });
-            
+
             Route::group(['middleware' => 'can:media_conference'], function () {
                 Route::post('media-conference/dt', [PlatformController::class, 'dt']);
                 Route::post('media-conference/update/{id}', [PlatformController::class, 'update']);
@@ -426,14 +427,14 @@ Route::group(['middleware' => ['auth-handling']], function () {
             });
         });
 
-        Route::group(['middleware' => 'can:data_transaction'], function () {    
+        Route::group(['middleware' => 'can:data_transaction'], function () {
             Route::group(['prefix' => 'transaction'], function () {
                 Route::group(['middleware' => 'can:data_transaction_coach'], function () {
                     Route::get('coach', [TransactionCoachController::class, 'index']);
                     Route::post('coach/dt', [TransactionCoachController::class, 'dt']);
                     Route::post('coach/confirm/{id}', [TransactionCoachController::class, 'confirm']);
                 });
-    
+
                 Route::group(['middleware' => 'can:data_transaction_student'], function () {
                     Route::get('student', [TransactionStudentController::class, 'index']);
                     Route::post('student/dt', [TransactionStudentController::class, 'dt']);
@@ -486,7 +487,6 @@ Route::group(['middleware' => ['auth-handling']], function () {
 
             });
 
-
             Route::group(['prefix' => 'transaction'], function () {
                 Route::get('student', [ScheduleController::class, 'index']);
                 Route::post('student/excel', [TransactionStudentController::class, 'excel']);
@@ -496,9 +496,22 @@ Route::group(['middleware' => ['auth-handling']], function () {
 
         Route::post('event/dt', [EventController::class, 'dt']);
         Route::post('event/{id}/participants/dt',[EventController::class, 'participants_dt']);
-        Route::delete('cart/{id}', [CartController::class, 'destroy']);
         Route::post('event/update/{id}', [EventController::class, 'update']);
         Route::resource('event', EventController::class);
+
+        Route::delete('cart/{id}', [CartController::class, 'destroy']);
+        Route::post('career-detail/dt', [CareerAdminController::class, 'dt_detail']);
+        Route::get('career-detail/{id}', [CareerAdminController::class, 'show_detail']);
+
+        Route::post('career/dt', [CareerAdminController::class, 'dt']);
+        Route::get('/career-detail/{id}', [CareerAdminController::class, 'show_detail']);
+        Route::resource('career', CareerAdminController::class);
+
+        Route::post('career/{career_id}/job-description/dt', [JobDescriptionController::class, 'dt']);
+        Route::resource('job-description', JobDescriptionController::class);
+
+        Route::post('career/{career_id}/job-requirement/dt', [JobRequirementController::class, 'dt']);
+        Route::resource('job-requirement', JobRequirementController::class);
 
         Route::group(['prefix' => 'cms'], function () {
             Route::post('company/dt', [CompanyController::class, 'dt']);
@@ -526,15 +539,6 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::post('team/dt', [TeamController::class, 'dt']);
             Route::post('team/update/{id}', [TeamController::class, 'update']);
             Route::resource('team', TeamController::class);
-
-            Route::post('career/dt', [CareerAdminController::class, 'dt']);
-            Route::resource('career', CareerAdminController::class);
-
-            Route::post('career/{career_id}/job-description/dt', [JobDescriptionController::class, 'dt']);
-            Route::resource('job-description', JobDescriptionController::class);
-
-            Route::post('career/{career_id}/job-requirement/dt', [JobRequirementController::class, 'dt']);
-            Route::resource('job-requirement', JobRequirementController::class);
 
             Route::post('working-hour/dt', [WorkingHourController::class, 'dt']);
             Route::resource('working-hour', WorkingHourController::class);

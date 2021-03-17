@@ -323,6 +323,13 @@ class BaseMenu extends Controller
                 ],
             ],
             [
+                'key' => 'career',
+                'title' => 'Karir',
+                'url' => 'admin/career',
+                'permission' => 'career',
+                'icon' => $this->icon('master'),
+            ],
+            [
                 'key' => 'cms',
                 'title' => 'CMS',
                 'url' => '#',
@@ -339,12 +346,6 @@ class BaseMenu extends Controller
                         'key' => 'branch',
                         'title' => 'Branch',
                         'url' => 'admin/cms/branch',
-                        'permission' => 'cms'
-                    ],
-                    [
-                        'key' => 'career',
-                        'title' => 'Career',
-                        'url' => 'admin/cms/career',
                         'permission' => 'cms'
                     ],
                     [

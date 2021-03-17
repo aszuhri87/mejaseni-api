@@ -1,0 +1,154 @@
+.my-dropzone {
+  min-height: auto; }
+
+.my-dropzone.my-dropzone-default {
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  border: 2px dashed #EBEDF3;
+  border-radius: 0.42rem; }
+  .my-dropzone.my-dropzone-default .my-dropzone-msg-title {
+    color: #3F4254;
+    margin: 0 0 5px 0;
+    padding: 0;
+    font-weight: 500;
+    font-size: 1.2rem; }
+  .my-dropzone.my-dropzone-default .my-dropzone-msg-desc {
+    color: #B5B5C3;
+    font-weight: 400;
+    font-size: 1rem; }
+  .my-dropzone.my-dropzone-default .dz-preview .dz-image {
+    border-radius: 0.42rem; }
+  .my-dropzone.my-dropzone-default .dz-remove {
+    color: #7E8299;
+    font-size: 10px;
+    font-weight: 500;
+    -webkit-transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, -webkit-box-shadow 0.15s ease;
+    transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, -webkit-box-shadow 0.15s ease;
+    transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, -webkit-box-shadow 0.15s ease; }
+    .my-dropzone.my-dropzone-default .dz-remove:hover {
+      -webkit-transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, -webkit-box-shadow 0.15s ease;
+      transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, -webkit-box-shadow 0.15s ease;
+      transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+      transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, -webkit-box-shadow 0.15s ease;
+      color: #7F16A7; }
+  .my-dropzone.my-dropzone-default.my-dropzone-primary {
+    border-color: #7F16A7; }
+  .my-dropzone.my-dropzone-default.my-dropzone-secondary {
+    border-color: #E4E6EF; }
+  .my-dropzone.my-dropzone-default.my-dropzone-success {
+    border-color: #1BC5BD; }
+  .my-dropzone.my-dropzone-default.my-dropzone-info {
+    border-color: #8950FC; }
+  .my-dropzone.my-dropzone-default.my-dropzone-warning {
+    border-color: #FFA800; }
+  .my-dropzone.my-dropzone-default.my-dropzone-danger {
+    border-color: #F64E60; }
+  .my-dropzone.my-dropzone-default.my-dropzone-light {
+    border-color: #F3F6F9; }
+  .my-dropzone.my-dropzone-default.my-dropzone-dark {
+    border-color: #181C32; }
+  .my-dropzone.my-dropzone-default.my-dropzone-white {
+    border-color: #ffffff; }
+
+.my-dropzone.my-dropzone-multi {
+  border: 0;
+  padding: 0; }
+  .my-dropzone.my-dropzone-multi .dz-message {
+    display: none; }
+  .my-dropzone.my-dropzone-multi .my-dropzone-panel .my-dropzone-upload,
+  .my-dropzone.my-dropzone-multi .my-dropzone-panel .my-dropzone-remove-all {
+    display: none; }
+  .my-dropzone.my-dropzone-multi .my-dropzone-item {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    margin-top: 0.75rem;
+    border-radius: 0.42rem;
+    padding: 0.5rem 1rem;
+    background-color: #F3F6F9; }
+    .my-dropzone.my-dropzone-multi .my-dropzone-item .my-dropzone-file {
+      -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+      flex-grow: 1; }
+      .my-dropzone.my-dropzone-multi .my-dropzone-item .my-dropzone-file .my-dropzone-filename {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: #7E8299;
+        text-overflow: ellipsis;
+        margin-right: 0.5rem; }
+        .my-dropzone.my-dropzone-multi .my-dropzone-item .my-dropzone-file .my-dropzone-filename b {
+          font-size: 0.9rem;
+          font-weight: 500;
+          color: #B5B5C3; }
+      .my-dropzone.my-dropzone-multi .my-dropzone-item .my-dropzone-file .my-dropzone-error {
+        margin-top: 0.25rem;
+        font-size: 0.9rem;
+        font-weight: 400;
+        color: #F64E60;
+        text-overflow: ellipsis; }
+    .my-dropzone.my-dropzone-multi .my-dropzone-item .my-dropzone-progress {
+      width: 15%; }
+      .my-dropzone.my-dropzone-multi .my-dropzone-item .my-dropzone-progress .progress {
+        height: 5px;
+        -webkit-transition: all 0.2s ease-in-out;
+        transition: all 0.2s ease-in-out; }
+        @media (prefers-reduced-motion: reduce) {
+          .my-dropzone.my-dropzone-multi .my-dropzone-item .my-dropzone-progress .progress {
+            -webkit-transition: none;
+            transition: none; } }
+    .my-dropzone.my-dropzone-multi .my-dropzone-item .my-dropzone-toolbar {
+      margin-left: 1rem;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-wrap: nowrap;
+      flex-wrap: nowrap; }
+      .my-dropzone.my-dropzone-multi .my-dropzone-item .my-dropzone-toolbar .my-dropzone-start,
+      .my-dropzone.my-dropzone-multi .my-dropzone-item .my-dropzone-toolbar .my-dropzone-cancel,
+      .my-dropzone.my-dropzone-multi .my-dropzone-item .my-dropzone-toolbar .my-dropzone-delete {
+        height: 25px;
+        width: 25px;
+        display: -webkit-inline-box;
+        display: -ms-inline-flexbox;
+        display: inline-flex;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        justify-content: center;
+        cursor: pointer;
+        -webkit-transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, -webkit-box-shadow 0.15s ease;
+        transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, -webkit-box-shadow 0.15s ease;
+        transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+        transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, -webkit-box-shadow 0.15s ease; }
+        .my-dropzone.my-dropzone-multi .my-dropzone-item .my-dropzone-toolbar .my-dropzone-start i,
+        .my-dropzone.my-dropzone-multi .my-dropzone-item .my-dropzone-toolbar .my-dropzone-cancel i,
+        .my-dropzone.my-dropzone-multi .my-dropzone-item .my-dropzone-toolbar .my-dropzone-delete i {
+          -webkit-transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, -webkit-box-shadow 0.15s ease;
+          transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, -webkit-box-shadow 0.15s ease;
+          transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+          transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, -webkit-box-shadow 0.15s ease;
+          font-size: 0.8rem;
+          color: #7E8299; }
+        .my-dropzone.my-dropzone-multi .my-dropzone-item .my-dropzone-toolbar .my-dropzone-start:hover,
+        .my-dropzone.my-dropzone-multi .my-dropzone-item .my-dropzone-toolbar .my-dropzone-cancel:hover,
+        .my-dropzone.my-dropzone-multi .my-dropzone-item .my-dropzone-toolbar .my-dropzone-delete:hover {
+          -webkit-transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, -webkit-box-shadow 0.15s ease;
+          transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, -webkit-box-shadow 0.15s ease;
+          transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+          transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, -webkit-box-shadow 0.15s ease; }
+          .my-dropzone.my-dropzone-multi .my-dropzone-item .my-dropzone-toolbar .my-dropzone-start:hover i,
+          .my-dropzone.my-dropzone-multi .my-dropzone-item .my-dropzone-toolbar .my-dropzone-cancel:hover i,
+          .my-dropzone.my-dropzone-multi .my-dropzone-item .my-dropzone-toolbar .my-dropzone-delete:hover i {
+            color: #7F16A7; }
+      .my-dropzone.my-dropzone-multi .my-dropzone-item .my-dropzone-toolbar .my-dropzone-start {
+        -webkit-transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, -webkit-box-shadow 0.15s ease;
+        transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, -webkit-box-shadow 0.15s ease;
+        transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+        transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, -webkit-box-shadow 0.15s ease; }
