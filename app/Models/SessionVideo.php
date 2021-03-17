@@ -23,6 +23,7 @@ class SessionVideo extends Model
         'description',
         'price',
         'name',
+        'image',
         'datetime'
     ];
 

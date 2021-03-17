@@ -122,6 +122,7 @@ class StoreController extends Controller
                 ->select([
                     'session_videos.*',
                     'coaches.name as coach',
+                     DB::raw("CONCAT('{$path}',session_videos.image) as image_url"),
                 ])
                 ->leftJoin('coaches', 'coaches.id','=','session_videos.coach_id')
                 ->leftJoinSub($is_has_video, 'theory_videos', function($join){
@@ -284,6 +285,7 @@ class StoreController extends Controller
                     </div>';
         $video_courses_html = "";
 
+        $path = Storage::disk('s3')->url('/');
         $is_has_video = DB::table('theory_videos')
             ->select([
                 'theory_videos.session_video_id',
@@ -296,7 +298,8 @@ class StoreController extends Controller
         $video_courses = DB::table('session_videos')
                             ->select([
                                 'session_videos.*',
-                                'coaches.name as coach'
+                                'coaches.name as coach',
+                                DB::raw("CONCAT('{$path}',session_videos.image) as image_url"),
                             ])
                             ->leftJoin('coaches', 'coaches.id','=','session_videos.coach_id')
                             ->leftJoinSub($is_has_video, 'theory_videos', function($join){
@@ -314,7 +317,7 @@ class StoreController extends Controller
             $video_courses_html .= '<div class="row mb-5 pb-2">
                                     <div class="col-xl-3 mb-3 mb-md-0">
                                       <a href="#">
-                                        <figure><img src="/cms/assets/img/master-lesson__banner.jpg" /></figure>
+                                        <figure><img src="'.$video_course->image_url.'" /></figure>
                                       </a>
                                     </div>
                                     <div class="col-xl-9 px-4">

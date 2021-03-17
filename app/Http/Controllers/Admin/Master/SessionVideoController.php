@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\SessionVideo;
 
 use DataTables;
+use Storage;
 
 class SessionVideoController extends BaseMenu
 {
@@ -35,6 +36,7 @@ class SessionVideoController extends BaseMenu
 
     public function dt()
     {
+        $path = Storage::disk('s3')->url('/');
         $theories = DB::table('theory_videos')
             ->select([
                 'theory_videos.session_video_id',
@@ -51,6 +53,7 @@ class SessionVideoController extends BaseMenu
                 'expertises.name as expertise',
                 'sub_classroom_categories.name as sub_category',
                 'classroom_categories.name as category',
+                DB::raw("CONCAT('{$path}',session_videos.image) as image_url"),
                 DB::raw("CASE
                     WHEN theories.count_theory IS NULL THEN 0
                     ELSE theories.count_theory
@@ -74,6 +77,12 @@ class SessionVideoController extends BaseMenu
     public function store(Request $request)
     {
         try {
+            if(!isset($request->image)){
+                return response([
+                    "message"   => 'Gambar harus diisi!'
+                ], 400);
+            }
+
             if(!isset($request->sub_classroom_category_id)){
                 return response([
                     "message"   => 'Sub Kategori harus diisi!'
@@ -81,6 +90,11 @@ class SessionVideoController extends BaseMenu
             }
 
             $result = DB::transaction(function () use($request){
+                if(isset($request->image)){
+                    $file = $request->file('image');
+                    $path = Storage::disk('s3')->put('media', $file);
+                }
+
                 $result = SessionVideo::create([
                     'sub_classroom_category_id' => $request->sub_classroom_category_id,
                     'expertise_id' => $request->expertise_id,
@@ -89,6 +103,7 @@ class SessionVideoController extends BaseMenu
                     'price' => $request->price,
                     'name' => $request->name,
                     'datetime' => date('Y-m-d H:i:s'),
+                    'image' => $path
                 ]);
 
                 return $result;
@@ -116,6 +131,13 @@ class SessionVideoController extends BaseMenu
             }
 
             $result = DB::transaction(function () use($request, $id){
+                $path = null;
+
+                if(isset($request->image)){
+                    $file = $request->file('image');
+                    $path = Storage::disk('s3')->put('media', $file);
+                }
+
                 $result = SessionVideo::find($id)->update([
                     'sub_classroom_category_id' => $request->sub_classroom_category_id,
                     'expertise_id' => $request->expertise_id,
@@ -123,6 +145,7 @@ class SessionVideoController extends BaseMenu
                     'description' => $request->description,
                     'price' => $request->price,
                     'name' => $request->name,
+                    'image' => $path ? $path:$result->image
                 ]);
 
                 return $result;

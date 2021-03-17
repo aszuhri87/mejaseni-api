@@ -49,6 +49,13 @@
                     </div>
                     <div class="form-group">
                         <label>
+                            Picture
+                            <span class="text-danger">*</span>
+                        </label>
+                        <div id="image"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>
                             Coach
                             <span class="text-danger">*</span>
                         </label>

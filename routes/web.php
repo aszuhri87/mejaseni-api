@@ -306,6 +306,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
                     Route::delete('session-video/file/{id}', [TheoryVideoController::class, 'file_destroy']);
 
                     Route::post('session-video/dt', [SessionVideoController::class, 'dt']);
+                    Route::post('session-video/update/{id}', [SessionVideoController::class, 'update']);
                     Route::resource('session-video', SessionVideoController::class);
                 });
 
