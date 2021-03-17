@@ -9,7 +9,7 @@
               <h3 class="mt-5">{{ $career->title ? $career->title:'' }}</h3>
               <p class="row-center-start mt-3 mb-5"><img class="mr-2" src="{{ asset('cms/assets/img/svg/marker.svg') }}"
                       alt="">{{ $career->placement ? $career->placement:'' }}</p>
-              <a href="" class="btn btn-primary mt-5 mb-4 w-25">Apply</a>
+              <a data-toggle="modal" data-target="#modal-apply-career" class="btn btn-primary mt-5 mb-4 w-25">Apply</a>
           </div>
       </div>
       <div class="col-lg-9 mb-lg-0 mb-3">
@@ -38,6 +38,7 @@
       </div>
   </div>
 </section>
+@include('cms.career-detail.modal')
 @endsection
 
 @push('script')

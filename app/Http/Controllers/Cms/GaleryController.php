@@ -8,45 +8,43 @@ use Ramsey\Uuid\Uuid;
 
 use App\Models\Branch;
 use App\Models\Company;
-use App\Models\News;
+use App\Models\Galery;
 
 
 use DB;
 use Storage;
 
-
-class NewsDetailController extends Controller
+class GaleryController extends Controller
 {
-    public function index($news_id)
+    public function index($id)
     {
-        // check if id valid
-        $is_valid = Uuid::isValid($news_id);
-        if(!$is_valid)
-            return abort(404);
+    	// check if id valid
+		$is_valid = Uuid::isValid($id);
+    	if(!$is_valid)
+    		return abort(404);
 
 
-        $news = News::find($news_id);
-        if(!$news)
-            return abort(404);
+    	$galery = Galery::find($id);
+    	if(!$galery)
+    		return abort(404);
 
     	$company = Company::first();
     	$branchs = Branch::all();
         $path = Storage::disk('s3')->url('/');
 
-        $news = DB::table('news')
+        $galery = DB::table('galeries')
                     ->select([
                         'id',
                         'title',
                         'description',
                         'created_at as date',
-                        'quill_description',
                          DB::raw("CONCAT('{$path}',image) as image_url"),
                     ])
                     ->whereNull('deleted_at')
-                    ->where('id',$news_id)
+                    ->where('id',$id)
                     ->first();
 
-        $list_news = DB::table('news')
+        $galeries = DB::table('galeries')
                     ->select([
                         'id',
                         'title',
@@ -54,7 +52,7 @@ class NewsDetailController extends Controller
                          DB::raw("CONCAT('{$path}',image) as image_url"),
                     ])
                     ->whereNull('deleted_at')
-                    ->where('id','!=',$news_id)
+                    ->where('id','!=',$id)
                     ->take(3)
                     ->get();
 
@@ -68,11 +66,11 @@ class NewsDetailController extends Controller
             ])
             ->get();
 
-    	return view('cms.news-detail.index', [
+    	return view('cms.galery.index', [
     		"company" => $company,
     		"branchs" => $branchs,
-    		"news" => $news,
-    		"list_news" => $list_news,
+    		"galery" => $galery,
+    		"galeries" => $galeries,
             "social_medias" => $social_medias
     	]);
     }

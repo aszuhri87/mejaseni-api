@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Admin\Cms;
 
+
+use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\BaseMenu;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use App\Jobs\SendEmailReplyQuestion;
 
 use App\Models\Question;
 
@@ -43,6 +46,7 @@ class QuestionController extends BaseMenu
             ->select([
                 'questions.*',
             ])
+            ->where('is_reply',false)
             ->whereNull([
                 'questions.deleted_at'
             ])
@@ -54,13 +58,40 @@ class QuestionController extends BaseMenu
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Reply
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function reply(Request $request)
     {
-        //
+        try {
+            $result = DB::transaction(function () use($request){
+
+
+                $name = $request->name;
+                $question = $request->question;
+                $answer = $request->answer;
+                Mail::send('mail.reply', compact('question', 'answer','name'), function($message) use ($request){
+                    $message->to($request->email, $request->name)
+                        ->from(config('mail.from.address'), config('mail.from.name'))
+                        ->subject('FAQ');
+                });
+
+                $result = Question::find($request->id)->update([
+                    'is_reply' => true
+                ]);
+            });
+            
+
+            return response([
+                "message"   => 'Successfully send!'
+            ], 200);
+         } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> "Internal Server Error"
+            ]);
+         } 
     }
 
     /**
@@ -92,40 +123,6 @@ class QuestionController extends BaseMenu
                 "message"=> "Internal Server Error"
             ]);
         }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
     }
 
     /**

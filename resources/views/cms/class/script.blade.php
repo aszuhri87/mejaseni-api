@@ -116,24 +116,19 @@
                     splideCategory()
                 @endif
 
-                @if(!$sub_categories->isEmpty())
-                    splideSubCategory()
-                @endif
-
-
                 AOS.init();
-                // selectPackage();
-
-
                 TabDetailListener()
-                eventCategorySelectedListener()
-                eventSubCategoryChangeListener()
-                packageListener()
-            });
+
+                const swalWithBootstrapButtons = Swal.mixin({
+                    customClass: {
+                        confirmButton: 'btn btn-tertiary',
+                        cancelButton: 'btn btn-tertiary ml-3'
+                    },
+                    buttonsStyling: false
+                })
 
 
-
-            var packageListener = ()=>{
+                //event
                 $('.package').click(function(event){
                     $('.package').removeClass('active');
                     $(this).addClass('active');
@@ -141,28 +136,49 @@
                     let package = $(this).data('id')
                     let selected_category = $('.class-category-selected').data('id')
                     let selected_sub_category = $('.btn-tertiary.active').data('id')
+
+                    if(!selected_category){
+                        swalWithBootstrapButtons.fire({
+                            title: 'Gagal!',
+                            padding: '2em',
+                            icon: 'danger',
+                            text: "Kategori belum dipilih"
+                        })
+                        return true
+                    }
+
+                    getPackage(selected_category, selected_sub_category, package)
+                    event.preventDefault()
+                })
+
+                //classroom
+                $('.class-category-filter__wrapper').click(function(event){
+                    $('.splide__slide div.class-category-selected').removeClass('class-category-selected');
+                    $(this).addClass('class-category-selected');
+                    let package = $('.package.active').data('id')
+                    let selected_category = $('.class-category-selected').data('id')
+                    let selected_sub_category = $('.btn-tertiary.active').data('id')
+                    getPackage(selected_category, selected_sub_category, package)
+
+                    event.preventDefault()
+                })
+
+                initSubCategory()
+            });
+
+            var initSubCategory = ()=>{
+                $('.btn-tertiary').click(function(event){
+                    $('.btn-tertiary').removeClass('active');
+                    $(this).addClass('active');
+                    let selected_sub_category = $(this).data("id")
+                    let package = $('.package.active').data('id')
+                    let selected_category = $('.class-category-selected').data('id')
+
                     getPackage(selected_category, selected_sub_category, package)
                     event.preventDefault()
                 })
             }
 
-            var eventCategorySelectedListener = ()=>{
-                $('.class-category-filter__wrapper').click(function(event){
-                    $('.splide__slide div.class-category-selected').removeClass('class-category-selected');
-                    $(this).addClass('class-category-selected');
-                    let category_id = $(this).data("id")
-                    getSubCategory(category_id, this)
-                })
-            }
-
-            var eventSubCategoryChangeListener = ()=>{
-                $('.btn-tertiary').click(function(event){
-                    $('.btn-tertiary').removeClass('active');
-                    $(this).addClass('active');
-                    let sub_category_id = $(this).data("id")
-                    getClassroom(sub_category_id)
-                })
-            }
 
             var getPackage = (category_id, sub_category_id, package)=>{
                 showLoader()
@@ -171,12 +187,13 @@
                     type: 'GET',
                 })
                 .done(function(res, xhr, meta) {
+                    $("#sub-category").html(res.data.sub_category_html)
+                    initSubCategory()
                     if(res.data.classroom_html){
+                        $("#empty-classroom").html('')
                         $("#class-content").html(res.data.classroom_html)
+                        $("#classroom-content").html(res.data.classroom_review_html)
                         TabDetailListener()
-                        eventCategorySelectedListener()
-                        eventSubCategoryChangeListener()
-                        packageListener()
                         splide()
                     }else{
                         $("#class-content").html(`
@@ -184,54 +201,17 @@
                                 <img style="width: 200px;" src="/cms/assets/img/svg/empty-store.svg" alt="">
                                 <h4 class="mt-3 text-center">Wah, Class belum tersedia</h4>
                             </div>`)
+
+                        $("#classroom-content").html(`
+                                <div class="mb-5 empty-store">
+                                      <div class="row my-5 py-5">
+                                          <div class="col-12 pr-0 pr-lg-4 column-center">
+                                              <img style="width: 200px;" src="/cms/assets/img/svg/empty-store.svg" alt="">
+                                              <h4 class="mt-3 text-center">Wah, video course yang kamu cari <br />belum dibuat nih</h4>
+                                          </div>
+                                      </div>
+                                  </div>`)
                     }
-                })
-                .fail(function(res, error) {
-                    toastr.error(res.responseJSON.message, 'Failed')
-                })
-                .always(function() {
-                    hideLoader()
-                });
-            }
-
-
-            var getSubCategory = (category_id, element)=>{
-                $.ajax({
-                    url: `{{ url('/class/classroom_category') }}/${category_id}/sub_classroom_category`,
-                    type: 'GET',
-                })
-                .done(function(res, xhr, meta) {
-                    if(res.data.classroom_html){
-                        $("#empty-classroom").html('')
-                        $("#sub-category").html(res.data.sub_category_html)
-                        $("#classroom-content").html(res.data.classroom_html)
-                        splideSubCategory()
-                        eventSubCategoryChangeListener()
-                    }else{
-                        $("#category-splide").css('visibility','none')
-                        $("#sub-category").html('')
-                        $("#classroom-content").html('')
-                        $("#empty-classroom").html(res.data.default_html)
-                        splide_sub_category.destroy()
-                    }
-                })
-                .fail(function(res, error) {
-                    toastr.error(res.responseJSON.message, 'Failed')
-                })
-                .always(function() {
-
-                });
-            }
-
-            var getClassroom = (sub_category_id)=>{
-                $.ajax({
-                    url: `{{ url('/classroom_category/sub_classroom_category') }}/${sub_category_id}/classroom`,
-                    type: 'GET',
-                })
-                .done(function(res, xhr, meta) {
-
-                    $("#classroom-content").html(res.data.classroom_html)
-                    splideSubCategory()
                 })
                 .fail(function(res, error) {
                     toastr.error(res.responseJSON.message, 'Failed')
@@ -356,41 +336,9 @@
                     }
 
                     event.preventDefault()
-
-                    // let selected_tab = $(this).attr('href')
-                    // $(".tab-detail").removeClass("active" );
-                    // $("#tab-coach").find('content-tab-detail').replaceWith('content-tab-detail-selected')
-                    // event.preventDefault()
-
-            // test();
-                    // $("#tab-coach").removeClass("content-tab-detail");
-                    // $("#tab-coach").addClass("content-tab-detail-selected")
-                    // $(".content-tab-detail").css("display","none");
-                    // $("#tab-coach .content-tab-detail").css('display','block');
-                    // $(this).addClass( "active" )
-
                 })
             }
 
-
-            var selectPackage = ()=>{
-                $('.package').click(function(e){
-                    e.preventDefault()
-                    $.ajax({
-                        url: url,
-                        type: 'DELETE',
-                        dataType: 'json',
-                    })
-                    .done(function(res, xhr, meta) {
-                        toastr.success(res.message, 'Success')
-                        init_table.draw(false);
-                    })
-                    .fail(function(res, error) {
-                        toastr.error(res.responseJSON.message, 'Failed')
-                    })
-                    .always(function() { })
-                })
-            }
 
             var splideCategory = ()=>{
                 new Splide('#category-splide', {
@@ -429,8 +377,26 @@
                 }).mount();
             }
 
-            var splideSubCategory = ()=>{
+            splide = () => {
+                splide_class = new Splide('#class-splide', {
+                    pagination: false,
+                    lazyLoad: true,
+                    perPage: 1,
+                    type: 'loop',
+                    arrows:'',
+                    breakpoints: {
+                        640: {
+                            perPage: 1,
+                        },
+                    }
+                }).mount();
+
+
+                if(splide_sub_category){
+                    splide_sub_category.destroy()
+                }
                 splide_sub_category = new Splide('#class-category-splide', {
+
                     lazyLoad: true,
                     pagination: false,
                     type: 'loop',
@@ -440,20 +406,11 @@
                         },
                     }
                 }).mount();
-            }
 
-            splide = () => {
+                splide_sub_category.on( 'arrows:updated', function(index) {
+                    splide_class.go(splide_sub_category.index)
+                });
 
-                splide_class = new Splide('#class-splide', {
-                    lazyLoad: true,
-                    perPage: 1,
-                    type: 'loop',
-                    breakpoints: {
-                        640: {
-                            perPage: 1,
-                        },
-                    }
-                }).mount();
             }
         };
         return {

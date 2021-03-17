@@ -209,7 +209,7 @@
     }
 
     function showModal(selector) {
-        $('#' + selector).modal('show')
+        $('#' + selector).modal({backdrop: 'static', keyboard: false},'show')
     }
 
     function hideModal(selector) {

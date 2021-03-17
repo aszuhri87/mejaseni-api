@@ -26,11 +26,11 @@
                     <div class="col-md-8 mb-5 mb-lg-0" id="video-content">
                         @if($video_course_item_open->is_youtube)
                             <div class="content-embed__wrapper">
-                                <iframe id="video-course" class="w-100 h-100" src="" frameborder="0"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    allowfullscreen>
-                                        
-                                    </iframe>
+                                <iframe id="video-course" class="w-100 h-100" src="{{ $video_course_item_open->youtube_url }}" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen>
+                                    
+                                </iframe>
                             </div>
 
                         @else

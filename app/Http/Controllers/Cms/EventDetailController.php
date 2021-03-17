@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Cms;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Ramsey\Uuid\Uuid;
 
 use App\Models\Branch;
 use App\Models\Company;
+use App\Models\Event;
+
 
 use DB;
 use Storage;
@@ -15,6 +18,17 @@ class EventDetailController extends Controller
 {
     public function index($event_id)
     {
+        // check if id valid
+        $is_valid = Uuid::isValid($event_id);
+        if(!$is_valid)
+            return abort(404);
+
+
+        $event = Event::find($event_id);
+        if(!$event)
+            return abort(404);
+
+
     	$company = Company::first();
     	$branchs = Branch::all();
         $path = Storage::disk('s3')->url('/');

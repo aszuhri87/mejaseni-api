@@ -12,6 +12,7 @@
   <title>Mejaseni</title>
   <meta name="description" content="Mejaseni" />
   <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
   @stack('style')
 </head>
 
@@ -64,6 +65,8 @@
   <script src="{{ asset('cms/assets/js/script.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.min.js"></script>
 <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
   <script type="text/javascript">
     var showLoader = ()=>{
       $.blockUI({
