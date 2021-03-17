@@ -33,7 +33,10 @@
                     selectable: true,
                     height: 750,
                     select: function(info) {
-                        if(moment(info.start).format('DD MMMM YYYY') >= moment(new Date()).format('DD MMMM YYYY')){
+                        let start = moment(info.start).format('DD MMMM YYYY');
+                        let end = moment(new Date()).format('DD MMMM YYYY');
+
+                        if(moment(start).isSameOrAfter(end)){
                             $('#form-schedule').trigger("reset");
 
                             $('.timepicker').val(moment(info.start).format('HH:mm:ss') == '00:00:00' ? moment().format('HH:mm:ss') : moment(info.start).format('HH:mm:ss'))

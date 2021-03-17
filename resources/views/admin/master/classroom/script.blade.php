@@ -276,6 +276,7 @@
                         $('.switch-sub-package').show();
                     }else{
                         $('.switch-sub-package').hide();
+                        $('#form-classroom').find('input[name="name"]').val('');
                     }
                 })
 
@@ -284,6 +285,37 @@
                         $('.select-sub-package').show();
                     }else{
                         $('.select-sub-package').hide();
+                    }
+                })
+
+                $(document).on('change', '.sub-package-type', function(){
+                    if($('input[name="switch_sub"]:checked').length == 1){
+                        let category = $("#classroom-category option:selected" ).text(),
+                            sub_category = $("#sub-classroom-category option:selected" ).text(),
+                            val_sub_category = $("#sub-classroom-category" ).val(),
+                            name;
+
+                        if(!!val_sub_category && val_sub_category != ''){
+                            if($(this).val() == 1){
+                                name = sub_category + ' Basic'
+                            }else if($(this).val() == 2){
+                                name = sub_category + ' Intermediate'
+                            }else{
+                                name = sub_category + ' Advanced'
+                            }
+                        }else{
+                            if($(this).val() == 1){
+                                name = category + ' Basic'
+                            }else if($(this).val() == 2){
+                                name = category + ' Intermediate'
+                            }else{
+                                name = category + ' Advanced'
+                            }
+                        }
+
+                        $('#form-classroom').find('input[name="name"]').val(name);
+                    }else{
+                        $('#form-classroom').find('input[name="name"]').val('');
                     }
                 })
 
@@ -568,6 +600,7 @@
 
                         $('#sub-classroom-category').html(element);
                     }else{
+                        $('#sub-classroom-category').val('');
                         $('.select-sub-category').hide();
                     }
                 })

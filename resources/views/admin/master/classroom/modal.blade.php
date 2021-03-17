@@ -56,17 +56,17 @@
                                     </span>
                                     <div class="radio-inline select-sub-package mt-2" style="display: none;">
                                         <label class="radio radio-lg">
-                                            <input type="radio" value="1" name="sub_package_type"/>
+                                            <input type="radio" value="1" name="sub_package_type" class="sub-package-type"/>
                                             <span></span>
                                             Basic
                                         </label>
                                         <label class="radio radio-lg">
-                                            <input type="radio" value="2" name="sub_package_type"/>
+                                            <input type="radio" value="2" name="sub_package_type" class="sub-package-type"/>
                                             <span></span>
                                             Intermediate
                                         </label>
                                         <label class="radio radio-lg">
-                                            <input type="radio" value="3" name="sub_package_type"/>
+                                            <input type="radio" value="3" name="sub_package_type" class="sub-package-type"/>
                                             <span></span>
                                             Advanced
                                         </label>
