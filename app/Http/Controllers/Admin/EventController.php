@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Cms;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\BaseMenu;
 use App\Http\Controllers\Controller;
@@ -23,14 +23,11 @@ class EventController extends BaseMenu
     {
         $navigation = [
             [
-                'title' => 'CMS'
-            ],
-            [
                 'title' => 'Event'
             ],
         ];
 
-        return view('admin.cms.event.index', [
+        return view('admin.event.index', [
             'title' => 'Event',
             'navigation' => $navigation,
             'list_menu' => $this->menu_admin(),

@@ -23,6 +23,7 @@ use App\Http\Controllers\Transaction\PaymentController;
 |--------------------------------------------------------------------------
 */
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
+use App\Http\Controllers\Admin\EventController as EventController;
 use App\Http\Controllers\Admin\Master\TheoryController;
 use App\Http\Controllers\Admin\Master\PackageController;
 use App\Http\Controllers\Admin\Master\PlatformController;
@@ -95,7 +96,6 @@ use App\Http\Controllers\Student\NotificationController as StudentNotificationCo
 use App\Http\Controllers\Admin\Cms\CompanyController as CompanyController;
 use App\Http\Controllers\Admin\Cms\BranchController as BranchController;
 use App\Http\Controllers\Admin\Cms\ProgramController as ProgramController;
-use App\Http\Controllers\Admin\Cms\EventController as EventController;
 use App\Http\Controllers\Admin\Cms\NewsController as NewsController;
 use App\Http\Controllers\Admin\Cms\PrivacyPolicyController as PrivacyPolicyAdminController;
 use App\Http\Controllers\Admin\Cms\FaqController as FaqAdminController;
@@ -494,6 +494,12 @@ Route::group(['middleware' => ['auth-handling']], function () {
             });
         });
 
+        Route::post('event/dt', [EventController::class, 'dt']);
+        Route::post('event/{id}/participants/dt',[EventController::class, 'participants_dt']);
+        Route::delete('cart/{id}', [CartController::class, 'destroy']);
+        Route::post('event/update/{id}', [EventController::class, 'update']);
+        Route::resource('event', EventController::class);
+
         Route::group(['prefix' => 'cms'], function () {
             Route::post('company/dt', [CompanyController::class, 'dt']);
             Route::resource('company', CompanyController::class);
@@ -504,12 +510,6 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::post('program/dt', [ProgramController::class, 'dt']);
             Route::post('program/update/{id}', [ProgramController::class, 'update']);
             Route::resource('program', ProgramController::class);
-
-            Route::post('event/dt', [EventController::class, 'dt']);
-            Route::post('event/{id}/participants/dt',[EventController::class, 'participants_dt']);
-            Route::delete('cart/{id}', [CartController::class, 'destroy']);
-            Route::post('event/update/{id}', [EventController::class, 'update']);
-            Route::resource('event', EventController::class);
 
             Route::post('news/dt', [NewsController::class, 'dt']);
             Route::post('news/update/{id}', [NewsController::class, 'update']);

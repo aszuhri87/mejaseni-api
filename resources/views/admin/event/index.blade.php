@@ -78,9 +78,9 @@
     </div>
 </div>
 
-@include('admin.cms.event.modal')
+@include('admin.event.modal')
 @endsection
 
 @push('script')
-    @include('admin.cms.event.script')
+    @include('admin.event.script')
 @endpush

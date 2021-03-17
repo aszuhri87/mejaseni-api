@@ -19,7 +19,7 @@
                     sScrollY: ($(window).height() < 700) ? $(window).height() - 200 : $(window).height() - 450,
                     ajax: {
                         type: 'POST',
-                        url: "{{ url('admin/cms/event/dt') }}",
+                        url: "{{ url('admin/event/dt') }}",
                     },
                     columns: [
                         { data: 'DT_RowIndex' },
@@ -76,7 +76,7 @@
                             data: "id",
                             render : function(data, type, full, meta) {
                                 return `
-                                    <a href="{{ url('admin/cms/event') }}/${data}/participants/dt" title="List Participant" class="btn btn-participants btn-sm btn-clean btn-icon mr-2" title="Edit details">
+                                    <a href="{{ url('admin/event') }}/${data}/participants/dt" title="List Participant" class="btn btn-participants btn-sm btn-clean btn-icon mr-2" title="Edit details">
                                         <span class="svg-icon svg-icon-md">
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -87,7 +87,7 @@
                                             </svg>
                                         </span>
                                     </a>
-                                    <a href="{{url('/admin/cms/event/update')}}/${data}" title="Edit" class="btn btn-edit btn-sm btn-clean btn-icon mr-2" title="Edit details">
+                                    <a href="{{url('/admin/event/update')}}/${data}" title="Edit" class="btn btn-edit btn-sm btn-clean btn-icon mr-2" title="Edit details">
                                         <span class="svg-icon svg-icon-md">
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -98,7 +98,7 @@
                                             </svg>
                                         </span>
                                     </a>
-                                    <a href="{{url('/admin/cms/event')}}/${data}" title="Delete" class="btn btn-delete btn-sm btn-clean btn-icon" title="Delete">
+                                    <a href="{{url('/admin/event')}}/${data}" title="Delete" class="btn btn-delete btn-sm btn-clean btn-icon" title="Delete">
                                         <span class="svg-icon svg-icon-md">
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -176,7 +176,7 @@
                             data: "cart_id",
                             render : function(data, type, full, meta) {
                                 return `
-                                    <a href="{{url('/admin/cms/cart')}}/${data}" title="Delete" class="btn btn-participants-delete btn-sm btn-clean btn-icon" title="Delete">
+                                    <a href="{{url('/admin/cart')}}/${data}" title="Delete" class="btn btn-participants-delete btn-sm btn-clean btn-icon" title="Delete">
                                         <span class="svg-icon svg-icon-md">
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -218,7 +218,7 @@
                     event.preventDefault();
 
                     $('#form-event').trigger("reset");
-                    $('#form-event').attr('action','{{url('admin/cms/event')}}');
+                    $('#form-event').attr('action','{{url('admin/event')}}');
                     $('#form-event').attr('method','POST');
 
                     get_classroom_category();

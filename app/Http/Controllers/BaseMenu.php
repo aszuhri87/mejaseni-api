@@ -360,12 +360,6 @@ class BaseMenu extends Controller
                         'permission' => 'cms'
                     ],
                     [
-                        'key' => 'event',
-                        'title' => 'Event',
-                        'url' => 'admin/cms/event',
-                        'permission' => 'cms'
-                    ],
-                    [
                         'key' => 'faq',
                         'title' => 'FAQ',
                         'url' => 'admin/cms/faq',
