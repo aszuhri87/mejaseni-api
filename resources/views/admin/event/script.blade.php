@@ -46,7 +46,7 @@
                             data: "image_url",
                             render : function(data, type, full, meta) {
                                 return `
-                                    <img src="${data}" class="w-75 align-self-end" alt="">
+                                    <img src="${data}" class="viewer-img rounded" width="50" height="50">
                                     `
                             }
                         },

@@ -63,13 +63,13 @@
             <thead>
                 <tr>
                     <th>No</th>
-                    <th width="15%">Image</th>
+                    <th width="10%">Image</th>
                     <th width="25%">Title</th>
                     <th width="15%">Start At</th>
                     <th width="15%">End At</th>
                     <th width="10%">Quota</th>
                     <th width="10%">Participants</th>
-                    <th width="15%">Actions</th>
+                    <th width="20%">Actions</th>
                 </tr>
             </thead>
             <tbody>
