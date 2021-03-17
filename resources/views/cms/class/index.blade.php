@@ -114,7 +114,7 @@
         </div>
       </div>
       <div class="sub-category" id="sub-category">
-        @if($sub_categories)
+        @if(!$sub_categories->isEmpty())
           @foreach($sub_categories as $sub_category)
             @if($sub_category->id == $selected_sub_category->id)
             <button class="btn btn-tertiary mr-2 mb-2 active" data-id="{{$sub_category->id}}">{{ $sub_category->name ? $sub_category->name:''}}</button>
@@ -125,33 +125,38 @@
         @endif
       </div>
 
-      <div id="empty-classroom">
-
-      </div>
-
-      <div class="splide mt-5" id="class-category-splide">
-        <div class="splide__track">
-          <ul class="splide__list" id="classroom-content">
-
-            @if($classrooms)
-              @foreach($classrooms as $classroom)
-                <li class="splide__slide pb-md-0 pb-3 pb-md-5">
-                  <div class="content-embed__wrapper">
-                    <img src="{{ $classroom->image_url ? $classroom->image_url :'' }}"
-                    data-splide-lazy="path-to-the-image" alt="">
-                    <div class="px-4 px-md-0 px-md-0 pt-4 pt-md-0">
-                      <div class="badge-left">
-                        <h3 class="mt-3 ml-2">{{ $classroom->name ? $classroom->name:''}}</h3>
+      <div id="classroom-content">
+        @if(!$regular_classrooms->isEmpty())
+          <div class="splide mt-5" id="class-category-splide">
+            <div class="splide__track">
+              <ul class="splide__list" id="classroom-content">
+                @foreach($regular_classrooms as $classroom)
+                  <li class="splide__slide pb-md-0 pb-3 pb-md-5">
+                    <div class="content-embed__wrapper">
+                      <img src="{{ $classroom->image_url ? $classroom->image_url :'' }}"
+                      data-splide-lazy="path-to-the-image" alt="">
+                      <div class="px-4 px-md-0 px-md-0 pt-4 pt-md-0">
+                        <div class="badge-left">
+                          <h3 class="mt-3 ml-2">{{ $classroom->name ? $classroom->name:''}}</h3>
+                        </div>
+                        <p class="my-3 desc__slider-content">{{ $classroom->description ? $classroom->description:''}}</p>
                       </div>
-                      <p class="my-3 desc__slider-content">{{ $classroom->description ? $classroom->description:''}}</p>
                     </div>
+                  </li>
+                  @endforeach
+              </ul>
+            </div>
+          </div>
+        @else
+          <div class="mb-5 empty-store">
+              <div class="row my-5 py-5">
+                  <div class="col-12 pr-0 pr-lg-4 column-center">
+                      <img style="width: 200px;" src="/cms/assets/img/svg/empty-store.svg" alt="">
+                      <h4 class="mt-3 text-center">Wah, video course yang kamu cari <br />belum dibuat nih</h4>
                   </div>
-                </li>
-                @endforeach
-            @endif
-
-          </ul>
-        </div>
+              </div>
+          </div>
+        @endif
       </div>
 
     </div>

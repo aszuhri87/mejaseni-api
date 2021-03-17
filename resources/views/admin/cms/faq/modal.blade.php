@@ -12,17 +12,17 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label>
-                            Title
+                            Question
                             <span class="text-danger">*</span>
                         </label>
-                        <input required type="text" name="title" class="form-control" placeholder="Title"/>
+                        <input required type="text" name="title" class="form-control" placeholder="Question"/>
                     </div>
                     <div class="form-group">
                         <label>
-                            Description
+                            Answer
                             <span class="text-danger">*</span>
                         </label>
-                        <textarea required name="description" class="form-control" placeholder="Description" rows="4"></textarea>
+                        <textarea required name="description" class="form-control" placeholder="Answer" rows="4"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">

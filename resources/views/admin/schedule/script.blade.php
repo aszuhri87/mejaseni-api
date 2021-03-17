@@ -36,7 +36,10 @@
                     selectable: true,
                     height: 750,
                     select: function(info) {
-                        if(moment(info.start).format('DD MMMM YYYY') >= moment(new Date()).format('DD MMMM YYYY')){
+                        let start = moment(info.start).format('DD MMMM YYYY');
+                        let end = moment(new Date()).format('DD MMMM YYYY');
+
+                        if(moment(start).isSameOrAfter(end)){
                             $('#form-schedule').trigger("reset");
 
                             $('.timepicker').val(moment(info.start).format('HH:mm:ss') == '00:00:00' ? moment().format('HH:mm:ss') : moment(info.start).format('HH:mm:ss'))
@@ -52,58 +55,71 @@
                         }
                     },
                     eventDrop: function(info) {
-                        if(info.event.extendedProps.source_type == 1){
-                            Swal.fire({
-                                title: 'Ubah Jadwal?',
-                                icon: 'warning',
-                                showCancelButton: true,
-                                confirmButtonColor: '#7F16A7',
-                                confirmButtonText: 'Ya, Ubah',
-                            }).then(function (result) {
-                                if (result.value) {
-                                    $.ajax({
-                                        url: "{{url('admin/schedule/update')}}/"+info.event.id,
-                                        type: 'POST',
-                                        data: {
-                                            date: moment(info.event.start).format('DD MMMM YYYY'),
-                                            time: moment(info.event.start).format('HH:mm:ss')
-                                        },
-                                    })
-                                    .done(function(res, xhr, meta) {
-                                        renderCalender()
-                                    });
-                                }else{
-                                    info.revert();
-                                }
-                            })
+                        let old_start = moment(info.oldEvent.start).format('DD MMMM YYYY');
+                        let end = moment(new Date()).format('DD MMMM YYYY');
+                        let start = moment(info.event.start).format('DD MMMM YYYY');
 
-                            $('.swal2-title').addClass('justify-content-center')
+                        if(moment(old_start).isSameOrBefore(end)){
+                            info.revert();
+                            return false;
+                        }
+
+                        if(moment(start).isAfter(end)){
+                            if(info.event.extendedProps.source_type == 1){
+                                Swal.fire({
+                                    title: 'Ubah Jadwal?',
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#7F16A7',
+                                    confirmButtonText: 'Ya, Ubah',
+                                }).then(function (result) {
+                                    if (result.value) {
+                                        $.ajax({
+                                            url: "{{url('admin/schedule/update')}}/"+info.event.id,
+                                            type: 'POST',
+                                            data: {
+                                                date: moment(info.event.start).format('DD MMMM YYYY'),
+                                                time: moment(info.event.start).format('HH:mm:ss')
+                                            },
+                                        })
+                                        .done(function(res, xhr, meta) {
+                                            renderCalender()
+                                        });
+                                    }else{
+                                        info.revert();
+                                    }
+                                })
+
+                                $('.swal2-title').addClass('justify-content-center')
+                            }else{
+                                Swal.fire({
+                                    title: 'Ubah Jadwal?',
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#7F16A7',
+                                    confirmButtonText: 'Ya, Ubah',
+                                }).then(function (result) {
+                                    if (result.value) {
+                                        $.ajax({
+                                            url: "{{url('admin/schedule/master-lesson/update')}}/"+info.event.id,
+                                            type: 'POST',
+                                            data: {
+                                                date: moment(info.event.start).format('DD MMMM YYYY'),
+                                                time: moment(info.event.start).format('HH:mm:ss')
+                                            },
+                                        })
+                                        .done(function(res, xhr, meta) {
+                                            renderCalender()
+                                        });
+                                    }else{
+                                        info.revert();
+                                    }
+                                })
+
+                                $('.swal2-title').addClass('justify-content-center')
+                            }
                         }else{
-                            Swal.fire({
-                                title: 'Ubah Jadwal?',
-                                icon: 'warning',
-                                showCancelButton: true,
-                                confirmButtonColor: '#7F16A7',
-                                confirmButtonText: 'Ya, Ubah',
-                            }).then(function (result) {
-                                if (result.value) {
-                                    $.ajax({
-                                        url: "{{url('admin/schedule/master-lesson/update')}}/"+info.event.id,
-                                        type: 'POST',
-                                        data: {
-                                            date: moment(info.event.start).format('DD MMMM YYYY'),
-                                            time: moment(info.event.start).format('HH:mm:ss')
-                                        },
-                                    })
-                                    .done(function(res, xhr, meta) {
-                                        renderCalender()
-                                    });
-                                }else{
-                                    info.revert();
-                                }
-                            })
-
-                            $('.swal2-title').addClass('justify-content-center')
+                            info.revert();
                         }
                     },
                     eventClick: function(info) {

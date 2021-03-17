@@ -4,15 +4,9 @@ namespace App\Http\Controllers\Admin\Cms;
 
 use App\Http\Controllers\BaseMenu;
 use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
-use App\Models\Company;
-
-use DataTables;
-
-class CompanyController extends BaseMenu
+class BannerController extends BaseMenu
 {
     /**
      * Display a listing of the resource.
@@ -26,31 +20,15 @@ class CompanyController extends BaseMenu
                 'title' => 'CMS'
             ],
             [
-                'title' => 'Company'
+                'title' => 'Banner'
             ],
         ];
 
-        return view('admin.cms.company.index', [
-            'title' => 'Company',
+        return view('admin.cms.banner.index', [
+            'title' => 'Banner',
             'navigation' => $navigation,
             'list_menu' => $this->menu_admin(),
         ]);
-    }
-
-    public function dt()
-    {
-        $data = DB::table('companies')
-            ->select([
-                'companies.*',
-            ])
-            ->whereNull([
-                'companies.deleted_at'
-            ])
-            ->get();
-
-        return DataTables::of($data)
-            ->addIndexColumn()
-            ->make(true);
     }
 
     /**
@@ -105,31 +83,7 @@ class CompanyController extends BaseMenu
      */
     public function update(Request $request, $id)
     {
-        try {
-            $result = DB::transaction(function () use($request, $id){
-                $result = Company::find($id)->update([
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'telephone' => $request->telephone,
-                    'address' => $request->address,
-                    'vision' => $request->vision,
-                    'mission' => $request->mission,
-                    'maps_url' => $request->maps_url
-                ]);
-
-                return $result;
-            });
-
-            return response([
-                "data"      => $result,
-                "message"   => 'Successfully updated!'
-            ], 200);
-        } catch (Exception $e) {
-            throw new Exception($e);
-            return response([
-                "message"=> $e->getMessage(),
-            ]);
-        }
+        //
     }
 
     /**

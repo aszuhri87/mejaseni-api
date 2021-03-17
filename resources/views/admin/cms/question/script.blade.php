@@ -42,13 +42,12 @@
                             data: "id",
                             render : function(data, type, full, meta) {
                                 return `
-                                    <a href="{{url('/admin/cms/question/update')}}/${data}" title="Edit" class="btn btn-edit btn-sm btn-clean btn-icon mr-2" title="Edit details">
+                                    <a href="{{url('/admin/cms/question/update')}}/${data}" title="Reply" class="btn btn-edit btn-sm btn-clean btn-icon mr-2" title="Edit details">
                                         <span class="svg-icon svg-icon-md">
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                                     <rect x="0" y="0" width="24" height="24"/>
-                                                    <path d="M8,17.9148182 L8,5.96685884 C8,5.56391781 8.16211443,5.17792052 8.44982609,4.89581508 L10.965708,2.42895648 C11.5426798,1.86322723 12.4640974,1.85620921 13.0496196,2.41308426 L15.5337377,4.77566479 C15.8314604,5.0588212 16,5.45170806 16,5.86258077 L16,17.9148182 C16,18.7432453 15.3284271,19.4148182 14.5,19.4148182 L9.5,19.4148182 C8.67157288,19.4148182 8,18.7432453 8,17.9148182 Z" fill="#000000" fill-rule="nonzero" transform="translate(12.000000, 10.707409) rotate(-135.000000) translate(-12.000000, -10.707409) "/>
-                                                    <rect fill="#000000" opacity="0.3" x="5" y="20" width="15" height="2" rx="1"/>
+                                                    <path d="M21.4451171,17.7910156 C21.4451171,16.9707031 21.6208984,13.7333984 19.0671874,11.1650391 C17.3484374,9.43652344 14.7761718,9.13671875 11.6999999,9 L11.6999999,4.69307548 C11.6999999,4.27886191 11.3642135,3.94307548 10.9499999,3.94307548 C10.7636897,3.94307548 10.584049,4.01242035 10.4460626,4.13760526 L3.30599678,10.6152626 C2.99921905,10.8935795 2.976147,11.3678924 3.2544639,11.6746702 C3.26907199,11.6907721 3.28437331,11.7062312 3.30032452,11.7210037 L10.4403903,18.333467 C10.7442966,18.6149166 11.2188212,18.596712 11.5002708,18.2928057 C11.628669,18.1541628 11.6999999,17.9721616 11.6999999,17.7831961 L11.6999999,13.5 C13.6531249,13.5537109 15.0443703,13.6779456 16.3083984,14.0800781 C18.1284272,14.6590944 19.5349747,16.3018455 20.5280411,19.0083314 L20.5280247,19.0083374 C20.6363903,19.3036749 20.9175496,19.5 21.2321404,19.5 L21.4499999,19.5 C21.4499999,19.0068359 21.4451171,18.2255859 21.4451171,17.7910156 Z" fill="#000000" fill-rule="nonzero"/>
                                                 </g>
                                             </svg>
                                         </span>
@@ -98,11 +97,11 @@
                     var data = init_table.row($(this).parents('tr')).data();
 
                     $('#form-question').trigger("reset");
-
+                    $('#form-question').find('input[name="id"]').val(data.id);
                     $('#form-question').find('input[name="name"]').val(data.name);
                     $('#form-question').find('input[name="phone"]').val(data.phone);
                     $('#form-question').find('input[name="email"]').val(data.email);
-                    $('#form-question').find('textarea[name="message"]').val(data.message);
+                    $('#form-question').find('textarea[name="question"]').val(data.message);
 
                     showModal('modal-question');
                 });
@@ -138,23 +137,33 @@
                     })
                     $('.swal2-title').addClass('justify-content-center')
                 });
+
+                $(document).on('click', '.btn-reply', function(event){
+                    event.preventDefault();
+                    $('#form-reply').trigger("reset");
+                    $('#form-reply').attr('action','{{url('admin/cms/question/reply')}}');
+                    $('#form-reply').attr('method','POST');
+                    let email = $('#form-question').find('input[name="email"]').val();
+
+                    $('#form-reply').find('input[name="email"]').val(email);
+
+                    showModal('modal-reply');
+                });
             },
             formSubmit = () => {
-                $('#form-question').submit(function(event){
+                $('#form-reply').submit(function(event){
                     event.preventDefault();
 
                     btn_loading('start')
                     $.ajax({
                         url: $(this).attr('action'),
                         type: $(this).attr('method'),
-                        data: new FormData(this),
-                        contentType: false,
-                        cache: false,
-                        processData: false,
+                        data: $('#form-question, #form-reply').serialize()
                     })
                     .done(function(res, xhr, meta) {
-                        toastr.success(res.message, 'Success');
+                        toastr.success(res.message, 'Success')
                         init_table.draw(false);
+                        hideModal('modal-reply');
                         hideModal('modal-question');
                     })
                     .fail(function(res, error) {
@@ -164,6 +173,8 @@
                         btn_loading('stop')
                     });
                 });
+
+                
             }
         };
 

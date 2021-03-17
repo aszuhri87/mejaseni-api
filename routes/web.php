@@ -109,7 +109,7 @@ use App\Http\Controllers\Admin\Cms\SocialMediaController as SocialMediaControlle
 use App\Http\Controllers\Admin\Cms\MarketPlaceController as MarketPlaceController;
 use App\Http\Controllers\Admin\Cms\QuestionController as QuestionController;
 use App\Http\Controllers\Admin\Cms\CoachReviewController as CoachReviewController;
-
+use App\Http\Controllers\Admin\Cms\BannerController as BannerController;
 
 
 /*
@@ -132,6 +132,8 @@ use App\Http\Controllers\Cms\EventListController as EventListController;
 use App\Http\Controllers\Cms\EventDetailController as EventDetailController;
 use App\Http\Controllers\Cms\NewsListController as NewsListController;
 use App\Http\Controllers\Cms\NewsDetailController as NewsDetailController;
+use App\Http\Controllers\Cms\GaleryController as GaleryDetailController;
+
 
 
 
@@ -184,6 +186,7 @@ Route::get('/event/{event_id}/detail', [EventDetailController::class, 'index']);
 Route::get('/news-list',[NewsListController::class, 'index']);
 Route::get('/news/{news_id}/detail',[NewsDetailController::class, 'index']);
 
+
 Route::get('/news-list',[NewsListController::class, 'index']);
 Route::post('/news-list/search', [NewsListController::class, 'search']);
 Route::get('/news/{news_id}/detail',[NewsDetailController::class, 'index']);
@@ -199,6 +202,10 @@ Route::post('/question',[QuestionController::class,'store']);
 Route::get('/career', [CareerController::class, 'index']);
 Route::get('/career/{id}/detail', [CareerDetailController::class, 'index']);
 Route::post('/notifications/payments', [PaymentController::class, 'notification']);
+
+Route::get('/galery/{id}/detail',[GaleryDetailController::class, 'index']);
+
+
 
 Route::group(['middleware' => ['guest-handling']], function () {
 
@@ -219,6 +226,8 @@ Route::group(['middleware' => ['guest-handling']], function () {
     Route::get('auth/{provider}', [ProviderController::class, 'redirect_provider']);
     Route::get('auth/{provider}/callback', [ProviderController::class, 'callback_provider']);
 });
+
+
 
 Route::group(['middleware' => ['auth-handling']], function () {
 
@@ -543,12 +552,17 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::resource('marketplace', MarketPlaceController::class);
 
             Route::post('question/dt', [QuestionController::class, 'dt']);
+            Route::post('question/reply',[QuestionController::class, 'reply']);
             Route::resource('question', QuestionController::class);
 
             Route::post('coach-review/dt', [CoachReviewController::class, 'dt']);
             Route::post('coach-review/coach_dt', [CoachReviewController::class, 'coach_dt']);
             Route::post('coach-review/{coach_id}', [CoachReviewController::class, 'store']);
             Route::resource('coach-review', CoachReviewController::class);
+
+            Route::post('banner/dt', [BannerController::class, 'dt']);
+            Route::post('banner/update/{id}', [BannerController::class, 'update']);
+            Route::resource('banner', BannerController::class);
 
 
         });

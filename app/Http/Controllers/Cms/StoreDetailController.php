@@ -56,16 +56,32 @@ class StoreDetailController extends Controller
             ->whereNull("theory_video_resolutions.deleted_at")
             ->first();
 
+        $video_course_item_open_videos = null;
 
-        $video_course_item_open_videos = DB::table('theory_videos')
+        // jika video pertama adalah menggunakan file video
+        if($video_course_item_open){
+            $video_course_item_open_videos = DB::table('theory_videos')
+                ->select([
+                    'theory_video_resolutions.url',
+                    'theory_video_resolutions.name as resolution'
+                ])
+                ->leftJoin('theory_video_resolutions','theory_video_resolutions.theory_video_id','=','theory_videos.id')
+                ->where('theory_video_resolutions.theory_video_id',$video_course_item_open->id)
+                ->whereNull("theory_video_resolutions.deleted_at")
+                ->get();
+        }else{
+            $video_course_item_open = DB::table('theory_videos')
             ->select([
-                'theory_video_resolutions.url',
-                'theory_video_resolutions.name as resolution'
+                'theory_videos.*',
             ])
-            ->leftJoin('theory_video_resolutions','theory_video_resolutions.theory_video_id','=','theory_videos.id')
-            ->where('theory_video_resolutions.theory_video_id',$video_course_item_open->id)
-            ->whereNull("theory_video_resolutions.deleted_at")
-            ->get();
+            ->where('theory_videos.session_video_id',$video_course_id)
+            ->where('theory_videos.is_public',true)
+            ->whereNull([
+                "theory_videos.deleted_at",
+            ])
+            ->first();
+        }
+
 
         $is_registered = DB::table('carts')
                 ->where('session_video_id','!=',null)

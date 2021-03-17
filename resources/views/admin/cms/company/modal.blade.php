@@ -33,10 +33,24 @@
                     </div>
                     <div class="form-group">
                         <label>
+                            Vision
+                            <span class="text-danger">*</span>
+                        </label>
+                        <textarea required name="vision" class="form-control" placeholder="Vision" rows="6"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            Mission
+                            <span class="text-danger">*</span>
+                        </label>
+                        <textarea required name="mission" class="form-control" placeholder="Mission" rows="6"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>
                             Embeded Map URL
                             <span class="text-danger">*</span>
                         </label>
-                        <textarea required name="maps_url" class="form-control" placeholder="https://www.google.com/maps/embed?pb=<source>" rows="4"></textarea>
+                        <textarea required name="maps_url" class="form-control" placeholder="https://www.google.com/maps/embed?pb=<source>" rows="6"></textarea>
                     </div>
                     <div class="form-group">
                         <label>

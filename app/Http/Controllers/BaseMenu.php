@@ -330,6 +330,12 @@ class BaseMenu extends Controller
                 'icon' => $this->icon('master'),
                 'children' => [
                     [
+                        'key' => 'banner',
+                        'title' => 'Banner',
+                        'url' => 'admin/cms/banner',
+                        'permission' => 'cms'
+                    ],
+                    [
                         'key' => 'branch',
                         'title' => 'Branch',
                         'url' => 'admin/cms/branch',

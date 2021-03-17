@@ -11,7 +11,7 @@
             yang menyenangkan, praktis, dan tepat sasaran, maka kamu dipastikan mampu menguasai kemampuan berkarya baru
             sesuai bakat dan minatmu.</p>
           <div class="pt-4">
-            <a href="#" class="btn btn-primary row-center w-75">
+            <a href="{{ url('register') }}" class="btn btn-primary row-center w-75">
               Daftar Sekarang<img class="ml-2" src="{{ asset('cms/assets/img/svg/Sign-in.svg') }}" alt=""></a>
           </div>
         </div>
@@ -29,7 +29,7 @@
                         <h3 class="mt-3 ml-2">{{ $galery->title ? $galery->title:'' }}</h3>
                       </div>
                       <p class="my-3 desc__slider-content">{{ $galery->description ? $galery->description:'' }}</p>
-                      <a href="#">Selengkapnya ></a>
+                      <a href="{{ url('galery') }}/{{ $galery->id}}/detail">Selengkapnya ></a>
                     </div>
                   </div>
                 </li>

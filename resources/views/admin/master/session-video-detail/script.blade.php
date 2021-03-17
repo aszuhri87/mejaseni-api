@@ -230,13 +230,14 @@
                     $('#form-session-video-detail').attr('method','POST');
 
                     $('#form-session-video-detail').find('input[name="name"]').val(data.name);
+                    $('#form-session-video-detail').find('input[name="number"]').val(data.number);
 
                     if(data.is_public){
                         $('#switch-public').attr('checked', true);
                     }
 
                     if(data.is_youtube){
-                        $('#form-session-video-detail').find('input[name="url"]').val(data.url);
+                        $('#form-session-video-detail').find('input[name="url"]').val(data.youtube_url);
                         $('#switch-youtube').attr('checked', true);
                         $('#i-url').prop('required', true);
                         $('.file-upload').hide()
