@@ -786,7 +786,7 @@ class DashboardController extends BaseMenu
         }
     }
 
-    public function student_booking_week()
+    public function student_booking_month()
     {
         try {
             $coach_schedule = DB::table('coach_schedules')
@@ -803,7 +803,7 @@ class DashboardController extends BaseMenu
                 ->joinSub($coach_schedule, 'coach_schedules', function ($join) {
                     $join->on('student_schedules.coach_schedule_id', '=', 'coach_schedules.id');
                 })
-                ->whereRaw('(SELECT EXTRACT(WEEK FROM coach_schedules.datetime)) = (SELECT EXTRACT(WEEK FROM now()))')
+                ->whereRaw('(SELECT EXTRACT(MONTH FROM coach_schedules.datetime)) = (SELECT EXTRACT(MONTH FROM now()))')
                 ->whereNull('student_schedules.deleted_at')
                 ->count();
 

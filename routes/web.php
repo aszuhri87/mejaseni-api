@@ -671,7 +671,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::get('history-booking', [StudentDashboardController::class, 'history_booking']);
             Route::get('rest-session', [StudentDashboardController::class, 'rest_session']);
             Route::get('upcoming', [StudentDashboardController::class, 'upcoming']);
-            Route::get('student-booking-week', [StudentDashboardController::class, 'student_booking_week']);
+            Route::get('student-booking-month', [StudentDashboardController::class, 'student_booking_month']);
             Route::get('my-course', [StudentDashboardController::class, 'my_course']);
             Route::get('progress-class', [StudentDashboardController::class, 'progress_class']);
             Route::get('summary-course', [StudentDashboardController::class, 'summary_course']);

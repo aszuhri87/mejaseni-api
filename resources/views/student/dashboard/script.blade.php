@@ -395,12 +395,12 @@
             },
             studentBookingWeek = () => {
                 $.ajax({
-                    url: `{{url('student/dashboard/student-booking-week')}}`,
+                    url: `{{url('student/dashboard/student-booking-month')}}`,
                     type: 'GET',
                 })
                 .done(function(res, xhr, meta) {
                     if(res.status == 200 ){
-                        $('#student-booking-week').html(res.data);
+                        $('#student-booking-month').html(res.data);
                     }
                 })
                 .fail(function(res, error) {

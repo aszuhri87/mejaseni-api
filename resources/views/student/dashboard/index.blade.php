@@ -9,7 +9,7 @@
                     <div class="col-8">
                         <div>
                             <h3 style="margin-bottom:0 !important">Summary Course</h3>
-                            <span class="text-muted" id="text-summary">Lebih dari <span id="student-booking-week">0</span> siswa melakukan booking untuk minggu ini</span>
+                            <span class="text-muted" id="text-summary">Lebih dari <span id="student-booking-month">0</span> siswa melakukan booking untuk bulan ini</span>
                         </div>
                     </div>
                     <div class="col-4 d-flex justify-content-end">
