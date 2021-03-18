@@ -37,7 +37,7 @@
                             orderable: false,
                             data: "image_url",
                             render : function(data, type, full, meta) {
-                                return `<img src="${data}" class="viewer-img rounded" width="250" height="100">`
+                                return `<img src="${data}" class="viewer-img rounded" width="50" height="50">`
                             }
                         },
                         {
