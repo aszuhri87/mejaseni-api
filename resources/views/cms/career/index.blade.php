@@ -63,9 +63,9 @@
                         @endforeach
                     </div>
                 @endif
-                
-                @if(!$professional_coach_careers->isEmpty())
-                    @if(!$internal_team_careers->isEmpty())
+
+                @if($professional_coach_careers)
+                    @if($internal_team_careers)
                         <div class="border-line-bold mt-5 mb-4"></div>
                     @endif
                     <div class="row mt-0 mt-lg-3 py-5 px-3 px-md-5">
@@ -86,7 +86,7 @@
                                             alt="">{{ $professional_coach_career->placement ? $professional_coach_career->placement:'-'}}</p>
                                     <div class="border-line mt-5 mb-4"></div>
                                     <div class="row">
-                                        <a href="{{ url('career-detail') }}?id={{$professional_coach_career->id}}" class="btn btn-primary shadow ml-auto">Detail</a>
+                                        <a href="{{ url('career') }}/{{$professional_coach_career->id}}/detail" class="btn btn-primary shadow ml-auto">Detail</a>
                                     </div>
                                 </div>
                             </div>
@@ -94,7 +94,7 @@
                     </div>
                 @endif
 
-                
+
             </div>
         </section>
     @else
@@ -111,7 +111,7 @@
     @endif
 
 
-    
+
 @endsection
 @push('script')
   @include('cms.career.script')

@@ -8,6 +8,16 @@
 @section('content')
 <section id="career-detail__wrapper">
     <div class="row">
+        <div class="col-12 send-success" style="display: none;">
+            <div class="alert alert-success" style="text-align: left;" role="alert">
+                <i class="far fa-times-circle text-white text-left"></i> Berhasil mengirim
+            </div>
+        </div>
+        <div class="col-12 send-failed" style="display: none;">
+            <div class="alert alert-danger" style="text-align: left;" role="alert">
+                <i class="far fa-times-circle text-white text-left"></i> Gagal mengirim, silakan coba lagi.
+            </div>
+        </div>
         <div class="col-lg-3 mt-lg-0 mt-3">
             <div class="bg-white career-detail__aside column-center py-lg-5 py-2">
                 <img class="mt-5" src="{{ asset('cms/assets/img/svg/Tie1.svg') }}" alt="">

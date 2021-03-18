@@ -68,6 +68,11 @@
                     })
                     .done(function(res, xhr, meta) {
                         $('#modal-apply-career').modal('hide')
+                        $('.send-success').show();
+                        $('.send-failed').hide();
+                    }).fail(function(res, error) {
+                        $('.send-success').hide();
+                        $('.send-failed').show();
                     });
                 });
             }
