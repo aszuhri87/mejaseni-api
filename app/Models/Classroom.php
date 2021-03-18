@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\Uuid;
-use Dyrynda\Database\Support\CascadeSoftDeletes;
+use App\Traits\SoftDeleteCascade;
+use App\Traits\RestoreSoftDeletes;
 
 class Classroom extends Model
 {
-    use HasFactory, Uuid, SoftDeletes, CascadeSoftDeletes;
+    use HasFactory, Uuid, SoftDeletes, SoftDeleteCascade, RestoreSoftDeletes;
 
     public $incrementing = false;
 
@@ -30,7 +31,7 @@ class Classroom extends Model
         'session_duration'
     ];
 
-    protected $cascadeDeletes = [
+    public $cascadeDeletes = [
         'student_classrooms',
         'classroom_tools',
         'sessions',
@@ -69,5 +70,10 @@ class Classroom extends Model
     public function carts()
     {
         return $this->hasMany(Cart::class, 'classroom_id', 'id');
+    }
+
+    public function restore()
+    {
+        return $this->restore_soft_deletes($this);
     }
 }

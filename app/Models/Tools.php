@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\Uuid;
-use Dyrynda\Database\Support\CascadeSoftDeletes;
+use App\Traits\SoftDeleteCascade;
+use App\Traits\RestoreSoftDeletes;
 
 class Tools extends Model
 {
-    use HasFactory, Uuid, SoftDeletes, CascadeSoftDeletes;
+    use HasFactory, Uuid, SoftDeletes, SoftDeleteCascade, RestoreSoftDeletes;
 
     public $incrementing = false;
 
@@ -20,7 +21,7 @@ class Tools extends Model
         'text'
     ];
 
-    protected $cascadeDeletes = [
+    public $cascadeDeletes = [
         'classroom_tools',
     ];
 

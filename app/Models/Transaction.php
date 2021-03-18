@@ -5,12 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Dyrynda\Database\Support\CascadeSoftDeletes;
+use App\Traits\SoftDeleteCascade;
+use App\Traits\RestoreSoftDeletes;
 use App\Traits\Uuid;
 
 class Transaction extends Model
 {
-    use HasFactory, Uuid, SoftDeletes, CascadeSoftDeletes;
+    use HasFactory, Uuid, SoftDeletes, SoftDeleteCascade, RestoreSoftDeletes;
 
     public $incrementing = false;
 
@@ -38,7 +39,7 @@ class Transaction extends Model
 
     protected $dates = ['deleted_at'];
 
-    protected $cascadeDeletes = ['details'];
+    public $cascadeDeletes = ['details'];
 
     /**
      * Get all of the comments for the Transaction

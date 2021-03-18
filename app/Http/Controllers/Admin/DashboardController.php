@@ -201,4 +201,11 @@ class DashboardController extends BaseMenu
             ]);
         }
     }
+
+    public function execute_restoration()
+    {
+        return DB::transaction(function () {
+            return \App\Models\Classroom::where('id','638f4588-8ecd-48b0-b612-d246fe0bd18d')->withTrashed()->first()->restore();
+        });
+    }
 }

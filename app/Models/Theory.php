@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\Uuid;
-use Dyrynda\Database\Support\CascadeSoftDeletes;
+use App\Traits\SoftDeleteCascade;
+use App\Traits\RestoreSoftDeletes;
 
 class Theory extends Model
 {
-    use HasFactory, Uuid, SoftDeletes, CascadeSoftDeletes;
+    use HasFactory, Uuid, SoftDeletes, SoftDeleteCascade, RestoreSoftDeletes;
 
     public $incrementing = false;
 
@@ -28,7 +29,7 @@ class Theory extends Model
         'confirmed'
     ];
 
-    protected $cascadeDeletes = [
+    public $cascadeDeletes = [
         'carts',
     ];
 

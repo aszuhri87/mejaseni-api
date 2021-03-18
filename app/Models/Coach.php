@@ -8,11 +8,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use App\Traits\Uuid;
-use Dyrynda\Database\Support\CascadeSoftDeletes;
+use App\Traits\SoftDeleteCascade;
+use App\Traits\RestoreSoftDeletes;
 
 class Coach extends Authenticatable
 {
-    use HasFactory, Notifiable, Uuid, SoftDeletes, HasRoles, CascadeSoftDeletes;
+    use HasFactory, Notifiable, Uuid, SoftDeletes, HasRoles, SoftDeleteCascade, RestoreSoftDeletes;
 
     public $incrementing = false;
 
@@ -30,8 +31,8 @@ class Coach extends Authenticatable
         'suspend',
     ];
 
-    protected $cascadeDeletes = [
-        'classrooms',
+    public $cascadeDeletes = [
+        'coach_classrooms',
         'student_feedbacks',
         'income_transactions',
         'guest_star',
@@ -45,12 +46,17 @@ class Coach extends Authenticatable
 
     protected $dates = ['deleted_at'];
 
+    public function restore()
+    {
+        return $this->restore_soft_deletes($this);
+    }
+
     /**
      * Get all of the comments for the Coach
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function classrooms()
+    public function coach_classrooms()
     {
         return $this->hasMany(CoachClassroom::class, 'coach_id', 'id');
     }

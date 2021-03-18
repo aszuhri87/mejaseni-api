@@ -47,7 +47,7 @@ class LoginController extends Controller
 
             return redirect('/admin/dashboard');
         }else if (Auth::guard('coach')->attempt($login)) {
-            if(Auth::guard('coach')->user()->suspend == true){
+            if(Auth::guard('coach')->user()->suspend == false){
                 activity()->withProperties([
                     'method'=> request()->method(),
                     'ip'    => request()->ip(),
