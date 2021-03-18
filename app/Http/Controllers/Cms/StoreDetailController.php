@@ -98,10 +98,13 @@ class StoreDetailController extends Controller
             ->first();
         }
 
-
         $is_registered = DB::table('carts')
                 ->where('session_video_id','!=',null)
                 ->whereNull('deleted_at');
+
+        if(Auth::guard('student')->check())
+            $is_registered->where('student_id',Auth::guard('student')->user()->id);
+
 
         $video_course = DB::table('session_videos')
             ->select([
@@ -118,7 +121,7 @@ class StoreDetailController extends Controller
             })
             ->where('session_videos.id',$video_course_id)
             ->whereNull([
-                'session_videos.deleted_at'
+                'session_videos.deleted_at',
             ])
             ->first();
 
@@ -134,7 +137,7 @@ class StoreDetailController extends Controller
                 'session_video_feedback.deleted_at',
                 'students.deleted_at'
             ])
-            ->get();        
+            ->get();      
 
         return view('cms.store-detail.index', [
             "company" => $company, 
