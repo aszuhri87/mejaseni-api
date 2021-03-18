@@ -133,9 +133,17 @@
                                 </ul>
                                 
                                 
-                                @if(!$video_course->is_registered)
-                                    <a class="btn btn-primary shadow row-center" data-toggle="modal" data-target="@if (Auth::guard('student')->user()){{'#eventRegisterModal'}}@else{{'#loginRequiredModal'}}@endif">
-                                    <img class="mr-2" src="{{ asset('cms/assets/img/svg/cart-white.svg') }}" alt=""> Beli Paket</a>
+                                @if(Auth::guard('student')->check())
+                                    @if(!$video_course->is_registered)
+                                        <a class="btn btn-primary shadow row-center" data-toggle="modal" data-target="#eventRegisterModal">
+                                        <img class="mr-2" src="{{ asset('cms/assets/img/svg/cart-white.svg') }}" alt=""> Beli Paket</a>
+                                    @else
+                                        <a href="{{ url('student/theory/video-class/video-detail') }}/{{ $video_course->id }}" class="btn btn-primary w-75 row-center">Lihat Kelas <img
+                                class="ml-2" src="{{ asset('cms/assets/img/svg/Sign-in.svg') }}" alt=""></a>
+                                    @endif
+                                @else
+                                    <a class="btn btn-primary shadow row-center" data-toggle="modal" data-target="#loginRequiredModal">
+                                        <img class="mr-2" src="{{ asset('cms/assets/img/svg/cart-white.svg') }}" alt=""> Beli Paket</a>
                                 @endif
                             </div>
                         </div>
