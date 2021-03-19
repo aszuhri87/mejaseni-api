@@ -70,7 +70,7 @@
                     <th width="30%">Nama</th>
                     <th width="20%">Jumlah Class</th>
                     <th width="20%">Expertise</th>
-                    <th width="10%">Status</th>
+                    <th width="10%">Suspend</th>
                     <th width="20%">Actions</th>
                 </tr>
             </thead>

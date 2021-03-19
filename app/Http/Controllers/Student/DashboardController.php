@@ -804,6 +804,7 @@ class DashboardController extends BaseMenu
                     $join->on('student_schedules.coach_schedule_id', '=', 'coach_schedules.id');
                 })
                 ->whereRaw('(SELECT EXTRACT(MONTH FROM coach_schedules.datetime)) = (SELECT EXTRACT(MONTH FROM now()))')
+                ->whereRaw('(SELECT EXTRACT(YEAR FROM coach_schedules.datetime)) = (SELECT EXTRACT(YEAR FROM now()))')
                 ->whereNull('student_schedules.deleted_at')
                 ->count();
 
