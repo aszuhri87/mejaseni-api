@@ -14,18 +14,18 @@
             <div class="row">
                 <div class="col-12 col-lg-8 px-0">
                     <div class="event-image__wrapper">
-                        <img class="w-100" src="{{ $event->image_url ? $event->image_url:'' }}" alt="">
+                        <img class="w-100" src="{{ isset($event->image_url) ? $event->image_url:'' }}" alt="">
                     </div>
                 </div>
                 <div class="col-12 col-lg-4 px-0">
                     <div class="event-detail__wrapper">
                         <div class="d-flex flex-column justify-content-between p-4 h-100"style="background-color: #ffffff3a; backdrop-filter: blur(50px);">
                             <div>
-                                <h4>{{ $event->title ? $event->title:'' }}</h4>
+                                <h4>{{ isset($event->title) ? $event->title:'' }}</h4>
                                 <div class="mt-3">
                                     <div class="mb-3">
                                         <p class="label">Lokasi</p>
-                                        <p>{{ $event->location ? $event->location:''}}</p>
+                                        <p>{{ isset($event->location) ? $event->location:''}}</p>
                                     </div>
                                     <div class="mb-3">
                                         <p class="label">Tanggal & Waktu</p>
@@ -57,8 +57,8 @@
                 </div>
                 <div class="col-12 px-0">
                     <div class="event-desc__wrapper p-5">
-                        <h4>{{ $event->title ? $event->title:'' }}</h4>
-                        <p class="mt-3">{{ $event->description ? $event->description:''  }}
+                        <h4>{{ isset($event->title) ? $event->title:'' }}</h4>
+                        <p class="mt-3">{{ isset($event->description) ? $event->description:''  }}
                         </p>
                     </div>
                 </div>
@@ -78,7 +78,7 @@
                     <h3>Daftar Event</h3>
                     <div class="mt-4">
                         <label>Nama Event</label>
-                        <h5 class="my-3">{{ $event->title ? $event->title:'0'}}</h5>
+                        <h5 class="my-3">{{ isset($event->title) ? $event->title:'0'}}</h5>
                         <label>Harga</label>
                         <h5 class="mt-3 mb-4">Rp.@convert($event->total)</h5>
                         <div class="border-line"></div>
