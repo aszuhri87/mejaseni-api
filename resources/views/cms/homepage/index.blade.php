@@ -93,7 +93,7 @@
                             <div class="content-embed__wrapper">
                                 <img src="{{ isset($event->image_url) ? $event->image_url:''}}"
                                     data-splide-lazy="path-to-the-image" alt="">
-                                <div class="px-3 px-md-0 pt-3 pt-md-0 pb-1  ">
+                                {{-- <div class="px-3 px-md-0 pt-3 pt-md-0 pb-1  ">
                                     <div class="badge-left">
                                         <h3 class="mt-3 ml-2">{{ isset($event->title) ? $event->title:''}}</h3>
                                     </div>
@@ -111,7 +111,7 @@
                                             </g>
                                         </svg>
                                     </a>
-                                </div>
+                                </div> --}}
                             </div>
                         </li>
                         @endforeach
