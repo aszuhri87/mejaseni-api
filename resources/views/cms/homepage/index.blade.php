@@ -93,25 +93,6 @@
                             <div class="content-embed__wrapper">
                                 <img src="{{ isset($event->image_url) ? $event->image_url:''}}"
                                     data-splide-lazy="path-to-the-image" alt="">
-                                {{-- <div class="px-3 px-md-0 pt-3 pt-md-0 pb-1  ">
-                                    <div class="badge-left">
-                                        <h3 class="mt-3 ml-2">{{ isset($event->title) ? $event->title:''}}</h3>
-                                    </div>
-                                    <p class="my-3 desc__slider-content">
-                                        {{ isset($event->description) ? $event->description:''}}</p>
-                                    <a class="link link--arrowed"
-                                        href="{{ url('event') }}/{{$event->id}}/detail">Selengkapnya
-                                        <svg class="arrow-icon ml-1" xmlns="http://www.w3.org/2000/svg" width="32"
-                                            height="32" viewBox="0 0 32 32">
-                                            <g fill="none" stroke="#7F16A7" stroke-width="1.5" stroke-linejoin="round"
-                                                stroke-miterlimit="10">
-                                                <circle class="arrow-icon--circle" cx="16" cy="16" r="15.12"></circle>
-                                                <path class="arrow-icon--arrow"
-                                                    d="M16.14 9.93L22.21 16l-6.07 6.07M8.23 16h13.98"></path>
-                                            </g>
-                                        </svg>
-                                    </a>
-                                </div> --}}
                             </div>
                         </li>
                         @endforeach
