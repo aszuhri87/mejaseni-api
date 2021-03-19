@@ -16,9 +16,8 @@
         </ul>
     </div>
 </div>
-<div class="row" id="category">
-    {{-- <div class="col-2">
-    </div> --}}
+<div id="category" class="d-flex align-content-start flex-wrap">
+
 </div>
 <h5 class="mt-5 mb-5">Class Conference Package</h5>
 <div class="row" id="conference-package">
