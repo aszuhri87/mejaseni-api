@@ -71,7 +71,8 @@ class HomePageController extends Controller
             ->leftJoin('coach_reviews','coach_reviews.coach_id','=','coaches.id')
             ->leftJoin('expertises','coaches.expertise_id','=','expertises.id')
             ->whereNull([
-                'coach_reviews.deleted_at'
+                'coach_reviews.deleted_at',
+                'coaches.deleted_at',
             ])
             ->get();
 
