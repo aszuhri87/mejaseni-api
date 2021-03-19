@@ -193,7 +193,7 @@
                                 </div>
                                 <div class="text__wrapper px-4">
                                     <div class="text-shape px-2 px-lg-3 pt-4 pb-4">
-                                        <a href="#" target="_blank">
+                                        <a href="{{isset($coach->url) ? $coach->url : 'javascript:void(0)'}}" @if(isset($coach->url))target="_blank" @endif>
                                             <img class="social-media-img__professional-coach"
                                                 src="{{ asset('cms/assets/img/instagram-logo.png') }}" alt="">
                                         </a>
