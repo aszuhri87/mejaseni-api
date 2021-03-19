@@ -193,7 +193,7 @@
                                     Nama Bank
                                     <span class="text-danger">*</span>
                                 </label>
-                                <input required type="text" name="bank" readonly value="{{$bank_account->bank}}" class="form-control" placeholder="Nama Bank"/>
+                                <input required type="text" name="bank" readonly value="{{isset($bank_account->bank) ? $bank_account->bank : ''}}" class="form-control" placeholder="Nama Bank"/>
                             </div>
                         </div>
                         <div class="col-md-6 col-sm-12">
@@ -202,7 +202,7 @@
                                     Nomor Rekening
                                     <span class="text-danger">*</span>
                                 </label>
-                                <input required type="text" readonly value="{{$bank_account->bank_number}}" name="bank_number" class="form-control" placeholder="Nomor Rekening"/>
+                                <input required type="text" readonly value="{{isset($bank_account->bank_number) ? $bank_account->bank_number : ''}}" name="bank_number" class="form-control" placeholder="Nomor Rekening"/>
                             </div>
                         </div>
                         <div class="col-md-6 col-sm-12">
@@ -211,7 +211,7 @@
                                     Nama Pemilik Rekening
                                     <span class="text-danger">*</span>
                                 </label>
-                                <input required type="text" readonly value="{{$bank_account->name_account}}" name="name_account" class="form-control" placeholder="Nama Pemilik Rekening"/>
+                                <input required type="text" readonly value="{{isset($bank_account->name_account) ? $bank_account->name_account : ''}}" name="name_account" class="form-control" placeholder="Nama Pemilik Rekening"/>
                             </div>
                         </div>
                         <div class="col-md-6 col-sm-12">

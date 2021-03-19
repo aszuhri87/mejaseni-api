@@ -14,7 +14,7 @@ use Storage;
 
 class Student extends Authenticatable
 {
-    use HasFactory, Notifiable, Uuid, SoftDeletes, CascadeSoftDeletes;
+    use HasFactory, Notifiable, Uuid, SoftDeletes, SoftDeleteCascade, RestoreSoftDeletes;
 
     public $incrementing = false;
 

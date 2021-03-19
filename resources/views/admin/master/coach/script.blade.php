@@ -297,16 +297,16 @@
                     var data = init_table.row($(this).parents('tr')).data();
                     let url = '';
                     let status = '';
-                    if(check){
+                    if(!check){
                         status = "Activate";
-                        url = `{{ url('admin/master/coach/activate-suspend') }}/${data.id}`;
+                        url = `{{ url('admin/master/coach/suspend') }}/${data.id}`;
                     }else{
                         status = "Suspend";
-                        url = `{{ url('admin/master/coach/suspend') }}/${data.id}`;
+                        url = `{{ url('admin/master/coach/activate-suspend') }}/${data.id}`;
                     }
                     Swal.fire({
                         title: `${status} Coach?`,
-                        text: "Coach will be active!.",
+                        text: `Coach will be ${status}!.`,
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#7F16A7',
