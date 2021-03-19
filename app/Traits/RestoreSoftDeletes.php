@@ -26,8 +26,8 @@ trait RestoreSoftDeletes
         if(!empty($data->cascadeDeletes)){
             foreach ($data->cascadeDeletes as $self_func) {
                 $children = $data->{$self_func}()
-                    ->whereRaw("deleted_at::timestamp >= '$deletedAt'::timestamp - INTERVAL '5 SECONDS'")
-                    ->whereRaw("deleted_at::timestamp <= '$deletedAt'::timestamp + INTERVAL '5 SECONDS'")
+                    ->whereRaw("deleted_at::timestamp >= '$deletedAt'::timestamp - INTERVAL '60 SECONDS'")
+                    ->whereRaw("deleted_at::timestamp <= '$deletedAt'::timestamp + INTERVAL '60 SECONDS'")
                     ->withTrashed()
                     ->get();
 
@@ -37,8 +37,8 @@ trait RestoreSoftDeletes
                     }
 
                     $data->{$self_func}()
-                        ->whereRaw("deleted_at::timestamp >= '$deletedAt'::timestamp - INTERVAL '5 SECONDS'")
-                        ->whereRaw("deleted_at::timestamp <= '$deletedAt'::timestamp  + INTERVAL '5 SECONDS'")
+                        ->whereRaw("deleted_at::timestamp >= '$deletedAt'::timestamp - INTERVAL '60 SECONDS'")
+                        ->whereRaw("deleted_at::timestamp <= '$deletedAt'::timestamp  + INTERVAL '60 SECONDS'")
                         ->withTrashed()
                         ->update([
                             'deleted_at' => null
