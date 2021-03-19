@@ -15,18 +15,18 @@
                 @foreach($events as $event)
                     <div class="col-lg-4 col-12 col-12 p-4">
                         <div class="news-item__wrapper">
-                            <img class="h-100" src="{{ $event->image_url ? $event->image_url:''}}" alt="">
+                            <img class="h-100" src="{{ isset($event->image_url) ? $event->image_url:''}}" alt="">
                         </div>
                         <div class="news-item-desc__wrapper mt-4 mb-5">
                             <div class="badge-left">
                                 <h3 class="ml-3">
                                     <a href="{{ url('event') }}/{{ $event->id}}/detail">
-                                        {{ $event->title ? $event->title:''}}
+                                        {{ isset($event->title) ? $event->title:''}}
                                 </h3>
                                 </a>
                             </div>
                             <div class="pl-3 pt-3">
-                                <p class="mb-3">{{ $event->description ? $event->description:''}}</p>
+                                <p class="mb-3">{{ isset($event->description) ? $event->description:''}}</p>
                                 <a class="link link--arrowed" href="{{ url('event') }}/{{ $event->id}}/detail">Selengkapnya<svg class="arrow-icon ml-1"
                                         xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
                                         <g fill="none" stroke="#7F16A7" stroke-width="1.5" stroke-linejoin="round"
@@ -65,14 +65,14 @@
                 @foreach($news as $new)
                     <div class="col-lg-4 col-12 col-12 p-4">
                         <div class="news-item__wrapper">
-                            <img class="h-100" src="{{ $new->image_url ? $new->image_url:''}}" alt="">
+                            <img class="h-100" src="{{ isset($new->image_url) ? $new->image_url:''}}" alt="">
                         </div>
                         <div class="news-item-desc__wrapper mt-4 mb-5">
                             <div class="badge-left">
-                                <h3 class="ml-3">{{ $new->title ? $new->title:''}}</h3>
+                                <h3 class="ml-3">{{ isset($new->title) ? $new->title:''}}</h3>
                             </div>
                             <div class="pl-3 pt-3">
-                                <p class="mb-3">{{ $new->description ? $new->description:''}}</p>
+                                <p class="mb-3">{{ isset($new->description) ? $new->description:''}}</p>
                                 <a class="link link--arrowed" href="{{ url('news') }}/{{$new->id}}/detail">Selengkapnya<svg class="arrow-icon ml-1"
                                         xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
                                         <g fill="none" stroke="#7F16A7" stroke-width="1.5" stroke-linejoin="round"

@@ -16,8 +16,9 @@
         </ul>
     </div>
 </div>
-<div id="category" class="d-flex">
-
+<div class="row" id="category">
+    {{-- <div class="col-2">
+    </div> --}}
 </div>
 <h5 class="mt-5 mb-5">Class Conference Package</h5>
 <div class="row" id="conference-package">

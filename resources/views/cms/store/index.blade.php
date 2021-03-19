@@ -20,11 +20,11 @@
           @foreach($market_places as $market_place)
           <div class="online-shop__item-wrapper">
             <div class="online-shop__item mb-2">
-              <a href="{{ $market_place->url ? $market_place->url:''}}" target="_blank">
-                <img src="{{ $market_place->image_url ? $market_place->image_url:''}}" alt="">
+              <a href="{{ isset($market_place->url) ? $market_place->url:''}}" target="_blank">
+                <img src="{{ isset($market_place->image_url) ? $market_place->image_url:''}}" alt="">
               </a>
             </div>
-            <span>{{ $market_place->name ? $market_place->name:''}}</span>
+            <span>{{ isset($market_place->name) ? $market_place->name:''}}</span>
           </div>
           @endforeach 
         </div>
@@ -45,7 +45,7 @@
               <li class="splide__slide px-2">
                 <div class="class-category-filter__wrapper class-category-selected" data-id="{{$classroom_category->id}}">
                   <div class="class-category-filter-overlay row-center ">
-                    <h4>{{ $classroom_category->name ? $classroom_category->name:'' }}</h4>
+                    <h4>{{ isset($classroom_category->name) ? $classroom_category->name:'' }}</h4>
                   </div>
                   <img src="{{ asset('cms/assets/img/category-placeholder.png') }}" alt="">
                 </div>
@@ -54,7 +54,7 @@
               <li class="splide__slide px-2">
                 <div class="class-category-filter__wrapper" data-id="{{$classroom_category->id}}">
                   <div class="class-category-filter-overlay row-center" >
-                    <h4>{{ $classroom_category->name ? $classroom_category->name:'' }}</h4>
+                    <h4>{{ isset($classroom_category->name) ? $classroom_category->name:'' }}</h4>
                   </div>
                   <img src="{{ asset('cms/assets/img/category-placeholder.png') }}" alt="">
                 </div>
@@ -67,9 +67,9 @@
         <div class="sub-category py-4" id="sub-category">
           @foreach($sub_categories as $sub_category)
             @if($loop->index == 0)
-              <button class="btn btn-tertiary mr-2 mb-2 active" data-id="{{$sub_category->id}}">{{ $sub_category->name ? $sub_category->name:''}}</button>
+              <button class="btn btn-tertiary mr-2 mb-2 active" data-id="{{$sub_category->id}}">{{ isset($sub_category->name) ? $sub_category->name:''}}</button>
             @else
-              <button class="btn btn-tertiary mr-2 mb-2" data-id="{{$sub_category->id}}">{{ $sub_category->name ? $sub_category->name:''}}</button>
+              <button class="btn btn-tertiary mr-2 mb-2" data-id="{{$sub_category->id}}">{{ isset($sub_category->name) ? $sub_category->name:''}}</button>
             @endif
           @endforeach
 
@@ -90,13 +90,13 @@
               <div class="col-xl-9 px-4">
                 <div class="badge-left">
                   <a href="{{ url('video-course') }}/{{$video_course->id}}/detail" target="_blank">
-                    <h3 class="ml-2 mt-2 mt-md-4 mt-lg-0">{{ $video_course->name ? $video_course->name:''}}</h3>
+                    <h3 class="ml-2 mt-2 mt-md-4 mt-lg-0">{{ isset($video_course->name) ? $video_course->name:''}}</h3>
                   </a>
                 </div>
-                <p class="mt-3 ml-3 desc__store-content">{{ $video_course->description ? $video_course->description:''}}</p>
+                <p class="mt-3 ml-3 desc__store-content">{{ isset($video_course->description) ? $video_course->description:''}}</p>
                 <div class="detail__store-content ml-3 mt-3">
                   <div class="coach-name__store-content row-center mr-4">
-                    <img src="{{ asset('cms/assets/img/svg/User.svg') }}" class="mr-2" alt="">{{ $video_course->coach ? $video_course->coach:''}}
+                    <img src="{{ asset('cms/assets/img/svg/User.svg') }}" class="mr-2" alt="">{{ isset($video_course->coach) ? $video_course->coach:''}}
                   </div>
                 </div>
               </div>
