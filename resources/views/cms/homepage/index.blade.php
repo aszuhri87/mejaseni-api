@@ -91,14 +91,14 @@
                         @foreach($events as $event)
                         <li class="splide__slide pb-md-0 pb-5">
                             <div class="content-embed__wrapper">
-                                <img src="{{ $event->image_url ? $event->image_url:''}}"
+                                <img src="{{ isset($event->image_url) ? $event->image_url:''}}"
                                     data-splide-lazy="path-to-the-image" alt="">
                                 <div class="px-3 px-md-0 pt-3 pt-md-0 pb-1  ">
                                     <div class="badge-left">
-                                        <h3 class="mt-3 ml-2">{{ $event->title ? $event->title:''}}</h3>
+                                        <h3 class="mt-3 ml-2">{{ isset($event->title) ? $event->title:''}}</h3>
                                     </div>
                                     <p class="my-3 desc__slider-content">
-                                        {{ $event->description ? $event->description:''}}</p>
+                                        {{ isset($event->description) ? $event->description:''}}</p>
                                     <a class="link link--arrowed"
                                         href="{{ url('event') }}/{{$event->id}}/detail">Selengkapnya
                                         <svg class="arrow-icon ml-1" xmlns="http://www.w3.org/2000/svg" width="32"
@@ -141,16 +141,16 @@
                         @foreach($classroom_categories as $classroom_category)
                         <li class="splide__slide px-2 px-md-4 pb-5">
                             <div class="content-embed__wrapper class-category__splide">
-                                <img src="{{ $classroom_category->image_url ? $classroom_category->image_url:''}}"
+                                <img src="{{ isset($classroom_category->image_url) ? $classroom_category->image_url:''}}"
                                     alt="">
                             </div>
                             <div class="px-4">
                                 <div class="badge-left">
                                     <h3 class="mt-3 mt-md-5 ml-2">
-                                        {{ $classroom_category->name ? $classroom_category->name:''}}</h3>
+                                        {{ isset($classroom_category->name) ? $classroom_category->name:''}}</h3>
                                 </div>
                                 <p class="my-3 desc__class-category">
-                                    {{ $classroom_category->description ? $classroom_category->description:''}}</p>
+                                    {{ isset($classroom_category->description) ? $classroom_category->description:''}}</p>
                             </div>
                         </li>
                         @endforeach

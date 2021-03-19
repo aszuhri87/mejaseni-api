@@ -118,8 +118,6 @@ class ClassController extends Controller
 
         }
 
-
-
     	return view('cms.class.index', [
             "company" => $company,
             "branchs" => $branchs,
@@ -132,6 +130,7 @@ class ClassController extends Controller
             "social_medias" => $social_medias
         ]);
     }
+
 
     public function detail($classroom_id)
     {
@@ -511,21 +510,21 @@ class ClassController extends Controller
     public function _get_master_lesson_description_html($master_lesson)
     {
         $html = '<div class="desc__class-tab my-4">
-                    <p>'.$master_lesson->description.'</p>
+                    <p>'. (isset($master_lesson->description) ? $master_lesson->description:"") .'</p>
                 </div>
                 <div class="row master-lesson__details">
                     <div class="col-6 d-flex flex-column">
                         <label>Slot</label>
-                        <span>'.$master_lesson->slot.' Partisipan</span>
+                        <span>'. (isset($master_lesson->slot) ? $master_lesson->slot:"") .' Partisipan</span>
                     </div>
                     <div class="col-6 d-flex flex-column">
                         <label>Platform</label>
-                        <span>'.$master_lesson->platform.'</span>
+                        <span>'. (isset($master_lesson->platform) ? $master_lesson->platform:"") .'</span>
                     </div>
                 </div>
                 <div class="class-tab-summary d-flex justify-content-between flex-md-row flex-column mt-5 mb-4">
                     <div class="d-flex flex-column">
-                        <span class="mt-2">Rp.'.number_format($master_lesson->price, 2).'</span>
+                        <span class="mt-2">Rp.'. (isset($master_lesson->price) ? number_format($master_lesson->price, 2):"0").'</span>
                     </div>
                     <div class="mt-5 mt-md-0">
                         <a  class="btn btn-primary shadow " onclick="'.$this->_is_authenticated($master_lesson->id, 3).'">Daftar Sekarang
@@ -540,7 +539,7 @@ class ClassController extends Controller
         $html = '<div class="content-tab-detail" style="">
                     <div class="desc__class-tab my-4">
                       <p>
-                        '. $classroom->description .'
+                        '. (isset($classroom->description) ? $classroom->description:"") .'
                       </p>
                     </div>
                   </div>
@@ -548,8 +547,8 @@ class ClassController extends Controller
                     <div class="row">
                         <div class="col col-12 mt-4">
                             <div class="d-flex flex-column">
-                              <p>'. $classroom->session_total .' Sesi | @ '. $classroom->session_duration .'menit</p>
-                                <span class="mt-2">Rp.'.number_format($classroom->price, 2).'</span>
+                              <p>'. (isset($classroom->session_total) ? $classroom->session_total:"") .' Sesi | @ '. (isset($classroom->session_duration) ? $classroom->session_duration:"") .'menit</p>
+                                <span class="mt-2">Rp.'.(isset($classroom->price) ? number_format($classroom->price, 2):"").'</span>
                             </div>
                         </div>
                         <div class="col col-12 mt-4 justify-content-md-end">
@@ -574,11 +573,11 @@ class ClassController extends Controller
             $html .= '<div class="coach__class-tab my-4">
                         <div class="row-center-start">
                             <div class="coach-img__class-tab mr-3">
-                                <img src="'.$coach->image_url.'" class="w-100 rounded-circle" alt="">
+                                <img src="'.(isset($coach->image_url) ? $coach->image_url:"").'" class="w-100 rounded-circle" alt="">
                             </div>
                             <div class="d-flex flex-column">
-                                <h3>'.$coach->name.'</h3>
-                                <span class="mt-1">'.$coach->expertise.'</span>
+                                <h3>'. (isset($coach->name) ? $coach->name:"") .'</h3>
+                                <span class="mt-1">'.(isset($coach->expertise) ? $coach->expertise:"").'</span>
                             </div>
                         </div>
                     </div>';
@@ -696,7 +695,7 @@ class ClassController extends Controller
                             <div class="content-tab-detail" style="">
                                 <div class="desc__class-tab my-4">
                                   <p>
-                                    '. $classroom->description .'
+                                    '. (isset($classroom->description) ? $classroom->description:"") .'
                                   </p>
                                 </div>
                               </div>
@@ -704,8 +703,8 @@ class ClassController extends Controller
                                 <div class="row">
                                     <div class="col col-12 mt-4">
                                         <div class="d-flex flex-column">
-                                          <p>'. $classroom->session_total .' Sesi | @ '. $classroom->session_duration .'menit</p>
-                                            <span class="mt-2">Rp.'.number_format($classroom->price, 2).'</span>
+                                          <p>'. (isset($classroom->session_total) ? $classroom->session_total:"") .' Sesi | @ '. (isset($classroom->session_duration) ? $classroom->session_duration:"") .'menit</p>
+                                            <span class="mt-2">Rp.'. (isset($classroom->price) ? number_format($classroom->price, 2):"").'</span>
                                         </div>
                                     </div>
                                     <div class="col col-12 mt-4 justify-content-md-end">
@@ -758,9 +757,9 @@ class ClassController extends Controller
 
         foreach ($master_lessons as $key => $master_lesson) {
             $html .= '<li class="splide__slide px-2 pb-5">
-                        <img class="w-100 rounded" src="'.$master_lesson->image_url.'" alt="">
+                        <img class="w-100 rounded" src="'. (isset($master_lesson->image_url) ? $master_lesson->image_url:"") .'" alt="">
                         <div class="badge-left">
-                            <h4 class="mt-4 ml-2">'.$master_lesson->name.'</h3>
+                            <h4 class="mt-4 ml-2">'. (isset($master_lesson->name) ? $master_lesson->name:"") .'</h3>
                         </div>
                         <ul class="row-center-start class-tab mt-5 mt-md-4">
                             <li class="active tab-detail" data-id="'. $master_lesson->id.'" href="tab-master-lession-description">Deskripsi</li>
@@ -768,21 +767,21 @@ class ClassController extends Controller
                         </ul>
                         <div id="description">
                             <div class="desc__class-tab my-4">
-                                <p>'.$master_lesson->description.'</p>
+                                <p>'.(isset($master_lesson->description) ? $master_lesson->description:"").'</p>
                             </div>
                             <div class="row master-lesson__details">
                                 <div class="col-6 d-flex flex-column">
                                     <label>Slot</label>
-                                    <span>'.$master_lesson->slot.' Partisipan</span>
+                                    <span>'.(isset($master_lesson->slot) ? $master_lesson->slot:"").' Partisipan</span>
                                 </div>
                                 <div class="col-6 d-flex flex-column">
                                     <label>Platform</label>
-                                    <span>'.$master_lesson->platform.'</span>
+                                    <span>'.(isset($master_lesson->platform) ? $master_lesson->platform:"").'</span>
                                 </div>
                             </div>
                             <div class="class-tab-summary d-flex justify-content-between flex-md-row flex-column mt-5 mb-4">
                                 <div class="d-flex flex-column">
-                                    <span class="mt-2">Rp. '.number_format($master_lesson->price, 2).'</span>
+                                    <span class="mt-2">Rp. '.(isset($master_lesson->price) ? number_format($master_lesson->price, 2):"").'</span>
                                 </div>
                                 <div class="mt-5 mt-md-0">
                                     <a class="btn btn-primary shadow" onclick="'.$this->_is_authenticated($master_lesson->id, 3).'">Daftar Sekarang

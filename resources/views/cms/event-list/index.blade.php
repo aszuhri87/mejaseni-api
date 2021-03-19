@@ -20,7 +20,7 @@
                                 <select class="mt-3 mb-4" name="classroom_category" id="select-subcategories">
                                     <option value="0">Semua Kategory</option>
                                     @foreach($classroom_categories as $classroom_category)
-                                    <option value="{{$classroom_category->id}}">{{$classroom_category->name ? $classroom_category->name:''}}</option>
+                                        <option value="{{$classroom_category->id}}">{{ isset($classroom_category->name) ? $classroom_category->name:''}}</option>
                                     @endforeach
                                 </select>
                                 <div class="input-group input-daterange d-flex flex-column">
@@ -47,19 +47,19 @@
                         <div class="row mb-4 pr-0 pr-lg-5 pb-3">
                             <div class="col-xl-4 mb-3 mb-md-0">
                                 <a href="{{ url('event') }}/{{$event->id}}/detail">
-                                    <figure><img src="{{ $event->image_url ? $event->image_url:'' }}" /></figure>
+                                    <figure><img src="{{ isset($event->image_url) ? $event->image_url:'' }}" /></figure>
                                 </a>
                             </div>
                             <div class="col-xl-8 px-4">
                                 <div class="badge-left">
                                     <a href="{{ url('event') }}/{{$event->id}}/detail">
-                                        <h3 class="ml-2 mt-2 mt-md-4 mt-lg-0">{{ $event->title ? $event->title:'' }}</h3>
+                                        <h3 class="ml-2 mt-2 mt-md-4 mt-lg-0">{{ isset($event->title) ? $event->title:'' }}</h3>
                                     </a>
                                 </div>
-                                <p class="mt-3 ml-3 desc__store-content">{{ $event->description ? $event->description:'' }}</p>
+                                <p class="mt-3 ml-3 desc__store-content">{{ isset($event->description) ? $event->description:'' }}</p>
                                 <div class="detail__store-content ml-3 mt-3">
                                     <div class="coach-name__store-content row-center mr-4">
-                                        <img src="{{ asset('cms/assets/img/svg/Crown.svg') }}" class="mr-2" alt="">{{ $event->category ? $event->category:'-'}}
+                                        <img src="{{ asset('cms/assets/img/svg/Crown.svg') }}" class="mr-2" alt="">{{ isset($event->category) ? $event->category:'-'}}
                                     </div>
                                     <div class="class__store-content row-center mt-md-0 mt-3">
                                         <img src="{{ asset('cms/assets/img/svg/calendar.svg') }}" class="mr-2" alt="">{{ $event->date ? date_format(date_create($event->date), "l, d F Y | H:i"):''}}

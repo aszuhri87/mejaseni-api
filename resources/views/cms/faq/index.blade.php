@@ -38,7 +38,7 @@
                                 <h4 class="panel-title">
                                     <a data-toggle="collapse" data-parent="#accordion"
                                         href="#collapseOne{{ $faq->id }}" aria-expanded="true" aria-controls="collapseOne">
-                                        <button class="btn btn-primary w-100 row-center-spacebetween rotate">{{ $faq->title ? $faq->title:'' }}
+                                        <button class="btn btn-primary w-100 row-center-spacebetween rotate">{{ isset($faq->title) ? $faq->title:'' }}
                                             <img src="{{ asset('cms/assets/img/svg/Angle-down1.svg') }}" alt="">
                                         </button>
                                     </a> 
