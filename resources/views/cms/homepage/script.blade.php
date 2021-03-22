@@ -30,7 +30,7 @@
         $(document).ready(function () {
           splide();
 
-          @if(!$events->isEmpty())
+          @if(!$image_galeries->isEmpty())
             initEventSplit()
           @endif
 

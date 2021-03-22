@@ -17,7 +17,7 @@ use Auth;
 
 class ClassController extends Controller
 {
-    public function index()
+    public function index($category=null)
     {
     	$company = Company::first();
     	$branchs = Branch::all();
@@ -57,9 +57,18 @@ class ClassController extends Controller
             ->leftJoin('sub_classroom_categories','sub_classroom_categories.classroom_category_id','=','classroom_categories.id')
             ->whereNull([
                 'classroom_categories.deleted_at'
-            ])
-            ->first();
+            ]);
 
+        if($category){
+            $category = str_replace("-"," ",$category);
+            $selected_category = $selected_category->where('classroom_categories.name', 'ilike', '%'.strtolower($category).'%');
+        }
+        $selected_category = $selected_category->first();
+
+        // jika parameter tidak valid
+        if($category && $selected_category == null){
+            return abort(404);
+        }
 
 
         $sub_categories = null;

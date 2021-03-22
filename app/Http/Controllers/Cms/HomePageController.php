@@ -33,6 +33,15 @@ class HomePageController extends Controller
             ])
             ->get();
 
+        $image_galeries = DB::table('image_galeries')
+            ->select([
+                DB::raw("CONCAT('{$path}',image) as image_url"),
+            ])
+            ->whereNull([
+                'deleted_at'
+            ])
+            ->get();
+
 
         $is_registered = Auth::guard('student')->check() ? 'registered':'unregistered';
         $banner = DB::table('banners')
@@ -46,19 +55,6 @@ class HomePageController extends Controller
                 'deleted_at'
             ])
             ->first();
-
-        $events = DB::table('events')
-                    ->select([
-                        'id',
-                        'title',
-                        'description',
-                        'start_at',
-                         DB::raw("CONCAT('{$path}',image) as image_url"),
-                    ])
-                    ->whereNull('deleted_at')
-                    ->orderBy('start_at','desc')
-                    ->take(4)
-                    ->get();
         
         $sosmed = DB::table('sosmeds')
             ->select([
@@ -132,9 +128,9 @@ class HomePageController extends Controller
             "banner" => $banner, 
             "coachs" => $coachs,
             "programs" => $programs,
-            "events" => $events,
             "social_medias" => $social_medias,
-            "classroom_categories" => $classroom_categories
+            "classroom_categories" => $classroom_categories,
+            "image_galeries" => $image_galeries
         ]);
     }
 }

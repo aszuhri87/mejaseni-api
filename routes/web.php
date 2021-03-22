@@ -111,6 +111,7 @@ use App\Http\Controllers\Admin\Cms\QuestionController as QuestionController;
 use App\Http\Controllers\Admin\Cms\CoachReviewController as CoachReviewController;
 use App\Http\Controllers\Admin\Cms\BannerController as BannerController;
 use App\Http\Controllers\Admin\Cms\FunCreativeController as FunCreativeController;
+use App\Http\Controllers\Admin\Cms\ImageGaleryController as ImageGaleryController;
 
 
 
@@ -162,6 +163,7 @@ use App\Http\Controllers\Cms\GaleryController as GaleryDetailController;
 
 Route::get('/', [HomePageController::class, 'index']);
 Route::get('/class', [ClassController::class, 'index']);
+Route::get('/class/{category?}', [ClassController::class, 'index']);
 Route::get('/class/classroom_category/{category_id}/sub_classroom_category', [ClassController::class, 'get_sub_category']);
 Route::get('/classroom_category/sub_classroom_category/{sub_category_id}/classroom', [ClassController::class, 'get_classroom']);
 Route::get('/class/{classroom_category_id}/sub_classroom_category/{sub_classroom_category_id}/package/{package}', [ClassController::class, 'get_package']);
@@ -580,6 +582,11 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::post('fun-creative/dt', [FunCreativeController::class, 'dt']);
             Route::post('fun-creative/update/{id}', [FunCreativeController::class, 'update']);
             Route::resource('fun-creative', FunCreativeController::class);
+
+
+            Route::post('galery-home/dt', [ImageGaleryController::class, 'dt']);
+            Route::post('galery-home/update/{id}', [ImageGaleryController::class, 'update']);
+            Route::resource('galery-home', ImageGaleryController::class);
 
 
 

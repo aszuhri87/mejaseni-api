@@ -84,14 +84,14 @@
         @endif
 
         <div class="col-lg-8 col-md-12 col-sm-12 px-0 mt-0 mt-md-5 mt-lg-0">
-            @if(!$events->isEmpty())
+            @if(!$image_galeries->isEmpty())
             <div class="splide pb-md-5 pb-3 mb-5 w-100" id="splide1">
                 <div class="splide__track">
                     <ul class="splide__list">
-                        @foreach($events as $event)
+                        @foreach($image_galeries as $image_galery)
                         <li class="splide__slide pb-md-0 pb-5">
                             <div class="content-embed__wrapper">
-                                <img src="{{ isset($event->image_url) ? $event->image_url:''}}"
+                                <img src="{{ isset($image_galery->image_url) ? $image_galery->image_url:''}}"
                                     data-splide-lazy="path-to-the-image" alt="">
                             </div>
                         </li>
@@ -103,7 +103,7 @@
             @else
             <div class="col-12 pr-0 pr-lg-4 mt-4 column-center">
                 <img style="width: 200px;" src="/cms/assets/img/svg/empty-store.svg" alt="">
-                <h4 class="mt-3 text-center">Wah, Event belum tersedia</h4>
+                <h4 class="mt-3 text-center">Wah, Foto galeri belum ditambahkan</h4>
             </div>
             @endif
 

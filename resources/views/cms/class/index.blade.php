@@ -87,7 +87,7 @@
       <div class="splide mb-4" id="category-splide">
         <div class="splide__track">
           <ul class="splide__list">
-            @if($classroom_categories)
+            @if(!$classroom_categories->isEmpty())
               @foreach($classroom_categories as $classroom_category)
                 @if($classroom_category->id == $selected_category->id)
                 <li class="splide__slide px-2">
