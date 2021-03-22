@@ -95,7 +95,8 @@ class ReviewAssignmentController extends BaseMenu
         $coach_schedule = DB::table('coach_schedules')
             ->select([
                 'coach_schedules.id',
-                'coach_classrooms.coach_id'
+                'coach_classrooms.coach_id',
+                'coach_schedules.datetime'
             ])
             ->JoinSub($coach_classroom, 'coach_classrooms', function ($join) {
                 $join->on('coach_schedules.coach_classroom_id', '=', 'coach_classrooms.id');
@@ -105,7 +106,8 @@ class ReviewAssignmentController extends BaseMenu
         $student_schedule = DB::table('student_schedules')
             ->select([
                 'student_schedules.session_id',
-                'coach_schedules.coach_id'
+                'coach_schedules.coach_id',
+                'coach_schedules.datetime',
             ])
             ->JoinSub($coach_schedule, 'coach_schedules', function ($join) {
                 $join->on('student_schedules.coach_schedule_id', '=', 'coach_schedules.id');
@@ -115,7 +117,8 @@ class ReviewAssignmentController extends BaseMenu
         $session = DB::table('sessions')
             ->select([
                 'sessions.id',
-                'student_schedules.coach_id'
+                'student_schedules.coach_id',
+                'student_schedules.datetime',
             ])
             ->JoinSub($student_schedule, 'student_schedules', function ($join) {
                 $join->on('sessions.id', '=', 'student_schedules.session_id');
@@ -127,7 +130,9 @@ class ReviewAssignmentController extends BaseMenu
             ->select([
                 'assignments.id',
                 'assignments.upload_date',
-                'sessions.coach_id'
+                'assignments.due_time',
+                'sessions.coach_id',
+                'sessions.datetime',
             ])
             ->JoinSub($session, 'sessions', function ($join) {
                 $join->on('assignments.session_id', '=', 'sessions.id');
@@ -162,7 +167,8 @@ class ReviewAssignmentController extends BaseMenu
                         ELSE
                             0
                     END
-                ) as status')
+                ) as status'),
+                DB::raw("to_char(assignments.datetime, 'DD Month YYYY') as datetime"),
             ])
             ->leftJoinSub($assignment, 'assignments', function ($join) {
                 $join->on('collections.assignment_id', '=', 'assignments.id');
@@ -247,15 +253,15 @@ class ReviewAssignmentController extends BaseMenu
                     DB::raw("CONCAT('{$path}',coaches.image) as coache_image_url"),
                 )
                 ->join('collections', 'collections.id', 'collection_feedback.collection_id')
-                ->join('assignments', 'assignments.id', 'collections.assignment_id')
-                ->join('sessions', 'sessions.id', 'assignments.session_id')
-                ->join('students', 'students.id', 'collections.student_id')
-                ->join('student_classrooms', 'student_classrooms.student_id', 'students.id')
-                ->join('classrooms', 'classrooms.id', 'student_classrooms.classroom_id')
-                ->join('coach_classrooms', 'coach_classrooms.classroom_id', 'classrooms.id')
-                ->join('coaches', 'coaches.id', 'coach_classrooms.coach_id')
+                // ->join('assignments', 'assignments.id', 'collections.assignment_id')
+                // ->join('sessions', 'sessions.id', 'assignments.session_id')
+                // ->join('students', 'students.id', 'collections.student_id')
+                // ->join('student_classrooms', 'student_classrooms.student_id', 'students.id')
+                // ->join('classrooms', 'classrooms.id', 'student_classrooms.classroom_id')
+                // ->join('coach_classrooms', 'coach_classrooms.classroom_id', 'classrooms.id')
+                ->join('coaches', 'coaches.id', 'collection_feedback.coach_id')
                 ->where('collection_id', $result->id)
-                ->distinct()
+                // ->distinct()
                 ->get();
 
             $collection_files = DB::table('collection_files')

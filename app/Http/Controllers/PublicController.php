@@ -114,7 +114,7 @@ class PublicController extends Controller
                 ], 200);
             }
 
-            $result = \App\Models\Coach::whereHas('classrooms', function($query) use($id){
+            $result = \App\Models\Coach::whereHas('coach_classrooms', function($query) use($id){
                     $query->where('classroom_id', $id);
                 })
                 ->select([
@@ -476,6 +476,7 @@ class PublicController extends Controller
                 ])
                 ->where('classroom_id', $classroom_id)
                 ->whereNull('deleted_at')
+                ->orderBy(DB::raw('name::integer'), 'asc')
                 ->get();
 
             return response([

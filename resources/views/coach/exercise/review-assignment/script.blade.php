@@ -452,10 +452,10 @@
                                 data: 'DT_RowIndex'
                             },
                             {
-                                data: 'due_time'
+                                data: 'upload_date'
                             },
                             {
-                                data: 'upload_date'
+                                data: 'datetime'
                             },
                             {
                                 data: 'name'

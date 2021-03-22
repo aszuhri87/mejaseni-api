@@ -263,7 +263,17 @@
                                                 <div class="col text-justify overflow-auto" style="height:80px !important">
                                                     ${data.description}
                                                 </div>
-                                            </div>
+                                            </div>`;
+                                            if(data.file_url != null){
+                                                element += `
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <a href="${data.file_url}" class="text-primary" target="_blank">Download file</a>
+                                                        </div>
+                                                    </div>
+                                                `;
+                                            }
+                                            element +=`
                                             <div class="row mb-5">
                                                 <div class="col">
                                                     <table class="bordered-less">
@@ -283,6 +293,7 @@
                                                 </div>
                                             </div>
                                             `;
+                                            
                                             if(data.status_collection == 0){
                                                 if(moment(moment().format('YYYY-MM-DD')).isAfter(moment(data.due_date).format('YYYY-MM-DD'))){
                                                     element += `
