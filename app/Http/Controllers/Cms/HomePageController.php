@@ -33,6 +33,16 @@ class HomePageController extends Controller
             ])
             ->get();
 
+        $image_galeries = DB::table('image_galeries')
+            ->select([
+                DB::raw("CONCAT('{$path}',image) as image_url"),
+            ])
+            ->whereNull([
+                'deleted_at'
+            ])
+            ->orderBy('number')
+            ->get();
+
 
         $is_registered = Auth::guard('student')->check() ? 'registered':'unregistered';
         $banner = DB::table('banners')
@@ -46,19 +56,25 @@ class HomePageController extends Controller
                 'deleted_at'
             ])
             ->first();
+        
+        $sosmed = DB::table('sosmeds')
+            ->select([
+                'sosmeds.id',
+                'sosmeds.slug'
+            ])
+            ->whereNull('sosmeds.deleted_at');
 
-        $events = DB::table('events')
-                    ->select([
-                        'id',
-                        'title',
-                        'description',
-                        'start_at',
-                         DB::raw("CONCAT('{$path}',image) as image_url"),
-                    ])
-                    ->whereNull('deleted_at')
-                    ->orderBy('start_at','desc')
-                    ->take(4)
-                    ->get();
+        $coach_sosmed = DB::table('coach_sosmeds')
+            ->select([
+                'coach_sosmeds.id',
+                'coach_sosmeds.coach_id',
+                'coach_sosmeds.url'
+            ])
+            ->joinSub($sosmed, 'sosmeds', function ($join) {
+                $join->on('coach_sosmeds.sosmed_id', '=', 'sosmeds.id');
+            })
+            ->where('sosmeds.slug','instagram')
+            ->whereNull('coach_sosmeds.deleted_at');
 
         $coachs = DB::table('coaches')
             ->select([
@@ -66,15 +82,20 @@ class HomePageController extends Controller
                 'coaches.description',
                 'coach_reviews.id',
                 'expertises.name as expertise_name',
+                'coach_sosmeds.url',
                 DB::raw("CONCAT('{$path}',coaches.image) as image_url"),
             ])
             ->leftJoin('coach_reviews','coach_reviews.coach_id','=','coaches.id')
             ->leftJoin('expertises','coaches.expertise_id','=','expertises.id')
+            ->leftJoinSub($coach_sosmed, 'coach_sosmeds', function ($join) {
+                $join->on('coaches.id', '=', 'coach_sosmeds.coach_id');
+            })
             ->whereNull([
-                'coach_reviews.deleted_at'
+                'coach_reviews.deleted_at',
+                'coaches.deleted_at',
             ])
             ->get();
-
+        
         $programs = DB::table('programs')
             ->select([
                 'name',
@@ -108,9 +129,9 @@ class HomePageController extends Controller
             "banner" => $banner, 
             "coachs" => $coachs,
             "programs" => $programs,
-            "events" => $events,
             "social_medias" => $social_medias,
-            "classroom_categories" => $classroom_categories
+            "classroom_categories" => $classroom_categories,
+            "image_galeries" => $image_galeries
         ]);
     }
 }

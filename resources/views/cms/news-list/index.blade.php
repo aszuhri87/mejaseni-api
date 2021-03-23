@@ -48,13 +48,13 @@
                                 <div class="col-xl-8 px-4">
                                     <div class="badge-left">
                                         <a href="{{ url('news') }}/{{$new->id}}/detail">
-                                            <h3 class="ml-2 mt-2 mt-md-4 mt-lg-0">{{ $new->title ? $new->title:''}}</h3>
+                                            <h3 class="ml-2 mt-2 mt-md-4 mt-lg-0">{{ isset($new->title) ? $new->title:''}}</h3>
                                         </a>
                                     </div>
                                     {{-- <p class="mt-3 ml-3 desc__store-content">{{ $new->description ? $new->description:''}}</p> --}}
                                     <div class="detail__store-content ml-3 mt-3">
                                         <div class="class__store-content row-center mt-md-0 mt-3">
-                                            <img src="{{ asset('cms/assets/img/svg/calendar.svg') }}" class="mr-2" alt="">{{ $new->created_at ? date_format(date_create($new->created_at), "l, d F Y | H:i"):''}}
+                                            <img src="{{ asset('cms/assets/img/svg/calendar.svg') }}" class="mr-2" alt="">{{ isset($new->created_at) ? date_format(date_create($new->created_at), "l, d F Y | H:i"):''}}
                                         </div>
                                     </div>
                                 </div>

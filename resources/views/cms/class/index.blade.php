@@ -24,9 +24,9 @@
                 <ul class="splide__list" id="classrooms">
                     @foreach($regular_classrooms as $regular_classroom)
                       <li class="splide__slide px-2 pb-5">
-                        <img class="w-100 rounded" src="{{ $regular_classroom->image_url ? $regular_classroom->image_url : '' }}" alt="">
+                        <img class="w-100 rounded" src="{{ isset($regular_classroom->image_url) ? $regular_classroom->image_url : '' }}" alt="">
                         <div class="badge-left">
-                          <h3 class="mt-4 ml-2">{{ $regular_classroom->name ? $regular_classroom->name : '' }}</h3>
+                          <h3 class="mt-4 ml-2">{{ isset($regular_classroom->name) ? $regular_classroom->name : '' }}</h3>
                         </div>
                         <ul class="row-center-start class-tab mt-5 mt-md-4">
                           <li class="active tab-detail" data-id="{{ $regular_classroom->id }}" href="tab-description">Deskripsi</li>
@@ -38,7 +38,7 @@
                           <div class="content-tab-detail" style="">
                             <div class="desc__class-tab my-4">
                               <p>
-                                {{ $regular_classroom->description ? $regular_classroom->description : '' }}
+                                {{ isset($regular_classroom->description) ? $regular_classroom->description : '' }}
                               </p>
                             </div>
                           </div>
@@ -46,7 +46,7 @@
                             <div class="row">
                                 <div class="col col-12 mt-4">
                                     <div class="d-flex flex-column">
-                                      <p>{{ $regular_classroom->session_total ? $regular_classroom->session_total : '' }} Sesi | @ {{ $regular_classroom->session_duration ? $regular_classroom->session_duration : '' }}menit</p>
+                                      <p>{{ isset($regular_classroom->session_total) ? $regular_classroom->session_total : '' }} Sesi | @ {{ isset($regular_classroom->session_duration) ? $regular_classroom->session_duration : '' }}menit</p>
                                       <span class="mt-2">Rp.@convert($regular_classroom->price)</span>
                                     </div>
                                 </div>
@@ -87,13 +87,13 @@
       <div class="splide mb-4" id="category-splide">
         <div class="splide__track">
           <ul class="splide__list">
-            @if($classroom_categories)
+            @if(!$classroom_categories->isEmpty())
               @foreach($classroom_categories as $classroom_category)
                 @if($classroom_category->id == $selected_category->id)
                 <li class="splide__slide px-2">
                   <div class="class-category-filter__wrapper class-category-selected" data-id="{{$classroom_category->id}}">
                     <div class="class-category-filter-overlay row-center ">
-                      <h4>{{ $classroom_category->name ? $classroom_category->name:'' }}</h4>
+                      <h4>{{ isset($classroom_category->name) ? $classroom_category->name:'' }}</h4>
                     </div>
                     <img src="{{ asset('cms/assets/img/category-placeholder.png') }}" alt="">
                   </div>
@@ -102,7 +102,7 @@
                 <li class="splide__slide px-2">
                   <div class="class-category-filter__wrapper" data-id="{{$classroom_category->id}}">
                     <div class="class-category-filter-overlay row-center">
-                      <h4>{{ $classroom_category->name ? $classroom_category->name:'' }}</h4>
+                      <h4>{{ isset($classroom_category->name) ? $classroom_category->name:'' }}</h4>
                     </div>
                     <img src="{{ asset('cms/assets/img/category-placeholder.png') }}" alt="">
                   </div>

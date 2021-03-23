@@ -786,7 +786,7 @@
                     if(res.data.length > 0){
                         $.each(res.data, function(index, data) {
                             element += `
-                                <div class="mr-2">
+                                <div class="mb-2 mr-2">
                                     <button type="button" class="btn btn-outline-primary btn-category btn-pill" data-id="${data.id}">${data.name}</button>
                                 </div>
                             `;

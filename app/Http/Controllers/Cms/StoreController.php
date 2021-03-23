@@ -317,19 +317,19 @@ class StoreController extends Controller
             $video_courses_html .= '<div class="row mb-5 pb-2">
                                     <div class="col-xl-3 mb-3 mb-md-0">
                                       <a href="#">
-                                        <figure><img src="'.$video_course->image_url.'" /></figure>
+                                        <figure><img src="'.(isset($video_course->image_url) ? $video_course->image_url:"").'" /></figure>
                                       </a>
                                     </div>
                                     <div class="col-xl-9 px-4">
                                       <div class="badge-left">
                                         <a href="/video-course/'.$video_course->id.'/detail" target="_blank">
-                                          <h3 class="ml-2 mt-2 mt-md-4 mt-lg-0">'.$video_course->name.'</h3>
+                                          <h3 class="ml-2 mt-2 mt-md-4 mt-lg-0">'. (isset($video_course->name) ? $video_course->name:"") .'</h3>
                                         </a>
                                       </div>
-                                      <p class="mt-3 ml-3 desc__store-content">'.$video_course->description.'</p>
+                                      <p class="mt-3 ml-3 desc__store-content">'. (isset($video_course->description) ? $video_course->description:"") .'</p>
                                       <div class="detail__store-content ml-3 mt-3">
                                         <div class="coach-name__store-content row-center mr-4">
-                                          <img src="/cms/assets/img/svg/User.svg" class="mr-2" alt="">'.$video_course->coach.'
+                                          <img src="/cms/assets/img/svg/User.svg" class="mr-2" alt="">'. (isset($video_course->coach) ? $video_course->coach:"") .'
                                         </div>
                                       </div>
                                     </div>

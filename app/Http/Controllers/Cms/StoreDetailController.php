@@ -213,8 +213,8 @@ class StoreDetailController extends Controller
     {
         $html ='';
         foreach($video_course_item_open_videos as $video_course_item_open_video){
-            $html .= '<div class="video-quality__item '.$video_course_item_open_video->resolution .'" data-url="'. $video_course_item_open_video->url .'">
-                                    '. $video_course_item_open_video->resolution .'
+            $html .= '<div class="video-quality__item '. (isset($video_course_item_open_video->resolution) ? $video_course_item_open_video->resolution :"") .'" data-url="'. (isset($video_course_item_open_video->url) ? $video_course_item_open_video->url:"") .'">
+                                    '. (isset($video_course_item_open_video->resolution) ? $video_course_item_open_video->resolution:"") .'
                     </div>';
         }
 

@@ -18,7 +18,7 @@
                                 @foreach($fun_creatives as $fun_creative)
                                     <li class="splide__slide px-2 px-md-4">
                                         <div class="content-embed__wrapper">
-                                            <img src="{{ $fun_creative->image_url ? $fun_creative->image_url:'' }}" alt="">
+                                            <img src="{{ isset($fun_creative->image_url) ? $fun_creative->image_url:'' }}" alt="">
                                         </div>
                                     </li>
                                 @endforeach
@@ -51,9 +51,9 @@
                         @foreach($internal_team_careers as $internal_team_career)
                             <div class="col-lg-6 col-12 px-4 pt-5 pb-1">
                                 <div class="career__item px-5 pt-5 pb-4" data-aos="zoom-out" data-aos-delay="0">
-                                    <h3>{{ $internal_team_career->title ? $internal_team_career->title:''}}</h3>
+                                    <h3>{{ isset($internal_team_career->title) ? $internal_team_career->title:''}}</h3>
                                     <p class="row-center-start mt-3"><img class="mr-2" src="{{ asset('cms/assets/img/svg/marker.svg') }}"
-                                            alt="">{{ $internal_team_career->placement ? $internal_team_career->placement:'-'}}</p>
+                                            alt="">{{ isset($internal_team_career->placement) ? $internal_team_career->placement:'-'}}</p>
                                     <div class="border-line mt-5 mb-4"></div>
                                     <div class="row">
                                         <a href="{{ url('career') }}/{{$internal_team_career->id}}/detail" class="btn btn-primary shadow ml-auto">Detail</a>
@@ -81,9 +81,9 @@
                         @foreach($professional_coach_careers as $professional_coach_career)
                             <div class="col-lg-6 col-12 px-4 pt-5 pb-1">
                                 <div class="career__item px-5 pt-5 pb-4" data-aos="zoom-out" data-aos-delay="0">
-                                    <h3>{{ $professional_coach_career->title ? $professional_coach_career->title:''}}</h3>
+                                    <h3>{{ isset($professional_coach_career->title) ? $professional_coach_career->title:''}}</h3>
                                     <p class="row-center-start mt-3"><img class="mr-2" src="{{ asset('cms/assets/img/svg/marker.svg') }}"
-                                            alt="">{{ $professional_coach_career->placement ? $professional_coach_career->placement:'-'}}</p>
+                                            alt="">{{ isset($professional_coach_career->placement) ? $professional_coach_career->placement:'-'}}</p>
                                     <div class="border-line mt-5 mb-4"></div>
                                     <div class="row">
                                         <a href="{{ url('career') }}/{{$professional_coach_career->id}}/detail" class="btn btn-primary shadow ml-auto">Detail</a>

@@ -16,7 +16,7 @@
         </ul>
     </div>
 </div>
-<div id="category" class="d-flex">
+<div id="category" class="d-flex align-content-start flex-wrap">
 
 </div>
 <h5 class="mt-5 mb-5">Class Conference Package</h5>

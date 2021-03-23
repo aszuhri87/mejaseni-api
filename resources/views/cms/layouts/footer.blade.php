@@ -7,21 +7,21 @@
           <h1>mejaseni</h1>
         </div>
         <div class="mt-4">
-          <h5>{{ $company->name ? $company->name :'' }}</h5>
-          <p class="pt-2">{{ $company->address ? $company->address :'' }}</p>
+          <h5>{{ isset($company->name) ? $company->name :'' }}</h5>
+          <p class="pt-2">{{ isset($company->address) ? $company->address :'' }}</p>
         </div>
       </div>
       <div class="col-lg-3 col-md-6 px-3 pr-md-5 mt-md-4">
         @foreach ($branchs as $branch)
           @if ($loop->index == 0)
             <div>
-              <h5 class="mb-2 mt-5 mt-md-0">{{ $branch->name ? $branch->name :'' }}</h5>
-              <p>{{ $branch->address ? $branch->address :'' }}</p>
+              <h5 class="mb-2 mt-5 mt-md-0">{{ isset($branch->name) ? $branch->name :'' }}</h5>
+              <p>{{ isset($branch->address) ? $branch->address :'' }}</p>
             </div>
           @else
             <div class="mt-4">
-              <h5 class="mb-2 mt-5 mt-md-0">{{ $branch->name ? $branch->name :'' }}</h5>
-              <p>{{ $branch->address ? $branch->address :'' }}</p>
+              <h5 class="mb-2 mt-5 mt-md-0">{{ isset($branch->name) ? $branch->name :'' }}</h5>
+              <p>{{ isset($branch->address) ? $branch->address :'' }}</p>
             </div>
           @endif
         @endforeach
@@ -55,17 +55,17 @@
             <h5>Call Us</h5>
           </div>
           @foreach ($branchs as $branch)
-            <p>{{ $branch->telephone ? $branch->telephone:'-'}}</p>
+            <p>{{ isset($branch->telephone) ? $branch->telephone:'-'}}</p>
           @endforeach
           
-          <p>{{ $company->telephone ? $company->telephone:'' }}</p>
+          <p>{{ isset($company->telephone) ? $company->telephone:'' }}</p>
         </div>
         <div class="mt-4">
           <div class="badge__wrapper mb-2">
             <img class="image-badge__footer mr-2" src="{{ asset('cms/assets/img/svg/Mail.svg') }}" alt="">
             <h5>Email</h5>
           </div>
-          <a>{{ $company->email ? $company->email:'' }}</a>
+          <a>{{ isset($company->email) ? $company->email:'' }}</a>
         </div>
         <div class="mt-5 mt-md-4">
           <div class="badge__wrapper mb-2">
@@ -73,8 +73,8 @@
           </div>
           <div class="badge__wrapper pt-2" id="social-media__wrapper">
             @foreach($social_medias as $social_media)
-              <a target="_blank" href="{{ $social_media->url ? $social_media->url:'#'}}">
-                <img src="{{ $social_media->image_url ? $social_media->image_url:'#'}}" alt="">
+              <a target="_blank" href="{{ isset($social_media->url) ? $social_media->url:'#'}}">
+                <img src="{{ isset($social_media->image_url) ? $social_media->image_url:'#'}}" alt="">
               </a>
             @endforeach
           </div>

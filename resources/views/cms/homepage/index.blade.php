@@ -84,34 +84,15 @@
         @endif
 
         <div class="col-lg-8 col-md-12 col-sm-12 px-0 mt-0 mt-md-5 mt-lg-0">
-            @if(!$events->isEmpty())
+            @if(!$image_galeries->isEmpty())
             <div class="splide pb-md-5 pb-3 mb-5 w-100" id="splide1">
                 <div class="splide__track">
                     <ul class="splide__list">
-                        @foreach($events as $event)
+                        @foreach($image_galeries as $image_galery)
                         <li class="splide__slide pb-md-0 pb-5">
                             <div class="content-embed__wrapper">
-                                <img src="{{ $event->image_url ? $event->image_url:''}}"
+                                <img src="{{ isset($image_galery->image_url) ? $image_galery->image_url:''}}"
                                     data-splide-lazy="path-to-the-image" alt="">
-                                <div class="px-3 px-md-0 pt-3 pt-md-0 pb-1  ">
-                                    <div class="badge-left">
-                                        <h3 class="mt-3 ml-2">{{ $event->title ? $event->title:''}}</h3>
-                                    </div>
-                                    <p class="my-3 desc__slider-content">
-                                        {{ $event->description ? $event->description:''}}</p>
-                                    <a class="link link--arrowed"
-                                        href="{{ url('event') }}/{{$event->id}}/detail">Selengkapnya
-                                        <svg class="arrow-icon ml-1" xmlns="http://www.w3.org/2000/svg" width="32"
-                                            height="32" viewBox="0 0 32 32">
-                                            <g fill="none" stroke="#7F16A7" stroke-width="1.5" stroke-linejoin="round"
-                                                stroke-miterlimit="10">
-                                                <circle class="arrow-icon--circle" cx="16" cy="16" r="15.12"></circle>
-                                                <path class="arrow-icon--arrow"
-                                                    d="M16.14 9.93L22.21 16l-6.07 6.07M8.23 16h13.98"></path>
-                                            </g>
-                                        </svg>
-                                    </a>
-                                </div>
                             </div>
                         </li>
                         @endforeach
@@ -122,7 +103,7 @@
             @else
             <div class="col-12 pr-0 pr-lg-4 mt-4 column-center">
                 <img style="width: 200px;" src="/cms/assets/img/svg/empty-store.svg" alt="">
-                <h4 class="mt-3 text-center">Wah, Event belum tersedia</h4>
+                <h4 class="mt-3 text-center">Wah, Foto galeri belum ditambahkan</h4>
             </div>
             @endif
 
@@ -141,16 +122,16 @@
                         @foreach($classroom_categories as $classroom_category)
                         <li class="splide__slide px-2 px-md-4 pb-5">
                             <div class="content-embed__wrapper class-category__splide">
-                                <img src="{{ $classroom_category->image_url ? $classroom_category->image_url:''}}"
+                                <img src="{{ isset($classroom_category->image_url) ? $classroom_category->image_url:''}}"
                                     alt="">
                             </div>
                             <div class="px-4">
                                 <div class="badge-left">
                                     <h3 class="mt-3 mt-md-5 ml-2">
-                                        {{ $classroom_category->name ? $classroom_category->name:''}}</h3>
+                                        {{ isset($classroom_category->name) ? $classroom_category->name:''}}</h3>
                                 </div>
                                 <p class="my-3 desc__class-category">
-                                    {{ $classroom_category->description ? $classroom_category->description:''}}</p>
+                                    {{ isset($classroom_category->description) ? $classroom_category->description:''}}</p>
                             </div>
                         </li>
                         @endforeach
@@ -212,7 +193,7 @@
                                 </div>
                                 <div class="text__wrapper px-4">
                                     <div class="text-shape px-2 px-lg-3 pt-4 pb-4">
-                                        <a href="#" target="_blank">
+                                        <a href="{{isset($coach->url) ? $coach->url : 'javascript:void(0)'}}" @if(isset($coach->url))target="_blank" @endif>
                                             <img class="social-media-img__professional-coach"
                                                 src="{{ asset('cms/assets/img/instagram-logo.png') }}" alt="">
                                         </a>
