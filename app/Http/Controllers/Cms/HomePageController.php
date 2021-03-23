@@ -85,7 +85,7 @@ class HomePageController extends Controller
                 'coach_sosmeds.url',
                 DB::raw("CONCAT('{$path}',coaches.image) as image_url"),
             ])
-            ->leftJoin('coach_reviews','coach_reviews.coach_id','=','coaches.id')
+            ->rightJoin('coach_reviews','coach_reviews.coach_id','=','coaches.id')
             ->leftJoin('expertises','coaches.expertise_id','=','expertises.id')
             ->leftJoinSub($coach_sosmed, 'coach_sosmeds', function ($join) {
                 $join->on('coaches.id', '=', 'coach_sosmeds.coach_id');
