@@ -87,7 +87,7 @@ class RegisterController extends Controller
 
             Mail::send('mail.email-verification', compact('account'), function($message) use($request){
                 $message->to($request->email, $request->name)
-                    ->from('mtaufiikh@gmail.com', 'MEJASENI')
+                    ->from('info@mejaseni.com', 'MEJASENI')
                     ->subject('Email Verification');
             });
         });
@@ -162,7 +162,7 @@ class RegisterController extends Controller
 
             Mail::send('mail.email-verification', compact('account'), function($message) use($student){
                 $message->to($student->email, $student->name)
-                    ->from('mtaufiikh@gmail.com', 'MEJASENI')
+                    ->from('info@mejaseni.com', 'MEJASENI')
                     ->subject('Email Verification');
             });
 
@@ -197,7 +197,7 @@ class RegisterController extends Controller
 
                 Mail::send('mail.forgot-password', compact('student', 'new_password'), function($message) use($student){
                     $message->to($student->email, $student->name)
-                        ->from('mtaufiikh@gmail.com', 'MEJASENI')
+                        ->from('info@mejaseni.com', 'MEJASENI')
                         ->subject('Email Verification');
                 });
 
