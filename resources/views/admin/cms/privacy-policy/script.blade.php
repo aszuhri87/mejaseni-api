@@ -176,9 +176,9 @@
                     $('#form-policy').attr('action', $(this).attr('href'));
                     $('#form-policy').attr('method','PUT');
 
-                    console.log(JSON.parse(unescapeHtml(data.json_description)))
-
-                    quill.setContents(JSON.parse(unescapeHtml(data.json_description)));
+                    if(data.json_description){
+                        quill.setContents(JSON.parse(unescapeHtml(data.json_description)));
+                    }
 
                     showModal('modal-policy');
                 });
