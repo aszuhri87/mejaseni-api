@@ -8,6 +8,10 @@
     strong{
         font-weight:bold;
     }
+    
+    u{
+        font-style: italic;
+    }
 </style>
 @endpush
 
