@@ -3,6 +3,12 @@
 @push('style')
 <link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 <link href="//cdn.quilljs.com/1.3.6/quill.bubble.css" rel="stylesheet">
+
+<style type="text/css">
+    strong{
+        font-weight:bold;
+    }
+</style>
 @endpush
 
 @section('content')
@@ -12,9 +18,11 @@
             <h1>Kebijakan Privasi</h1>
             <h3 class="mt-2">Privacy Policy</h3>
             @if($privacy_policy)
-                <p class="mt-3">
+                <p class="mt-3 policy">
                     {!! $privacy_policy->quill_description !!}
                 </p>
+
+
 
 
                 <div class="panel-group mt-5" id="accordion" role="tablist" aria-multiselectable="true">
