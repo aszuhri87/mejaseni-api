@@ -16,7 +16,8 @@ class ImageGalery extends Model
     public $keyType = 'string';
 
     protected $fillable = [
-        'image'
+        'image',
+        'number'
     ];
 
     protected $dates = ['deleted_at'];

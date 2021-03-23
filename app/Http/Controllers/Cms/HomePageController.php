@@ -40,6 +40,7 @@ class HomePageController extends Controller
             ->whereNull([
                 'deleted_at'
             ])
+            ->orderBy('number')
             ->get();
 
 
