@@ -31,6 +31,7 @@ class PrivacyPolicyController extends Controller
                     ])
                     ->where('privacy_policy_id',$privacy_policy->id)
                     ->whereNull('deleted_at')
+                    ->orderBy('title')
                     ->get();
         }
 

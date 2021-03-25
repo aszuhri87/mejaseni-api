@@ -186,7 +186,7 @@
                         <li class="splide__slide px-3">
                             <div class="coach-featured__wrapper">
                                 <div class="img-shape">
-                                    <a href="#">
+                                    <a href="{{isset($coach->url) ? $coach->url : 'javascript:void(0)'}}" @if(isset($coach->url))target="_blank" @endif>
                                         <img
                                             src="{{ $coach->image_url ? $coach->image_url :'/assets/cms/assets/img/coach.png' }}">
                                     </a>

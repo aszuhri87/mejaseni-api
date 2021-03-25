@@ -146,6 +146,8 @@ class PrivacyPolicyController extends BaseMenu
             $result = DB::transaction(function () use($request, $id){
                 $result = PrivacyPolicy::find($id)->update([
                     'description' => $request->description,
+                    'quill_description' => $request->quill_description,
+                    'json_description' => $request->json_description,
                 ]);
 
                 return $result;

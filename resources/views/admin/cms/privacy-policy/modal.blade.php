@@ -1,6 +1,6 @@
 <!-- Modal-->
 <div class="modal" id="modal-policy" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <form id="form-policy" autocomplete="off">
                 <div class="modal-header">
@@ -15,7 +15,7 @@
                             Description
                             <span class="text-danger">*</span>
                         </label>
-                        <textarea required name="description" class="form-control" placeholder="Description" rows="8"></textarea>
+                        <div id="kt_quil_2" style="min-height: 325px"></div>
                     </div>
                 </div>
                 <div class="modal-footer">

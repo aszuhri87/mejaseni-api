@@ -1,12 +1,13 @@
 <script type="text/javascript">
     var Page = function() {
         var _componentPage = function(){
-            var init_table, init_privacy_policy;
+            var init_table, init_privacy_policy, quill;
 
             $(document).ready(function() {
                 initTable();
                 formSubmit();
                 initAction();
+                initQuil()
                 
             });
 
@@ -175,7 +176,9 @@
                     $('#form-policy').attr('action', $(this).attr('href'));
                     $('#form-policy').attr('method','PUT');
 
-                    $('#form-policy').find('textarea[name="description"]').val(data.description);
+                    if(data.json_description){
+                        quill.setContents(JSON.parse(unescapeHtml(data.json_description)));
+                    }
 
                     showModal('modal-policy');
                 });
@@ -247,11 +250,19 @@
                 $('#form-policy').submit(function(event){
                     event.preventDefault();
 
+                    let description = quill.container.firstChild.innerHTML;
+                    let json_description = JSON.stringify(quill.getContents());
+                    let data = {
+                        'description':quill.getText(),
+                        'quill_description':description,
+                        'json_description':json_description
+                    }
+
                     btn_loading('start')
                     $.ajax({
                         url: $(this).attr('action'),
                         type: $(this).attr('method'),
-                        data: $(this).serialize()
+                        data: data
                     })
                     .done(function(res, xhr, meta) {
                         toastr.success(res.message, 'Success');
@@ -287,6 +298,16 @@
                     .always(function() {
                         btn_loading('stop')
                     });
+                });
+            },
+            initQuil = () => {
+                var Delta = Quill.import('delta');
+                quill = new Quill('#kt_quil_2', {
+                    modules: {
+                        toolbar: true
+                    },
+                    placeholder: 'Type your text here...',
+                    theme: 'snow'
                 });
             }
         };
