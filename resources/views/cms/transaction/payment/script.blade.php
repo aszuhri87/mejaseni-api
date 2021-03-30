@@ -15,6 +15,9 @@
                     event.preventDefault();
 
                     if($("input[name=payment_chanel]:checked").val() && $("input[name=payment_method]:checked").val()){
+                        $('#btn-next').html('<div id="loading" class="mr-1"></div> Loading...');
+                        $('#btn-next').addClass('d-flex align-items-center');
+                        $('#btn-next').attr('disabled', true);
                         $.ajax({
                             url: "{{url('cart-payment')}}",
                             type: 'POST',

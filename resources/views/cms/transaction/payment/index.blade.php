@@ -1,6 +1,37 @@
 @extends('cms.transaction.layouts.app')
 
 @section('content')
+<style>
+#loading {
+    display: inline-block;
+    width: 17px;
+    height: 17px;
+    border: 3px solid rgba(255,255,255,.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+    -webkit-animation: spin 1s ease-in-out infinite;
+}
+
+.my-spinner-loading {
+    padding-top: 10px;
+    display: inline-block;
+    width: 17px;
+    height: 17px;
+    border: 3px solid #edc0ff;
+    border-radius: 50%;
+    border-top-color: #7F16A7;
+    animation: spin 1s ease-in-out infinite;
+    -webkit-animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { -webkit-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+    to { -webkit-transform: rotate(360deg); }
+}
+</style>
 <div class="border-line"></div>
 <div class="row pt-5 pb-4">
     <div class="col-lg-4 text-center text-md-left">
