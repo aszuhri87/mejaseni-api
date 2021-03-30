@@ -14,16 +14,22 @@
                 $(document).on('click','#btn-next',function(event){
                     event.preventDefault();
 
-                    $.ajax({
-                        url: "{{url('cart-payment')}}",
-                        type: 'POST',
-                        data: {
-                            type: $("input[name=payment_method]:checked").val(),
-                            va_chanel:  $("input[name=payment_chanel]:checked").val()
-                        }
-                    }).done(function(res, xhr, meta){
-                        window.location = res.redirect_url;
-                    })
+                    if($("input[name=payment_chanel]:checked").val() && $("input[name=payment_method]:checked").val()){
+                        $.ajax({
+                            url: "{{url('cart-payment')}}",
+                            type: 'POST',
+                            data: {
+                                type: $("input[name=payment_method]:checked").val(),
+                                va_chanel:  $("input[name=payment_chanel]:checked").val()
+                            }
+                        }).done(function(res, xhr, meta){
+                            window.location = res.redirect_url;
+                        })
+                    }else{
+                        alert('Silakan pilih metode pembayaran!')
+                        return false;
+                    }
+
                 })
 
                 $(document).on('click','#btn-next-zero',function(event){
