@@ -16,7 +16,6 @@
 
                     if($("input[name=payment_chanel]:checked").val() && $("input[name=payment_method]:checked").val()){
                         $('#btn-next').html('<div id="loading" class="mr-1"></div> Loading...');
-                        $('#btn-next').addClass('d-flex align-items-center');
                         $('#btn-next').attr('disabled', true);
                         $.ajax({
                             url: "{{url('cart-payment')}}",
@@ -27,7 +26,13 @@
                             }
                         }).done(function(res, xhr, meta){
                             window.location = res.redirect_url;
+                        }).fail(function(res, error) {
+                            alert('Proses gagal, silakan coba kembali.')
                         })
+                        .always(function() {
+                            $('#btn-next').html(`Lanjutkan Pembayaran <img class="ml-2" src="assets/img/svg/Arrow-right.svg" alt="">`);
+                            $('#btn-next').attr('disabled', false);
+                        });
                     }else{
                         alert('Silakan pilih metode pembayaran!')
                         return false;

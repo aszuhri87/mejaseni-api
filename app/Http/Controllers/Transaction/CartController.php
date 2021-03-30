@@ -275,7 +275,7 @@ class CartController extends Controller
                 });
 
                 return response([
-                    "message"   => 'Failed'
+                    "message"   => 'Failed',
                 ], 400);
             }
         } catch (Exception $e) {
