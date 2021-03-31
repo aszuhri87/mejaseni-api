@@ -112,6 +112,10 @@ use App\Http\Controllers\Admin\Cms\CoachReviewController as CoachReviewControlle
 use App\Http\Controllers\Admin\Cms\BannerController as BannerController;
 use App\Http\Controllers\Admin\Cms\FunCreativeController as FunCreativeController;
 use App\Http\Controllers\Admin\Cms\ImageGaleryController as ImageGaleryController;
+use App\Http\Controllers\Admin\Cms\ReasonController as ReasonController;
+use App\Http\Controllers\Admin\Cms\StoreBannerController as StoreBannerController;
+
+
 
 
 
@@ -136,6 +140,8 @@ use App\Http\Controllers\Cms\EventDetailController as EventDetailController;
 use App\Http\Controllers\Cms\NewsListController as NewsListController;
 use App\Http\Controllers\Cms\NewsDetailController as NewsDetailController;
 use App\Http\Controllers\Cms\GaleryController as GaleryDetailController;
+use App\Http\Controllers\Cms\VideoCourseController as VideoCourseController;
+
 
 
 
@@ -174,12 +180,14 @@ Route::get('/master-lesson/{master_lesson_id}/guest-star', [ClassController::cla
 Route::get('/master-lesson/{master_lesson_id}/detail', [ClassController::class, 'get_master_lesson']);
 
 
-Route::get('/store', [StoreController::class, 'index']);
-Route::post('/store/search', [StoreController::class, 'search']);
+Route::get('/video-course', [VideoCourseController::class, 'index']);
+Route::post('/video-course/search', [VideoCourseController::class, 'search']);
 Route::get('/video-course/{video_course_id}/detail', [StoreDetailController::class, 'index']);
 Route::get('/video-course/videos/{id}', [StoreDetailController::class, 'get_videos']);
-Route::get('/classroom_category/{category_id}/sub_classroom_category', [StoreController::class, 'get_sub_category']);
-Route::get('/classroom_category/sub_classroom_category/{sub_category_id}/video-course', [StoreController::class, 'get_video_courses']);
+Route::get('/classroom_category/{category_id}/sub_classroom_category', [VideoCourseController::class, 'get_sub_category']);
+Route::get('/classroom_category/sub_classroom_category/{sub_category_id}/video-course', [VideoCourseController::class, 'get_video_courses']);
+
+Route::get('/store', [StoreController::class, 'index']);
 
 
 
@@ -588,6 +596,15 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::post('galery-home/dt', [ImageGaleryController::class, 'dt']);
             Route::post('galery-home/update/{id}', [ImageGaleryController::class, 'update']);
             Route::resource('galery-home', ImageGaleryController::class);
+
+            Route::post('reason/dt', [ReasonController::class, 'dt']);
+            Route::post('reason/update/{id}', [ReasonController::class, 'update']);
+            Route::resource('reason', ReasonController::class);
+
+            Route::post('store-banner/dt', [StoreBannerController::class, 'dt']);
+            Route::post('store-banner/update/{id}', [StoreBannerController::class, 'update']);
+            Route::resource('store-banner', StoreBannerController::class);
+            
 
 
 

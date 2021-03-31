@@ -1,7 +1,7 @@
 <script type="text/javascript">
     var Page = function() {
         var _componentPage = function(){
-            var init_table, init_privacy_policy, quill;
+            var init_table, init_privacy_policy, quill, privacy_policy_quill;
 
             $(document).ready(function() {
                 initTable();
@@ -281,11 +281,20 @@
                 $('#form-privacy-policy').submit(function(event){
                     event.preventDefault();
 
+                    let description = privacy_policy_quill.container.firstChild.innerHTML;
+                    let json_description = JSON.stringify(privacy_policy_quill.getContents());
+                    let title = $("#form-privacy-policy").find('input[name="title"]').val()
+                    let data = {
+                        'title':title,
+                        'description':privacy_policy_quill.getText(),
+                        'quill_description':description,
+                        'json_description':json_description
+                    }
                     btn_loading('start')
                     $.ajax({
                         url: $(this).attr('action'),
                         type: $(this).attr('method'),
-                        data: $(this).serialize()
+                        data: data
                     })
                     .done(function(res, xhr, meta) {
                         toastr.success(res.message, 'Success');
@@ -303,6 +312,14 @@
             initQuil = () => {
                 var Delta = Quill.import('delta');
                 quill = new Quill('#kt_quil_2', {
+                    modules: {
+                        toolbar: true
+                    },
+                    placeholder: 'Type your text here...',
+                    theme: 'snow'
+                });
+
+                privacy_policy_quill = new Quill('#policy-privacy-quil', {
                     modules: {
                         toolbar: true
                     },

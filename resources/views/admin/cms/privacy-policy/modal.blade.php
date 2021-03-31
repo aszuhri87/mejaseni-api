@@ -61,7 +61,7 @@
 
 
 <div class="modal" id="modal-privacy-policy" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <form id="form-privacy-policy" autocomplete="off">
                 <div class="modal-header">
@@ -83,7 +83,7 @@
                             Keterangan
                             <span class="text-danger">*</span>
                         </label>
-                        <textarea required name="description" class="form-control" placeholder="Keterangan" rows="8"></textarea>
+                        <div id="policy-privacy-quil" style="min-height: 325px"></div>
                     </div>
                 </div>
                 <div class="modal-footer">

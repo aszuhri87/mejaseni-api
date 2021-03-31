@@ -38,7 +38,7 @@ class AboutController extends Controller
             ])
             ->get();
 
-        $programs = DB::table('programs')
+        $reasons = DB::table('reasons')
             ->select([
                 'name',
                 'description',
@@ -81,7 +81,7 @@ class AboutController extends Controller
     		"company" => $company, 
     		"branchs" => $branchs,
     		"teams" => $teams,
-    		"programs" => $programs,
+    		"reasons" => $reasons,
             "working_hours" => $working_hours,
             "galeries" => $galeries,
             "social_medias" => $social_medias

@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\Uuid;
 
-class PrivacyPolicyItem extends Model
+
+class Reason extends Model
 {
     use HasFactory, Uuid, SoftDeletes;
 
@@ -16,11 +17,9 @@ class PrivacyPolicyItem extends Model
     public $keyType = 'string';
 
     protected $fillable = [
-        'title',
+        'name',
         'description',
-        'privacy_policy_id',
-        'quill_description',
-        'json_description'
+        'image',
     ];
 
     protected $dates = ['deleted_at'];

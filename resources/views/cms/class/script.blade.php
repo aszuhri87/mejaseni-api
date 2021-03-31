@@ -109,11 +109,11 @@
             $(document).ready(function () {
 
                 @if(!$regular_classrooms->isEmpty())
-                    splide();
+                splide();
                 @endif
 
                 @if(!$classroom_categories->isEmpty())
-                    splideCategory()
+                splideCategory()
                 @endif
 
                 AOS.init();
@@ -157,13 +157,14 @@
                     $(this).addClass('class-category-selected');
                     let package = $('.package.active').data('id')
                     let selected_category = $('.class-category-selected').data('id')
-                    let selected_sub_category = $('.btn-tertiary.active').data('id')
+                    let selected_sub_category = undefined
                     getPackage(selected_category, selected_sub_category, package)
 
                     event.preventDefault()
                 })
 
                 initSubCategory()
+                initReadMore()
             });
 
             var initSubCategory = ()=>{
@@ -177,6 +178,16 @@
                     getPackage(selected_category, selected_sub_category, package)
                     event.preventDefault()
                 })
+            }
+
+            var initReadMore = ()=>{
+                $('.readmore').readmore({
+                  speed: 20,
+                  moreLink: '<a  class="font-weight-bold">Selanjutnya...</a>',
+                  lessLink: '<a  class="font-weight-bold">Tutup</a>',
+                  collapsedHeight: 150,
+                });
+
             }
 
 
@@ -195,22 +206,23 @@
                         $("#classroom-content").html(res.data.classroom_review_html)
                         TabDetailListener()
                         splide()
+                        initReadMore()
                     }else{
                         $("#class-content").html(`
                             <div class="col-12 pr-0 pr-lg-4 column-center">
-                                <img style="width: 200px;" src="/cms/assets/img/svg/empty-store.svg" alt="">
-                                <h4 class="mt-3 text-center">Wah, Class belum tersedia</h4>
+                            <img style="width: 200px;" src="/cms/assets/img/svg/empty-store.svg" alt="">
+                            <h4 class="mt-3 text-center">Wah, Class belum tersedia</h4>
                             </div>`)
 
                         $("#classroom-content").html(`
-                                <div class="mb-5 empty-store">
-                                      <div class="row my-5 py-5">
-                                          <div class="col-12 pr-0 pr-lg-4 column-center">
-                                              <img style="width: 200px;" src="/cms/assets/img/svg/empty-store.svg" alt="">
-                                              <h4 class="mt-3 text-center">Wah, video course yang kamu cari <br />belum dibuat nih</h4>
-                                          </div>
-                                      </div>
-                                  </div>`)
+                            <div class="mb-5 empty-store">
+                            <div class="row my-5 py-5">
+                            <div class="col-12 pr-0 pr-lg-4 column-center">
+                            <img style="width: 200px;" src="/cms/assets/img/svg/empty-store.svg" alt="">
+                            <h4 class="mt-3 text-center">Wah, video course yang kamu cari <br />belum dibuat nih</h4>
+                            </div>
+                            </div>
+                            </div>`)
                     }
                 })
                 .fail(function(res, error) {
@@ -230,6 +242,7 @@
                     splide_class.destroy()
                     $("#description").html(res.data.html)
                     splide()
+                    initReadMore()
                 })
                 .fail(function(res, error) {
                     toastr.error(res.responseJSON.message, 'Failed')
@@ -254,8 +267,8 @@
                     toastr.error(res.responseJSON.message, 'Failed')
                 })
                 .always(function() {
-                   hideLoader()
-                });
+                 hideLoader()
+             });
             }
 
             var getTools = (classroom_id)=>{
@@ -273,8 +286,8 @@
                     toastr.error(res.responseJSON.message, 'Failed')
                 })
                 .always(function() {
-                   hideLoader()
-                });
+                 hideLoader()
+             });
             }
 
             var getGuests = (master_lession_id)=>{

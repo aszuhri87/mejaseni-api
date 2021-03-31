@@ -409,6 +409,12 @@ class BaseMenu extends Controller
                         'permission' => 'cms'
                     ],
                     [
+                        'key' => 'reason',
+                        'title' => 'Reason',
+                        'url' => 'admin/cms/reason',
+                        'permission' => 'cms'
+                    ],
+                    [
                         'key' => 'team',
                         'title' => 'Team',
                         'url' => 'admin/cms/team',
@@ -418,6 +424,12 @@ class BaseMenu extends Controller
                         'key' => 'social-media',
                         'title' => 'Social Media',
                         'url' => 'admin/cms/social-media',
+                        'permission' => 'cms'
+                    ],
+                    [
+                        'key' => 'store-banner',
+                        'title' => 'Store Banner',
+                        'url' => 'admin/cms/store-banner',
                         'permission' => 'cms'
                     ],
                     [

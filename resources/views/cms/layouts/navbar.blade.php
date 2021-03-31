@@ -19,7 +19,10 @@
       <li class="nav-item @if($segment1 == 'class'){{'active'}}@endif">
         <a class="nav-link" href="{{ url('class') }}">Class</a>
       </li>
-      <li class="nav-item @if($segment1 == 'store' || $segment1 == 'video-course'){{'active'}}@endif">
+      <li class="nav-item @if($segment1 == 'video-course'){{'active'}}@endif">
+        <a class="nav-link" href="{{ url('video-course') }}">Video Tutorial</a>
+      </li>
+      <li class="nav-item @if($segment1 == 'store'){{'active'}}@endif">
         <a class="nav-link" href="{{ url('store') }}">E-Store</a>
       </li>
       <li class="nav-item @if($segment1 == 'news-event' || $segment1 == 'event-list' 

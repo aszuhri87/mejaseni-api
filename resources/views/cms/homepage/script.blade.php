@@ -34,10 +34,6 @@
             initEventSplit()
           @endif
 
-          @if(!$classroom_categories->isEmpty())
-            initMinatSplide()
-          @endif
-
 
           AOS.init();
         });

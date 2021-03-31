@@ -6,13 +6,13 @@ use App\Http\Controllers\BaseMenu;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Models\PrivacyPolicy;
-use App\Models\PrivacyPolicyItem;
+use App\Models\Reason;
 
 use DB;
 use DataTables;
+use Storage;
 
-class PrivacyPolicyController extends BaseMenu
+class ReasonController extends BaseMenu
 {
     /**
      * Display a listing of the resource.
@@ -26,12 +26,12 @@ class PrivacyPolicyController extends BaseMenu
                 'title' => 'CMS'
             ],
             [
-                'title' => 'Privacy Policy'
+                'title' => 'Reason'
             ],
         ];
 
-        return view('admin.cms.privacy-policy.index', [
-            'title' => 'Privacy Policy',
+        return view('admin.cms.reason.index', [
+            'title' => 'Reason',
             'navigation' => $navigation,
             'list_menu' => $this->menu_admin(),
         ]);
@@ -39,28 +39,14 @@ class PrivacyPolicyController extends BaseMenu
 
     public function dt()
     {
-        $data = DB::table('privacy_policies')
+        $path = Storage::disk('s3')->url('/');
+        $data = DB::table('reasons')
             ->select([
-                'privacy_policies.*',
+                'reasons.*',
+                DB::raw("CONCAT('{$path}',image) as image_url"),
             ])
             ->whereNull([
-                'privacy_policies.deleted_at'
-            ])
-            ->get();
-
-        return DataTables::of($data)
-            ->addIndexColumn()
-            ->make(true);
-    }
-
-    public function dt_item()
-    {
-        $data = DB::table('privacy_policy_items')
-            ->select([
-                'privacy_policy_items.*',
-            ])
-            ->whereNull([
-                'privacy_policy_items.deleted_at'
+                'reasons.deleted_at'
             ])
             ->get();
 
@@ -88,14 +74,22 @@ class PrivacyPolicyController extends BaseMenu
     public function store(Request $request)
     {
         try {
+            if(!isset($request->image)){
+                return response([
+                    "message"   => 'Gambar harus diisi!'
+                ], 400);
+            }
+
             $result = DB::transaction(function () use($request){
-                $privacy_policy = PrivacyPolicy::first();
-                $result = PrivacyPolicyItem::create([
-                    'title' => $request->title,
+                if(isset($request->image)){
+                    $file = $request->file('image');
+                    $path = Storage::disk('s3')->put('media', $file);
+                }
+
+                $result = Reason::create([
+                    'name' => $request->name,
                     'description' => $request->description,
-                    'privacy_policy_id' => $privacy_policy->id,
-                    'quill_description' => $request->quill_description,
-                    'json_description' => $request->json_description,
+                    'image' => $path
                 ]);
 
                 return $result;
@@ -146,43 +140,18 @@ class PrivacyPolicyController extends BaseMenu
     {
         try {
             $result = DB::transaction(function () use($request, $id){
-                $result = PrivacyPolicy::find($id)->update([
+                $result = Reason::find($id);
+                $path = null;
+
+                if(isset($request->image)){
+                    $file = $request->file('image');
+                    $path = Storage::disk('s3')->put('media', $file);
+                }
+
+                $result->update([
+                    'name' => $request->name,
                     'description' => $request->description,
-                    'quill_description' => $request->quill_description,
-                    'json_description' => $request->json_description,
-                ]);
-
-                return $result;
-            });
-
-            return response([
-                "data"      => $result,
-                "message"   => 'Successfully updated!'
-            ], 200);
-        } catch (Exception $e) {
-            throw new Exception($e);
-            return response([
-                "message"=> $e->getMessage(),
-            ]);
-        }
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update_item(Request $request, $id)
-    {
-        try {
-            $result = DB::transaction(function () use($request, $id){
-                $result = PrivacyPolicyItem::find($id)->update([
-                    'title' => $request->title,
-                    'description' => $request->description,
-                    'quill_description' => $request->quill_description,
-                    'json_description' => $request->json_description
+                    'image' => $path ? $path:$result->image
                 ]);
 
                 return $result;
@@ -209,7 +178,7 @@ class PrivacyPolicyController extends BaseMenu
     public function destroy($id)
     {
         try {
-            $result = PrivacyPolicyItem::find($id);
+            $result = Reason::find($id);
 
             DB::transaction(function () use($result){
                 $result->delete();
