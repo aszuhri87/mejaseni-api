@@ -15,6 +15,7 @@ class CreateImageGaleriesTable extends Migration
     {
         Schema::create('image_galeries', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->integer('number');
             $table->string('image');
             $table->timestamps();
             $table->softDeletes();

@@ -111,37 +111,26 @@
     </div>
 </section>
 
-@if(!$classroom_categories->isEmpty())
 <section id="class-category" class="pb-5">
-    <h1 class="color-white mt-3 mb-5 pt-md-0 pt-5 text-center">Temukan Minatmu</h1>
-    <div class="row mx-0">
-        <div class="col-md-12">
-            <div class="splide w-100" id="splide2">
-                <div class="splide__track">
-                    <ul class="splide__list">
-                        @foreach($classroom_categories as $classroom_category)
-                        <li class="splide__slide px-2 px-md-4 pb-5">
-                            <div class="content-embed__wrapper class-category__splide">
-                                <img src="{{ isset($classroom_category->image_url) ? $classroom_category->image_url:''}}"
-                                    alt="">
-                            </div>
-                            <div class="px-4">
-                                <div class="badge-left">
-                                    <h3 class="mt-3 mt-md-5 ml-2">
-                                        {{ isset($classroom_category->name) ? $classroom_category->name:''}}</h3>
-                                </div>
-                                <p class="my-3 desc__class-category">
-                                    {{ isset($classroom_category->description) ? $classroom_category->description:''}}</p>
-                            </div>
-                        </li>
-                        @endforeach
-                    </ul>
+    <h1 class="mt-3 mb-5 pt-md-0 pt-5 text-center text-white">Temukan Minatmu</h1>
+    <div class="row mx-0 justify-content-center">
+        <div class="col-xl-8 col-lg-10 col-md-10">
+            <div class="row justify-content-around">
+                @foreach($classroom_categories as $classroom_category)
+                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-4">
+                    <div class="d-flex align-items-center flex-column mb-3">
+                        <a href="{{ url('class') }}/{{ isset($classroom_category->name) ? $classroom_category->name:''}}">
+                            <img src="{{ isset($classroom_category->image_url) ? $classroom_category->image_url:''}}" style="width: 150px;">
+                        </a>
+                        <p class="">{{ isset($classroom_category->name) ? $classroom_category->name:''}}</p>
+                    </div>
                 </div>
+                @endforeach
             </div>
         </div>
     </div>
 </section>
-@endif
+
 
 <section id="program-package">
     <div class="row mx-0 my-5 pb-5 pb-md-0 pb-lg-3 pb-xl-5">
@@ -155,7 +144,7 @@
                 <div class="badge-left">
                     <h3 class="mt-3 ml-2">{{ $program->name ? $program->name:'' }}</h3>
                 </div>
-                <p class="my-3 pt-1">{{ $program->description ? $program->description:'' }}</p>
+                <p class="my-3 pt-1 text-justify">{{ $program->description ? $program->description:'' }}</p>
             </div>
         </div>
         @endforeach
@@ -166,7 +155,7 @@
     <div class="row mx-0 d-flex">
         <div class="col-xl-4 col-12 order-md-1 order-2 my-5 pt-4 pt-md-0 pb-2 pb-md-5">
             <h1>Kembangkan Bakatmu</h1>
-            <p class="pt-4 px-md-0 px-3 desc__professional-coach">Lorem ipsum dolor sit amet, consectetur adipisicing
+            <p class="pt-4 px-md-0 px-3 desc__professional-coach text-justify">Lorem ipsum dolor sit amet, consectetur adipisicing
                 elit.
                 Ea nobis nostrum sit rem! Inventore
                 quia distinctio fugiat rerum dolor cumque.</p>
@@ -186,7 +175,7 @@
                         <li class="splide__slide px-3">
                             <div class="coach-featured__wrapper">
                                 <div class="img-shape">
-                                    <a href="#">
+                                    <a href="{{isset($coach->url) ? $coach->url : 'javascript:void(0)'}}" @if(isset($coach->url))target="_blank" @endif>
                                         <img
                                             src="{{ $coach->image_url ? $coach->image_url :'/assets/cms/assets/img/coach.png' }}">
                                     </a>
@@ -214,5 +203,6 @@
 </section>
 @endsection
 @push('script')
+<script src="https://cdn.lordicon.com/libs/frhvbuzj/lord-icon-2.0.2.js"></script>
 @include('cms.homepage.script')
 @endpush

@@ -123,7 +123,10 @@
                 "title": "Data Transaction Coach",
                 "expanded": true,
                 "folder": false,
-                "crud": true
+                "crud": true,
+                "other":{
+                    "managerial": "Managerial"
+                }
             },
             {
                 "key": "data_transaction_student",

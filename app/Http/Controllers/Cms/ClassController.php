@@ -519,7 +519,7 @@ class ClassController extends Controller
     public function _get_master_lesson_description_html($master_lesson)
     {
         $html = '<div class="desc__class-tab my-4">
-                    <p>'. (isset($master_lesson->description) ? $master_lesson->description:"") .'</p>
+                    <p class="text-justify readmore">'. (isset($master_lesson->description) ? $master_lesson->description:"") .'</p>
                 </div>
                 <div class="row master-lesson__details">
                     <div class="col-6 d-flex flex-column">
@@ -547,7 +547,7 @@ class ClassController extends Controller
     {
         $html = '<div class="content-tab-detail" style="">
                     <div class="desc__class-tab my-4">
-                      <p>
+                      <p class="text-justify readmore">
                         '. (isset($classroom->description) ? $classroom->description:"") .'
                       </p>
                     </div>
@@ -703,7 +703,7 @@ class ClassController extends Controller
                         <div id="description">
                             <div class="content-tab-detail" style="">
                                 <div class="desc__class-tab my-4">
-                                  <p>
+                                  <p class="text-justify readmore">
                                     '. (isset($classroom->description) ? $classroom->description:"") .'
                                   </p>
                                 </div>
@@ -776,7 +776,7 @@ class ClassController extends Controller
                         </ul>
                         <div id="description">
                             <div class="desc__class-tab my-4">
-                                <p>'.(isset($master_lesson->description) ? $master_lesson->description:"").'</p>
+                                <p class="text-justify readmore">'.(isset($master_lesson->description) ? $master_lesson->description:"").'</p>
                             </div>
                             <div class="row master-lesson__details">
                                 <div class="col-6 d-flex flex-column">
@@ -829,7 +829,7 @@ class ClassController extends Controller
                                       <div class="badge-left">
                                         <h3 class="mt-3 ml-2">'.$classroom->name.'</h3>
                                       </div>
-                                      <p class="my-3 desc__slider-content">'.$classroom->description.'</p>
+                                      <p class="my-3 desc__slider-content text-justify">'.$classroom->description.'</p>
                                     </div>
                                   </div>
                                 </li>';

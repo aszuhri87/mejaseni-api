@@ -28,9 +28,12 @@ class PrivacyPolicyController extends Controller
                     ->select([
                         'title',
                         'description',
+                        'quill_description',
+                        'json_description'
                     ])
                     ->where('privacy_policy_id',$privacy_policy->id)
                     ->whereNull('deleted_at')
+                    ->orderBy('title')
                     ->get();
         }
 

@@ -1,6 +1,37 @@
 @extends('cms.transaction.layouts.app')
 
 @section('content')
+<style>
+#loading {
+    display: inline-block;
+    width: 17px;
+    height: 17px;
+    border: 3px solid rgba(255,255,255,.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+    -webkit-animation: spin 1s ease-in-out infinite;
+}
+
+.my-spinner-loading {
+    padding-top: 10px;
+    display: inline-block;
+    width: 17px;
+    height: 17px;
+    border: 3px solid #edc0ff;
+    border-radius: 50%;
+    border-top-color: #7F16A7;
+    animation: spin 1s ease-in-out infinite;
+    -webkit-animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { -webkit-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+    to { -webkit-transform: rotate(360deg); }
+}
+</style>
 <div class="border-line"></div>
 <div class="row pt-5 pb-4">
     <div class="col-lg-4 text-center text-md-left">
@@ -10,9 +41,11 @@
         <div class="payment-option row-center-start">
             <form class="form">
                 <div class="plan d-flex flex-row flex-wrap">
+                    @if (config('doku.cc_payment'))
                     <input type="radio" class="r-input" name="payment_method" id="credit-card" value="cc" checked>
                     <label class="mr-3" for="credit-card">Kartu Kredit</label>
-                    <input type="radio" class="r-input" name="payment_method" id="virtual-account" value="va">
+                    @endif
+                    <input type="radio" class="r-input" name="payment_method" id="virtual-account" value="va" @if(!config('doku.cc_payment')) {{'checked'}} @endif>
                     <label class="mr-3" for="virtual-account">Virtual Account</label>
                 </div>
             </form>
@@ -21,7 +54,7 @@
 </div>
 <div class="border-line"></div>
 
-<div class="list-bank-va" style="display: none;">
+<div class="list-bank-va" @if(config('doku.cc_payment')) style="display: none;" @endif>
     <div class="row pt-5 pb-4">
         <div class="col-lg-4 text-center text-md-left">
             <h4>Pilih Bank</h4>
@@ -29,6 +62,7 @@
         <div class="col-lg-8">
             <div class="payment-option row-center-start">
                 <form class="form column-center-start">
+                    @if (config('doku.bca_payment'))
                     <div class="plan row-center-start my-2">
                         <div class="payment-method-item__img">
                             <img src="assets/img/bca.png" alt="">
@@ -37,6 +71,7 @@
                             value="bca-virtual-account">
                         <label class="mr-0 mr-md-3 mt-2 mt-md-0" for="bca-virtual-account">Bank BCA</label>
                     </div>
+                    @endif
                     <div class="plan row-center-start my-2">
                         <div class="payment-method-item__img">
                             <img src="assets/img/bank_mandiri.png" alt="">

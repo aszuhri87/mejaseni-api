@@ -170,6 +170,7 @@ class PermissionAdminSeeder extends Seeder
                 'reporting_transaction_student_delete',
                 'reporting_transaction_student_print',
                 'cms',
+                'managerial'
             ];
 
             foreach ($permissions as $key => $permission) {

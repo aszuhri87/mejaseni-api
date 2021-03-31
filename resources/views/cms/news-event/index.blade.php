@@ -26,7 +26,7 @@
                                 </a>
                             </div>
                             <div class="pl-3 pt-3">
-                                <p class="mb-3">{{ isset($event->description) ? $event->description:''}}</p>
+                                <p class="mb-3 text-justify">{{ isset($event->description) ? $event->description:''}}</p>
                                 <a class="link link--arrowed" href="{{ url('event') }}/{{ $event->id}}/detail">Selengkapnya<svg class="arrow-icon ml-1"
                                         xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
                                         <g fill="none" stroke="#7F16A7" stroke-width="1.5" stroke-linejoin="round"
@@ -72,7 +72,7 @@
                                 <h3 class="ml-3">{{ isset($new->title) ? $new->title:''}}</h3>
                             </div>
                             <div class="pl-3 pt-3">
-                                <p class="mb-3">{{ isset($new->description) ? $new->description:''}}</p>
+                                <p class="mb-3 text-justify">{{ isset($new->description) ? $new->description:''}}</p>
                                 <a class="link link--arrowed" href="{{ url('news') }}/{{$new->id}}/detail">Selengkapnya<svg class="arrow-icon ml-1"
                                         xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
                                         <g fill="none" stroke="#7F16A7" stroke-width="1.5" stroke-linejoin="round"

@@ -12,6 +12,13 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label>
+                            Number
+                            <span class="text-danger">*</span>
+                        </label>
+                        <input required type="number" min="1" name="number" class="form-control" placeholder="Number"/>
+                    </div>
+                    <div class="form-group">
+                        <label>
                             Image
                             <span class="text-danger">*</span>
                         </label>

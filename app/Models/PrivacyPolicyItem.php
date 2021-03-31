@@ -18,7 +18,9 @@ class PrivacyPolicyItem extends Model
     protected $fillable = [
         'title',
         'description',
-        'privacy_policy_id'
+        'privacy_policy_id',
+        'quill_description',
+        'json_description'
     ];
 
     protected $dates = ['deleted_at'];

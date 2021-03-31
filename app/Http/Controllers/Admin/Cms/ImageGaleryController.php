@@ -76,6 +76,14 @@ class ImageGaleryController extends BaseMenu
     {
         try {
 
+            $is_exist = ImageGalery::where('number',$request->number)->first();
+
+            if($is_exist){
+                return response([
+                    "message"   => 'Data sudah tersedia'
+                ], 400);
+            }
+
             if(!isset($request->image)){
                 return response([
                     "message"   => 'Gambar harus diisi!'
@@ -89,7 +97,8 @@ class ImageGaleryController extends BaseMenu
                 }
 
                 $result = ImageGalery::create([
-                    'image' => $path
+                    'image' => $path,
+                    'number' => $request->number
                 ]);
 
                 return $result;
@@ -149,7 +158,8 @@ class ImageGaleryController extends BaseMenu
                 }
 
                 $result->update([
-                    'image' => $path ? $path:$result->image
+                    'image' => $path ? $path:$result->image,
+                    'number' => $request->number
                 ]);
 
                 return $result;

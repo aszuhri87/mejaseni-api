@@ -22,6 +22,7 @@
                     columns: [
                         { data: 'DT_RowIndex' },
                         { data: 'image_url' },
+                        { data: 'number' },
                         { defaultContent: '' }
                         ],
                     columnDefs: [
@@ -74,7 +75,7 @@
                             }
                         },
                     ],
-                    order: [[1, 'asc']],
+                    order: [[2, 'asc']],
                     searching: true,
                     paging:true,
                     lengthChange:false,
@@ -104,6 +105,7 @@
                     $('#form-galery-home').attr('action','{{url('admin/cms/galery-home')}}');
                     $('#form-galery-home').attr('method','POST');
 
+                    $('#form-galery-home').find('input[name="number"]').prop('readonly', false);
                     $('#image').html('<input type="file" name="image" class="dropify image"/>');
                     $('.dropify').dropify();
 
@@ -120,6 +122,8 @@
                     $('#form-galery-home').attr('action', $(this).attr('href'));
                     $('#form-galery-home').attr('method','POST');
 
+
+                    $('#form-galery-home').find('input[name="number"]').val(data.number).prop('readonly', true)
                     $('#image').empty();
 
                     if(data.image_url){

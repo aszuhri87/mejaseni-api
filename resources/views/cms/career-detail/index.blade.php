@@ -36,7 +36,7 @@
                     <h4>Job Description</h4>
                     <ul class="mt-3 mb-4 pl-4 pl-md-5">
                         @foreach($job_descriptions as $job_description)
-                        <li>{{ isset($job_description->description) ? $job_description->description:'' }}</li>
+                        <li class="text-justify">{{ isset($job_description->description) ? $job_description->description:'' }}</li>
                         @endforeach
                     </ul>
                     @endif
@@ -45,7 +45,7 @@
                     <h4 class="mt-5">Requirements</h4>
                     <ul class="mt-3 pl-5">
                         @foreach($job_requirements as $job_requirement)
-                        <li>{{ isset($job_requirement->description) ? $job_requirement->description:'' }}</li>
+                        <li class="text-justify">{{ isset($job_requirement->description) ? $job_requirement->description:'' }}</li>
                         @endforeach
                     </ul>
                     @endif

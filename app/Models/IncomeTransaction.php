@@ -31,7 +31,8 @@ class IncomeTransaction extends Model
         'image',
         'bank',
         'bank_number',
-        'name_account'
+        'name_account',
+        'approved',
     ];
 
     protected $dates = ['deleted_at'];

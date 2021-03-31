@@ -93,7 +93,9 @@ class PrivacyPolicyController extends BaseMenu
                 $result = PrivacyPolicyItem::create([
                     'title' => $request->title,
                     'description' => $request->description,
-                    'privacy_policy_id' => $privacy_policy->id
+                    'privacy_policy_id' => $privacy_policy->id,
+                    'quill_description' => $request->quill_description,
+                    'json_description' => $request->json_description,
                 ]);
 
                 return $result;
@@ -146,6 +148,8 @@ class PrivacyPolicyController extends BaseMenu
             $result = DB::transaction(function () use($request, $id){
                 $result = PrivacyPolicy::find($id)->update([
                     'description' => $request->description,
+                    'quill_description' => $request->quill_description,
+                    'json_description' => $request->json_description,
                 ]);
 
                 return $result;
@@ -177,6 +181,8 @@ class PrivacyPolicyController extends BaseMenu
                 $result = PrivacyPolicyItem::find($id)->update([
                     'title' => $request->title,
                     'description' => $request->description,
+                    'quill_description' => $request->quill_description,
+                    'json_description' => $request->json_description
                 ]);
 
                 return $result;

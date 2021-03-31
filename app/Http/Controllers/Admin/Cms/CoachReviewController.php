@@ -47,9 +47,10 @@ class CoachReviewController extends BaseMenu
                 'coach_reviews.id',
                 DB::raw("CONCAT('{$path}',coaches.image) as image_url"),
             ])
-            ->leftJoin('coach_reviews','coach_reviews.coach_id','=','coaches.id')
+            ->rightJoin('coach_reviews','coach_reviews.coach_id','=','coaches.id')
             ->whereNull([
-                'coach_reviews.deleted_at'
+                'coach_reviews.deleted_at',
+                'coaches.deleted_at'
             ])
             ->get();
 

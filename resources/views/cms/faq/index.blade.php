@@ -46,7 +46,7 @@
                             </div>
                             <div id="collapseOne{{ $faq->id }}" class="panel-collapse collapse in" role="tabpanel"
                             aria-labelledby="headingOne">
-                                <div class="panel-body p-4 mt-3">
+                                <div class="panel-body p-4 mt-3 text-justify">
                                     <p>{{ $faq->description ? $faq->description:''}}</p>
                                 </div>
                             </div>

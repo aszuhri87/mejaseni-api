@@ -45,6 +45,50 @@
                         </span>
                     </div>
                 </div>
+                <div class="form-group ml-1">
+                    <div class="btn-group dropleft">
+                        <button class="btn btn-primary font-weight-bold dropdown-toggle py-3 px-5" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Filter
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-lg">
+                            <form class="p-5" id="form-filter">
+                                <div class="form-group">
+                                    <label>Status</label>
+                                    <select name="status" id="select-status" class="form-control">
+                                        <option value="">Select Status</option>
+                                        <option value="1">Waiting Approve</option>
+                                        <option value="2">Waiting Transfer</option>
+                                        <option value="3">Waiting Session</option>
+                                        <option value="4">Success</option>
+                                        <option value="5">Cancel</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Dari Tanggal</label>
+                                    <input type="text" id="input-date-from" class="form-control datepicker" style="width: 100%" readonly placeholder="Select date">
+                                </div>
+                                <div class="form-group">
+                                    <label>Sampai Tanggal</label>
+                                    <input type="text" id="input-date-to" class="form-control datepicker" style="width: 100%" readonly placeholder="Select date">
+                                </div>
+                                <div class="d-flex">
+                                    <button type="submit" id="btn-filter" style="width: 100%" class="btn btn-primary">Submit</button>
+                                    <button type="reset" id="btn-reset" style="width: 100%" class="btn btn-secondary ml-1">Reset</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group ml-1">
+                    <a class="btn btn-success font-weight-bold py-3 px-5" href="{{url('admin/transaction/coach/export/excel')}}">
+                        Excel
+                    </a>
+                </div>
+                {{-- <div class="form-group ml-1">
+                    <button class="btn btn-warning font-weight-bold py-3 px-5" type="button">
+                        Setting
+                    </button>
+                </div> --}}
             </div>
         </div>
         <table class="table table-separate table-head-custom mb-0 pb-0" width="100%" id="init-table">

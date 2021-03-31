@@ -6,7 +6,7 @@
         <div class="login-wrapper p-5">
           <img class="rounded-circle img-logged mb-3" src="{{ asset('cms/assets/img/logo.png') }}" alt="">
           <h1>Platform Pembelajaran Seni Pertama di Indonesia</h1>
-          <p class="mt-3">Mejaseni merupakan platform daring khusus kursus kesenian secara profesional. Setiap kursus di
+          <p class="mt-3 text-justify">Mejaseni merupakan platform daring khusus kursus kesenian secara profesional. Setiap kursus di
             Mejaseni didampingi oleh profesional ahli dan berpengalaman di bidangnya. Dengan metode pengajaran daring
             yang menyenangkan, praktis, dan tepat sasaran, maka kamu dipastikan mampu menguasai kemampuan berkarya baru
             sesuai bakat dan minatmu.</p>
@@ -28,7 +28,7 @@
                       <div class="badge-left">
                         <h3 class="mt-3 ml-2">{{ isset($galery->title) ? $galery->title:'' }}</h3>
                       </div>
-                      <p class="my-3 desc__slider-content">{{ isset($galery->description) ? $galery->description:'' }}</p>
+                      <p class="my-3 desc__slider-content text-justify">{{ isset($galery->description) ? $galery->description:'' }}</p>
                       <a href="{{ url('galery') }}/{{ $galery->id}}/detail">Selengkapnya ></a>
                     </div>
                   </div>
@@ -50,11 +50,11 @@
         <div class="row">
           <div class="col-lg-6 p-4">
             <h2 class="color-white">Visi</h2>
-            <p class="mt-3">{{ isset($company->vision) ? $company->vision : ''}}</p>
+            <p class="mt-3 text-justify" >{{ isset($company->vision) ? $company->vision : ''}}</p>
           </div>
           <div class="col-lg-6 p-4">
             <h2 class="color-white">Misi</h2>
-            <p class="mt-3">{{ isset($company->mission) ? $company->mission : ''}}</p>
+            <p class="mt-3 text-justify">{{ isset($company->mission) ? $company->mission : ''}}</p>
           </div>
         </div>
       </div>
@@ -66,14 +66,14 @@
       <div class="col-md-12 text-center my-5 pt-4 pt-md-0 pb-2 pb-md-5">
         <h1>Mengapa Harus Kami?</h1>
       </div>
-      @foreach($programs as $program)
+      @foreach($reasons as $reason)
         <div class="col-lg-3 mb-md-5 px-5 px-md-3 py-3 py-md-0">
           <div class="our-program__item p-5" data-aos="zoom-out" data-aos-delay="0">
-            <img class="img__program-thumbnail" src="{{ isset($program->image_url) ? $program->image_url:'' }}" alt="">
+            <img class="img__program-thumbnail" src="{{ isset($reason->image_url) ? $reason->image_url:'' }}" alt="">
             <div class="badge-left">
-              <h3 class="mt-3 ml-2">{{ isset($program->name) ? $program->name:'' }}</h3>
+              <h3 class="mt-3 ml-2">{{ isset($reason->name) ? $reason->name:'' }}</h3>
             </div>
-            <p class="my-3 pt-1">{{ isset($program->description) ? $program->description:'' }}</p>
+            <p class="my-3 pt-1 text-justify">{{ isset($reason->description) ? $reason->description:'' }}</p>
           </div>
         </div>
       @endforeach
@@ -98,7 +98,7 @@
                     <div class="col-lg-8 pl-4 pr-5 text-lg-left text-center">
                       <h1 class="mb-2 mt-lg-0 mt-5">{{ isset($team->name) ? $team->name:''}}</h1>
                       <h3>{{ isset($team->position) ? $team->position:''}}</h3>
-                      <p class="mt-3">{{ isset($team->description) ? $team->description:''}}</p>
+                      <p class="mt-3 text-justify">{{ isset($team->description) ? $team->description:''}}</p>
                     </div>
                   </div>
                 </li>
