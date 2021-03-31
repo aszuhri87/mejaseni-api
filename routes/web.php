@@ -435,9 +435,11 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::group(['middleware' => 'can:data_transaction'], function () {
             Route::group(['prefix' => 'transaction'], function () {
                 Route::group(['middleware' => 'can:data_transaction_coach'], function () {
+                    Route::get('coach/export/excel', [TransactionCoachController::class, 'export']);
                     Route::get('coach', [TransactionCoachController::class, 'index']);
                     Route::post('coach/dt', [TransactionCoachController::class, 'dt']);
                     Route::post('coach/confirm/{id}', [TransactionCoachController::class, 'confirm']);
+                    Route::post('coach/approve/{id}', [TransactionCoachController::class, 'approve']);
                 });
 
                 Route::group(['middleware' => 'can:data_transaction_student'], function () {
@@ -447,7 +449,6 @@ Route::group(['middleware' => ['auth-handling']], function () {
                 });
             });
         });
-
 
         Route::get('schedule/master-lesson/{id}', [ScheduleController::class, 'show_master_lesson']);
         Route::post('schedule/master-lesson/update/{id}', [ScheduleController::class, 'update_time_master_lesson']);

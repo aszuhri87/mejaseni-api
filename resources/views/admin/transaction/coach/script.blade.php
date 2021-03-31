@@ -7,9 +7,18 @@
                 initTable();
                 initAction();
                 formSubmit();
+
+                $('.dropdown-menu').on('click', function(event) {
+                    event.stopPropagation();
+                });
+
             });
 
-            const initTable = () => {
+            const initTable = (date_from, date_to, status) => {
+                if(init_table){
+                    init_table.clear();
+                }
+
                 init_table = $('#init-table').DataTable({
                     destroy: true,
                     processing: true,
@@ -18,6 +27,11 @@
                     ajax: {
                         type: 'POST',
                         url: "{{ url('admin/transaction/coach/dt') }}",
+                        data: {
+                            date_from: date_from,
+                            date_to: date_to,
+                            status: status
+                        }
                     },
                     columns: [
                         { data: 'DT_RowIndex' },
@@ -43,7 +57,7 @@
                                 return `
                                     <div class="d-flex flex-column font-weight-bold">
                                         <p class="mb-1 font-size-lg">${full.number}</p>
-                                        <span class="text-muted">${moment(data).format('DD MMMM YYYY')}</span>
+                                        <span class="text-muted">${moment(data).format('DD MMMM YYYY, H:m:s')}</span>
                                     </div>
                                 `;
                             }
@@ -86,22 +100,17 @@
                             targets: 5,
                             data:"status_text",
                             render: function(data, type, full, meta){
-                                if(data == 'Waiting'){
+                                if(full.status == 3){
                                     return `
                                         <div class="d-flex flex-column font-weight-bold">
-                                            <p class="mb-1 font-size-lg text-warning">${data}</p>
-                                        </div>
-                                    `;
-                                }else if(data == 'Success'){
-                                    return `
-                                        <div class="d-flex flex-column font-weight-bold">
-                                            <p class="mb-1 font-size-lg text-success">${data}</p>
+                                            <p class="mb-1 font-size-lg text-${full.status_color}">${data}</p>
+                                            <span class="text-muted">${moment(full.next_week).format('DD MMMM YYYY')}</span>
                                         </div>
                                     `;
                                 }else{
                                     return `
                                         <div class="d-flex flex-column font-weight-bold">
-                                            <p class="mb-1 font-size-lg text-danger">${data}</p>
+                                            <p class="mb-1 font-size-lg text-${full.status_color}">${data}</p>
                                         </div>
                                     `;
                                 }
@@ -133,16 +142,30 @@
                             render : function(data, type, full, meta) {
                                 if(full.status == 1){
                                     return `
-                                    @can('data_transaction_coach_update')
-                                        <a href="{{ url('/waiting-payment') }}/${data}" title="Konfirmasi" data-toogle="tooltip" class="btn btn-confirm btn-primary btn-sm">
-                                            Konfirmasi
-                                        </a>
-                                    @endcan
+                                        @can('data_transaction_coach_update')
+                                            <a href="" title="Approve" data-toogle="tooltip" class="btn btn-approve btn-${full.status_color} btn-sm">
+                                                Approve
+                                            </a>
+                                        @endcan
+                                    `;
+                                }else if(full.status == 2){
+                                    return `
+                                        @can('data_transaction_coach_update')
+                                            <a href="" title="Konfirmasi" data-toogle="tooltip" class="btn btn-confirm btn-${full.status_color} btn-sm">
+                                                Konfirmasi
+                                            </a>
+                                        @endcan
+                                    `;
+                                }else if(full.status == 3){
+                                    return `
+                                        <button class="btn btn-${full.status_color} btn-sm" disabled>
+                                            ${full.status_text}
+                                        </button>
                                     `;
                                 }else{
                                     return `
-                                        <button class="btn btn-success btn-sm" disabled>
-                                            Success
+                                        <button class="btn btn-${full.status_color} btn-sm" disabled>
+                                            ${full.status_text}
                                         </button>
                                     `;
                                 }
@@ -194,6 +217,50 @@
 
                     showModal('modal-confirm');
                 })
+
+                $(document).on('click','.btn-approve',function(event){
+                    event.preventDefault();
+
+                    var data = init_table.row($(this).parents('tr')).data();
+
+                    Swal.fire({
+                        title: 'Approve Transaction?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#7F16A7',
+                        confirmButtonText: 'Yes, Approve',
+                    }).then(function (result) {
+                        if (result.value) {
+                            $.ajax({
+                                url: "{{url('admin/transaction/coach/approve')}}/"+data.id,
+                                type: "POST",
+                            })
+                            .done(function(res, xhr, meta) {
+                                toastr.success(res.message, 'Success');
+                                init_table.draw(false);
+                            })
+                            .fail(function(res, error) {
+                                toastr.error(res.responseJSON.message, 'Failed')
+                            })
+                        }
+                    })
+
+                    $('.swal2-title').addClass('justify-content-center')
+                })
+
+                $('#form-filter').submit(function(event){
+                    event.preventDefault();
+
+                    initTable(
+                        $('#input-date-from').val(),
+                        $('#input-date-to').val(),
+                        $('#select-status').val(),
+                    );
+
+                    $('#form-export').find('input[name="status"]').val($('#select-status').val());
+                    $('#form-export').find('input[name="date_from"]').val($('#input-date-from').val());
+                    $('#form-export').find('input[name="date_to"]').val($('#input-date-to').val());
+                });
             },
             formSubmit = () => {
                 $('#form-confirm').submit(function(event){

@@ -20,7 +20,7 @@ class GalerySeeder extends Seeder
                     'title' => 'Galery - Mejaseni Virtual Festival 1',
                     'description' => 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Reprehenderit facere facilis consequuntur inventore velit suscipit distinctio quod iure, repellendus ad. Alias, rerum!',
                     'image' => "media/master-lesson__banner.jpg",
-                    
+
                 ],
                 [
                     'title' => 'Galery - Mejaseni Virtual Festival 2',

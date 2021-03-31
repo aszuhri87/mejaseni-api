@@ -55,6 +55,7 @@ class CartController extends Controller
                     DB::raw("CASE
                         WHEN master_lessons.id IS NOT NULL THEN 'Master Lesson'
                         WHEN events.id IS NOT NULL THEN 'Event'
+                        WHEN classrooms.package_type = 1 THEN 'Special Class'
                         ELSE 'Regular Class'
                     END as type"),
                 ])
@@ -169,6 +170,7 @@ class CartController extends Controller
                     DB::raw("CASE
                         WHEN master_lessons.id IS NOT NULL THEN 'Master Lesson'
                         WHEN events.id IS NOT NULL THEN 'Event'
+                        WHEN classrooms.package_type = 1 THEN 'Special Class'
                         ELSE 'Regular Class'
                     END as type"),
                 ])
@@ -311,6 +313,7 @@ class CartController extends Controller
                     DB::raw("CASE
                         WHEN master_lessons.id IS NOT NULL THEN 'Master Lesson'
                         WHEN events.id IS NOT NULL THEN 'Event'
+                        WHEN classrooms.package_type = 1 THEN 'Special Class'
                         ELSE 'Regular Class'
                     END as type"),
                 ])
