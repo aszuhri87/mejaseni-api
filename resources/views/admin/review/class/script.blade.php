@@ -86,7 +86,7 @@
                             className: "text-left",
                             data: "classroom_category_name",
                             render: function(data, type, full, meta){
-                                return `<strong>${data}</strong><br><span class="text-muted">${full.sub_classroom_category_name}</span>`;
+                                return `<strong>${data}</strong><br><span class="text-muted">${full.classroom_category_name}</span>`;
                             }
                         },
                         {

@@ -383,14 +383,14 @@
                     $('#last-meeting').html(subtraction);
                     $('#rating-classroom-id').val(classroom_id);
 
-                    if(subtraction == 0){
-                        if(is_rating){
-                            $('#rating-class').hide();
-                        }
-                        else{
-                            $('#rating-class').show();
-                        }
-                    }
+                    // if(subtraction == 0){
+                    //     if(is_rating){
+                    //         $('#rating-class').hide();
+                    //     }
+                    //     else{
+                    //         $('#rating-class').show();
+                    //     }
+                    // }
                 });
 
                 $(document).on('click','.btn-rating-class',function(event){
