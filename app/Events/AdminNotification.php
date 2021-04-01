@@ -10,6 +10,8 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class AdminNotification implements ShouldBroadcastNow
 {
@@ -44,8 +46,27 @@ class AdminNotification implements ShouldBroadcastNow
 
     public function broadcastWith()
     {
+        $this->email_notification($this->data);
+
         return [
             'data' => $this->data
         ];
+    }
+
+    public function email_notification($notification, $id = null)
+    {
+        $user = \Auth::guard('admin')->user();
+
+        try {
+            Mail::send('mail.notification', compact('notification'), function($message) use($user){
+                $message->to($user->email, $user->name)
+                    ->from('info@mejaseni.com', 'MEJASENI')
+                    ->subject('Mejaseni Notification');
+            });
+        } catch (\Exception $th) {
+            return false;
+        }
+
+        return true;
     }
 }
