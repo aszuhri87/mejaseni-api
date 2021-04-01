@@ -546,7 +546,10 @@ class DashboardController extends BaseMenu
                 ->leftJoinSub($session_video, 'session_videos', function ($join) {
                     $join->on('carts.session_video_id', '=', 'session_videos.id');
                 })
-                ->whereNotNull('carts.session_video_id');
+                ->whereNotNull([
+                    'carts.session_video_id',
+                    'session_videos.id'
+                ]);
 
             $transaction_detail = DB::table('transaction_details')
                 ->select([
@@ -570,6 +573,7 @@ class DashboardController extends BaseMenu
                     $join->on('transactions.id', '=', 'transaction_details.transaction_id');
                 })
                 ->where('transactions.student_id',Auth::guard('student')->user()->id)
+                ->whereNull('transactions.deleted_at')
                 ->get();
 
             if(!empty($request->filter_course)){

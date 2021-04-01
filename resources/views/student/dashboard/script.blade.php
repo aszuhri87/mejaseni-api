@@ -19,6 +19,8 @@
                 myCourse();
                 initAction();
                 studentBookingWeek();
+
+                $('#tour').trigger('click');
             });
 
             const initChart = () => {

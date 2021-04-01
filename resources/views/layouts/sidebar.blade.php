@@ -43,7 +43,7 @@
                                                 <ul class="menu-subnav">
                                                     @foreach ($children['children'] as $item)
                                                         @can($item['permission'])
-                                                        <li class="menu-item  @if($segment4 == $item['key']){{'menu-item-active'}}@endif" aria-haspopup="true">
+                                                        <li class="menu-item @if($segment4 == $item['key']){{'menu-item-active'}}@endif" aria-haspopup="true">
                                                             <a href="{{$item['url']}}" class="menu-link ">
                                                                 <i class="menu-bullet menu-bullet-dot">
                                                                     <span></span>
@@ -104,7 +104,7 @@
         <ul class="menu-nav ">
             @foreach ($list_menu as $menu)
                 @if (isset($menu['children']))
-                    <li class="menu-item  menu-item-submenu @if($segment2 == $menu['key']){{'menu-item-here menu-item-open'}}@endif" aria-haspopup="true" data-menu-toggle="hover">
+                    <li class="menu-item menu-item-submenu {{$menu['key']}} @if($segment2 == $menu['key']){{'menu-item-here menu-item-open'}}@endif" aria-haspopup="true" data-menu-toggle="hover">
                         <a href="javascript:;" class="menu-link menu-toggle">
                             {!!$menu['icon']!!}
                             <span class="menu-text">{{$menu['title']}}</span>
@@ -154,7 +154,7 @@
                         </div>
                     </li>
                 @else
-                    <li class="menu-item @if($segment2 == $menu['key']){{'menu-item-here menu-item-open'}}@endif" aria-haspopup="true">
+                    <li class="menu-item {{$menu['key']}} @if($segment2 == $menu['key']){{'menu-item-here menu-item-open'}}@endif" aria-haspopup="true">
                         <a href="{{$menu['url']}}" class="menu-link ">
                             {!!$menu['icon']!!}
                             <span class="menu-text">{{$menu['title']}}</span>

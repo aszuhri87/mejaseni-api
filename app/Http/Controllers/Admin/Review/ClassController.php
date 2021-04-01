@@ -200,48 +200,23 @@ class ClassController extends BaseMenu
             ->whereNotNull('transaction_details.cart_id')
             ->groupBy('carts.classroom_id');
 
-        // $classroom_feedback = DB::table('classroom_feedback')
-        //     ->select([
-        //         'classroom_feedback.classroom_id',
-        //         DB::raw('COUNT(classroom_feedback.classroom_id) as total_feedback'),
-        //         DB::raw('SUM(classroom_feedback.star) as total_star'),
-        //     ])
-        //     ->whereNull('classroom_feedback.deleted_at')
-        //     ->groupBy('classroom_feedback.classroom_id');
-
         $student_schedule = DB::table('student_schedules')
             ->select([
                 'student_schedules.session_id',
                 'session_feedback.student_schedule_id',
                 'session_feedback.star',
-                // DB::raw('COUNT(session_feedback.student_schedule_id) as total_feedback'),
-                // DB::raw('SUM(session_feedback.star) as total_star'),
             ])
             ->leftJoin('session_feedback','student_schedules.id','=','session_feedback.student_schedule_id')
             ->whereNull([
                 'student_schedules.deleted_at',
                 'session_feedback.deleted_at',
             ]);
-            // ->groupBy('student_schedules.session_id');
 
         $session = DB::table('sessions')
             ->select([
                 'sessions.classroom_id',
-                // 'student_schedules.total_feedback',
-                // 'student_schedules.total_star',
                 DB::raw('COUNT(student_schedules.student_schedule_id) as total_feedback'),
                 DB::raw('SUM(student_schedules.star) as total_star'),
-                // DB::raw("(
-                //     CASE
-                //         WHEN
-                //             student_schedules.total_feedback IS NOT NULL AND
-                //             student_schedules.total_star IS NOT NULL
-                //         THEN
-                //             ROUND(student_schedules.total_star/student_schedules.total_feedback)
-                //         ELSE
-                //             0
-                //     END
-                // ) as rating"),
             ])
             ->leftJoinSub($student_schedule, 'student_schedules', function ($join) {
                 $join->on('sessions.id', '=', 'student_schedules.session_id');
@@ -250,8 +225,6 @@ class ClassController extends BaseMenu
             ->groupBy([
                 'sessions.classroom_id',
             ]);
-
-        // dd($session->get());
 
         $data = DB::table('classrooms')
             ->select([
@@ -283,17 +256,6 @@ class ClassController extends BaseMenu
                             0
                     END
                 ) as total_order"),
-                // DB::raw("(
-                //     CASE
-                //         WHEN
-                //             sessions.total_feedback IS NOT NULL AND
-                //             sessions.total_star IS NOT NULL
-                //         THEN
-                //             ROUND(sessions.total_star/sessions.total_feedback)
-                //         ELSE
-                //             0
-                //     END
-                // ) as rating"),
                 DB::raw("(
                     CASE
                         WHEN
@@ -316,9 +278,6 @@ class ClassController extends BaseMenu
             ->leftJoinSub($cart, 'carts', function ($join) {
                 $join->on('classrooms.id', '=', 'carts.classroom_id');
             })
-            // ->leftJoinSub($classroom_feedback, 'classroom_feedback', function ($join) {
-            //     $join->on('classrooms.id', '=', 'classroom_feedback.classroom_id');
-            // })
             ->leftJoinSub($session, 'sessions', function ($join) {
                 $join->on('classrooms.id', '=', 'sessions.classroom_id');
             })
@@ -333,9 +292,6 @@ class ClassController extends BaseMenu
                     $query->where('classrooms.package_type',$request->package);
                 }
                 if(!empty($request->rating)){
-                    // $query->whereRaw("
-                    //     sessions.rating = $request->rating
-                    // ");
                     $query->whereRaw("
                         CASE
                             WHEN

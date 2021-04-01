@@ -7,12 +7,12 @@ trait SoftDeleteCascade
     protected static function bootSoftDeleteCascade()
     {
         static::deleting(function ($model) {
-            try {
-                $deletedAt = date('Y-m-d H:i:s');
-                $model->delete_func_loop($model, $deletedAt);
-            } catch (\Exception $e) {
-                abort(500, $e->getMessage());
-            }
+            // try {
+            //     $deletedAt = date('Y-m-d H:i:s');
+            //     $model->delete_func_loop($model, $deletedAt);
+            // } catch (\Exception $e) {
+            //     abort(500, $e->getMessage());
+            // }
         });
     }
 
