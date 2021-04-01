@@ -73,7 +73,8 @@ class NewPackageController extends BaseMenu
                 ->leftJoinSub($cart, 'carts', function ($join) {
                     $join->on('classrooms.id', '=', 'carts.classroom_id');
                 })
-                ->where('classrooms.deleted_at')
+                ->where('classrooms.is_discount', false)
+                ->whereNull('classrooms.deleted_at')
                 ->distinct('classrooms.id')
                 ->paginate(6);
 
@@ -103,6 +104,152 @@ class NewPackageController extends BaseMenu
                 $value->tools = $tools;
                 $value->coach = $coach;
             }
+
+            return response([
+                "status"    => 200,
+                "data"      => $result,
+                "message"   => 'Successfully saved!'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function get_special_offer()
+    {
+        try {
+            $path = Storage::disk('s3')->url('/');
+
+            $result = DB::table('discounts')
+                ->select([
+                    'discounts.id',
+                    'discounts.classroom_id',
+                    'discounts.discount',
+                    'classrooms.price',
+                    DB::raw("CONCAT('{$path}',classrooms.image) as image_url"),
+                    DB::raw("(classrooms.price::integer - (classrooms.price::integer * discounts.discount::integer)/100) AS price_discount"),
+                ])
+                ->leftJoin('classrooms','discounts.classroom_id','=','classrooms.id')
+                ->whereRaw("discounts.date_start::timestamp <= now()::timestamp")
+                ->whereRaw("discounts.date_end::timestamp >= now()::timestamp")
+                ->whereNull([
+                    'discounts.deleted_at',
+                    'classrooms.deleted_at'
+                ])
+                ->get();
+
+            return response([
+                "status"    => 200,
+                "data"      => $result,
+                "message"   => 'Successfully saved!'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function special_offer_detail($id)
+    {
+        try {
+            $path = Storage::disk('s3')->url('/');
+
+            $transaction_detail = DB::table('transaction_details')
+                ->select([
+                    'transaction_details.cart_id',
+                    'transaction_details.id',
+                ])
+                ->whereNull('transaction_details.deleted_at');
+
+            $cart = DB::table('carts')
+                ->select([
+                    'carts.classroom_id',
+                    'transaction_details.id as transaction_detail_id',
+                ])
+                ->leftJoinSub($transaction_detail, 'transaction_details', function ($join) {
+                    $join->on('carts.id', '=', 'transaction_details.cart_id');
+                })
+                ->where([
+                    'carts.student_id' => Auth::guard('student')->user()->id
+                ])
+                ->whereNull('carts.deleted_at');
+
+            $classroom = DB::table('classrooms')
+                ->select([
+                    'classrooms.id',
+                    'classrooms.name as classroom_name',
+                    'classrooms.description',
+                    'classrooms.image',
+                    'classrooms.price',
+                    'classrooms.session_total',
+                    'classrooms.session_duration',
+                    DB::raw("CONCAT('{$path}',classrooms.image) as image_url"),
+                    DB::raw("(
+                        CASE
+                            WHEN carts.transaction_detail_id IS NOT NULL OR carts.classroom_id IS NOT NULL THEN
+                                1
+                            ELSE
+                                0
+                        END
+                    )AS is_buy")
+                ])
+                ->leftJoinSub($cart, 'carts', function ($join) {
+                    $join->on('classrooms.id', '=', 'carts.classroom_id');
+                })
+                ->whereNull('classrooms.deleted_at')
+                ->distinct('classrooms.id');
+
+            $result = DB::table('discounts')
+                ->select([
+                    'discounts.id',
+                    'discounts.classroom_id',
+                    'discounts.discount',
+                    'classrooms.classroom_name',
+                    'classrooms.description',
+                    'classrooms.image',
+                    'classrooms.price',
+                    'classrooms.session_total',
+                    'classrooms.session_duration',
+                    'classrooms.image_url',
+                    'classrooms.is_buy',
+                    DB::raw("(classrooms.price::integer - (classrooms.price::integer * discounts.discount::integer)/100) AS price_discount"),
+                ])
+                ->leftJoinSub($classroom, 'classrooms', function ($join) {
+                    $join->on('discounts.classroom_id', '=', 'classrooms.id');
+                })
+                ->where('discounts.id', $id)
+                ->whereNull('discounts.deleted_at')
+                ->first();
+
+            $tools = DB::table('classroom_tools')
+                ->select([
+                    'tools.text as tool_name'
+                ])
+                ->where('classroom_id',$result->classroom_id)
+                ->leftJoin('tools','classroom_tools.tool_id','=','tools.id')
+                ->get();
+
+            $coach = DB::table('coach_classrooms')
+                ->select([
+                    'coaches.name as coach_name',
+                    'coaches.id as coach_id',
+                    DB::raw("CONCAT('{$path}',coaches.image) as coach_image_url"),
+                ])
+                ->leftJoin('coaches','coach_classrooms.coach_id','=','coaches.id')
+                ->where('classroom_id',$result->classroom_id)
+                ->whereNull([
+                    'coach_classrooms.deleted_at',
+                    'coaches.deleted_at',
+                ])
+                ->get();
+
+            $result->tools = $tools;
+            $result->coach = $coach;
 
             return response([
                 "status"    => 200,

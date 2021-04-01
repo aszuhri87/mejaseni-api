@@ -151,16 +151,17 @@ class CoachController extends BaseMenu
                     ];
                 }
                 $coach->update($update);
-
-                foreach ($request->init_sosmed_coach as $key => $value) {
-                    CoachSosmed::UpdateOrCreate(
-                        ['id'=>$value],
-                        [
-                            'sosmed_id' => $request->sosmed[$key],
-                            'coach_id' => $id,
-                            'url' => $request->url_sosmed[$key]
-                        ]
-                    );
+                if(!empty($request->init_sosmed_coach)){
+                    foreach ($request->init_sosmed_coach as $key => $value) {
+                        CoachSosmed::UpdateOrCreate(
+                            ['id'=>$value],
+                            [
+                                'sosmed_id' => $request->sosmed[$key],
+                                'coach_id' => $id,
+                                'url' => $request->url_sosmed[$key]
+                            ]
+                        );
+                    }
                 }
                 return $coach;
             });
@@ -318,18 +319,18 @@ class CoachController extends BaseMenu
             // return $data->{'sub_classroom_categories'}()->where('deleted_at', $data->deleted_at)->withTrashed()->update([
             //     'deleted_at' => null
             // ]);
-            
+
             $result = CoachClassroom::where('coach_id', $id)
             ->whereNotIn('classroom_id',$request->select ? $request->select : [])
             ->delete();
-            
+
             if(!empty($request->select)){
                 foreach ($request->select as $key => $value) {
                     $coach_classroom = DB::table('coach_classrooms')
                         ->where('coach_id',$id)
                         ->where('classroom_id',$value)
                         ->first();
-                    
+
                     if(!empty($coach_classroom) && $coach_classroom->deleted_at != null){
                         $coach_schedule = DB::table('coach_schedules')
                             ->where('coach_schedules.coach_classroom_id',$coach_classroom->id)
@@ -372,7 +373,7 @@ class CoachController extends BaseMenu
                         ]);
                     }
                 }
-                    
+
             }
             return response([
                 "status"=>200,

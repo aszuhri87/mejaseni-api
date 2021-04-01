@@ -223,9 +223,9 @@
                             data:"status_checkin",
                             render:function(data, type, full, meta){
                                 if(data){
-                                    return `<span class="label label-success label-pill label-inline mr-2">Hadir</span>`
+                                    return `<span class="text-success font-weight-bolder">Hadir</span>`
                                 }else{
-                                    return `<span class="label label-danger label-pill label-inline mr-2">Tidak Hadir</span>`
+                                    return `<span class="text-danger font-weight-bolder">Tidak Hadir</span>`
                                 }
                             }
                         },
