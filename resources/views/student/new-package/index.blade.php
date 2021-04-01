@@ -19,6 +19,9 @@
 <div id="category" class="d-flex align-content-start flex-wrap">
 
 </div>
+<div id="special-offer" class="mt-5 mb-5">
+
+</div>
 <h5 class="mt-5 mb-5">Class Conference Package</h5>
 <div class="row" id="conference-package">
 
@@ -26,7 +29,7 @@
 <div class="row">
     <div class="col-12 d-flex justify-content-center">
         <div class="d-flex flex-wrap py-2 mr-3" id="package-paginate">
-            
+
         </div>
     </div>
 </div>

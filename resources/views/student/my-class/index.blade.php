@@ -11,8 +11,8 @@
     <div class="card-body">
         <div class="row">
             <div class="col-lg-5 text-left d-flex" style="padding-right: 0 !important">
-                <div class="ml-5">
-                    <img src="{{$data->image_url}}" width="100px" height="100px" class="rounded">
+                <div>
+                    <img src="{{$data->image_url}}" width="150px" height="150px" class="rounded">
                 </div>
                 <div class="ml-5">
                     <p class="font-weight-bold font-size-h3" style="margin-bottom: 0 !important">{{$data->name}}</p>
@@ -64,6 +64,7 @@
                             </div>
                         </div>
                     </div>
+                    <a href="{{url('student/schedule')}}" class="btn btn-primary mt-5">Lihat Schedule</a>
                 </div>
             </div>
             <div class="col-5">

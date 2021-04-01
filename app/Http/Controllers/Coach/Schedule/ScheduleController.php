@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
+use Carbon\Carbon;
+
+
 class ScheduleController extends BaseMenu
 {
     public function index()
@@ -31,59 +34,182 @@ class ScheduleController extends BaseMenu
     public function store(Request $request)
     {
         try {
-            $sub_category_check = DB::table('sub_classroom_categories')
+            $coach_schedule = DB::table('coach_schedules')
                 ->select([
-                    'id',
-                    'name'
+                    'coach_schedules.coach_classroom_id',
+                    'coach_schedules.datetime',
                 ])
-                ->where('classroom_category_id', $request->classroom_category_id)
-                ->whereNull('deleted_at')
-                ->count();
+                ->whereDate('coach_schedules.datetime','=',date('Y-m-d H:i:s', strtotime($request->date)))
+                ->whereNull('deleted_at');
 
-            if($sub_category_check > 0 && !isset($request->sub_classroom_category_id)){
-                return response([
-                    "message"   => 'Sub Kategori harus diisi!'
-                ], 400);
+            $schedule_last = DB::table('coach_classrooms')
+                ->select([
+                    'coach_schedules.datetime',
+                    DB::raw("coach_schedules.datetime + INTERVAL '1 MINUTES' * classrooms.session_duration AS datetime_interval")
+                ])
+                ->joinSub($coach_schedule, 'coach_schedules', function ($join) {
+                    $join->on('coach_classrooms.id', '=', 'coach_schedules.coach_classroom_id');
+                })
+                ->leftJoin('classrooms','coach_classrooms.classroom_id','=','classrooms.id')
+                ->where('coach_classrooms.coach_id', Auth::guard('coach')->user()->id)
+                ->whereNotNull('coach_schedules.datetime')
+                ->whereNull([
+                    'coach_classrooms.deleted_at',
+                    'classrooms.deleted_at'
+                ])
+                ->orderBy('coach_schedules.datetime', 'asc')
+                ->get();
+
+            $datetime = null;
+            $datetime_interval = null;
+            $schedule = null;
+
+            foreach ($schedule_last as $key => $value) {
+
+                $last = date('Y-m-d H:i:s', strtotime($value->datetime));
+                $interval = date('Y-m-d H:i:s', strtotime($value->datetime_interval));
+                $schedule = date('Y-m-d H:i:s', strtotime($request->date.' '.$request->time));
+
+                if($schedule > $last){
+                    $datetime_interval = $interval;
+                    $datetime = $last;
+                }else{
+                    break;
+                }
+            }
+            
+            if($datetime){
+                if($schedule > $datetime_interval){
+                    $schedule = Carbon::create($schedule);
+                    $datetime_interval = Carbon::create($datetime_interval);
+
+                    $diff_minute = $schedule->diffInMinutes($datetime_interval);
+
+                    if($diff_minute > 10){
+
+                        $sub_category_check = DB::table('sub_classroom_categories')
+                            ->select([
+                                'id',
+                                'name'
+                            ])
+                            ->where('classroom_category_id', $request->classroom_category_id)
+                            ->whereNull('deleted_at')
+                            ->count();
+
+                        if($sub_category_check > 0 && !isset($request->sub_classroom_category_id)){
+                            return response([
+                                "message"   => 'Sub Kategori harus diisi!'
+                            ], 400);
+                        }
+
+                        $coach_classroom = DB::table('coach_classrooms')
+                            ->where([
+                                'classroom_id' => $request->classroom_id,
+                                'coach_id' => Auth::guard('coach')->id(),
+                            ])
+                            ->whereNull('deleted_at')
+                            ->first();
+
+                        if(!$coach_classroom){
+                            return response([
+                                "message"   => 'Kelas dan Coach tidak cocok!'
+                            ], 400);
+                        }
+
+                        $result = DB::transaction(function () use($request){
+                            $coach_classroom = DB::table('coach_classrooms')
+                                ->where([
+                                    'classroom_id' => $request->classroom_id,
+                                    'coach_id' => Auth::guard('coach')->id(),
+                                ])
+                                ->whereNull('deleted_at')
+                                ->first();
+
+                            $result = CoachSchedule::create([
+                                'coach_classroom_id' => $coach_classroom->id,
+                                'platform_id' => $request->platform_id,
+                                'platform_link' => $request->platform_link,
+                                'accepted' => false,
+                                'datetime' => date('Y-m-d H:i:s', strtotime($request->date.' '.$request->time)),
+                            ]);
+
+                            return $result;
+                        });
+
+                        return response([
+                            "data"      => $result,
+                            "message"   => 'Successfully saved!',
+                            "status"    => 200
+                        ], 200);
+                    }else{
+                        return response([
+                            "message"   => 'Jadwal harus berjarak 10 menit!',
+                            "status"    => 400
+                        ], 400);
+                    }
+                }else{
+                    return response([
+                        "message"   => 'Jadwal telah tersedia!',
+                        "status"    => 400
+                    ], 400);
+                }
+            }else{
+                $sub_category_check = DB::table('sub_classroom_categories')
+                        ->select([
+                            'id',
+                            'name'
+                        ])
+                        ->where('classroom_category_id', $request->classroom_category_id)
+                        ->whereNull('deleted_at')
+                        ->count();
+
+                    if($sub_category_check > 0 && !isset($request->sub_classroom_category_id)){
+                        return response([
+                            "message"   => 'Sub Kategori harus diisi!'
+                        ], 400);
+                    }
+
+                    $coach_classroom = DB::table('coach_classrooms')
+                        ->where([
+                            'classroom_id' => $request->classroom_id,
+                            'coach_id' => Auth::guard('coach')->id(),
+                        ])
+                        ->whereNull('deleted_at')
+                        ->first();
+
+                    if(!$coach_classroom){
+                        return response([
+                            "message"   => 'Kelas dan Coach tidak cocok!'
+                        ], 400);
+                    }
+
+                    $result = DB::transaction(function () use($request){
+                        $coach_classroom = DB::table('coach_classrooms')
+                            ->where([
+                                'classroom_id' => $request->classroom_id,
+                                'coach_id' => Auth::guard('coach')->id(),
+                            ])
+                            ->whereNull('deleted_at')
+                            ->first();
+
+                        $result = CoachSchedule::create([
+                            'coach_classroom_id' => $coach_classroom->id,
+                            'platform_id' => $request->platform_id,
+                            'platform_link' => $request->platform_link,
+                            'accepted' => false,
+                            'datetime' => date('Y-m-d H:i:s', strtotime($request->date.' '.$request->time)),
+                        ]);
+
+                        return $result;
+                    });
+
+                    return response([
+                        "data"      => $result,
+                        "message"   => 'Successfully saved!',
+                        "status"    => 200
+                    ], 200);
             }
 
-            $coach_classroom = DB::table('coach_classrooms')
-                ->where([
-                    'classroom_id' => $request->classroom_id,
-                    'coach_id' => Auth::guard('coach')->id(),
-                ])
-                ->whereNull('deleted_at')
-                ->first();
-
-            if(!$coach_classroom){
-                return response([
-                    "message"   => 'Kelas dan Coach tidak cocok!'
-                ], 400);
-            }
-
-            $result = DB::transaction(function () use($request){
-                $coach_classroom = DB::table('coach_classrooms')
-                    ->where([
-                        'classroom_id' => $request->classroom_id,
-                        'coach_id' => Auth::guard('coach')->id(),
-                    ])
-                    ->whereNull('deleted_at')
-                    ->first();
-
-                $result = CoachSchedule::create([
-                    'coach_classroom_id' => $coach_classroom->id,
-                    'platform_id' => $request->platform_id,
-                    'platform_link' => $request->platform_link,
-                    'accepted' => false,
-                    'datetime' => date('Y-m-d H:i:s', strtotime($request->date.' '.$request->time)),
-                ]);
-
-                return $result;
-            });
-
-            return response([
-                "data"      => $result,
-                "message"   => 'Successfully saved!'
-            ], 200);
         } catch (Exception $e) {
             throw new Exception($e);
             return response([
@@ -95,36 +221,139 @@ class ScheduleController extends BaseMenu
     public function update(Request $request, $id)
     {
         try {
-            $sub_category_check = DB::table('sub_classroom_categories')
+
+            $coach_schedule = DB::table('coach_schedules')
                 ->select([
-                    'id',
-                    'name'
+                    'coach_schedules.coach_classroom_id',
+                    'coach_schedules.datetime',
                 ])
-                ->where('classroom_category_id', $request->classroom_category_id)
-                ->whereNull('deleted_at')
-                ->count();
+                ->whereDate('coach_schedules.datetime','=',date('Y-m-d H:i:s', strtotime($request->date)))
+                ->whereNull('deleted_at');
 
-            if($sub_category_check > 0 && !isset($request->sub_classroom_category_id)){
-                return response([
-                    "message"   => 'Sub Kategori harus diisi!'
-                ], 400);
+            $schedule_last = DB::table('coach_classrooms')
+                ->select([
+                    'coach_schedules.datetime',
+                    DB::raw("coach_schedules.datetime + INTERVAL '1 MINUTES' * classrooms.session_duration AS datetime_interval")
+                ])
+                ->joinSub($coach_schedule, 'coach_schedules', function ($join) {
+                    $join->on('coach_classrooms.id', '=', 'coach_schedules.coach_classroom_id');
+                })
+                ->leftJoin('classrooms','coach_classrooms.classroom_id','=','classrooms.id')
+                ->where('coach_classrooms.coach_id', Auth::guard('coach')->user()->id)
+                ->whereNotNull('coach_schedules.datetime')
+                ->whereNull([
+                    'coach_classrooms.deleted_at',
+                    'classrooms.deleted_at'
+                ])
+                ->orderBy('coach_schedules.datetime', 'asc')
+                ->get();
+
+            $datetime = null;
+            $datetime_interval = null;
+            $schedule = null;
+
+            foreach ($schedule_last as $key => $value) {
+
+                $last = date('Y-m-d H:i:s', strtotime($value->datetime));
+                $interval = date('Y-m-d H:i:s', strtotime($value->datetime_interval));
+                $schedule = date('Y-m-d H:i:s', strtotime($request->date.' '.$request->time));
+
+                if($schedule > $last){
+                    $datetime_interval = $interval;
+                    $datetime = $last;
+                }else{
+                    break;
+                }
             }
 
-            $coach_classroom = DB::table('coach_classrooms')
-                ->where([
-                    'classroom_id' => $request->classroom_id,
-                    'coach_id' => Auth::guard('coach')->id(),
-                ])
-                ->whereNull('deleted_at')
-                ->first();
+            if($datetime){
+                if($schedule > $datetime_interval){
+                    $schedule = Carbon::create($schedule);
+                    $datetime_interval = Carbon::create($datetime_interval);
 
-            if(!$coach_classroom){
-                return response([
-                    "message"   => 'Kelas dan Coach tidak cocok!'
-                ], 400);
-            }
+                    $diff_minute = $schedule->diffInMinutes($datetime_interval);
 
-            $result = DB::transaction(function () use($request, $id){
+                    if($diff_minute > 10){
+                        $sub_category_check = DB::table('sub_classroom_categories')
+                            ->select([
+                                'id',
+                                'name'
+                            ])
+                            ->where('classroom_category_id', $request->classroom_category_id)
+                            ->whereNull('deleted_at')
+                            ->count();
+
+                        if($sub_category_check > 0 && !isset($request->sub_classroom_category_id)){
+                            return response([
+                                "message"   => 'Sub Kategori harus diisi!'
+                            ], 400);
+                        }
+
+                        $coach_classroom = DB::table('coach_classrooms')
+                            ->where([
+                                'classroom_id' => $request->classroom_id,
+                                'coach_id' => Auth::guard('coach')->id(),
+                            ])
+                            ->whereNull('deleted_at')
+                            ->first();
+
+                        if(!$coach_classroom){
+                            return response([
+                                "message"   => 'Kelas dan Coach tidak cocok!'
+                            ], 400);
+                        }
+
+                        $result = DB::transaction(function () use($request, $id){
+                            $coach_classroom = DB::table('coach_classrooms')
+                                ->where([
+                                    'classroom_id' => $request->classroom_id,
+                                    'coach_id' => Auth::guard('coach')->id(),
+                                ])
+                                ->whereNull('deleted_at')
+                                ->first();
+
+                            $result = CoachSchedule::find($id)->update([
+                                'coach_classroom_id' => $coach_classroom->id,
+                                'platform_id' => $request->platform_id,
+                                'platform_link' => $request->platform_link,
+                                'datetime' => date('Y-m-d H:i:s', strtotime($request->date.' '.$request->time)),
+                            ]);
+
+                            return $result;
+                        });
+
+                        return response([
+                            "data"      => $result,
+                            "message"   => 'Successfully saved!'
+                        ], 200);
+                    }else{
+                        return response([
+                            "message"   => 'Jadwal harus berjarak 10 menit!',
+                            "status"    => 400
+                        ], 400);
+                    }
+                }else{
+                    return response([
+                        "message"   => 'Jadwal telah tersedia!',
+                        "status"    => 400
+                    ], 400);
+                }
+            }else{
+                $sub_category_check = DB::table('sub_classroom_categories')
+                    ->select([
+                        'id',
+                        'name'
+                    ])
+                    ->where('classroom_category_id', $request->classroom_category_id)
+                    ->whereNull('deleted_at')
+                    ->count();
+
+                if($sub_category_check > 0 && !isset($request->sub_classroom_category_id)){
+                    return response([
+                        "message"   => 'Sub Kategori harus diisi!'
+                    ], 400);
+                }
+
                 $coach_classroom = DB::table('coach_classrooms')
                     ->where([
                         'classroom_id' => $request->classroom_id,
@@ -133,20 +362,36 @@ class ScheduleController extends BaseMenu
                     ->whereNull('deleted_at')
                     ->first();
 
-                $result = CoachSchedule::find($id)->update([
-                    'coach_classroom_id' => $coach_classroom->id,
-                    'platform_id' => $request->platform_id,
-                    'platform_link' => $request->platform_link,
-                    'datetime' => date('Y-m-d H:i:s', strtotime($request->date.' '.$request->time)),
-                ]);
+                if(!$coach_classroom){
+                    return response([
+                        "message"   => 'Kelas dan Coach tidak cocok!'
+                    ], 400);
+                }
 
-                return $result;
-            });
+                $result = DB::transaction(function () use($request, $id){
+                    $coach_classroom = DB::table('coach_classrooms')
+                        ->where([
+                            'classroom_id' => $request->classroom_id,
+                            'coach_id' => Auth::guard('coach')->id(),
+                        ])
+                        ->whereNull('deleted_at')
+                        ->first();
 
-            return response([
-                "data"      => $result,
-                "message"   => 'Successfully saved!'
-            ], 200);
+                    $result = CoachSchedule::find($id)->update([
+                        'coach_classroom_id' => $coach_classroom->id,
+                        'platform_id' => $request->platform_id,
+                        'platform_link' => $request->platform_link,
+                        'datetime' => date('Y-m-d H:i:s', strtotime($request->date.' '.$request->time)),
+                    ]);
+
+                    return $result;
+                });
+
+                return response([
+                    "data"      => $result,
+                    "message"   => 'Successfully saved!'
+                ], 200);
+            }
         } catch (Exception $e) {
             throw new Exception($e);
             return response([

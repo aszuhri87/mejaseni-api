@@ -142,7 +142,7 @@
                             render : function(data, type, full, meta) {
                                 if(full.status == 1){
                                     return `
-                                        @can('data_transaction_coach_update')
+                                        @can('managerial')
                                             <a href="" title="Approve" data-toogle="tooltip" class="btn btn-approve btn-${full.status_color} btn-sm">
                                                 Approve
                                             </a>
@@ -150,7 +150,7 @@
                                     `;
                                 }else if(full.status == 2){
                                     return `
-                                        @can('data_transaction_coach_update')
+                                        @can('managerial')
                                             <a href="" title="Konfirmasi" data-toogle="tooltip" class="btn btn-confirm btn-${full.status_color} btn-sm">
                                                 Konfirmasi
                                             </a>

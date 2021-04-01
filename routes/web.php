@@ -604,7 +604,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::post('store-banner/dt', [StoreBannerController::class, 'dt']);
             Route::post('store-banner/update/{id}', [StoreBannerController::class, 'update']);
             Route::resource('store-banner', StoreBannerController::class);
-            
+
 
 
 
@@ -770,6 +770,8 @@ Route::group(['middleware' => ['auth-handling']], function () {
 
         Route::group(['prefix' => 'new-package'], function () {
             Route::get('/', [StudentNewPackageController::class, 'index']);
+            Route::get('get-special-offer', [StudentNewPackageController::class, 'get_special_offer']);
+            Route::get('get-special-offer-detail/{id}', [StudentNewPackageController::class, 'special_offer_detail']);
             Route::get('get-package', [StudentNewPackageController::class, 'get_package']);
             Route::get('get-sub-classroom-category', [StudentNewPackageController::class, 'get_sub_classroom_category']);
             Route::get('sub-classroom-category/{sub_classroom_category_id}', [StudentNewPackageController::class, 'get_classroom_by_sub_category_id']);

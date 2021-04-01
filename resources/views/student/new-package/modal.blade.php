@@ -51,3 +51,19 @@
         </div>
     </div>
 </div>
+
+<div class="modal" id="modal-special-offer" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span>&nbsp;</span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i aria-hidden="true" class="ki ki-close"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="content-modal-special-offer">
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -106,18 +106,20 @@ class ScheduleController extends BaseMenu
                     'student_classrooms.student_id',
                     'student_schedules.coach_schedule_id',
                     DB::raw("CASE
-                        WHEN coach_schedules.datetime::timestamp < now()::timestamp THEN 'secondary'
                         WHEN
                             student_schedules.coach_schedule_id IS NOT NULL AND
                             '$date'::timestamp < coach_schedules.datetime
                             THEN 'primary'
+                        WHEN coach_schedules.datetime::timestamp < (now()::timestamp + interval '6 hour')  THEN 'secondary'
                         ELSE 'success'
                     END color"),
                     DB::raw("CASE
-                        WHEN coach_schedules.datetime::timestamp < now()::timestamp AND
+                        WHEN student_schedules.coach_schedule_id IS NOT NULL AND
                             '$date'::timestamp < coach_schedules.datetime
+                            THEN 2
+                        WHEN coach_schedules.datetime::timestamp < (now()::timestamp + interval '6 hour') AND
+                            '$date'::timestamp < coach_schedules.datetime::timestamp
                             THEN 1
-                        WHEN student_schedules.coach_schedule_id IS NOT NULL THEN 2
                         ELSE 3
                     END status"),
                     DB::raw("(
@@ -243,18 +245,20 @@ class ScheduleController extends BaseMenu
                     'student_classrooms.student_id',
                     'student_schedules.id as student_schedule_id',
                     DB::raw("CASE
-                        WHEN coach_schedules.datetime::timestamp < now()::timestamp THEN 'secondary'
                         WHEN
                             student_schedules.coach_schedule_id IS NOT NULL AND
                             '$date'::timestamp < coach_schedules.datetime
                             THEN 'primary'
+                        WHEN coach_schedules.datetime::timestamp < (now()::timestamp + interval '6 hour') THEN 'secondary'
                         ELSE 'success'
                     END color"),
                     DB::raw("CASE
-                        WHEN coach_schedules.datetime::timestamp < now()::timestamp AND
+                        WHEN student_schedules.coach_schedule_id IS NOT NULL AND
+                            '$date'::timestamp < coach_schedules.datetime
+                            THEN 2
+                        WHEN coach_schedules.datetime::timestamp < (now()::timestamp + interval '6 hour') AND
                             '$date'::timestamp < coach_schedules.datetime
                             THEN 1
-                        WHEN student_schedules.coach_schedule_id IS NOT NULL THEN 2
                         ELSE 3
                     END status"),
                     DB::raw("(
@@ -663,7 +667,7 @@ class ScheduleController extends BaseMenu
                 ->whereNull('student_schedules.deleted_at')
                 ->where('student_classrooms.student_id',Auth::guard('student')->user()->id)
                 ->whereNotNull('session_feedback.student_schedule_id');
-            
+
             $coach_schedule = DB::table('coach_schedules')
                 ->select([
                     'coach_schedules.coach_classroom_id',
@@ -674,7 +678,7 @@ class ScheduleController extends BaseMenu
                 })
                 ->whereNull('coach_schedules.deleted_at')
                 ->whereNotNull('student_schedules.coach_schedule_id');
-            
+
             // end session star
 
             // classroom star

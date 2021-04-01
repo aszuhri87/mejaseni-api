@@ -251,10 +251,12 @@
                         processData: false,
                     })
                     .done(function(res, xhr, meta) {
-                        toastr.success(res.message, 'Success')
-                        arr_path = [];
-                        hideModal('modal-schedule');
-                        renderCalender()
+                        if(res.status == 200){
+                            toastr.success(res.message, 'Success')
+                            arr_path = [];
+                            hideModal('modal-schedule');
+                            renderCalender()
+                        }
                     })
                     .fail(function(res, error) {
                         toastr.error(res.responseJSON.message, 'Failed')

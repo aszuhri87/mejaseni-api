@@ -37,18 +37,37 @@ class ReviewClassExport implements FromView
             ])
             ->whereNull('students.deleted_at');
 
-        $data = DB::table('classroom_feedback')
+        $student_classroom = DB::table('student_classrooms')
             ->select([
-                'classroom_feedback.*',
-                'classroom_feedback.created_at as datetime',
+                'student_classrooms.id',
                 'students.student_name',
                 'students.image',
             ])
             ->leftJoinSub($student, 'students', function ($join) {
-                $join->on('classroom_feedback.student_id', '=', 'students.id');
+                $join->on('student_classrooms.student_id', '=', 'students.id');
             })
-            ->where('classroom_feedback.classroom_id',$this->id)
-            ->whereNull('classroom_feedback.deleted_at')
+            ->where('student_classrooms.classroom_id',$this->id)
+            ->whereNull('student_classrooms.deleted_at');
+
+        $data = DB::table('student_schedules')
+            ->select([
+                'session_feedback.*',
+                'session_feedback.created_at as datetime',
+                'student_classrooms.student_name',
+                'student_classrooms.image',
+            ])
+            ->leftJoinSub($student_classroom, 'student_classrooms', function ($join) {
+                $join->on('student_schedules.student_classroom_id', '=', 'student_classrooms.id');
+            })
+            ->leftJoin('session_feedback','student_schedules.id','=','session_feedback.student_schedule_id')
+            ->whereNotNull([
+                'session_feedback.id',
+                'student_classrooms.student_name'
+            ])
+            ->whereNull([
+                'student_schedules.deleted_at',
+                'session_feedback.deleted_at'
+            ])
             ->where(function($query) use($init_star){
                 if(!empty($init_star)){
                     $query->where('star',$init_star);
