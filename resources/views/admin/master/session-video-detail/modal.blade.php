@@ -58,7 +58,7 @@
                                 <input type="checkbox" id="switch-public" name="is_public"/>
                                 <span></span>
                             </label>
-                            Video Free
+                            Video Public
                         </span>
                     </div>
                 </div>

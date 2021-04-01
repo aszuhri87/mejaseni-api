@@ -527,7 +527,7 @@ class ClassController extends BaseMenu
 
 
         $pdf = PDF::loadview('admin.print.pdf.review-class',compact('data'));
-        return $pdf->download('review-class-'.$classroom->name.'-'.date('d-m-Y'));
+        return $pdf->download('review-class-'.$classroom->name.'-'.date('d-m-Y').'.pdf');
     }
 
     public function print_excel(Request $request,$id)

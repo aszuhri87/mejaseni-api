@@ -269,7 +269,7 @@ class VideoController extends BaseMenu
 
 
         $pdf = PDF::loadview('admin.print.pdf.review-video',compact('data'));
-        return $pdf->download('review-video-'.$session_video->name.'-'.date('d-m-Y'));
+        return $pdf->download('review-video-'.$session_video->name.'-'.date('d-m-Y').'.pdf');
     }
 
     public function print_excel(Request $request,$id)

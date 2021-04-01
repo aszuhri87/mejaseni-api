@@ -566,4 +566,39 @@ class ScheduleController extends BaseMenu
             ]);
         }
     }
+
+    public function email_notification($type, $notification, $id = null)
+    {
+        $user = null;
+        if($type == 1){
+            $user = DB::table('coaches')
+                ->select([
+                    'email',
+                    'name'
+                ])
+                ->where('id', $id)
+                ->first();
+        }else if($type == 2){
+            $user = DB::table('students')
+                ->select([
+                    'name'
+                ])
+                ->where('id', $id)
+                ->first();
+        }else{
+            $user = Auth::guard('admin')->user();
+        }
+
+        try {
+            Mail::send('mail.notification', compact('notification'), function($message) use($user){
+                $message->to($user->email, $user->name)
+                    ->from('info@mejaseni.com', 'MEJASENI')
+                    ->subject('Mejaseni Notification');
+            });
+        } catch (\Exception $th) {
+            return false;
+        }
+
+        return true;
+    }
 }

@@ -34,7 +34,7 @@
     </div>
 
     <div class="col-xl-12 col-md-12 col-sm-12">
-      <div class="row">
+      <div class="row justify-content-center">
         @foreach($market_places as $market_place)
         <div class="col-xl-4">
           <div class="d-flex justify-content-center">

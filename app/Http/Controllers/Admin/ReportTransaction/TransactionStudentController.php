@@ -255,7 +255,7 @@ class TransactionStudentController extends BaseMenu
                 ->first();
 
             $pdf = PDF::loadview('admin.print.pdf.transaction-student',compact('data','student'))->setPaper('a4', 'landscape');
-            return $pdf->download('transaction-student-'.$student->name.'-'.date('d-m-Y'));
+            return $pdf->download('transaction-student-'.$student->name.'-'.date('d-m-Y').'.pdf');
     }
 
     public function print_excel(Request $request)
