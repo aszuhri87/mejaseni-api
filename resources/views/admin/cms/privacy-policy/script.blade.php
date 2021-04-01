@@ -212,6 +212,10 @@
                     $('#form-privacy-policy').find('input[name="title"]').val(data.title);;
                     $('#form-privacy-policy').find('textarea[name="description"]').val(data.description);
 
+                    if(data.json_description){
+                        privacy_policy_quill.setContents(JSON.parse(unescapeHtml(data.json_description)));
+                    }
+
                     showModal('modal-privacy-policy');
                 });
 
