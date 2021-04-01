@@ -135,6 +135,6 @@ class CoachController extends BaseMenu
 
 
         $pdf = PDF::loadview('admin.print.pdf.transaction-coach',compact('data'))->setPaper('a4', 'landscape');
-        return $pdf->download('transaction-coach-'.date('d-m-Y'));
+        return $pdf->download('transaction-coach-'.date('d-m-Y').'.pdf');
     }
 }
