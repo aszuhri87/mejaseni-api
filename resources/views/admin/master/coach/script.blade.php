@@ -72,7 +72,7 @@
                                 if(data){
                                     return `
                                     <div class="d-flex justify-content-center">
-                                        <span class="switch switch-sm switch-outline switch-icon switch-success">
+                                        <span class="switch switch-sm switch-outline switch-icon switch-danger">
                                             <label>
                                             <input type="checkbox" class="btn-switch" checked="checked" name="suspend" id="btn-switch-${full.id}"/>
                                             <span></span>
