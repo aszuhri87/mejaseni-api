@@ -53,7 +53,7 @@
                     <th>No</th>
                     <th width="15%">Tanggal</th>
                     <th width="15%">Nomor Invoice</th>
-                    <th width="20%">Siswa</th>
+                    <th width="30%">Siswa</th>
                     <th width="20%">Total</th>
                     <th width="10%">Status</th>
                     <th width="10%">Actions</th>
