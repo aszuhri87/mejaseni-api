@@ -53,10 +53,22 @@ class ClassController extends Controller
             ->get();
 
         $selected_category = DB::table('classroom_categories')
-            ->select(['classroom_categories.id','classroom_categories.name'])
+            ->select([
+                'classroom_categories.id', 
+                'classroom_categories.name',
+                'profile_coach_videos.is_youtube',
+                'profile_coach_videos.url',
+                'coaches.name as coach',
+                'coaches.description'
+            ])
+            ->leftJoin('profile_coach_videos','profile_coach_videos.id','=','classroom_categories.profile_coach_video_id')
+            ->leftJoin('coaches','coaches.id','=','profile_coach_videos.coach_id')
             ->leftJoin('sub_classroom_categories','sub_classroom_categories.classroom_category_id','=','classroom_categories.id')
             ->whereNull([
-                'classroom_categories.deleted_at'
+                'classroom_categories.deleted_at',
+                'classroom_categories.deleted_at',
+                'profile_coach_videos.deleted_at',
+                'sub_classroom_categories.deleted_at'
             ]);
 
         if($category){
@@ -80,25 +92,54 @@ class ClassController extends Controller
 
         if($selected_category){
             $sub_categories = DB::table('sub_classroom_categories')
-                    ->select(['id','name'])
-                    ->where('classroom_category_id',$selected_category->id)
+                    ->select([
+                        'sub_classroom_categories.id',
+                        'sub_classroom_categories.name',
+                        'profile_coach_videos.is_youtube',
+                        'profile_coach_videos.url',
+                        'coaches.name as coach',
+                        'coaches.description'
+                    ])
+                    ->where('sub_classroom_categories.classroom_category_id',$selected_category->id)
+                    ->leftJoin('profile_coach_videos','profile_coach_videos.id','=','sub_classroom_categories.profile_coach_video_id')
+                    ->leftJoin('coaches','coaches.id','=','profile_coach_videos.coach_id')
                     ->whereNull([
-                        'deleted_at'
+                        'sub_classroom_categories.deleted_at',
+                        'profile_coach_videos.deleted_at'
                     ])
                     ->get();
 
             $selected_sub_category = DB::table('sub_classroom_categories')
-                ->select(['id','name'])
-                ->where('classroom_category_id',$selected_category->id)
-                ->whereNull([
-                    'deleted_at'
-                ])
+                ->select([
+                        'sub_classroom_categories.id',
+                        'sub_classroom_categories.name',
+                        'profile_coach_videos.is_youtube',
+                        'profile_coach_videos.url',
+                        'coaches.name as coach',
+                        'coaches.description'
+                    ])
+                    ->where('sub_classroom_categories.classroom_category_id',$selected_category->id)
+                    ->leftJoin('profile_coach_videos','profile_coach_videos.id','=','sub_classroom_categories.profile_coach_video_id')
+                    ->leftJoin('coaches','coaches.id','=','profile_coach_videos.coach_id')
+                    ->whereNull([
+                        'sub_classroom_categories.deleted_at',
+                        'profile_coach_videos.deleted_at'
+                    ])
                 ->first();
 
             
             $is_registered = DB::table('carts')
                     ->where('classroom_id','!=',null)
                     ->whereNull('deleted_at');
+
+            $classroom_feedback = DB::table('classroom_feedback')
+                ->select([
+                    'classroom_feedback.classroom_id',
+                    DB::raw('COUNT(classroom_feedback.classroom_id) as total_feedback'),
+                    DB::raw('SUM(classroom_feedback.star) as total_star'),
+                ])
+                ->whereNull('classroom_feedback.deleted_at')
+                ->groupBy('classroom_feedback.classroom_id');
 
             $regular_classrooms = DB::table('classrooms')
                 ->select([
@@ -107,11 +148,25 @@ class ClassController extends Controller
                     'sub_classroom_categories.name as sub_category',
                     'is_registered.id as is_registered',
                     DB::raw("CONCAT('{$path}',classrooms.image) as image_url"),
+                    DB::raw("(
+                        CASE
+                            WHEN
+                                classroom_feedback.total_feedback IS NOT NULL AND
+                                classroom_feedback.total_star IS NOT NULL
+                            THEN
+                                ROUND(classroom_feedback.total_star/classroom_feedback.total_feedback)
+                            ELSE
+                                0
+                        END
+                    ) as rating")
                 ])
                 ->leftJoin('classroom_categories','classroom_categories.id','=','classrooms.classroom_category_id')
                 ->leftJoin('sub_classroom_categories','sub_classroom_categories.id','=','classrooms.sub_classroom_category_id')
                 ->leftJoinSub($is_registered, 'is_registered', function($join){
                     $join->on('classrooms.id','is_registered.classroom_id');
+                })
+                ->leftJoinSub($classroom_feedback, 'classroom_feedback', function ($join) {
+                    $join->on('classrooms.id', '=', 'classroom_feedback.classroom_id');
                 })
                 ->whereNull([
                     'classrooms.deleted_at'
@@ -124,7 +179,6 @@ class ClassController extends Controller
             }
 
             $regular_classrooms = $regular_classrooms->get();
-
         }
 
     	return view('cms.class.index', [
@@ -335,6 +389,83 @@ class ClassController extends Controller
         }
     }
 
+    public function get_sub_category($category_id, $sub_category_id)
+    {
+        try {
+            $sub_categories = DB::table('sub_classroom_categories')
+                    ->select([
+                        'sub_classroom_categories.id',
+                        'sub_classroom_categories.name',
+                        'profile_coach_videos.is_youtube',
+                        'profile_coach_videos.url',
+                        'coaches.name as coach',
+                        'coaches.description'
+                    ])
+                    ->leftJoin('profile_coach_videos','profile_coach_videos.id','=','sub_classroom_categories.profile_coach_video_id')
+                    ->leftJoin('coaches','coaches.id','=','profile_coach_videos.coach_id')
+                    ->where('sub_classroom_categories.classroom_category_id',$category_id)
+                    ->whereNull([
+                        'sub_classroom_categories.deleted_at',
+                        'profile_coach_videos.deleted_at'
+                    ])
+                    ->get();
+
+            $video_coach = null;
+
+            if(!($sub_category_id == "undefined")){
+                $video_coach = DB::table('sub_classroom_categories')
+                    ->select([
+                        'sub_classroom_categories.id',
+                        'sub_classroom_categories.name',
+                        'profile_coach_videos.is_youtube',
+                        'profile_coach_videos.url',
+                        'coaches.name as coach',
+                        'coaches.description'
+                    ])
+                    ->leftJoin('profile_coach_videos','profile_coach_videos.id','=','sub_classroom_categories.profile_coach_video_id')
+                    ->leftJoin('coaches','coaches.id','=','profile_coach_videos.coach_id')
+                    ->whereNull([
+                        'sub_classroom_categories.deleted_at',
+                        'profile_coach_videos.deleted_at'
+                    ])
+                    ->where('sub_classroom_categories.id',$sub_category_id)
+                    ->first();
+            }else{
+                $video_coach = DB::table('classroom_categories')
+                    ->select([
+                        'classroom_categories.id', 
+                        'classroom_categories.name',
+                        'profile_coach_videos.is_youtube',
+                        'profile_coach_videos.url',
+                        'coaches.name as coach',
+                        'coaches.description'
+                    ])
+                    ->leftJoin('profile_coach_videos','profile_coach_videos.id','=','classroom_categories.profile_coach_video_id')
+                    ->leftJoin('coaches','coaches.id','=','profile_coach_videos.coach_id')
+                    ->whereNull([
+                        'classroom_categories.deleted_at',
+                        'profile_coach_videos.deleted_at',
+                    ])
+                    ->where('classroom_categories.id',$category_id)
+                    ->first();
+            }
+
+            return response([
+                "data"      => [
+                    "sub_categories" => $sub_categories,
+                    "sub_category_html" => $this->_get_sub_category_html($sub_categories),
+                    "video_coach" => $video_coach
+                ],
+                "message"   => 'Successfully'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
 
 
 
@@ -343,22 +474,14 @@ class ClassController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function _get_sub_category_html($sub_categories, $sub_classroom_category_id)
+    public function _get_sub_category_html($sub_categories)
     {
         $sub_category_html = "";
         if($sub_categories->isEmpty())
             return $sub_category_html;
 
-        $index = 0;
         foreach ($sub_categories as $key => $sub_category) {
-
-            if($sub_category->id == $sub_classroom_category_id){
-                $sub_category_html .= '<button class="btn btn-tertiary mr-2 mb-2 active" data-id="'. $sub_category->id .'">'. $sub_category->name .'</button>';
-
-            } else {
-                $sub_category_html .= '<button class="btn btn-tertiary mr-2 mb-2" data-id="'. $sub_category->id .'">'. $sub_category->name .'</button>';
-            }
-            $index++;
+            $sub_category_html .= '<button class="btn btn-tertiary mr-2 mb-2" data-id="'. $sub_category->id .'">'. $sub_category->name .'</button>';
         }
 
         return $sub_category_html;
@@ -417,12 +540,21 @@ class ClassController extends Controller
 
             $sub_categories = DB::table('sub_classroom_categories')
                     ->select([
-                        'id',
-                        'name',
+                        'sub_classroom_categories.id',
+                        'sub_classroom_categories.name',
+                        'profile_coach_videos.is_youtube',
+                        DB::raw("
+                        CASE
+                            WHEN profile_coach_videos.is_youtube IS true THEN profile_coach_videos.url
+                        ELSE
+                            CONCAT('{$path}',profile_coach_videos.url)
+                        END url "),
                     ])
-                    ->where('classroom_category_id',$classroom_category_id)
+                    ->where('sub_classroom_categories.classroom_category_id',$classroom_category_id)
+                    ->leftJoin('profile_coach_videos','profile_coach_videos.id','=','sub_classroom_categories.profile_coach_video_id')
                     ->whereNull([
-                        'deleted_at'
+                        'sub_classroom_categories.deleted_at',
+                        'profile_coach_videos.deleted_at'
                     ])
                     ->get();
 
@@ -444,15 +576,38 @@ class ClassController extends Controller
 
                 $classroom_html = $this->_get_master_lesson_html($classrooms);
             }else{
+                $classroom_feedback = DB::table('classroom_feedback')
+                    ->select([
+                        'classroom_feedback.classroom_id',
+                        DB::raw('COUNT(classroom_feedback.classroom_id) as total_feedback'),
+                        DB::raw('SUM(classroom_feedback.star) as total_star'),
+                    ])
+                    ->whereNull('classroom_feedback.deleted_at')
+                    ->groupBy('classroom_feedback.classroom_id');
+
                 $classrooms = DB::table('classrooms')
                     ->select([
                         'classrooms.*',
                         'classroom_categories.name as category',
                         'sub_classroom_categories.name as sub_category',
                         DB::raw("CONCAT('{$path}',classrooms.image) as image_url"),
+                        DB::raw("(
+                            CASE
+                                WHEN
+                                    classroom_feedback.total_feedback IS NOT NULL AND
+                                    classroom_feedback.total_star IS NOT NULL
+                                THEN
+                                    ROUND(classroom_feedback.total_star/classroom_feedback.total_feedback)
+                                ELSE
+                                    0
+                            END
+                        ) as rating")
                     ])
                     ->leftJoin('classroom_categories','classroom_categories.id','=','classrooms.classroom_category_id')
                     ->leftJoin('sub_classroom_categories','sub_classroom_categories.id','=','classrooms.sub_classroom_category_id')
+                    ->leftJoinSub($classroom_feedback, 'classroom_feedback', function ($join) {
+                        $join->on('classrooms.id', '=', 'classroom_feedback.classroom_id');
+                    })
                     ->whereNull([
                         'classrooms.deleted_at'
                     ])
@@ -476,8 +631,7 @@ class ClassController extends Controller
                 "data"      => [
                   "classrooms" => $classrooms,
                   "classroom_html" => $classroom_html,
-                  "classroom_review_html" => $classroom_review_html,
-                  "sub_category_html" => $sub_category_html
+                  "classroom_review_html" => $classroom_review_html
                 ],
                 "message"   => 'Successfully saved!'
             ], 200);
@@ -556,8 +710,10 @@ class ClassController extends Controller
                     <div class="row">
                         <div class="col col-12 mt-4">
                             <div class="d-flex flex-column">
-                              <p>'. (isset($classroom->session_total) ? $classroom->session_total:"") .' Sesi | @ '. (isset($classroom->session_duration) ? $classroom->session_duration:"") .'menit</p>
-                                <span class="mt-2">Rp.'.(isset($classroom->price) ? number_format($classroom->price, 2):"").'</span>
+                              <p>'. (isset($classroom->session_total) ? $classroom->session_total:"") .' Sesi | @ '. (isset($classroom->session_duration) ? $classroom->session_duration:"") .'menit |
+                                <span class="fa fa-star checked mr-1" style="font-size: 15px;"></span> '.(isset($classroom->rating) ? $classroom->rating < 4 ? "4.6":$classroom->rating : "4.6").'
+                              </p>
+                                <span class="mt-2">Rp.'.(isset($classroom->price) ? number_format($classroom->price, 2):"").' </span>
                             </div>
                         </div>
                         <div class="col col-12 mt-4 justify-content-md-end">
@@ -712,7 +868,8 @@ class ClassController extends Controller
                                 <div class="row">
                                     <div class="col col-12 mt-4">
                                         <div class="d-flex flex-column">
-                                          <p>'. (isset($classroom->session_total) ? $classroom->session_total:"") .' Sesi | @ '. (isset($classroom->session_duration) ? $classroom->session_duration:"") .'menit</p>
+                                            <p>'. (isset($classroom->session_total) ? $classroom->session_total:"") .' Sesi | @ '. (isset($classroom->session_duration) ? $classroom->session_duration:"") .'menit | <span class="fa fa-star checked mr-1" style="font-size: 15px;"></span> '.(isset($classroom->rating) ? $classroom->rating < 4 ? "4.6":$classroom->rating : "4.6").'
+                                            </p>
                                             <span class="mt-2">Rp.'. (isset($classroom->price) ? number_format($classroom->price, 2):"").'</span>
                                         </div>
                                     </div>

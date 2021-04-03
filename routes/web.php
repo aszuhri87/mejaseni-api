@@ -170,7 +170,7 @@ use App\Http\Controllers\Cms\VideoCourseController as VideoCourseController;
 Route::get('/', [HomePageController::class, 'index']);
 Route::get('/class', [ClassController::class, 'index']);
 Route::get('/class/{category?}', [ClassController::class, 'index']);
-Route::get('/class/classroom_category/{category_id}/sub_classroom_category', [ClassController::class, 'get_sub_category']);
+Route::get('/class/classroom_category/{category_id}/sub_classroom_category/{sub_category_id}', [ClassController::class, 'get_sub_category']);
 Route::get('/classroom_category/sub_classroom_category/{sub_category_id}/classroom', [ClassController::class, 'get_classroom']);
 Route::get('/class/{classroom_category_id}/sub_classroom_category/{sub_classroom_category_id}/package/{package}', [ClassController::class, 'get_package']);
 Route::get('/class/{classroom_id}/coachs', [ClassController::class, 'get_coach']);

@@ -116,8 +116,8 @@ class TheoryVideoController extends BaseMenu
                         'is_public' => isset($request->is_public) ? true : false,
                 ];
 
-                if(!$request->is_youtube){
-                    if($result->video_url != $request->url){
+                if(!isset($request->is_youtube)){
+                    if(isset($request->url)){
                         $path = Storage::disk('s3')->url('/');
                         $video_converter_hook = config('app.url')."/api/video-converter/".$result->id."/hook";
                         $url = $path . $request->file;

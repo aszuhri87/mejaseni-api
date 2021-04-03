@@ -158,12 +158,22 @@
                     let package = $('.package.active').data('id')
                     let selected_category = $('.class-category-selected').data('id')
                     let selected_sub_category = undefined
-                    getPackage(selected_category, selected_sub_category, package)
+                    getVideoCoach(selected_category, selected_sub_category)
 
                     event.preventDefault()
                 })
 
-                initSubCategory()
+                $('.btn-tertiary').click(function(event){
+                    $('.btn-tertiary').removeClass('active');
+                    $(this).addClass('active');
+                    let selected_category = $('.class-category-selected').data('id')
+                    let selected_sub_category = $(this).data("id")
+
+                    getVideoCoach(selected_category, selected_sub_category)
+                    event.preventDefault()
+                })
+
+
                 initReadMore()
             });
 
@@ -171,22 +181,93 @@
                 $('.btn-tertiary').click(function(event){
                     $('.btn-tertiary').removeClass('active');
                     $(this).addClass('active');
-                    let selected_sub_category = $(this).data("id")
-                    let package = $('.package.active').data('id')
                     let selected_category = $('.class-category-selected').data('id')
+                    let selected_sub_category = $(this).data("id")
 
-                    getPackage(selected_category, selected_sub_category, package)
+                    getVideoCoach(selected_category, selected_sub_category)
                     event.preventDefault()
                 })
+            }
+
+            var getVideoCoach = (selected_category, selected_sub_category)=>{
+                showLoader()
+                $.ajax({
+                    url: `/class/classroom_category/${selected_category}/sub_classroom_category/${selected_sub_category}`,
+                    type: 'GET',
+                })
+                .done(function(res, xhr, meta) {
+                    if(res.data){
+                        let html = ""
+                        if(!selected_sub_category){
+                            $("#sub-category").html(res.data.sub_category_html)
+                            initSubCategory()
+                        }
+
+                        if(!res.data.video_coach.url){
+                            html = `<div class="mb-5 empty-store">
+                                      <div class="row my-5 py-5">
+                                          <div class="col-12 pr-0 pr-lg-4 column-center">
+                                              <img style="width: 200px;" src="/cms/assets/img/svg/empty-store.svg" alt="">
+                                              <h4 class="mt-3 text-center">Wah, Video Profile Coach yang kamu cari <br />belum dibuat nih</h4>
+                                          </div>
+                                      </div>
+                                    </div>`
+                        }else{
+                            if(res.data.video_coach.is_youtube){
+                                html = `<div class="mb-3">
+                                              <div class="embed-responsive embed-responsive-16by9">
+                                                <iframe class="embed-responsive-item" frameborder="0"
+                                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                  allowfullscreen src="${res.data.video_coach.url}" id="video-coach-review"></iframe>
+                                              </div>
+                                              <div class="px-4 px-md-0 px-md-0 pt-4 pt-md-0">
+                                                <div class="badge-left">
+                                                  <h3 class="mt-3 ml-2">${res.data.video_coach.coach}</h3>
+                                                </div>
+                                                <p class="my-3 desc__slider-content text-justify">${res.data.video_coach.description}</p>
+                                              </div>
+                                            </div>`;
+                            }else{
+                                html = `<div class="content-embed__wrapper">
+                                          <video id="video-player" class="video-js w-100 h-100 vjs-big-play-centered" controls preload="auto" data-setup='{}'>
+                                            <source id="video-coach-review" src="${res.data.video_coach.url}"></source>
+                                            <p class="vjs-no-js">
+                                              To view this video please enable JavaScript, and consider upgrading to a
+                                              web browser that
+                                              <a href="http://videojs.com/html5-video-support/" target="_blank">
+                                                supports HTML5 video
+                                              </a>
+                                            </p>
+                                          </video>
+                                          <div class="px-4 px-md-0 px-md-0 pt-4 pt-md-0">
+                                            <div class="badge-left">
+                                              <h3 class="mt-3 ml-2">${res.data.video_coach.coach}</h3>
+                                            </div>
+                                            <p class="my-3 desc__slider-content text-justify">${res.data.video_coach.description}</p>
+                                          </div>
+                                        </div>`;
+                            }
+                        }
+
+                        $("#classroom-content").html(html)
+                    }
+                    
+                })
+                .fail(function(res, error) {
+                    toastr.error(res.responseJSON.message, 'Failed')
+                })
+                .always(function() {
+                    hideLoader()
+                });
             }
 
             var initReadMore = ()=>{
                 $('.readmore').readmore({
                   speed: 20,
-                  moreLink: '<a  class="font-weight-bold">Selanjutnya...</a>',
+                  moreLink: '<a  class="font-weight-bold">Selengkapnya...</a>',
                   lessLink: '<a  class="font-weight-bold">Tutup</a>',
                   collapsedHeight: 150,
-                });
+              });
 
             }
 
@@ -203,7 +284,6 @@
                     if(res.data.classroom_html){
                         $("#empty-classroom").html('')
                         $("#class-content").html(res.data.classroom_html)
-                        $("#classroom-content").html(res.data.classroom_review_html)
                         TabDetailListener()
                         splide()
                         initReadMore()
@@ -212,16 +292,6 @@
                             <div class="col-12 pr-0 pr-lg-4 column-center">
                             <img style="width: 200px;" src="/cms/assets/img/svg/empty-store.svg" alt="">
                             <h4 class="mt-3 text-center">Wah, Class belum tersedia</h4>
-                            </div>`)
-
-                        $("#classroom-content").html(`
-                            <div class="mb-5 empty-store">
-                            <div class="row my-5 py-5">
-                            <div class="col-12 pr-0 pr-lg-4 column-center">
-                            <img style="width: 200px;" src="/cms/assets/img/svg/empty-store.svg" alt="">
-                            <h4 class="mt-3 text-center">Wah, video course yang kamu cari <br />belum dibuat nih</h4>
-                            </div>
-                            </div>
                             </div>`)
                     }
                 })
@@ -267,8 +337,8 @@
                     toastr.error(res.responseJSON.message, 'Failed')
                 })
                 .always(function() {
-                 hideLoader()
-             });
+                   hideLoader()
+               });
             }
 
             var getTools = (classroom_id)=>{
@@ -286,8 +356,8 @@
                     toastr.error(res.responseJSON.message, 'Failed')
                 })
                 .always(function() {
-                 hideLoader()
-             });
+                   hideLoader()
+               });
             }
 
             var getGuests = (master_lession_id)=>{
@@ -392,11 +462,11 @@
 
             splide = () => {
                 splide_class = new Splide('#class-splide', {
-                    pagination: false,
+                    pagination: true,
                     lazyLoad: true,
                     perPage: 1,
                     type: 'loop',
-                    arrows:'',
+                    arrows:true,
                     breakpoints: {
                         640: {
                             perPage: 1,
@@ -405,24 +475,24 @@
                 }).mount();
 
 
-                if(splide_sub_category){
-                    splide_sub_category.destroy()
-                }
-                splide_sub_category = new Splide('#class-category-splide', {
+                // if(splide_sub_category){
+                //     splide_sub_category.destroy()
+                // }
+                // splide_sub_category = new Splide('#class-category-splide', {
 
-                    lazyLoad: true,
-                    pagination: false,
-                    type: 'loop',
-                    breakpoints: {
-                        640: {
-                            perPage: 1,
-                        },
-                    }
-                }).mount();
+                //     lazyLoad: true,
+                //     pagination: false,
+                //     type: 'loop',
+                //     breakpoints: {
+                //         640: {
+                //             perPage: 1,
+                //         },
+                //     }
+                // }).mount();
 
-                splide_sub_category.on( 'arrows:updated', function(index) {
-                    splide_class.go(splide_sub_category.index)
-                });
+                // splide_sub_category.on( 'arrows:updated', function(index) {
+                //     splide_class.go(splide_sub_category.index)
+                // });
 
             }
         };
