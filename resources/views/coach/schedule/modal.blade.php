@@ -28,7 +28,7 @@
                         </div>
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
-                                <label>Waktu Mulai<span class="text-danger">*</span></label>
+                                <label>Waktu Mulai / Jam Mulai<span class="text-danger">*</span></label>
                                 <input type="text" name="time" class="form-control timepicker" required placeholder="Time" style="width: 100% !important">
                             </div>
                         </div>
