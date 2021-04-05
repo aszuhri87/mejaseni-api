@@ -109,8 +109,34 @@ class TheoryVideoController extends BaseMenu
     public function update(Request $request, $id)
     {
         try {
+            $result = TheoryVideo::find($id);
+
+            $is_exist = TheoryVideo::whereNull('deleted_at')
+                ->where([
+                    'session_video_id' => $request->session_video_id,
+                    'number' => $request->number
+                ])->first();
+
+            if($is_exist && $result->number != $request->number){
+                return response([
+                    "message"=> "Nomor Video Sudah Digunakan",
+                ], 400);
+            }
+
             $result = DB::transaction(function () use($request, $id){
                 $result = TheoryVideo::find($id);
+
+                $is_exist = TheoryVideo::whereNull('deleted_at')
+                    ->where([
+                        'session_video_id' => $request->session_video_id,
+                        'number' => $request->number
+                    ])->first();
+
+                if($is_exist){
+                    return response([
+                        "message"=> "Nomor Video Sudah Digunakan",
+                    ], 400);
+                }
 
                 $data = [
                         'name' => $request->name,
