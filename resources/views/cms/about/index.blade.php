@@ -62,7 +62,7 @@
   </section>
 
   <section id="program-package">
-    <div class="row my-5 pb-5">
+    <div class="row justify-content-center my-5 pb-5">
       <div class="col-md-12 text-center my-5 pt-4 pt-md-0 pb-2 pb-md-5">
         <h1>Mengapa Harus Kami?</h1>
       </div>
