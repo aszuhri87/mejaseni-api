@@ -38,7 +38,11 @@ class TheoryVideoController extends BaseMenu
     {
         try {
 
-            $is_exist = TheoryVideo::whereNull('deleted_at')->where('number',$request->number)->first();
+            $is_exist = TheoryVideo::whereNull('deleted_at')
+                ->where([
+                    'session_video_id' => $request->session_video_id,
+                    'number' => $request->number
+                ])->first();
 
             if($is_exist){
                 return response([
