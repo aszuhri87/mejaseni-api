@@ -68,7 +68,7 @@
       </div>
       @foreach($reasons as $reason)
         <div class="col-md-4 col-sm-12 mb-md-5 px-5 px-md-3 py-3 py-md-0">
-          <div class="our-program__item p-5" data-aos="zoom-out"  style="min-height: 350px" data-aos-delay="0">
+          <div class="our-program__item p-4" data-aos="zoom-out"  style="min-height: 350px" data-aos-delay="0">
             <img class="img__program-thumbnail" src="{{ isset($reason->image_url) ? $reason->image_url:'' }}" alt="">
             <div class="badge-left">
               <h3 class="mt-3 ml-2">{{ isset($reason->name) ? $reason->name:'' }}</h3>
