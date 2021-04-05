@@ -17,7 +17,7 @@ class CoachNotification extends Model
 
     // Type Description
     // 1 Transaction Success
-    // 2 Schedule COnfirmed
+    // 2 Schedule Confirmed
     // 3 Reschedule
     // 4 Income Transaction Success
 

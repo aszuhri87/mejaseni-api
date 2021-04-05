@@ -67,7 +67,7 @@
         <h1>Mengapa Harus Kami?</h1>
       </div>
       @foreach($reasons as $reason)
-        <div class="col-lg-3 mb-md-5 px-5 px-md-3 py-3 py-md-0">
+        <div class="col-md-4 col-sm-12 mb-md-5 px-5 px-md-3 py-3 py-md-0">
           <div class="our-program__item p-5" data-aos="zoom-out" data-aos-delay="0">
             <img class="img__program-thumbnail" src="{{ isset($reason->image_url) ? $reason->image_url:'' }}" alt="">
             <div class="badge-left">
@@ -135,7 +135,7 @@
               <div class="col-6">Closed</div>
             @else
               <div class="col-6">
-                {{ isset($working_hour->open) ? date('h:i A', strtotime($working_hour->open)):''}} - 
+                {{ isset($working_hour->open) ? date('h:i A', strtotime($working_hour->open)):''}} -
                 {{ isset($working_hour->close) ? date('h:i A', strtotime($working_hour->close)):''}}
               </div>
             @endif
