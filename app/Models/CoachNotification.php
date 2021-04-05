@@ -19,6 +19,7 @@ class CoachNotification extends Model
     // 1 Transaction Success
     // 2 Schedule COnfirmed
     // 3 Reschedule
+    // 4 Income Transaction Success
 
     protected $fillable = [
         'coach_id',

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 use App\Models\IncomeTransaction;
 use App\Models\IncomeSetting;
+use App\Models\CoachNotification;
 
 use App\Exports\IncomeExport;
 
@@ -70,6 +71,10 @@ class CoachController extends BaseMenu
                             AND income_transactions.approved = true
                             THEN 2
                         WHEN income_transactions.status = 1
+                            AND income_transactions.approved = true
+                            AND income_transactions.confirmed = false
+                            THEN 2
+                        WHEN income_transactions.status = 1
                             AND income_transactions.confirmed = false
                             THEN 3
                         WHEN income_transactions.status = 2
@@ -87,6 +92,10 @@ class CoachController extends BaseMenu
                             AND income_transactions.approved = true
                             THEN 'Waiting Transfer'
                         WHEN income_transactions.status = 1
+                            AND income_transactions.approved = true
+                            AND income_transactions.confirmed = false
+                            THEN 'Waiting Transfer'
+                        WHEN income_transactions.status = 1
                             AND income_transactions.confirmed = false
                             THEN 'Waiting Session'
                         WHEN income_transactions.status = 2
@@ -102,6 +111,10 @@ class CoachController extends BaseMenu
                         WHEN income_transactions.datetime::timestamp >= '{$previous_week}'::timestamp
                             AND income_transactions.datetime::timestamp <= '{$this_week}'::timestamp
                             AND income_transactions.approved = true
+                            THEN 'warning'
+                        WHEN income_transactions.status = 1
+                            AND income_transactions.approved = true
+                            AND income_transactions.confirmed = false
                             THEN 'warning'
                         WHEN income_transactions.status = 1
                             AND income_transactions.confirmed = false
@@ -173,15 +186,28 @@ class CoachController extends BaseMenu
                 $file = $request->file('image');
                 $path = Storage::disk('s3')->put('media', $file);
 
-                $result = IncomeTransaction::find($id)->update([
+                $data = IncomeTransaction::find($id);
+
+                $data->update([
                     'image' => $path,
                     'status' => 2,
                     'confirmed' => true,
                     'confirmed_at' => date('Y-m-d H:i:s')
                 ]);
 
-                return $result;
+                $notification = CoachNotification::create([
+                    'coach_id' => $data->coach_id,
+                    'income_transaction_id' => $data->id,
+                    'type' => 4,
+                    'text' => "Withdraw dengan nomor {$data->number} telah terkonfirmasi.",
+                    'datetime' => date('Y-m-d H:i:s')
+                ]);
+
+                event(new \App\Events\CoachNotification($notification, $data->coach_id));
+
+                return $data;
             });
+
 
             return response([
                 "status"  => 200,
