@@ -13,6 +13,8 @@ class MediaController extends Controller
 {
     public function file_upload(Request $request)
     {
+        set_time_limit(600000);
+
         try {
             $path = Storage::disk('s3')->put('media', $request->file);
 
