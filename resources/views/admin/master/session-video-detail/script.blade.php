@@ -452,7 +452,7 @@
                     url: "{{url('media/file')}}",
                     paramName: "file",
                     maxFiles: 1,
-                    timeout: 60000,
+                    timeout: 6000000,
                     maxFilesize: 2048,
                     uploadMultiple: false,
                     addRemoveLinks: true,
