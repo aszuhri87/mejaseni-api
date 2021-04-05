@@ -64,10 +64,12 @@ class CoachController extends BaseMenu
                     DB::raw("CASE
                         WHEN income_transactions.datetime::timestamp >= '{$previous_week}'::timestamp
                             AND income_transactions.datetime::timestamp <= '{$this_week}'::timestamp
+                            AND income_transactions.confirmed = false
                             AND income_transactions.approved = false
                             THEN 1
                         WHEN income_transactions.datetime::timestamp >= '{$previous_week}'::timestamp
                             AND income_transactions.datetime::timestamp <= '{$this_week}'::timestamp
+                            AND income_transactions.confirmed = false
                             AND income_transactions.approved = true
                             THEN 2
                         WHEN income_transactions.status = 1
@@ -85,10 +87,12 @@ class CoachController extends BaseMenu
                     DB::raw("CASE
                         WHEN income_transactions.datetime::timestamp >= '{$previous_week}'::timestamp
                             AND income_transactions.datetime::timestamp <= '{$this_week}'::timestamp
+                            AND income_transactions.confirmed = false
                             AND income_transactions.approved = false
                             THEN 'Waiting Approve'
                         WHEN income_transactions.datetime::timestamp >= '{$previous_week}'::timestamp
                             AND income_transactions.datetime::timestamp <= '{$this_week}'::timestamp
+                            AND income_transactions.confirmed = false
                             AND income_transactions.approved = true
                             THEN 'Waiting Transfer'
                         WHEN income_transactions.status = 1
@@ -106,10 +110,12 @@ class CoachController extends BaseMenu
                     DB::raw("CASE
                         WHEN income_transactions.datetime::timestamp >= '{$previous_week}'::timestamp
                             AND income_transactions.datetime::timestamp <= '{$this_week}'::timestamp
+                            AND income_transactions.confirmed = false
                             AND income_transactions.approved = false
                             THEN 'danger'
                         WHEN income_transactions.datetime::timestamp >= '{$previous_week}'::timestamp
                             AND income_transactions.datetime::timestamp <= '{$this_week}'::timestamp
+                            AND income_transactions.confirmed = false
                             AND income_transactions.approved = true
                             THEN 'warning'
                         WHEN income_transactions.status = 1
