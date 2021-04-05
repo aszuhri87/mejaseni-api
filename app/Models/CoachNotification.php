@@ -25,6 +25,7 @@ class CoachNotification extends Model
         'coach_id',
         'transaction_id',
         'coach_schedule_id',
+        'income_transaction_id',
         'is_read',
         'text',
         'type',
