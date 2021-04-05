@@ -64,7 +64,7 @@
                 <tr>
                     <th>No</th>
                     <th width="45%">Name</th>
-                    <th width="15%" class="text-center">Order Number</th>
+                    <th width="15%" class="text-center">Nomor Urut Video</th>
                     <th width="10%">Public</th>
                     <th width="15%">Status</th>
                     <th width="10%">Actions</th>
