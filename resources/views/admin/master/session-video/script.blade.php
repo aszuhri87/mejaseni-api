@@ -104,7 +104,7 @@
                             data: "id",
                             render : function(data, type, full, meta) {
                                 return `
-                                <a href="{{url('admin/master/courses/session-video')}}/${data}" title="Detail" class="btn btn-edit btn-sm btn-clean btn-icon mr-2">
+                                <a href="{{url('admin/master/courses/session-video')}}/${data}" title="Detail" class="btn btn-sm btn-clean btn-icon mr-2">
                                     <span class="svg-icon svg-icon-md"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-02-01-052524/theme/html/demo1/dist/../src/media/svg/icons/General/Settings-1.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                         <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                             <rect x="0" y="0" width="24" height="24"/>

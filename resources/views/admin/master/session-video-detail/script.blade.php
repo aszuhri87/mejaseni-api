@@ -452,8 +452,8 @@
                     url: "{{url('media/file')}}",
                     paramName: "file",
                     maxFiles: 1,
-                    timeout:60000,
-                    maxFilesize: 100,
+                    timeout: 60000,
+                    maxFilesize: 2048,
                     uploadMultiple: false,
                     addRemoveLinks: true,
                     init: function() {
