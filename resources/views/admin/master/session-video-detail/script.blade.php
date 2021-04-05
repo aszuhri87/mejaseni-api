@@ -66,7 +66,7 @@
 
                                 return data  ?
                                     `<span class="label label-lg label-light-info label-inline font-weight-bold py-4">Ready</span>`:
-                                    `<span class="label label-lg label-light-warning label-inline font-weight-bold py-4">Pending</span>`
+                                    `<span class="label label-lg label-light-warning label-inline font-weight-bold py-4">On Process</span>`
                             }
                         },
                         {
