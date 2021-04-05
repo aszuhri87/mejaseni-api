@@ -498,7 +498,7 @@
                     url: "{{url('media/file')}}",
                     paramName: "file",
                     maxFiles: 1,
-                    maxFilesize: 2,
+                    maxFilesize: 2048,
                     uploadMultiple: false,
                     addRemoveLinks: true,
                     init: function() {
