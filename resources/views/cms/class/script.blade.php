@@ -46,6 +46,11 @@
         $("#loginRequiredModal").modal('show')
     }
 
+    var showModalClass = ()=>{
+        $("#modal-class").modal('show')
+    }
+
+
     var showModalRegisterClassroom = (classroom_id)=>{
         $.ajax({
             url: `/student/class/${classroom_id}/detail`,
@@ -57,6 +62,7 @@
             $("#classroom-name").text(res.data.name)
             $("#classroom-session").text(`${res.data.session_total} Sesi | @${res.data.session_duration}Menit`)
             $("#classroom-price").text(`Rp.${nf.format(res.data.price)}.00`)
+            $("#class-image").attr('src',res.data.image_url)
 
             if(res.data.package_type == 1)
                 $("#classroom-type").text('Special Class')
@@ -86,6 +92,7 @@
             $("#master-lesson-platform").text(res.data.master_lesson.platform)
             $("#master-lesson-price").text(res.data.master_lesson.price)
             $("#master-lesson-description").text(res.data.master_lesson.description)
+            $("#master-lesson-banner").attr('src',res.data.master_lesson.image_url)
 
             $('#masterLessonRegisterModal').modal('show')
         })
@@ -159,6 +166,7 @@
                     let selected_category = $('.class-category-selected').data('id')
                     let selected_sub_category = undefined
                     getVideoCoach(selected_category, selected_sub_category)
+                    getPackage(selected_category, selected_sub_category, package)
 
                     event.preventDefault()
                 })
@@ -168,8 +176,10 @@
                     $(this).addClass('active');
                     let selected_category = $('.class-category-selected').data('id')
                     let selected_sub_category = $(this).data("id")
+                    let package = $('.package.active').data('id')
 
                     getVideoCoach(selected_category, selected_sub_category)
+                    getPackage(selected_category, selected_sub_category, package)
                     event.preventDefault()
                 })
 
@@ -284,6 +294,7 @@
                     if(res.data.classroom_html){
                         $("#empty-classroom").html('')
                         $("#class-content").html(res.data.classroom_html)
+                        $("#class-content-modal").html(res.data.list_classroom_html)
                         TabDetailListener()
                         splide()
                         initReadMore()

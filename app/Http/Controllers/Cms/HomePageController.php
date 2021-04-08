@@ -9,6 +9,7 @@ use App\Models\Branch;
 use App\Models\Coach;
 use App\Models\Company;
 use App\Models\SocialMedia;
+use App\Models\Passion;
 
 
 use Auth;
@@ -22,6 +23,7 @@ class HomePageController extends Controller
     {
     	$company = Company::first();
     	$branchs = Branch::all();
+        $passion = Passion::first();
     	$path = Storage::disk('s3')->url('/');
         $social_medias = DB::table('social_media')
             ->select([
@@ -126,6 +128,7 @@ class HomePageController extends Controller
     	return view('cms.homepage.index',[
             "company" => $company, 
             "branchs" => $branchs,
+            "passion" => $passion,
             "banner" => $banner, 
             "coachs" => $coachs,
             "programs" => $programs,

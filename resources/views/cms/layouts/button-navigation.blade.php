@@ -1,4 +1,3 @@
-@if(Auth::guard('student')->check())
 <div class="bottom-navigation">
     <ul class="row mx-0">
         <li class="column-center active-menu">
@@ -9,6 +8,11 @@
         <li class="column-center">
             <a class="column-center" href="{{ url('class') }}">
                 <img src="{{ asset('cms/assets/img/svg/class.svg') }}" alt="">Kelas
+            </a>
+        </li>
+        <li class="column-center">
+            <a class="column-center" href="{{ url('video-course') }}">
+                <img src="{{ asset('cms/assets/img/svg/video-box.svg') }}" alt="">Video Tutotial
             </a>
         </li>
         <li class="column-center">
@@ -29,19 +33,3 @@
         </li>
     </ul>
 </div>
-@else
-<div class="bottom-navigation">
-    <ul class="row mx-0">
-        <li class="column-center active-menu">
-            <a class="column-center" href="{{ url('/login') }}">
-                <img src="{{ asset('cms/assets/img/svg/home.svg') }}" alt="">Login
-            </a>
-        </li>
-        <li class="column-center">
-            <a class="column-center" href="{{ url('register') }}">
-                <img src="{{ asset('cms/assets/img/svg/class.svg') }}" alt="">Register
-            </a>
-        </li>
-    </ul>
-</div>
-@endif

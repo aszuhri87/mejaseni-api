@@ -68,17 +68,18 @@
                           </div>
                         </div>
                         <div class="col col-12 mt-4 justify-content-md-end">
-                          <div class="mt-5 mt-md-0">
-                            @if(!$regular_classroom->is_registered)
-                            <a class="btn btn-primary shadow" onclick="@if (Auth::guard('student')->user()){{'showModalRegisterClassroom("'.$regular_classroom->id.'")'}}@else{{'showModalLoginRequired()'}}@endif">Daftar
-                              Sekarang
-                              <img class="ml-2" src="{{ asset('cms/assets/img/svg/Sign-in.svg') }}" alt="">
-                            </a>
-                            @else
-                            <a class="btn btn-primary shadow" href="{{ url('student/my-class') }}" > Lihat Kelas
-                              <img class="ml-2" src="{{ asset('cms/assets/img/svg/Sign-in.svg') }}" alt="">
-                            </a>
-                            @endif
+                          <div class="d-flex justify-content-start">
+                            <div class="mr-2">
+                              <a class="btn btn-primary shadow" onclick="@if (Auth::guard('student')->user()){{'showModalRegisterClassroom("'.$regular_classroom->id.'")'}}@else{{'showModalLoginRequired()'}}@endif">Daftar
+                                Sekarang
+                                <img class="ml-2" src="{{ asset('cms/assets/img/svg/Sign-in.svg') }}">
+                              </a>
+                            </div>
+                            <div>
+                              <a class="btn btn-primary shadow" onclick="showModalClass()">Lihat Kelas
+                                <img class="ml-2" src="{{ asset('cms/assets/img/svg/Sign-in.svg') }}">
+                              </a>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -233,44 +234,6 @@
             </div>
           @endif
         @endif
-
-        {{-- @if(isset($selected_sub_category->is_youtube))
-          @if($selected_sub_category->is_youtube)
-            <div class="mb-3">
-              <div class="embed-responsive embed-responsive-16by9">
-                <iframe class="embed-responsive-item" frameborder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowfullscreen src="{{ $selected_sub_category->url }}" id="video-coach-review"></iframe>
-              </div>
-              <div class="px-4 px-md-0 px-md-0 pt-4 pt-md-0">
-                <div class="badge-left">
-                  <h3 class="mt-3 ml-2">{{ $selected_sub_category->coach ? $selected_sub_category->coach:''}}</h3>
-                </div>
-                <p class="my-3 desc__slider-content text-justify">{{ $selected_sub_category->description ? $selected_sub_category->description:''}}</p>
-              </div>
-            </div>
-
-            @else
-            <div class="content-embed__wrapper">
-              <video id="video-player" class="video-js w-100 h-100 vjs-big-play-centered" controls preload="auto" data-setup='{}'>
-                <source id="video-coach-review" src="{{$selected_sub_category->url}}"></source>
-                <p class="vjs-no-js">
-                  To view this video please enable JavaScript, and consider upgrading to a
-                  web browser that
-                  <a href="http://videojs.com/html5-video-support/" target="_blank">
-                    supports HTML5 video
-                  </a>
-                </p>
-              </video>
-              <div class="px-4 px-md-0 px-md-0 pt-4 pt-md-0">
-                <div class="badge-left">
-                  <h3 class="mt-3 ml-2">{{ $selected_sub_category->coach ? $selected_sub_category->coach:''}}</h3>
-                </div>
-                <p class="my-3 desc__slider-content text-justify">{{ $selected_sub_category->description ? $selected_sub_category->description:''}}</p>
-              </div>
-            </div>
-          @endif
-        @endif  --}} 
       </div>
 
   </div>

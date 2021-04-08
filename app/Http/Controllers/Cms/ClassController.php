@@ -323,21 +323,20 @@ class ClassController extends Controller
     {
         try {
             $path = Storage::disk('s3')->url('/');
-            $guest_starts = DB::table('session_videos')
+            $guest_starts = DB::table('guest_star_master_lessons')
                     ->select([
-                        'coaches.name',
-                        'coaches.id',
+                        'guest_stars.name',
+                        'guest_stars.id',
                         'expertises.name as expertise',
-                        DB::raw("CONCAT('{$path}',coaches.image) as image_url"),
+                        DB::raw("CONCAT('{$path}',guest_stars.image) as image_url"),
                     ])
-                    ->leftJoin('coaches', 'coaches.id','=','session_videos.coach_id')
-                    ->leftJoin('expertises','coaches.expertise_id','=','expertises.id')
-                    ->where('session_videos.id',$master_lesson_id)
+                    ->leftJoin('guest_stars', 'guest_stars.id','=','guest_star_master_lessons.guest_star_id')
+                    ->leftJoin('expertises','guest_stars.expertise_id','=','expertises.id')
+                    ->where('guest_star_master_lessons.master_lesson_id',$master_lesson_id)
                     ->whereNull([
-                        'session_videos.deleted_at'
-                    ])
-                    ->whereNull([
-                        'coaches.deleted_at'
+                        'guest_star_master_lessons.deleted_at',
+                        'guest_stars.deleted_at',
+                        'expertises.deleted_at'
                     ])
                     ->get();
 
@@ -364,6 +363,7 @@ class ClassController extends Controller
             $master_lesson = DB::table('master_lessons')
                     ->select([
                         'master_lessons.*',
+                        DB::raw("CONCAT('{$path}',master_lessons.poster) as image_url"),
                         'platforms.name as platform'
                     ])
                     ->where('master_lessons.id',$master_lesson_id)
@@ -624,14 +624,17 @@ class ClassController extends Controller
             }
 
             $sub_category_html = $this->_get_sub_category_html($sub_categories, $sub_classroom_category_id);
+
             $classroom_review_html = $this->_get_classroom_review_html($classrooms);
+            $list_classroom_html = $this->_get_list_class_html($classrooms, $package);
 
 
             return response([
                 "data"      => [
                   "classrooms" => $classrooms,
                   "classroom_html" => $classroom_html,
-                  "classroom_review_html" => $classroom_review_html
+                  "classroom_review_html" => $classroom_review_html,
+                  "list_classroom_html" => $list_classroom_html
                 ],
                 "message"   => 'Successfully saved!'
             ], 200);
@@ -670,6 +673,41 @@ class ClassController extends Controller
     *
     */
 
+
+    public function _get_list_class_html($classrooms, $type)
+    {
+        $html = "";
+        foreach ($classrooms as $key => $classroom) {
+            $html .= '<div class="col-lg-4 col-md-12 col-sm-12 p-2">
+                        <div class="card card-custom card-shadowless h-100">
+                            <div class="card-body p-0">
+                                <div class="overlay">
+                                    <div class="overlay-wrapper rounded bg-light text-center">
+                                        <img src="'.(isset($classroom->image_url) ? $classroom->image_url : '' ).'" alt="" class="mw-100 h-200px" />
+                                    </div>
+                                </div>
+                                <div class="text-center mt-3 mb-md-0 mb-lg-5 mb-md-0 mb-lg-5 mb-lg-0 mb-5 d-flex flex-column p-1">
+                                    <a class="font-size-h5 font-weight-bolder text-dark-75 text-hover-primary mb-1">'.( isset($classroom->name) ? $classroom->name : '' ).'</a>
+                                    <div class="d-flex flex-column"> 
+                                        <p>'.( isset($classroom->session_total) ? $classroom->session_total : '' ).' Sesi | @ '.( isset($classroom->session_duration) ? $classroom->session_duration : '' ).'menit |
+                                          <span class="fa fa-star checked mr-1" style="font-size: 15px;"></span> '.( isset($classroom->rating) ? $classroom->rating < 4 ? '4.6':$classroom->rating : '4.6' ).'
+                                      </p>
+                                        <span class="mt-2">Rp.'.number_format($classroom->price, 2).'</span>                                               
+                                      </div>
+
+                                    <a class="btn btn-primary shadow mt-5" onclick="'.$this->_is_authenticated($classroom->id, $type).'">Daftar
+                                        Sekarang
+                                        <img class="ml-2" src="cms/assets/img/svg/Sign-in.svg">
+                                      </a>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>';
+        }
+        return $html;
+    }
+
     public function _get_master_lesson_description_html($master_lesson)
     {
         $html = '<div class="desc__class-tab my-4">
@@ -691,7 +729,7 @@ class ClassController extends Controller
                     </div>
                     <div class="mt-5 mt-md-0">
                         <a  class="btn btn-primary shadow " onclick="'.$this->_is_authenticated($master_lesson->id, 3).'">Daftar Sekarang
-                            <img class="ml-2" src="/cms/assets/img/svg/Sign-in.svg" alt=""></a>
+                            <img class="ml-2" src="cms/assets/img/svg/Sign-in.svg" alt=""></a>
                     </div>
                 </div>';
         return $html;
@@ -717,12 +755,19 @@ class ClassController extends Controller
                             </div>
                         </div>
                         <div class="col col-12 mt-4 justify-content-md-end">
-                            <div class="mt-5 mt-md-0">
-                                <a class="btn btn-primary shadow" onclick="'.$this->_is_authenticated($classroom->id, 1).'">Daftar
-                                  Sekarang
-                                  <img class="ml-2" src="cms/assets/img/svg/Sign-in.svg" alt="">
-                                </a>
+                            <div class="d-flex justify-content-start">
+                            <div class="mr-2">
+                              <a class="btn btn-primary shadow"  onclick="'.$this->_is_authenticated($classroom->id, 1).'">Daftar
+                                Sekarang
+                                <img class="ml-2" src="cms/assets/img/svg/Sign-in.svg">
+                              </a>
                             </div>
+                            <div>
+                              <a class="btn btn-primary shadow" onclick="showModalClass()">Lihat Kelas
+                                <img class="ml-2" src="cms/assets/img/svg/Sign-in.svg">
+                              </a>
+                            </div>
+                          </div>
                         </div>
                     </div>
                   </div>';
@@ -874,12 +919,19 @@ class ClassController extends Controller
                                         </div>
                                     </div>
                                     <div class="col col-12 mt-4 justify-content-md-end">
-                                        <div class="mt-5 mt-md-0">
-                                            <a class="btn btn-primary shadow" onclick="'.$this->_is_authenticated($classroom->id, 1).'">Daftar
-                                              Sekarang
-                                              <img class="ml-2" src="cms/assets/img/svg/Sign-in.svg" alt="">
-                                            </a>
-                                        </div>
+                                        <div class="d-flex justify-content-start">
+                                            <div class="mr-2">
+                                              <a class="btn btn-primary shadow"  onclick="'.$this->_is_authenticated($classroom->id, 1).'">Daftar
+                                                Sekarang
+                                                <img class="ml-2" src="cms/assets/img/svg/Sign-in.svg">
+                                              </a>
+                                            </div>
+                                            <div>
+                                              <a class="btn btn-primary shadow" onclick="showModalClass()">Lihat Kelas
+                                                <img class="ml-2" src="cms/assets/img/svg/Sign-in.svg">
+                                              </a>
+                                            </div>
+                                          </div>
                                     </div>
                                 </div>
                               </div>

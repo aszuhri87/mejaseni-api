@@ -154,8 +154,8 @@
 <section id="professional-coach">
     <div class="row mx-0 d-flex">
         <div class="col-xl-4 col-12 order-md-1 order-2 my-5 pt-4 pt-md-0 pb-2 pb-md-5">
-            <h1>Kembangkan Bakatmu</h1>
-            <p class="pt-4 px-md-0 px-3 desc__professional-coach text-justify">Bersama Coach kami yang terdiri dari para Profesional di bidangnya.</p>
+            <h1>{{ isset($passion->title) ? $passion->title:"" }}</h1>
+            <p class="pt-4 px-md-0 px-3 desc__professional-coach text-justify">{{ isset($passion->description) ? $passion->description:"" }}</p>
             <div class="pt-2 pb-4 mini-coach-img__wrapper d-flex flex-row flex-wrap text-center">
                 @foreach($coachs as $coach)
                 <img src="{{ $coach->image_url ? $coach->image_url :'/assets/cms/assets/img/coach.png' }}"

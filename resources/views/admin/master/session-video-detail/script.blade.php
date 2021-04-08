@@ -243,10 +243,7 @@
 
                     $('#form-session-video-detail').find('input[name="name"]').val(data.name);
                     $('#form-session-video-detail').find('input[name="number"]').val(data.number);
-
-                    if(data.is_public){
-                        $('#switch-public').attr('checked', true);
-                    }
+                    $('#switch-public').attr('checked', data.is_public);
 
                     if(data.is_youtube){
                         $('#form-session-video-detail').find('input[name="url"]').val(data.youtube_url);

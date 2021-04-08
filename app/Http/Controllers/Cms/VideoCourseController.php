@@ -64,7 +64,8 @@ class VideoCourseController extends Controller
                 ->select(['classroom_categories.id','classroom_categories.name'])
                 ->leftJoin('sub_classroom_categories','sub_classroom_categories.classroom_category_id','=','classroom_categories.id')
                 ->whereNull([
-                    'classroom_categories.deleted_at'
+                    'classroom_categories.deleted_at',
+                    'sub_classroom_categories.deleted_at'
                 ])
                 ->first();
 
@@ -122,10 +123,10 @@ class VideoCourseController extends Controller
                 ]);
             
             if($selected_sub_categories){
-                $video_courses = $video_courses->where('session_videos.sub_classroom_category_id',$selected_sub_categories->id);
+                $video_courses = $video_courses->where('session_videos.sub_classroom_category_id',$selected_sub_categories->id)->get();
+            }else{
+                $video_courses = collect();
             }
-
-            $video_courses = $video_courses->get();
         }
 
     	return view('cms.video-course.index', [
