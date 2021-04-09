@@ -35,7 +35,8 @@ class DatabaseSeeder extends Seeder
             SocialMediaSeeder::class,
             TeamSeeder::class,
             WorkHourSeeder::class,
-            BannerSeeder::class
+            BannerSeeder::class,
+            PassionSeeder::class
 
             // CollectionSeed::class
         ]);

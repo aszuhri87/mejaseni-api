@@ -138,7 +138,9 @@ class SessionVideoController extends BaseMenu
                     $path = Storage::disk('s3')->put('media', $file);
                 }
 
-                $result = SessionVideo::find($id)->update([
+                $result = SessionVideo::find($id);
+
+                $result->update([
                     'sub_classroom_category_id' => $request->sub_classroom_category_id,
                     'expertise_id' => $request->expertise_id,
                     'coach_id' => $request->coach_id,

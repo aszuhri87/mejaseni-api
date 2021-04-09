@@ -51,6 +51,8 @@
             var videoContentChange = ()=>{
                 $(".video-title").click(function(event){
                     event.preventDefault()
+                    $("#title-video-played").text($(this).data('title'))
+                    
                     if($(this).data('youtube')){
                         $("#video-content").html(`<div class="content-embed__wrapper">
                                                     <iframe id="video-course" class="w-100 h-100" src="" frameborder="0"
@@ -61,6 +63,7 @@
                         $(".video-quality-selected").html($(this).text());
 
                         $("#video-course").attr('src',$(this).data('url'))
+
                     }else{
                         let url = $(this).data('url')
                         if(url){

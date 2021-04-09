@@ -20,7 +20,7 @@
                     </div>
                     <div class="form-group">
                         <label>
-                            Nomor Video
+                            Nomor Urut Video
                             <span class="text-danger">*</span>
                         </label>
                         <input required type="number" min="0" name="number" class="form-control" placeholder="Nomor Video"/>

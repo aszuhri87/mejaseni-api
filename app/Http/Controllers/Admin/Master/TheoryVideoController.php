@@ -38,7 +38,11 @@ class TheoryVideoController extends BaseMenu
     {
         try {
 
-            $is_exist = TheoryVideo::whereNull('deleted_at')->where('number',$request->number)->first();
+            $is_exist = TheoryVideo::whereNull('deleted_at')
+                ->where([
+                    'session_video_id' => $request->session_video_id,
+                    'number' => $request->number
+                ])->first();
 
             if($is_exist){
                 return response([
@@ -105,6 +109,20 @@ class TheoryVideoController extends BaseMenu
     public function update(Request $request, $id)
     {
         try {
+            $result = TheoryVideo::find($id);
+
+            $is_exist = TheoryVideo::whereNull('deleted_at')
+                ->where([
+                    'session_video_id' => $request->session_video_id,
+                    'number' => $request->number
+                ])->first();
+
+            if($is_exist && $result->number != $request->number){
+                return response([
+                    "message"=> "Nomor Video Sudah Digunakan",
+                ], 400);
+            }
+
             $result = DB::transaction(function () use($request, $id){
                 $result = TheoryVideo::find($id);
 
@@ -116,8 +134,8 @@ class TheoryVideoController extends BaseMenu
                         'is_public' => isset($request->is_public) ? true : false,
                 ];
 
-                if(!$request->is_youtube){
-                    if($result->video_url != $request->url){
+                if(!isset($request->is_youtube)){
+                    if(isset($request->url)){
                         $path = Storage::disk('s3')->url('/');
                         $video_converter_hook = config('app.url')."/api/video-converter/".$result->id."/hook";
                         $url = $path . $request->file;

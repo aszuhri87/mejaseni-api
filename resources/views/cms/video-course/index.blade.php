@@ -56,29 +56,39 @@
 
         <div class="store-content__wrapper mt-4">
           <div class="shine-hover" id="video_courses">
-
-            @foreach($video_courses as $video_course)
-            <div class="row mb-5 pb-2">
-              <div class="col-xl-3 mb-3 mb-md-0">
-                <a href="#">
-                  <figure><img src="{{ asset('cms/assets/img/master-lesson__banner.jpg') }}" /></figure>
-                </a>
-              </div>
-              <div class="col-xl-9 px-4">
-                <div class="badge-left">
-                  <a href="{{ url('video-course') }}/{{$video_course->id}}/detail" target="_blank">
-                    <h3 class="ml-2 mt-2 mt-md-4 mt-lg-0">{{ isset($video_course->name) ? $video_course->name:''}}</h3>
-                  </a>
-                </div>
-                <p class="mt-3 ml-3 desc__store-content text-justify">{{ isset($video_course->description) ? $video_course->description:''}}</p>
-                <div class="detail__store-content ml-3 mt-3">
-                  <div class="coach-name__store-content row-center mr-4">
-                    <img src="{{ asset('cms/assets/img/svg/User.svg') }}" class="mr-2" alt="">{{ isset($video_course->coach) ? $video_course->coach:''}}
+            @if(!$video_courses->isEmpty())
+              @foreach($video_courses as $video_course)
+                <div class="row mb-5 pb-2">
+                  <div class="col-xl-3 mb-3 mb-md-0">
+                    <a href="#">
+                      <figure><img src="{{ isset($video_course->image_url) ? $video_course->image_url:"" }}" /></figure>
+                    </a>
+                  </div>
+                  <div class="col-xl-9 px-4">
+                    <div class="badge-left">
+                      <a href="{{ url('video-course') }}/{{$video_course->id}}/detail" target="_blank">
+                        <h3 class="ml-2 mt-2 mt-md-4 mt-lg-0">{{ isset($video_course->name) ? $video_course->name:''}}</h3>
+                      </a>
+                    </div>
+                    <p class="mt-3 ml-3 desc__store-content text-justify">{{ isset($video_course->description) ? $video_course->description:''}}</p>
+                    <div class="detail__store-content ml-3 mt-3">
+                      <div class="coach-name__store-content row-center mr-4">
+                        <img src="{{ asset('cms/assets/img/svg/User.svg') }}" class="mr-2" alt="">{{ isset($video_course->coach) ? $video_course->coach:''}}
+                      </div>
+                    </div>
                   </div>
                 </div>
+                @endforeach
+            @else
+              <div class="mb-5 empty-store">
+                  <div class="row my-5 py-5">
+                      <div class="col-12 pr-0 pr-lg-4 column-center">
+                          <img style="width: 200px;" src="/cms/assets/img/svg/empty-store.svg" alt="">
+                          <h4 class="mt-3 text-center">Wah, video course yang kamu cari <br />belum dibuat nih</h4>
+                      </div>
+                  </div>
               </div>
-            </div>
-            @endforeach
+            @endif
 
           </div>
         </div>

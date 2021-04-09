@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Master;
 use App\Http\Controllers\BaseMenu;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use GuzzleHttp\Client;
 
 use App\Models\ProfileCoachVideo;
 
@@ -39,11 +40,7 @@ class ProfileVideoCoachController extends BaseMenu
             ->select([
                 'profile_coach_videos.*',
                 'coaches.name',
-                DB::raw("CASE
-                    WHEN is_youtube = true
-                    THEN profile_coach_videos.url
-                    ELSE CONCAT('{$path}',profile_coach_videos.url)
-                END url_video")
+                'profile_coach_videos.url as url_video'
             ])
             ->leftJoin('coaches','coaches.id','=','profile_coach_videos.coach_id')
             ->whereNull("profile_coach_videos.deleted_at")
@@ -56,12 +53,44 @@ class ProfileVideoCoachController extends BaseMenu
     {
         try {
             $result = DB::transaction(function () use($request){
-                $result = ProfileCoachVideo::create([
+                $video = [
                     'coach_id' => $request->coach_id,
                     'is_youtube' => isset($request->is_youtube) ? true : false,
                     'url' => isset($request->is_youtube) ? $request->url : $request->file,
-                ]);
+                ];
 
+                if(!isset($request->is_youtube)){
+                    $path = Storage::disk('s3')->url('/');
+                    $url = $path . $request->file;
+
+                    $client = new Client([
+                        'base_uri' => config('app.video_converter_host'),
+                    ]);
+
+                    $response = $client->request('POST', '/single-video',[
+                        "multipart" => [
+                            [
+                                "name" => "video",
+                                "contents" => file_get_contents($url),
+                                "filename" => $url
+                            ]
+                        ]
+                    ]);
+
+                    $status_created = 201;
+                    if($response->getStatusCode() == $status_created){
+                        $data = json_decode($response->getBody(), true);
+                        $video['url'] = $data['data'];
+                    }else{
+                        return response([
+                            "message"=> "Internal Server Error",
+                        ], $response->status());
+                    }
+
+                    
+                }
+
+                $result = ProfileCoachVideo::create($video);
                 return $result;
             });
 

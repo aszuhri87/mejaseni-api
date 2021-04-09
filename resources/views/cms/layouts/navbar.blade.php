@@ -20,7 +20,7 @@
         <a class="nav-link" href="{{ url('class') }}">Class</a>
       </li>
       <li class="nav-item @if($segment1 == 'video-course'){{'active'}}@endif">
-        <a class="nav-link" href="{{ url('video-course') }}">Video Tutorial</a>
+        <a class="nav-link" href="{{ url('video-course') }}">Tutorial Video</a>
       </li>
       <li class="nav-item @if($segment1 == 'store'){{'active'}}@endif">
         <a class="nav-link" href="{{ url('store') }}">E-Store</a>

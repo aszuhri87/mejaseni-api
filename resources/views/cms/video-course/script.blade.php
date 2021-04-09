@@ -10,7 +10,7 @@
                 eventCategorySelectedListener()
                 eventSubCategoryChangeListener()
                 eventSearchListener()
-                $('.btn-tertiary').trigger( "click" );
+                // $('.btn-tertiary').trigger( "click" );
             });
 
             var eventSearchListener = ()=>{

@@ -397,6 +397,12 @@ class BaseMenu extends Controller
                         'permission' => 'cms'
                     ],
                     [
+                        'key' => 'passion',
+                        'title' => 'Passion',
+                        'url' => 'admin/cms/passion',
+                        'permission' => 'cms'
+                    ],
+                    [
                         'key' => 'privacy-policy',
                         'title' => 'Privacy Policy',
                         'url' => 'admin/cms/privacy-policy',

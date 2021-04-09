@@ -54,6 +54,7 @@
             <div class="col-md-12">
                 <div class="badge-left mt-2">
                     <h2 class="ml-3">{{ isset($video_course->name) ? $video_course->name:'' }}</h2>
+                    <h3 class="ml-3" id="title-video-played">{{ isset($video_course_item_open->name) ? $video_course_item_open->name:'' }}</h3>
                 </div>
                 <div class="row pt-5">
                     <div class="col-md-8 mb-5 mb-lg-0" id="video-content">
@@ -102,7 +103,7 @@
                                 <ul class="my-4 playlist-ul pr-3">
                                     @foreach($video_course_items as $video_course_item)
                                         @if($video_course_item->is_public)
-                                            <a href="" data-youtube="{{ $video_course_item->is_youtube }}" data-url="{{ isset($video_course_item->is_youtube) ? $video_course_item->youtube_url:$video_course_item->id}}" class="video-title">
+                                            <a href="" data-youtube="{{ $video_course_item->is_youtube }}" data-title="{{ $video_course_item->name ? $video_course_item->name:""}}" data-url="{{ $video_course_item->is_youtube ? $video_course_item->youtube_url:$video_course_item->id}}" class="video-title">
                                                 <li class="row-center-spacebetween p-2 my-3 unlocked">
                                                     <div class="row-center-start w-80">
                                                         <div class="circle-border-icon mr-3">

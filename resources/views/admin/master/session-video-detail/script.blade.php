@@ -66,7 +66,7 @@
 
                                 return data  ?
                                     `<span class="label label-lg label-light-info label-inline font-weight-bold py-4">Ready</span>`:
-                                    `<span class="label label-lg label-light-warning label-inline font-weight-bold py-4">Pending</span>`
+                                    `<span class="label label-lg label-light-danger label-inline font-weight-bold py-4">On Process</span>`
                             }
                         },
                         {
@@ -243,10 +243,7 @@
 
                     $('#form-session-video-detail').find('input[name="name"]').val(data.name);
                     $('#form-session-video-detail').find('input[name="number"]').val(data.number);
-
-                    if(data.is_public){
-                        $('#switch-public').attr('checked', true);
-                    }
+                    $('#switch-public').attr('checked', data.is_public);
 
                     if(data.is_youtube){
                         $('#form-session-video-detail').find('input[name="url"]').val(data.youtube_url);
@@ -452,8 +449,8 @@
                     url: "{{url('media/file')}}",
                     paramName: "file",
                     maxFiles: 1,
-                    timeout:60000,
-                    maxFilesize: 100,
+                    timeout: 6000000,
+                    maxFilesize: 2048,
                     uploadMultiple: false,
                     addRemoveLinks: true,
                     init: function() {
@@ -498,7 +495,7 @@
                     url: "{{url('media/file')}}",
                     paramName: "file",
                     maxFiles: 1,
-                    maxFilesize: 2,
+                    maxFilesize: 2048,
                     uploadMultiple: false,
                     addRemoveLinks: true,
                     init: function() {

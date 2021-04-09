@@ -114,6 +114,8 @@ use App\Http\Controllers\Admin\Cms\FunCreativeController as FunCreativeControlle
 use App\Http\Controllers\Admin\Cms\ImageGaleryController as ImageGaleryController;
 use App\Http\Controllers\Admin\Cms\ReasonController as ReasonController;
 use App\Http\Controllers\Admin\Cms\StoreBannerController as StoreBannerController;
+use App\Http\Controllers\Admin\Cms\PassionController as PassionController;
+
 
 
 
@@ -170,7 +172,7 @@ use App\Http\Controllers\Cms\VideoCourseController as VideoCourseController;
 Route::get('/', [HomePageController::class, 'index']);
 Route::get('/class', [ClassController::class, 'index']);
 Route::get('/class/{category?}', [ClassController::class, 'index']);
-Route::get('/class/classroom_category/{category_id}/sub_classroom_category', [ClassController::class, 'get_sub_category']);
+Route::get('/class/classroom_category/{category_id}/sub_classroom_category/{sub_category_id}', [ClassController::class, 'get_sub_category']);
 Route::get('/classroom_category/sub_classroom_category/{sub_category_id}/classroom', [ClassController::class, 'get_classroom']);
 Route::get('/class/{classroom_category_id}/sub_classroom_category/{sub_classroom_category_id}/package/{package}', [ClassController::class, 'get_package']);
 Route::get('/class/{classroom_id}/coachs', [ClassController::class, 'get_coach']);
@@ -604,6 +606,9 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::post('store-banner/dt', [StoreBannerController::class, 'dt']);
             Route::post('store-banner/update/{id}', [StoreBannerController::class, 'update']);
             Route::resource('store-banner', StoreBannerController::class);
+
+            Route::post('passion/dt', [PassionController::class, 'dt']);
+            Route::resource('passion', PassionController::class);
 
 
 

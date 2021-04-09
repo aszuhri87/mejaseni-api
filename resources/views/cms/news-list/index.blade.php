@@ -41,8 +41,8 @@
                         @foreach($news as $new)
                             <div class="row mb-4 pr-0 pr-lg-5 pb-3">
                                 <div class="col-xl-4 mb-3 mb-md-0">
-                                    <a href="news-detail.html">
-                                        <figure><img src="{{ asset('cms/assets/img/master-lesson__banner.jpg') }}" /></figure>
+                                    <a href="{{ url('news') }}/{{$new->id}}/detail">
+                                        <figure><img src="{{ isset($new->image_url) ? $new->image_url:"" }}" /></figure>
                                     </a>
                                 </div>
                                 <div class="col-xl-8 px-4">
