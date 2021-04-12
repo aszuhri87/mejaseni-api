@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\BaseMenu;
 use Illuminate\Support\Facades\DB;
 
+use App\Models\Student;
+
 use Auth;
 use Storage;
 
@@ -19,11 +21,37 @@ class DashboardController extends BaseMenu
             ],
         ];
 
+        $pilot = Auth::guard('student')->user()->pilot;
+
         return view('student.dashboard.index', [
-            'title' => 'Dashboard',
-            'navigation' => $navigation,
-            'list_menu' => $this->menu_student(),
+            'title'         => 'Dashboard',
+            'navigation'    => $navigation,
+            'pilot'         => $pilot,
+            'list_menu'     => $this->menu_student(),
         ]);
+    }
+
+    public function save_tour($id){
+        try {
+            $data = DB::transaction(function () use($id){
+                $result = Student::find($id)->update([
+                    'pilot' => true
+                ]);
+
+                return $result;
+            });
+
+            return response([
+                "status"  => 200,
+                "data"    => $data,
+                "message" => 'OK!'
+            ],200);
+        }catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message" => $e->getMessage(),
+            ]);
+        }
     }
 
     public function total_class()

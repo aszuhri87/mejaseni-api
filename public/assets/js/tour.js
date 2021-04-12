@@ -14,7 +14,7 @@ $(function () {
                     text: "Pada dashboard kamu dapat melihat informasi-informasi mengenai kelas yang kamu ikuti",
                     attachTo: { element: ".dashboard", on: "right" },
                     buttons: [
-                        { action: t.cancel, classes: e, text: "Skip" },
+                        { action: t.cancel, classes: e + " btn-skip", text: "Skip" },
                         { text: "Next", classes: a, action: t.next },
                     ],
                 }),
@@ -105,7 +105,7 @@ $(function () {
                     attachTo: { element: ".invoice", on: "right" },
                     buttons: [
                         { text: "Back", classes: e, action: t.back },
-                        { text: "Finish", classes: a, action: t.cancel },
+                        { text: "Finish", classes: a + " btn-finish", action: t.cancel },
                     ],
                 }),
                 t.start();

@@ -33,7 +33,8 @@ class Student extends Authenticatable
         'provider',
         'token_verification',
         'token_expired_at',
-        'change_email'
+        'change_email',
+        'pilot',
     ];
 
     public $cascadeDeletes = [

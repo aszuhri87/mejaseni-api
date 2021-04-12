@@ -20,6 +20,7 @@
                 initAction();
                 studentBookingWeek();
 
+
                 $('#tour').trigger('click');
             });
 
@@ -101,6 +102,14 @@
                     event.preventDefault();
                     let filter_course = $(this).val();
                     myCourse(filter_course);
+                });
+
+                $(document).on('click','.btn-skip', function(){
+                    saveTour();
+                });
+
+                $(document).on('click','.btn-finish',function(){
+                    saveTour();
                 })
             },
             formSubmit = () => {
@@ -403,6 +412,23 @@
                 .done(function(res, xhr, meta) {
                     if(res.status == 200 ){
                         $('#student-booking-month').html(res.data);
+                    }
+                })
+                .fail(function(res, error) {
+                    toastr.error(res.responseJSON.message, 'Failed')
+                })
+                .always(function() {
+
+                });
+            },
+            saveTour = () => {
+                $.ajax({
+                    url: `{{url('student/dashboard/save-tour')}}/{{Auth::guard('student')->user()->id}}`,
+                    type: 'post',
+                })
+                .done(function(res, xhr, meta) {
+                    if(res.status == 200 ){
+                        return true;
                     }
                 })
                 .fail(function(res, error) {

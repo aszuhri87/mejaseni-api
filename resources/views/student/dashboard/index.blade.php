@@ -1,8 +1,12 @@
 @extends('layouts.app')
-@push('style')
-<link rel="stylesheet" href="{{asset('assets/css/shepherd.min.css')}}">
-<link rel="stylesheet" href="{{asset('assets/css/tour.min.css')}}">
-@endpush
+
+@if (!$pilot)
+    @push('style')
+    <link rel="stylesheet" href="{{asset('assets/css/shepherd.min.css')}}">
+    <link rel="stylesheet" href="{{asset('assets/css/tour.min.css')}}">
+    @endpush
+@endif
+
 @section('content')
 <div style="display: none">
     <button id="tour">Tour</button>
@@ -215,9 +219,14 @@
 </div>
 @endsection
 
+@if (!$pilot)
+    @push('script')
+        <script src="{{ asset('assets/js/shepherd.min.js') }}"></script>
+        <script src="{{ asset('assets/js/tour.js') }}"></script>
+    @endpush
+@endif
+
 @push('script')
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <script src="{{ asset('assets/js/shepherd.min.js') }}"></script>
-    <script src="{{ asset('assets/js/tour.js') }}"></script>
     @include('student.dashboard.script')
 @endpush

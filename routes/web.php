@@ -724,6 +724,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::get('my-course', [StudentDashboardController::class, 'my_course']);
             Route::get('progress-class', [StudentDashboardController::class, 'progress_class']);
             Route::get('summary-course', [StudentDashboardController::class, 'summary_course']);
+            Route::post('save-tour/{id}', [StudentDashboardController::class, 'save_tour']);
         });
 
         Route::group(['prefix' => 'invoice'], function () {
