@@ -93,7 +93,7 @@
             @if (Auth::guard('student')->check())
                 <div class="topbar-item">
                     <div class="btn btn-icon btn-clean btn-lg mr-1">
-                        <a href="{{ url('cart') }}" data-toggle="tooltip" title="Cart">
+                        <a href="{{ url('cart') }}" data-toggle="tooltip" title="Cart" class="cart-tour">
                             <span class="svg-icon svg-icon-xl svg-icon-primary">
                                 <!-- id="kt_quick_cart_toggle" begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Shopping/Cart3.svg-->
                                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
