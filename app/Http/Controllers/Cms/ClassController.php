@@ -885,13 +885,13 @@ class ClassController extends Controller
         if($classrooms->isEmpty())
             return "";
 
-        $html ='<div class="splide pb-4" id="class-splide">
+        $html ='<div class="splide" id="splide1">
               <div class="splide__track">
                 <ul class="splide__list" id="classrooms">';
         foreach ($classrooms as $key => $classroom) {
             $session_total = isset($classroom->session_total) ? $classroom->session_total:0;
             $session_duration = isset($classroom->session_duration) ? $classroom->session_duration:0;
-            $html .= '<li class="splide__slide px-2 pb-5">
+            $html .= '<li class="splide__slide px-2">
                         <img class="w-100 rounded" src="'. $classroom->image_url .'" alt="">
                         <div class="badge-left">
                           <h3 class="mt-4 ml-2">'. $classroom->name.'</h3>
@@ -969,12 +969,12 @@ class ClassController extends Controller
             return "";
         }
 
-        $html = '<div class="splide pb-4" id="class-splide">
+        $html = '<div class="splide" id="splide1">
                   <div class="splide__track">
                     <ul class="splide__list" id="classrooms">';
 
         foreach ($master_lessons as $key => $master_lesson) {
-            $html .= '<li class="splide__slide px-2 pb-5">
+            $html .= '<li class="splide__slide px-2">
                         <img class="w-100 rounded" src="'. (isset($master_lesson->image_url) ? $master_lesson->image_url:"") .'" alt="">
                         <div class="badge-left">
                             <h4 class="mt-4 ml-2">'. (isset($master_lesson->name) ? $master_lesson->name:"") .'</h3>
