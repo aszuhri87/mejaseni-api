@@ -439,6 +439,12 @@ class BaseMenu extends Controller
                         'permission' => 'cms'
                     ],
                     [
+                        'key' => 'tutorial-video',
+                        'title' => 'Tutorial Video',
+                        'url' => 'admin/cms/tutorial-video',
+                        'permission' => 'cms'
+                    ],
+                    [
                         'key' => 'working-hour',
                         'title' => 'Working Hour',
                         'url' => 'admin/cms/working-hour',
