@@ -2,27 +2,27 @@
     <ul class="row mx-0">
         <li class="column-center active-menu">
             <a class="column-center" href="{{ url('/') }}">
-                <img src="{{ asset('cms/assets/img/svg/home.svg') }}" alt="">Home
+                <img src="{{ asset('cms/assets/img/svg/home.svg') }}" alt="">
             </a>
         </li>
         <li class="column-center">
             <a class="column-center" href="{{ url('class') }}">
-                <img src="{{ asset('cms/assets/img/svg/class.svg') }}" alt="">Kelas
+                <img src="{{ asset('cms/assets/img/svg/class.svg') }}" alt="">
             </a>
         </li>
         <li class="column-center">
             <a class="column-center" href="{{ url('video-course') }}">
-                <img src="{{ asset('cms/assets/img/svg/video-box.svg') }}" alt="">Video Tutotial
+                <img src="{{ asset('cms/assets/img/svg/video-box.svg') }}" alt="">
             </a>
         </li>
         <li class="column-center">
             <a class="column-center" href="{{ url('store') }}">
-                <img src="{{ asset('cms/assets/img/svg/e-store.svg') }}" alt="">E-Store
+                <img src="{{ asset('cms/assets/img/svg/e-store.svg') }}" alt="">
             </a>
         </li>
         <li class="column-center ">
             <a class="column-center" href="{{ url('news-event') }}">
-                <img src="{{ asset('cms/assets/img/svg/event.svg') }}" alt="">Event
+                <img src="{{ asset('cms/assets/img/svg/event.svg') }}" alt="">
             </a>
         </li>
         <li class="column-center ">
