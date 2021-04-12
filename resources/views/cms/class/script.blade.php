@@ -472,8 +472,8 @@
             }
 
             splide = () => {
-                splide_class = new Splide('#class-splide', {
-                    pagination: true,
+                splide_class = new Splide('#splide1', {
+                    pagination: false,
                     lazyLoad: true,
                     perPage: 1,
                     type: 'loop',
