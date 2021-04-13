@@ -116,6 +116,8 @@ use App\Http\Controllers\Admin\Cms\ReasonController as ReasonController;
 use App\Http\Controllers\Admin\Cms\StoreBannerController as StoreBannerController;
 use App\Http\Controllers\Admin\Cms\PassionController as PassionController;
 use App\Http\Controllers\Admin\Cms\TutorialVideoController as TutorialVideoController;
+use App\Http\Controllers\Admin\Cms\ClassController as ClassRoomReviewController;
+
 
 
 
@@ -614,6 +616,11 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::post('tutorial-video/dt', [TutorialVideoController::class, 'dt']);
             Route::post('tutorial-video/update/{id}', [TutorialVideoController::class, 'update']);
             Route::resource('tutorial-video', TutorialVideoController::class);
+
+            Route::post('classroom/dt', [ClassRoomReviewController::class, 'dt']);
+            Route::get('classroom/{category_id}/get-classroom', [ClassRoomReviewController::class, 'get_classrooms']);
+            Route::resource('classroom', ClassRoomReviewController::class);
+            
 
 
 

@@ -193,8 +193,10 @@
                     $(this).addClass('active');
                     let selected_category = $('.class-category-selected').data('id')
                     let selected_sub_category = $(this).data("id")
+                    let package = $('.package.active').data('id')
 
                     getVideoCoach(selected_category, selected_sub_category)
+                    getPackage(selected_category, selected_sub_category, package)
                     event.preventDefault()
                 })
             }
@@ -289,8 +291,6 @@
                     type: 'GET',
                 })
                 .done(function(res, xhr, meta) {
-                    $("#sub-category").html(res.data.sub_category_html)
-                    initSubCategory()
                     if(res.data.classroom_html){
                         $("#empty-classroom").html('')
                         $("#class-content").html(res.data.classroom_html)

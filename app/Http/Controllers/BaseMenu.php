@@ -349,6 +349,12 @@ class BaseMenu extends Controller
                         'permission' => 'cms'
                     ],
                     [
+                        'key' => 'classroom',
+                        'title' => 'Classroom',
+                        'url' => 'admin/cms/classroom',
+                        'permission' => 'cms'
+                    ],
+                    [
                         'key' => 'company',
                         'title' => 'Company',
                         'url' => 'admin/cms/company',

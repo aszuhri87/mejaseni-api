@@ -10,6 +10,7 @@ use App\Models\Branch;
 use App\Models\Company;
 use App\Models\Classroom;
 use App\Models\Cart;
+use App\Models\ClassroomCategory;
 
 use DB;
 use Storage;
@@ -56,6 +57,7 @@ class ClassController extends Controller
             ->select([
                 'classroom_categories.id', 
                 'classroom_categories.name',
+                'classroom_categories.classroom_id',
                 'profile_coach_videos.is_youtube',
                 'profile_coach_videos.url',
                 'coaches.name as coach',
@@ -118,15 +120,15 @@ class ClassController extends Controller
                         'coaches.name as coach',
                         'coaches.description'
                     ])
-                    ->where('sub_classroom_categories.classroom_category_id',$selected_category->id)
+                    ->leftJoin('classrooms','classrooms.sub_classroom_category_id','=','sub_classroom_categories.id')
                     ->leftJoin('profile_coach_videos','profile_coach_videos.id','=','sub_classroom_categories.profile_coach_video_id')
                     ->leftJoin('coaches','coaches.id','=','profile_coach_videos.coach_id')
                     ->whereNull([
                         'sub_classroom_categories.deleted_at',
                         'profile_coach_videos.deleted_at'
                     ])
-                ->first();
-
+                    ->where('classrooms.id',$selected_category->classroom_id)
+                    ->first();
             
             $is_registered = DB::table('carts')
                     ->where('classroom_id','!=',null)
@@ -392,6 +394,14 @@ class ClassController extends Controller
     public function get_sub_category($category_id, $sub_category_id)
     {
         try {
+            $selected_sub_category = DB::table('classrooms')
+                                        ->select([
+                                            'classrooms.sub_classroom_category_id as id'
+                                        ])
+                                        ->leftJoin('classroom_categories','classroom_categories.classroom_id','=','classrooms.id')
+                                        ->where('classroom_categories.id',$category_id)
+                                        ->first();
+
             $sub_categories = DB::table('sub_classroom_categories')
                     ->select([
                         'sub_classroom_categories.id',
@@ -411,6 +421,7 @@ class ClassController extends Controller
                     ->get();
 
             $video_coach = null;
+            $selected_sub_category_id = null;
 
             if(!($sub_category_id == "undefined")){
                 $video_coach = DB::table('sub_classroom_categories')
@@ -430,6 +441,28 @@ class ClassController extends Controller
                     ])
                     ->where('sub_classroom_categories.id',$sub_category_id)
                     ->first();
+
+            }else if(isset($selected_sub_category->id)){
+                $video_coach = DB::table('sub_classroom_categories')
+                    ->select([
+                        'sub_classroom_categories.id',
+                        'sub_classroom_categories.name',
+                        'profile_coach_videos.is_youtube',
+                        'profile_coach_videos.url',
+                        'coaches.name as coach',
+                        'coaches.description'
+                    ])
+                    ->leftJoin('profile_coach_videos','profile_coach_videos.id','=','sub_classroom_categories.profile_coach_video_id')
+                    ->leftJoin('coaches','coaches.id','=','profile_coach_videos.coach_id')
+                    ->whereNull([
+                        'sub_classroom_categories.deleted_at',
+                        'profile_coach_videos.deleted_at'
+                    ])
+                    ->where('sub_classroom_categories.id',$selected_sub_category->id)
+                    ->first();
+
+                $selected_sub_category_id = $selected_sub_category->id;
+
             }else{
                 $video_coach = DB::table('classroom_categories')
                     ->select([
@@ -453,7 +486,7 @@ class ClassController extends Controller
             return response([
                 "data"      => [
                     "sub_categories" => $sub_categories,
-                    "sub_category_html" => $this->_get_sub_category_html($sub_categories),
+                    "sub_category_html" => $this->_get_sub_category_html($sub_categories, $selected_sub_category_id),
                     "video_coach" => $video_coach
                 ],
                 "message"   => 'Successfully'
@@ -474,14 +507,17 @@ class ClassController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function _get_sub_category_html($sub_categories)
+    public function _get_sub_category_html($sub_categories, $selected_sub_category=null)
     {
         $sub_category_html = "";
         if($sub_categories->isEmpty())
             return $sub_category_html;
 
         foreach ($sub_categories as $key => $sub_category) {
-            $sub_category_html .= '<button class="btn btn-tertiary mr-2 mb-2" data-id="'. $sub_category->id .'">'. $sub_category->name .'</button>';
+            if($selected_sub_category == $sub_category->id)
+                $sub_category_html .= '<button class="btn btn-tertiary mr-2 mb-2 active" data-id="'. $sub_category->id .'">'. $sub_category->name .'</button>';
+            else
+                $sub_category_html .= '<button class="btn btn-tertiary mr-2 mb-2" data-id="'. $sub_category->id .'">'. $sub_category->name .'</button>';
         }
 
         return $sub_category_html;
@@ -537,6 +573,8 @@ class ClassController extends Controller
             $master_lesson_type = 3;
             $path = Storage::disk('s3')->url('/');
             $classroom_html = "";
+
+            $selected_category = ClassroomCategory::find($classroom_category_id);
 
             $sub_categories = DB::table('sub_classroom_categories')
                     ->select([

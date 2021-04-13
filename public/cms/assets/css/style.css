@@ -23095,8 +23095,10 @@ div {
 	}
 	#our-team .splide__arrow,
 	#splide1 .splide__arrow {
-		top: 98%;
-		z-index: 2
+		top: 28%;
+		z-index: 2;
+		margin-left: -72px;
+		margin-right: -72px;
 	}
 	#our-team .splide__arrow--prev,
 	#splide1 .splide__arrow--prev {
