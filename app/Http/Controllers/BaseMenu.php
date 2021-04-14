@@ -349,9 +349,9 @@ class BaseMenu extends Controller
                         'permission' => 'cms'
                     ],
                     [
-                        'key' => 'classroom',
-                        'title' => 'Classroom',
-                        'url' => 'admin/cms/classroom',
+                        'key' => 'class-review',
+                        'title' => 'Class Review',
+                        'url' => 'admin/cms/class-review',
                         'permission' => 'cms'
                     ],
                     [

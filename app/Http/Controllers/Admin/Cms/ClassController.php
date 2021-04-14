@@ -33,7 +33,7 @@ class ClassController extends BaseMenu
             ],
         ];
 
-        return view('admin.cms.classroom.index', [
+        return view('admin.cms.class-review.index', [
             'title' => 'Classroom',
             'navigation' => $navigation,
             'list_menu' => $this->menu_admin(),
@@ -47,7 +47,8 @@ class ClassController extends BaseMenu
             ->select([
                 'classroom_categories.id',
                 'classroom_categories.name as category',
-                'classrooms.name as classroom'
+                'classrooms.name as classroom',
+                'classrooms.id as classroom_id'  
             ])
             ->leftJoin('classrooms','classrooms.id','=','classroom_categories.classroom_id')
             ->whereNull([

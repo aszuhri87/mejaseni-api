@@ -1,8 +1,8 @@
 <!-- Modal-->
-<div class="modal" id="modal-classroom" tabindex="-1" role="dialog">
+<div class="modal" id="modal-class-review" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <form id="form-classroom" autocomplete="off">
+            <form id="form-class-review" autocomplete="off">
                 <div class="modal-header">
                     <h5 class="modal-title">Review Classroom</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">

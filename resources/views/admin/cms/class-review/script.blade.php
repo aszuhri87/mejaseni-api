@@ -17,7 +17,7 @@
                     sScrollY: ($(window).height() < 700) ? $(window).height() - 200 : $(window).height() - 450,
                     ajax: {
                         type: 'POST',
-                        url: "{{ url('admin/cms/classroom/dt') }}",
+                        url: "{{ url('admin/cms/class-review/dt') }}",
                     },
                     columns: [
                         { data: 'DT_RowIndex' },
@@ -49,7 +49,7 @@
                             render : function(data, type, full, meta) {
                                 return `
                                 @can('sub_category_class_update')
-                                    <a href="{{url('/admin/cms/classroom')}}/${data}" title="Edit" class="btn btn-edit btn-sm btn-clean btn-icon mr-2" title="Edit details">
+                                    <a href="{{url('/admin/cms/class-review')}}/${data}" title="Edit" class="btn btn-edit btn-sm btn-clean btn-icon mr-2" title="Edit details">
                                         <span class="svg-icon svg-icon-md">
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -94,19 +94,19 @@
 
                     var data = init_table.row($(this).parents('tr')).data();
 
-                    $('#form-classroom').trigger("reset");
-                    $('#form-classroom').attr('action', $(this).attr('href'));
-                    $('#form-classroom').attr('method','PUT');
+                    $('#form-class-review').trigger("reset");
+                    $('#form-class-review').attr('action', $(this).attr('href'));
+                    $('#form-class-review').attr('method','PUT');
 
-                    $('#form-classroom').find('input[name="category"]').val(data.category);
-                    get_classroom(data.id)
+                    $('#form-class-review').find('input[name="category"]').val(data.category);
+                    get_classroom(data.id, data.classroom_id)
 
-                    showModal('modal-classroom');
+                    showModal('modal-class-review');
                 });
 
             },
             formSubmit = () => {
-                $('#form-classroom').submit(function(event){
+                $('#form-class-review').submit(function(event){
                     event.preventDefault();
 
                     btn_loading('start')
@@ -118,7 +118,7 @@
                     .done(function(res, xhr, meta) {
                         toastr.success(res.message, 'Success');
                         init_table.draw(false);
-                        hideModal('modal-classroom');
+                        hideModal('modal-class-review');
                     })
                     .fail(function(res, error) {
                         toastr.error(res.responseJSON.message, 'Failed')
@@ -136,9 +136,9 @@
                 init_classroom = new SlimSelect({
                     select: '#classroom'
                 })
-
+                console.log(selected_id)
                 $.ajax({
-                    url: `{{ url('admin/cms/classroom') }}/${category_id}/get-classroom` ,
+                    url: `{{ url('admin/cms/class-review') }}/${category_id}/get-classroom` ,
                     type: 'GET',
                     dataType: 'json',
                 })
@@ -146,14 +146,14 @@
                     let element = `<option value="">Select Class</option>`
 
                     $.each(res.data, function(index, data) {
-                        if(selected_id == data.id){
-                            element += `<option value="${data.id}" selected>${data.name}</option>`;
-                        }else{
-                            element += `<option value="${data.id}">${data.name}</option>`;
-                        }
+                        element += `<option value="${data.id}">${data.name}</option>`;
                     });
 
                     $('#classroom').html(element);
+                    if(selected_id){
+                        $("#classroom").val(selected_id).change();
+                    }
+
                 })
             }
         };

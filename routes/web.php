@@ -617,9 +617,9 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::post('tutorial-video/update/{id}', [TutorialVideoController::class, 'update']);
             Route::resource('tutorial-video', TutorialVideoController::class);
 
-            Route::post('classroom/dt', [ClassRoomReviewController::class, 'dt']);
-            Route::get('classroom/{category_id}/get-classroom', [ClassRoomReviewController::class, 'get_classrooms']);
-            Route::resource('classroom', ClassRoomReviewController::class);
+            Route::post('class-review/dt', [ClassRoomReviewController::class, 'dt']);
+            Route::get('class-review/{category_id}/get-classroom', [ClassRoomReviewController::class, 'get_classrooms']);
+            Route::resource('class-review', ClassRoomReviewController::class);
             
 
 
