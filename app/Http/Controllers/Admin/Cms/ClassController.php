@@ -33,7 +33,7 @@ class ClassController extends BaseMenu
             ],
         ];
 
-        return view('admin.cms.class-review.index', [
+        return view('admin.cms.class-preview.index', [
             'title' => 'Classroom',
             'navigation' => $navigation,
             'list_menu' => $this->menu_admin(),

@@ -5,7 +5,7 @@
     <div class="card-body">
         <div class="d-flex justify-content-between align-items-center">
             <div class="my-title">
-                <h4 class="m-0 p-0">Class Review</h4>
+                <h4 class="m-0 p-0">Class Preview</h4>
             </div>
             <div class="my-toolbar d-flex">
                 <div class="form-group">
@@ -62,9 +62,9 @@
     </div>
 </div>
 
-@include('admin.cms.class-review.modal')
+@include('admin.cms.class-preview.modal')
 @endsection
 
 @push('script')
-    @include('admin.cms.class-review.script')
+    @include('admin.cms.class-preview.script')
 @endpush

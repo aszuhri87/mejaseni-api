@@ -17,7 +17,7 @@
                     sScrollY: ($(window).height() < 700) ? $(window).height() - 200 : $(window).height() - 450,
                     ajax: {
                         type: 'POST',
-                        url: "{{ url('admin/cms/class-review/dt') }}",
+                        url: "{{ url('admin/cms/class-preview/dt') }}",
                     },
                     columns: [
                         { data: 'DT_RowIndex' },
@@ -49,7 +49,7 @@
                             render : function(data, type, full, meta) {
                                 return `
                                 @can('sub_category_class_update')
-                                    <a href="{{url('/admin/cms/class-review')}}/${data}" title="Edit" class="btn btn-edit btn-sm btn-clean btn-icon mr-2" title="Edit details">
+                                    <a href="{{url('/admin/cms/class-preview')}}/${data}" title="Edit" class="btn btn-edit btn-sm btn-clean btn-icon mr-2" title="Edit details">
                                         <span class="svg-icon svg-icon-md">
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -94,19 +94,19 @@
 
                     var data = init_table.row($(this).parents('tr')).data();
 
-                    $('#form-class-review').trigger("reset");
-                    $('#form-class-review').attr('action', $(this).attr('href'));
-                    $('#form-class-review').attr('method','PUT');
+                    $('#form-class-preview').trigger("reset");
+                    $('#form-class-preview').attr('action', $(this).attr('href'));
+                    $('#form-class-preview').attr('method','PUT');
 
-                    $('#form-class-review').find('input[name="category"]').val(data.category);
+                    $('#form-class-preview').find('input[name="category"]').val(data.category);
                     get_classroom(data.id, data.classroom_id)
 
-                    showModal('modal-class-review');
+                    showModal('modal-class-preview');
                 });
 
             },
             formSubmit = () => {
-                $('#form-class-review').submit(function(event){
+                $('#form-class-preview').submit(function(event){
                     event.preventDefault();
 
                     btn_loading('start')
@@ -118,7 +118,7 @@
                     .done(function(res, xhr, meta) {
                         toastr.success(res.message, 'Success');
                         init_table.draw(false);
-                        hideModal('modal-class-review');
+                        hideModal('modal-class-preview');
                     })
                     .fail(function(res, error) {
                         toastr.error(res.responseJSON.message, 'Failed')
@@ -138,7 +138,7 @@
                 })
                 console.log(selected_id)
                 $.ajax({
-                    url: `{{ url('admin/cms/class-review') }}/${category_id}/get-classroom` ,
+                    url: `{{ url('admin/cms/class-preview') }}/${category_id}/get-classroom` ,
                     type: 'GET',
                     dataType: 'json',
                 })
