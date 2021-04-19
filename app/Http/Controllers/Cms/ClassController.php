@@ -55,7 +55,7 @@ class ClassController extends Controller
 
         $selected_category = DB::table('classroom_categories')
             ->select([
-                'classroom_categories.id', 
+                'classroom_categories.id',
                 'classroom_categories.name',
                 'classroom_categories.classroom_id',
                 'profile_coach_videos.is_youtube',
@@ -129,7 +129,7 @@ class ClassController extends Controller
                     ])
                     ->where('classrooms.id',$selected_category->classroom_id)
                     ->first();
-            
+
             $is_registered = DB::table('carts')
                     ->where('classroom_id','!=',null)
                     ->whereNull('deleted_at');
@@ -466,7 +466,7 @@ class ClassController extends Controller
             }else{
                 $video_coach = DB::table('classroom_categories')
                     ->select([
-                        'classroom_categories.id', 
+                        'classroom_categories.id',
                         'classroom_categories.name',
                         'profile_coach_videos.is_youtube',
                         'profile_coach_videos.url',
@@ -726,11 +726,11 @@ class ClassController extends Controller
                                 </div>
                                 <div class="text-center mt-3 mb-md-0 mb-lg-5 mb-md-0 mb-lg-5 mb-lg-0 mb-5 d-flex flex-column p-1">
                                     <a class="font-size-h5 font-weight-bolder text-dark-75 text-hover-primary mb-1">'.( isset($classroom->name) ? $classroom->name : '' ).'</a>
-                                    <div class="d-flex flex-column"> 
+                                    <div class="d-flex flex-column">
                                         <p>'.( isset($classroom->session_total) ? $classroom->session_total : '' ).' Sesi | @ '.( isset($classroom->session_duration) ? $classroom->session_duration : '' ).'menit |
                                           <span class="fa fa-star checked mr-1" style="font-size: 15px;"></span> '.( isset($classroom->rating) ? $classroom->rating < 4 ? '4.6':$classroom->rating : '4.6' ).'
                                       </p>
-                                        <span class="mt-2">Rp.'.number_format($classroom->price, 2).'</span>                                               
+                                        <span class="mt-2">Rp.'.number_format($classroom->price, 2).'</span>
                                       </div>
 
                                     <a class="btn btn-primary shadow mt-5" onclick="'.$this->_is_authenticated($classroom->id, $type).'">Daftar
@@ -1003,6 +1003,10 @@ class ClassController extends Controller
 
     public function _get_master_lesson_html($master_lessons)
     {
+        date_default_timezone_set("Asia/Jakarta");
+
+        $now = date('Y-m-d H:i:s');
+
         if($master_lessons->isEmpty()){
             return "";
         }
@@ -1012,6 +1016,18 @@ class ClassController extends Controller
                     <ul class="splide__list" id="classrooms">';
 
         foreach ($master_lessons as $key => $master_lesson) {
+
+            if($master_lesson->datetime > $now){
+                $button = '<div class="mt-3">
+                        <a class="btn btn-primary shadow" onclick="'.$this->_is_authenticated($master_lesson->id, 3).'">Daftar Sekarang
+                            <img class="ml-2" src="/cms/assets/img/svg/Sign-in.svg" alt=""></a>
+                    </div>';
+            }else{
+                $button = '<div class="mt-3">
+                    <label class="text-muted">Sudah terlaksana</label>
+                </div>';
+            }
+
             $html .= '<li class="splide__slide px-2">
                         <img class="w-100 rounded" src="'. (isset($master_lesson->image_url) ? $master_lesson->image_url:"") .'" alt="">
                         <div class="badge-left">
@@ -1034,15 +1050,16 @@ class ClassController extends Controller
                                     <label>Platform</label>
                                     <span>'.(isset($master_lesson->platform) ? $master_lesson->platform:"").'</span>
                                 </div>
+                                <div class="col-6 mt-3 d-flex flex-column">
+                                    <label>Tanggal</label>
+                                    <span>'.(isset($master_lesson->datetime) ? date('d M Y H:i:s', strtotime($master_lesson->datetime)) : "").'</span>
+                                </div>
                             </div>
-                            <div class="class-tab-summary d-flex justify-content-between flex-md-row flex-column mt-5 mb-4">
+                            <div class="class-tab-summary mt-5 mb-4">
                                 <div class="d-flex flex-column">
                                     <span class="mt-2">Rp. '.(isset($master_lesson->price) ? number_format($master_lesson->price, 2):"").'</span>
                                 </div>
-                                <div class="mt-5 mt-md-0">
-                                    <a class="btn btn-primary shadow" onclick="'.$this->_is_authenticated($master_lesson->id, 3).'">Daftar Sekarang
-                                        <img class="ml-2" src="/cms/assets/img/svg/Sign-in.svg" alt=""></a>
-                                </div>
+                                '.($button).'
                             </div>
                         </div>
                     </li>';
