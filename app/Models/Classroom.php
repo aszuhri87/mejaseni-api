@@ -11,6 +11,10 @@ use App\Traits\RestoreSoftDeletes;
 
 class Classroom extends Model
 {
+    /*
+    package_type :  1 special
+                    2 regular
+    */
     use HasFactory, Uuid, SoftDeletes, SoftDeleteCascade, RestoreSoftDeletes;
 
     public $incrementing = false;

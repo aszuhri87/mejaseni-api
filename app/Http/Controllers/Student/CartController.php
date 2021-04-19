@@ -17,6 +17,7 @@ class CartController extends Controller
     {
         try {
             $result = DB::transaction(function () use($request){
+                
                 $data = [];
                 if($request->type == 1){
                     $data = [

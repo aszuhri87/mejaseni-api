@@ -782,6 +782,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::get('get-sub-classroom-category', [StudentNewPackageController::class, 'get_sub_classroom_category']);
             Route::get('sub-classroom-category/{sub_classroom_category_id}', [StudentNewPackageController::class, 'get_classroom_by_sub_category_id']);
             Route::get('get-session-video', [StudentNewPackageController::class, 'get_session_video']);
+            Route::get('get-master-lesson', [StudentNewPackageController::class, 'get_master_lesson']);
             Route::get('classroom-category/{classroom_category_id}', [StudentNewPackageController::class, 'get_classroom_by_category_id']);
         });
 

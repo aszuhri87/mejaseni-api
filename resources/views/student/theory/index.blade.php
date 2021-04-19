@@ -40,7 +40,7 @@
         </div>
     </div>
 
-    <div class="row mt-5 theory">
+    <div class="row mt-5" id="theory">
 
     </div>
 </div>

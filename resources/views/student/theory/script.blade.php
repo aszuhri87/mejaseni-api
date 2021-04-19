@@ -206,7 +206,7 @@
                                     </div>
                                 `;
                             }
-                            $('.theory').html(element);
+                            $('#theory').html(element);
                         }
                     })
                     .fail(function(res, error) {
@@ -377,7 +377,7 @@
                             `
                         }
                         KTApp.unblockPage();
-                        $('.theory').html(element);
+                        $('#theory').html(element);
                     }
                 })
                 .fail(function(res, error) {

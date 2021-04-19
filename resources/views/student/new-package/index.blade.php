@@ -6,7 +6,13 @@
         a:hover{
             color: #7F16A7 !important
         }
+        @media only screen and (max-width: 600px) {
+            #group-filter {
+                width: 100%;
+            }
+        }
     </style>
+
 @endpush
 @section('content')
 <div class="splide mb-4" id="category-splide">
@@ -16,13 +22,28 @@
         </ul>
     </div>
 </div>
+
 <div id="category" class="d-flex align-content-start flex-wrap">
 
 </div>
 <div id="special-offer" class="mt-5 mb-5">
 
 </div>
-<h5 class="mt-5 mb-5">Class Conference Package</h5>
+
+<div class="row">
+    <div class="col-lg-6">
+        <h5 class="mt-5 mb-5">Class Conference Package</h5>
+    </div>
+    <div class="col-lg-6 d-flex justify-content-end mb-5" >
+        <input type="hidden" name="init_class_filter" id="init_class_filter">
+        <div class="btn-group" id="group-filter" role="group" aria-label="Basic example">
+            <button type="button" class="btn btn-outline-primary filter" data-package_type='1'>Special</button>
+            <button type="button" class="btn btn-outline-primary filter" data-package_type='2'>Regular</button>
+            <button type="button" class="btn btn-outline-primary master-lesson" data-package_type='3'>Master Lesson</button>
+        </div>
+    </div>
+</div>
+
 <div class="row" id="conference-package">
 
 </div>

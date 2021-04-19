@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Storage;
 use Auth;
 
+use App\Models\GuestStarMasterLesson;
+
 class NewPackageController extends BaseMenu
 {
     public function index()
@@ -26,7 +28,7 @@ class NewPackageController extends BaseMenu
         ]);
     }
 
-    public function get_package()
+    public function get_package(Request $request)
     {
         try {
             $path = Storage::disk('s3')->url('/');
@@ -74,6 +76,11 @@ class NewPackageController extends BaseMenu
                     $join->on('classrooms.id', '=', 'carts.classroom_id');
                 })
                 ->where('classrooms.is_discount', false)
+                ->where(function($query) use($request){
+                    if($request->package_type){
+                        $query->where('package_type',$request->package_type);
+                    }
+                })
                 ->whereNull('classrooms.deleted_at')
                 ->distinct('classrooms.id')
                 ->paginate(6);
@@ -375,13 +382,6 @@ class NewPackageController extends BaseMenu
                 ])
                 ->whereNull('coaches.deleted_at');
 
-            $sub_classroom_category = DB::table('sub_classroom_categories')
-                ->select([
-                    'sub_classroom_categories.id',
-                    'sub_classroom_categories.image',
-                ])
-                ->whereNull('sub_classroom_categories.deleted_at');
-
             $result = DB::table('session_videos')
                 ->select([
                     'session_videos.id',
@@ -392,13 +392,10 @@ class NewPackageController extends BaseMenu
                     'session_videos.price',
                     'session_videos.coach_id',
                     'session_videos.expertise_id',
-                    DB::raw("CONCAT('{$path}',sub_classroom_categories.image) as image_url"),
+                    DB::raw("CONCAT('{$path}',session_videos.image) as image_url"),
                     'coaches.name as coach_name',
                     'expertises.name as expertise_name',
                 ])
-                ->joinSub($sub_classroom_category, 'sub_classroom_categories', function ($join) {
-                    $join->on('session_videos.sub_classroom_category_id', '=', 'sub_classroom_categories.id');
-                })
                 ->joinSub($coach, 'coaches', function ($join) {
                     $join->on('session_videos.coach_id', '=', 'coaches.id');
                 })
@@ -538,6 +535,131 @@ class NewPackageController extends BaseMenu
             return response([
                 "status"    => 200,
                 "data"      => $result,
+                "message"   => 'OK!'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function get_master_lesson()
+    {
+        try {
+            $path = Storage::disk('s3')->url('/');
+
+            $transaction = DB::table('transactions')
+                ->select([
+                    'transactions.id',
+                    'transactions.status',
+                ])
+                ->where('transactions.status',2)
+                ->whereNull('transactions.deleted_at');
+
+            $transaction_detail = DB::table('transaction_details')
+                ->select([
+                    'transaction_details.cart_id',
+                    'transaction_details.id',
+                    'transactions.status',
+                ])
+                ->leftJoinSub($transaction, 'transactions', function ($join) {
+                    $join->on('transaction_details.transaction_id', '=', 'transactions.id');
+                })
+                ->whereNull('transaction_details.deleted_at');
+
+            $cart = DB::table('carts')
+                ->select([
+                    'carts.master_lesson_id',
+                    'transaction_details.id as transaction_detail_id',
+                    'transaction_details.status'
+                ])
+                ->joinSub($transaction_detail, 'transaction_details', function ($join) {
+                    $join->on('carts.id', '=', 'transaction_details.cart_id');
+                })
+                ->where([
+                    'carts.student_id' => Auth::guard('student')->user()->id
+                ])
+                ->whereNull('carts.deleted_at')
+                ->whereNotNull('transaction_details.id');
+
+            $sub_master_lesson = DB::table('master_lessons')
+                ->select([
+                    'master_lessons.id',
+                    DB::raw("COUNT(carts.master_lesson_id) as total_booking")
+                ])
+                ->leftJoinSub($cart, 'carts', function ($join) {
+                    $join->on('master_lessons.id', '=', 'carts.master_lesson_id');
+                })
+                ->groupBy('master_lessons.id');
+
+            $master_lesson = DB::table('master_lessons')
+                ->select([
+                    'master_lessons.id',
+                    'master_lessons.name',
+                    DB::raw("CONCAT('{$path}',master_lessons.poster) as poster"),
+                    'master_lessons.slot',
+                    'master_lessons.platform_link',
+                    'master_lessons.price',
+                    'master_lessons.datetime',
+                    'master_lessons.description',
+                    'sub_master_lesson.total_booking',
+                    DB::raw("(
+                        CASE
+                            WHEN carts.status = 2 THEN
+                                1
+                            ELSE
+                                0
+                        END
+                    )AS is_buy")
+                ])
+                ->leftJoinSub($sub_master_lesson, 'sub_master_lesson', function ($join) {
+                    $join->on('master_lessons.id', '=', 'sub_master_lesson.id');
+                })
+                ->leftJoinSub($cart, 'carts', function ($join) {
+                    $join->on('master_lessons.id', '=', 'carts.master_lesson_id');
+                })
+                ->whereRaw('master_lessons.datetime::timestamp > now()::timestamp')
+                ->whereRaw('(master_lessons.slot::numeric - sub_master_lesson.total_booking::numeric) > 0')
+                ->whereNull('master_lessons.deleted_at')
+                ->paginate(10);
+
+            foreach ($master_lesson as $key => $value) {
+                $guest_star = DB::table('guest_star_master_lessons')
+                    ->select([
+                        'guest_star_master_lessons.*',
+                        DB::raw("CONCAT('{$path}',guest_stars.image) as image"),
+                        'guest_stars.name',
+                        'guest_stars.description',
+                    ])
+                    ->leftJoin('guest_stars','guest_star_master_lessons.guest_star_id','=','guest_stars.id')
+                    ->where('master_lesson_id', $value->id)
+                    ->whereNull([
+                        'guest_star_master_lessons.deleted_at',
+                        'guest_stars.deleted_at',
+                    ])
+                    ->get();
+
+                $check_cart = DB::table('carts')
+                    ->where([
+                        'student_id' => Auth::guard('student')->user()->id,
+                        'master_lesson_id' => $value->id
+                    ])
+                    ->whereNull('carts.deleted_at')
+                    ->count();
+
+                $value->guest_star = $guest_star;
+                if($check_cart>0){
+                    $value->is_exist_cart = true;
+                }else{
+                    $value->is_exist_cart = false;
+                }
+            }
+
+            return response([
+                "status" => 200,
+                "data"      => $master_lesson,
                 "message"   => 'OK!'
             ], 200);
         } catch (Exception $e) {
