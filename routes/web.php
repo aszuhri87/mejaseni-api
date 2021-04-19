@@ -620,7 +620,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::post('class-preview/dt', [ClassRoomReviewController::class, 'dt']);
             Route::get('class-preview/{category_id}/get-classroom', [ClassRoomReviewController::class, 'get_classrooms']);
             Route::resource('class-preview', ClassRoomReviewController::class);
-            
+
 
 
 

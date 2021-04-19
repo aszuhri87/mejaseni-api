@@ -669,10 +669,10 @@ class ClassController extends Controller
 
             return response([
                 "data"      => [
-                  "classrooms" => $classrooms,
-                  "classroom_html" => $classroom_html,
-                  "classroom_review_html" => $classroom_review_html,
-                  "list_classroom_html" => $list_classroom_html
+                    "classrooms" => $classrooms,
+                    "classroom_html" => $classroom_html,
+                    "classroom_review_html" => $classroom_review_html,
+                    "list_classroom_html" => $list_classroom_html
                 ],
                 "message"   => 'Successfully saved!'
             ], 200);
@@ -748,6 +748,21 @@ class ClassController extends Controller
 
     public function _get_master_lesson_description_html($master_lesson)
     {
+        date_default_timezone_set("Asia/Jakarta");
+
+        $now = date('Y-m-d H:i:s');
+
+        if($master_lesson->datetime > $now){
+            $button = '<div class="mt-3">
+                    <a class="btn btn-primary shadow" onclick="'.$this->_is_authenticated($master_lesson->id, 3).'">Daftar Sekarang
+                        <img class="ml-2" src="/cms/assets/img/svg/Sign-in.svg" alt=""></a>
+                </div>';
+        }else{
+            $button = '<div class="mt-3">
+                <label class="text-muted">Sudah terlaksana</label>
+            </div>';
+        }
+
         $html = '<div class="desc__class-tab my-4">
                     <p class="text-justify readmore">'. (isset($master_lesson->description) ? $master_lesson->description:"") .'</p>
                 </div>
@@ -760,16 +775,18 @@ class ClassController extends Controller
                         <label>Platform</label>
                         <span>'. (isset($master_lesson->platform) ? $master_lesson->platform:"") .'</span>
                     </div>
+                    <div class="col-6 mt-3 d-flex flex-column">
+                        <label>Tanggal</label>
+                        <span>'.(isset($master_lesson->datetime) ? date('d M Y H:i:s', strtotime($master_lesson->datetime)) : "").'</span>
+                    </div>
                 </div>
-                <div class="class-tab-summary d-flex justify-content-between flex-md-row flex-column mt-5 mb-4">
+                <div class="class-tab-summary mt-5 mb-4">
                     <div class="d-flex flex-column">
                         <span class="mt-2">Rp.'. (isset($master_lesson->price) ? number_format($master_lesson->price, 2):"0").'</span>
                     </div>
-                    <div class="mt-5 mt-md-0">
-                        <a  class="btn btn-primary shadow " onclick="'.$this->_is_authenticated($master_lesson->id, 3).'">Daftar Sekarang
-                            <img class="ml-2" src="cms/assets/img/svg/Sign-in.svg" alt=""></a>
-                    </div>
+                    '.($button).'
                 </div>';
+
         return $html;
     }
 
