@@ -349,6 +349,12 @@ class BaseMenu extends Controller
                         'permission' => 'cms'
                     ],
                     [
+                        'key' => 'class-preview',
+                        'title' => 'Class Preview',
+                        'url' => 'admin/cms/class-preview',
+                        'permission' => 'cms'
+                    ],
+                    [
                         'key' => 'company',
                         'title' => 'Company',
                         'url' => 'admin/cms/company',
@@ -436,6 +442,12 @@ class BaseMenu extends Controller
                         'key' => 'store-banner',
                         'title' => 'Store Banner',
                         'url' => 'admin/cms/store-banner',
+                        'permission' => 'cms'
+                    ],
+                    [
+                        'key' => 'tutorial-video',
+                        'title' => 'Tutorial Video',
+                        'url' => 'admin/cms/tutorial-video',
                         'permission' => 'cms'
                     ],
                     [

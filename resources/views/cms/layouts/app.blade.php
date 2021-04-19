@@ -79,9 +79,9 @@
                 css: {
                     padding: 0,
                     margin: 0,
-                    width: '30%',
-                    top: '25%',
-                    left: '40%',
+                    top:  ($(window).height() - 400) /2 + 'px',
+                    left: ($(window).width() - 400) /2 + 'px',
+                    width: '100px',
                     textAlign: 'center',
                     color: '#000',
                     border: null,
@@ -93,7 +93,7 @@
                     opacity: 0.7,
                     cursor: 'wait'
                 },
-                message: '<lottie-player src="https://assets3.lottiefiles.com/packages/lf20_o3kcs3sk.json" background="transparent" speed="1" style="width: 500px; height: 500px;" loop autoplay></lottie-player>'
+                message: '<lottie-player src="https://assets3.lottiefiles.com/packages/lf20_o3kcs3sk.json" background="transparent" speed="1" style="width: 400px; height: 400px;" loop autoplay></lottie-player>'
             });
         }
 
@@ -162,7 +162,7 @@
     @stack('script')
 
     <!--Start of Tawk.to Script-->
-    <script type="text/javascript">
+    {{-- <script type="text/javascript">
         var Tawk_API = Tawk_API || {},
             Tawk_LoadStart = new Date();
         (function () {
@@ -175,7 +175,7 @@
             s0.parentNode.insertBefore(s1, s0);
         })();
 
-    </script>
+    </script> --}}
     <!--End of Tawk.to Script-->
 
 </body>

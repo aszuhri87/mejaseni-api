@@ -10,6 +10,7 @@ use App\Models\Branch;
 use App\Models\Company;
 use App\Models\Classroom;
 use App\Models\Cart;
+use App\Models\ClassroomCategory;
 
 use DB;
 use Storage;
@@ -54,8 +55,9 @@ class ClassController extends Controller
 
         $selected_category = DB::table('classroom_categories')
             ->select([
-                'classroom_categories.id', 
+                'classroom_categories.id',
                 'classroom_categories.name',
+                'classroom_categories.classroom_id',
                 'profile_coach_videos.is_youtube',
                 'profile_coach_videos.url',
                 'coaches.name as coach',
@@ -118,16 +120,16 @@ class ClassController extends Controller
                         'coaches.name as coach',
                         'coaches.description'
                     ])
-                    ->where('sub_classroom_categories.classroom_category_id',$selected_category->id)
+                    ->leftJoin('classrooms','classrooms.sub_classroom_category_id','=','sub_classroom_categories.id')
                     ->leftJoin('profile_coach_videos','profile_coach_videos.id','=','sub_classroom_categories.profile_coach_video_id')
                     ->leftJoin('coaches','coaches.id','=','profile_coach_videos.coach_id')
                     ->whereNull([
                         'sub_classroom_categories.deleted_at',
                         'profile_coach_videos.deleted_at'
                     ])
-                ->first();
+                    ->where('classrooms.id',$selected_category->classroom_id)
+                    ->first();
 
-            
             $is_registered = DB::table('carts')
                     ->where('classroom_id','!=',null)
                     ->whereNull('deleted_at');
@@ -392,6 +394,14 @@ class ClassController extends Controller
     public function get_sub_category($category_id, $sub_category_id)
     {
         try {
+            $selected_sub_category = DB::table('classrooms')
+                                        ->select([
+                                            'classrooms.sub_classroom_category_id as id'
+                                        ])
+                                        ->leftJoin('classroom_categories','classroom_categories.classroom_id','=','classrooms.id')
+                                        ->where('classroom_categories.id',$category_id)
+                                        ->first();
+
             $sub_categories = DB::table('sub_classroom_categories')
                     ->select([
                         'sub_classroom_categories.id',
@@ -411,6 +421,7 @@ class ClassController extends Controller
                     ->get();
 
             $video_coach = null;
+            $selected_sub_category_id = null;
 
             if(!($sub_category_id == "undefined")){
                 $video_coach = DB::table('sub_classroom_categories')
@@ -430,10 +441,32 @@ class ClassController extends Controller
                     ])
                     ->where('sub_classroom_categories.id',$sub_category_id)
                     ->first();
+
+            }else if(isset($selected_sub_category->id)){
+                $video_coach = DB::table('sub_classroom_categories')
+                    ->select([
+                        'sub_classroom_categories.id',
+                        'sub_classroom_categories.name',
+                        'profile_coach_videos.is_youtube',
+                        'profile_coach_videos.url',
+                        'coaches.name as coach',
+                        'coaches.description'
+                    ])
+                    ->leftJoin('profile_coach_videos','profile_coach_videos.id','=','sub_classroom_categories.profile_coach_video_id')
+                    ->leftJoin('coaches','coaches.id','=','profile_coach_videos.coach_id')
+                    ->whereNull([
+                        'sub_classroom_categories.deleted_at',
+                        'profile_coach_videos.deleted_at'
+                    ])
+                    ->where('sub_classroom_categories.id',$selected_sub_category->id)
+                    ->first();
+
+                $selected_sub_category_id = $selected_sub_category->id;
+
             }else{
                 $video_coach = DB::table('classroom_categories')
                     ->select([
-                        'classroom_categories.id', 
+                        'classroom_categories.id',
                         'classroom_categories.name',
                         'profile_coach_videos.is_youtube',
                         'profile_coach_videos.url',
@@ -453,7 +486,7 @@ class ClassController extends Controller
             return response([
                 "data"      => [
                     "sub_categories" => $sub_categories,
-                    "sub_category_html" => $this->_get_sub_category_html($sub_categories),
+                    "sub_category_html" => $this->_get_sub_category_html($sub_categories, $selected_sub_category_id),
                     "video_coach" => $video_coach
                 ],
                 "message"   => 'Successfully'
@@ -474,14 +507,17 @@ class ClassController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function _get_sub_category_html($sub_categories)
+    public function _get_sub_category_html($sub_categories, $selected_sub_category=null)
     {
         $sub_category_html = "";
         if($sub_categories->isEmpty())
             return $sub_category_html;
 
         foreach ($sub_categories as $key => $sub_category) {
-            $sub_category_html .= '<button class="btn btn-tertiary mr-2 mb-2" data-id="'. $sub_category->id .'">'. $sub_category->name .'</button>';
+            if($selected_sub_category == $sub_category->id)
+                $sub_category_html .= '<button class="btn btn-tertiary mr-2 mb-2 active" data-id="'. $sub_category->id .'">'. $sub_category->name .'</button>';
+            else
+                $sub_category_html .= '<button class="btn btn-tertiary mr-2 mb-2" data-id="'. $sub_category->id .'">'. $sub_category->name .'</button>';
         }
 
         return $sub_category_html;
@@ -537,6 +573,8 @@ class ClassController extends Controller
             $master_lesson_type = 3;
             $path = Storage::disk('s3')->url('/');
             $classroom_html = "";
+
+            $selected_category = ClassroomCategory::find($classroom_category_id);
 
             $sub_categories = DB::table('sub_classroom_categories')
                     ->select([
@@ -631,10 +669,10 @@ class ClassController extends Controller
 
             return response([
                 "data"      => [
-                  "classrooms" => $classrooms,
-                  "classroom_html" => $classroom_html,
-                  "classroom_review_html" => $classroom_review_html,
-                  "list_classroom_html" => $list_classroom_html
+                    "classrooms" => $classrooms,
+                    "classroom_html" => $classroom_html,
+                    "classroom_review_html" => $classroom_review_html,
+                    "list_classroom_html" => $list_classroom_html
                 ],
                 "message"   => 'Successfully saved!'
             ], 200);
@@ -688,11 +726,11 @@ class ClassController extends Controller
                                 </div>
                                 <div class="text-center mt-3 mb-md-0 mb-lg-5 mb-md-0 mb-lg-5 mb-lg-0 mb-5 d-flex flex-column p-1">
                                     <a class="font-size-h5 font-weight-bolder text-dark-75 text-hover-primary mb-1">'.( isset($classroom->name) ? $classroom->name : '' ).'</a>
-                                    <div class="d-flex flex-column"> 
+                                    <div class="d-flex flex-column">
                                         <p>'.( isset($classroom->session_total) ? $classroom->session_total : '' ).' Sesi | @ '.( isset($classroom->session_duration) ? $classroom->session_duration : '' ).'menit |
                                           <span class="fa fa-star checked mr-1" style="font-size: 15px;"></span> '.( isset($classroom->rating) ? $classroom->rating < 4 ? '4.6':$classroom->rating : '4.6' ).'
                                       </p>
-                                        <span class="mt-2">Rp.'.number_format($classroom->price, 2).'</span>                                               
+                                        <span class="mt-2">Rp.'.number_format($classroom->price, 2).'</span>
                                       </div>
 
                                     <a class="btn btn-primary shadow mt-5" onclick="'.$this->_is_authenticated($classroom->id, $type).'">Daftar
@@ -710,6 +748,21 @@ class ClassController extends Controller
 
     public function _get_master_lesson_description_html($master_lesson)
     {
+        date_default_timezone_set("Asia/Jakarta");
+
+        $now = date('Y-m-d H:i:s');
+
+        if($master_lesson->datetime > $now){
+            $button = '<div class="mt-3">
+                    <a class="btn btn-primary shadow" onclick="'.$this->_is_authenticated($master_lesson->id, 3).'">Daftar Sekarang
+                        <img class="ml-2" src="/cms/assets/img/svg/Sign-in.svg" alt=""></a>
+                </div>';
+        }else{
+            $button = '<div class="mt-3">
+                <label class="text-muted">Sudah terlaksana</label>
+            </div>';
+        }
+
         $html = '<div class="desc__class-tab my-4">
                     <p class="text-justify readmore">'. (isset($master_lesson->description) ? $master_lesson->description:"") .'</p>
                 </div>
@@ -722,16 +775,18 @@ class ClassController extends Controller
                         <label>Platform</label>
                         <span>'. (isset($master_lesson->platform) ? $master_lesson->platform:"") .'</span>
                     </div>
+                    <div class="col-6 mt-3 d-flex flex-column">
+                        <label>Tanggal</label>
+                        <span>'.(isset($master_lesson->datetime) ? date('d M Y H:i:s', strtotime($master_lesson->datetime)) : "").'</span>
+                    </div>
                 </div>
-                <div class="class-tab-summary d-flex justify-content-between flex-md-row flex-column mt-5 mb-4">
+                <div class="class-tab-summary mt-5 mb-4">
                     <div class="d-flex flex-column">
                         <span class="mt-2">Rp.'. (isset($master_lesson->price) ? number_format($master_lesson->price, 2):"0").'</span>
                     </div>
-                    <div class="mt-5 mt-md-0">
-                        <a  class="btn btn-primary shadow " onclick="'.$this->_is_authenticated($master_lesson->id, 3).'">Daftar Sekarang
-                            <img class="ml-2" src="cms/assets/img/svg/Sign-in.svg" alt=""></a>
-                    </div>
+                    '.($button).'
                 </div>';
+
         return $html;
     }
 
@@ -885,13 +940,13 @@ class ClassController extends Controller
         if($classrooms->isEmpty())
             return "";
 
-        $html ='<div class="splide pb-4" id="class-splide">
+        $html ='<div class="splide" id="splide1">
               <div class="splide__track">
                 <ul class="splide__list" id="classrooms">';
         foreach ($classrooms as $key => $classroom) {
             $session_total = isset($classroom->session_total) ? $classroom->session_total:0;
             $session_duration = isset($classroom->session_duration) ? $classroom->session_duration:0;
-            $html .= '<li class="splide__slide px-2 pb-5">
+            $html .= '<li class="splide__slide px-2">
                         <img class="w-100 rounded" src="'. $classroom->image_url .'" alt="">
                         <div class="badge-left">
                           <h3 class="mt-4 ml-2">'. $classroom->name.'</h3>
@@ -965,16 +1020,32 @@ class ClassController extends Controller
 
     public function _get_master_lesson_html($master_lessons)
     {
+        date_default_timezone_set("Asia/Jakarta");
+
+        $now = date('Y-m-d H:i:s');
+
         if($master_lessons->isEmpty()){
             return "";
         }
 
-        $html = '<div class="splide pb-4" id="class-splide">
+        $html = '<div class="splide" id="splide1">
                   <div class="splide__track">
                     <ul class="splide__list" id="classrooms">';
 
         foreach ($master_lessons as $key => $master_lesson) {
-            $html .= '<li class="splide__slide px-2 pb-5">
+
+            if($master_lesson->datetime > $now){
+                $button = '<div class="mt-3">
+                        <a class="btn btn-primary shadow" onclick="'.$this->_is_authenticated($master_lesson->id, 3).'">Daftar Sekarang
+                            <img class="ml-2" src="/cms/assets/img/svg/Sign-in.svg" alt=""></a>
+                    </div>';
+            }else{
+                $button = '<div class="mt-3">
+                    <label class="text-muted">Sudah terlaksana</label>
+                </div>';
+            }
+
+            $html .= '<li class="splide__slide px-2">
                         <img class="w-100 rounded" src="'. (isset($master_lesson->image_url) ? $master_lesson->image_url:"") .'" alt="">
                         <div class="badge-left">
                             <h4 class="mt-4 ml-2">'. (isset($master_lesson->name) ? $master_lesson->name:"") .'</h3>
@@ -996,15 +1067,16 @@ class ClassController extends Controller
                                     <label>Platform</label>
                                     <span>'.(isset($master_lesson->platform) ? $master_lesson->platform:"").'</span>
                                 </div>
+                                <div class="col-6 mt-3 d-flex flex-column">
+                                    <label>Tanggal</label>
+                                    <span>'.(isset($master_lesson->datetime) ? date('d M Y H:i:s', strtotime($master_lesson->datetime)) : "").'</span>
+                                </div>
                             </div>
-                            <div class="class-tab-summary d-flex justify-content-between flex-md-row flex-column mt-5 mb-4">
+                            <div class="class-tab-summary mt-5 mb-4">
                                 <div class="d-flex flex-column">
                                     <span class="mt-2">Rp. '.(isset($master_lesson->price) ? number_format($master_lesson->price, 2):"").'</span>
                                 </div>
-                                <div class="mt-5 mt-md-0">
-                                    <a class="btn btn-primary shadow" onclick="'.$this->_is_authenticated($master_lesson->id, 3).'">Daftar Sekarang
-                                        <img class="ml-2" src="/cms/assets/img/svg/Sign-in.svg" alt=""></a>
-                                </div>
+                                '.($button).'
                             </div>
                         </div>
                     </li>';

@@ -21,7 +21,10 @@ class ClassroomCategory extends Model
         'name',
         'description',
         'image',
-        'profile_coach_video_id'
+        'profile_coach_video_id',
+        'empty_image',
+        'empty_message',
+        'classroom_id'
     ];
 
     public $cascadeDeletes = ['sub_classroom_categories'];

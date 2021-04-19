@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Branch;
 use App\Models\Company;
+use App\Models\ClassroomCategory;
 
 use Auth;
 use DB;
@@ -61,7 +62,12 @@ class VideoCourseController extends Controller
 
         if($classroom_categories){
             $selected_category = DB::table('classroom_categories')
-                ->select(['classroom_categories.id','classroom_categories.name'])
+                ->select([
+                    'classroom_categories.id',
+                    'classroom_categories.name',
+                    'classroom_categories.empty_message',
+                     DB::raw("CONCAT('{$path}',classroom_categories.empty_image) as image_url"),
+                ])
                 ->leftJoin('sub_classroom_categories','sub_classroom_categories.classroom_category_id','=','classroom_categories.id')
                 ->whereNull([
                     'classroom_categories.deleted_at',
@@ -169,6 +175,17 @@ class VideoCourseController extends Controller
     public function get_sub_category($category_id)
     {
         try {
+            $path = Storage::disk('s3')->url('/');
+            $selected_category = DB::table('classroom_categories')
+                ->select([
+                    'classroom_categories.id',
+                    'classroom_categories.name',
+                    'classroom_categories.empty_message',
+                     DB::raw("CONCAT('{$path}',classroom_categories.empty_image) as empty_image_url")
+                ])
+                ->where('id',$category_id)
+                ->first();
+
             $sub_categories = DB::table('sub_classroom_categories')
                     ->select([
                         'id',
@@ -184,13 +201,13 @@ class VideoCourseController extends Controller
             $video_courses_html = "";
 
             $default_html = '<div class="mb-5 empty-store">
-                              <div class="row my-5 py-5">
-                                  <div class="col-12 pr-0 pr-lg-4 column-center">
-                                      <img style="width: 200px;" src="/cms/assets/img/svg/empty-store.svg" alt="">
-                                      <h4 class="mt-3 text-center">Wah, video course yang kamu cari <br />belum dibuat nih</h4>
-                                  </div>
-                              </div>
-                          </div>';
+                        <div class="row my-5 py-5">
+                            <div class="col-12 pr-0 pr-lg-4 column-center">
+                                <img style="width: 200px;" src="'.(isset($selected_category->empty_image_url) ? $selected_category->empty_image_url: "").'" alt="">
+                                <h4 class="mt-3 text-center">'.(isset($selected_category->empty_message) ? $selected_category->empty_message:"").'</h4>
+                            </div>
+                        </div>
+                    </div>';
 
             $index = 0;
             $selected_sub_category = null;
@@ -210,7 +227,7 @@ class VideoCourseController extends Controller
 
             // get selected content
             if($selected_sub_category){
-                $video_courses_html = $this->_get_video_courses($selected_sub_category->id);   
+                $video_courses_html = $this->_get_video_courses($selected_category, $selected_sub_category->id);   
             }
 
 
@@ -235,9 +252,20 @@ class VideoCourseController extends Controller
     public function get_video_courses($sub_category_id)
     {
         try {
+            $path = Storage::disk('s3')->url('/');
+            $selected_category = DB::table('classroom_categories')
+                ->select([
+                    'classroom_categories.id',
+                    'classroom_categories.name',
+                    'classroom_categories.empty_message',
+                     DB::raw("CONCAT('{$path}',classroom_categories.empty_image) as empty_image_url")
+                ])
+                ->leftJoin('sub_classroom_categories','sub_classroom_categories.classroom_category_id','=','classroom_categories.id')
+                ->where('sub_classroom_categories.id',$sub_category_id)
+                ->first();
 
-            $video_courses_html = $this->_get_video_courses($sub_category_id);
 
+            $video_courses_html = $this->_get_video_courses($selected_category, $sub_category_id);
 
             return response([
                 "data"      => [
@@ -257,16 +285,17 @@ class VideoCourseController extends Controller
     /*
         Generate HTML for video courses
     */
-    public function _get_video_courses($selected_sub_category_id)
+    public function _get_video_courses($selected_category, $selected_sub_category_id)
     {
         $default_html = '<div class="mb-5 empty-store">
                         <div class="row my-5 py-5">
                             <div class="col-12 pr-0 pr-lg-4 column-center">
-                                <img style="width: 200px;" src="/cms/assets/img/svg/empty-store.svg" alt="">
-                                <h4 class="mt-3 text-center">Wah, video course yang kamu cari <br />belum dibuat nih</h4>
+                                <img style="width: 200px;" src="'.(isset($selected_category->empty_image_url) ? $selected_category->empty_image_url: "").'" alt="">
+                                <h4 class="mt-3 text-center">'.(isset($selected_category->empty_message) ? $selected_category->empty_message:"").'</h4>
                             </div>
                         </div>
                     </div>';
+
         $video_courses_html = "";
 
         $path = Storage::disk('s3')->url('/');

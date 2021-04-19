@@ -83,8 +83,8 @@
               <div class="mb-5 empty-store">
                   <div class="row my-5 py-5">
                       <div class="col-12 pr-0 pr-lg-4 column-center">
-                          <img style="width: 200px;" src="/cms/assets/img/svg/empty-store.svg" alt="">
-                          <h4 class="mt-3 text-center">Wah, video course yang kamu cari <br />belum dibuat nih</h4>
+                          <img style="width: 200px;" src="{{ isset($selected_category->image_url) ? $selected_category->image_url:"" }}" alt="">
+                          <h4 class="mt-3 text-center">{{ $selected_category->empty_message }}</h4>
                       </div>
                   </div>
               </div>

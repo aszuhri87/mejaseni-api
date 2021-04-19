@@ -31,12 +31,14 @@
 
       <div class="class-filter__wrapper mt-4 mb-5 mb-md-0 p-3 p-md-5">
         <div id="class-content">
+
           @if(!$regular_classrooms->isEmpty())
-          <div class="splide pb-4" id="class-splide">
+          <div class="splide" id="splide1">
+
             <div class="splide__track">
               <ul class="splide__list" id="classrooms">
                 @foreach($regular_classrooms as $regular_classroom)
-                <li class="splide__slide px-2 pb-5">
+                <li class="splide__slide px-2">
                   <img class="w-100 rounded" src="{{ isset($regular_classroom->image_url) ? $regular_classroom->image_url : '' }}" alt="">
                   <div class="badge-left">
                     <h3 class="mt-4 ml-2">{{ isset($regular_classroom->name) ? $regular_classroom->name : '' }}</h3>
