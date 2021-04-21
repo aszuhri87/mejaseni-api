@@ -6,14 +6,14 @@
 
 @push('style')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<style>  
-  .checked {  
-      color : yellow;  
-      font-size : 20px;  
-  }  
-  .unchecked {  
-      font-size : 20px;  
-  }  
+<style>
+  .checked {
+      color : yellow;
+      font-size : 20px;
+  }
+  .unchecked {
+      font-size : 20px;
+  }
 </style>
 @endpush
 
@@ -60,13 +60,13 @@
                     <div class="class-tab-summary mb-4">
                       <div class="row">
                         <div class="col col-12 mt-4">
-                          <div class="d-flex flex-column"> 
+                          <div class="d-flex flex-column">
                             <p>{{ isset($regular_classroom->session_total) ? $regular_classroom->session_total : '' }} Sesi | @ {{ isset($regular_classroom->session_duration) ? $regular_classroom->session_duration : '' }}menit |
                               <span class="fa fa-star checked mr-1" style="font-size: 15px;"></span> {{ isset($regular_classroom->rating) ? $regular_classroom->rating < 4 ? '4.6':$regular_classroom->rating : '4.6' }}
                           </p>
                             <span class="mt-2">Rp.@convert($regular_classroom->price)</span>
-                            
-                            
+
+
                           </div>
                         </div>
                         <div class="col col-12 mt-4 justify-content-md-end">
@@ -136,7 +136,7 @@
       <div class="sub-category" id="sub-category">
         @if(!$sub_categories->isEmpty())
           @foreach($sub_categories as $sub_category)
-            @if($sub_category->id == $selected_sub_category->id)
+            @if(isset($selected_sub_category) && $sub_category->id == $selected_sub_category->id)
               <button class="btn btn-tertiary mr-2 mb-2 active" data-id="{{$sub_category->id}}">{{ $sub_category->name ? $sub_category->name:''}}</button>
             @else
               <button class="btn btn-tertiary mr-2 mb-2" data-id="{{$sub_category->id}}">{{ $sub_category->name ? $sub_category->name:''}}</button>
@@ -147,7 +147,7 @@
 
       <div id="classroom-content">
         @if(isset($selected_sub_category))
-          
+
           @if(isset($selected_sub_category->is_youtube))
             @if($selected_sub_category->is_youtube)
               <div class="mb-3">
@@ -184,7 +184,7 @@
                 </div>
               </div>
             @endif
-          @endif 
+          @endif
 
         @else
           @if(isset($selected_category->url))
@@ -224,7 +224,7 @@
                   </div>
                 </div>
               @endif
-            @endif 
+            @endif
           @else
             <div class="mb-5 empty-store">
               <div class="row my-5 py-5">
