@@ -33,7 +33,7 @@
         </div>
     </div>
 
-    <div class="row mt-5 exercise">
+    <div class="row mt-5 exercise-content">
 
     </div>
 </div>

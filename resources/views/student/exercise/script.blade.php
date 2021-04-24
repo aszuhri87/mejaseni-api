@@ -351,7 +351,7 @@
                             `
                         }
                         KTApp.unblockPage();
-                        $('.exercise').html(element);
+                        $('.exercise-content').html(element);
                     }
                 })
                 .fail(function(res, error) {
