@@ -23,6 +23,7 @@
                         { data: 'DT_RowIndex' },
                         { data: 'title' },
                         { data: 'description' },
+                        { data: 'number' },
                         { defaultContent: '' }
                         ],
                     columnDefs: [
@@ -99,7 +100,7 @@
                     showModal('modal-faq');
                 });
 
-                
+
                 $(document).on('click', '.btn-edit', function(event){
                     event.preventDefault();
 
@@ -110,6 +111,7 @@
                     $('#form-faq').attr('method','PUT');
 
                     $('#form-faq').find('input[name="title"]').val(data.title);
+                    $('#form-faq').find('input[name="number"]').val(data.number);
                     $('#form-faq').find('textarea[name="description"]').val(data.description);
 
                     showModal('modal-faq');

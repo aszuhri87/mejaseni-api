@@ -65,7 +65,9 @@
             <thead>
                 <tr>
                     <th>No</th>
-                    <th width="90%">Name</th>
+                    <th width="50%">Name</th>
+                    <th width="20%">Nomor Urut</th>
+                    <th width="20%">Tampil Pertama</th>
                     <th width="10%">Actions</th>
                 </tr>
             </thead>

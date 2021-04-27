@@ -76,6 +76,7 @@ class FaqController extends BaseMenu
                 $result = Faq::create([
                     'title' => $request->title,
                     'description' => $request->description,
+                    'number' => $request->number,
                 ]);
 
                 return $result;
@@ -127,8 +128,9 @@ class FaqController extends BaseMenu
         try {
             $result = DB::transaction(function () use($request, $id){
                 $result = Faq::find($id)->update([
-                   'title' => $request->title,
+                    'title' => $request->title,
                     'description' => $request->description,
+                    'number' => $request->number,
                 ]);
 
                 return $result;

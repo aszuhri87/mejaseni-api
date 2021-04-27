@@ -30,6 +30,7 @@
                         { data: 'coach' },
                         { data: 'count_theory' },
                         { data: 'price' },
+                        { data: 'number' },
                         { defaultContent: '' }
                         ],
                     columnDefs: [
@@ -196,6 +197,7 @@
                     $('#form-session-video').find('input[name="name"]').val(data.name);
                     $('#form-session-video').find('input[name="price"]').val(data.price);
                     $('#form-session-video').find('textarea[name="description"]').val(data.description);
+                    $('#form-session-video').find('input[name="number"]').val(data.number);
 
                     get_coach(data.coach_id);
                     get_expertise(data.expertise_id);

@@ -17,11 +17,11 @@ class VideoCourseController extends Controller
 {
     public function index()
     {
-    	$company = Company::first();
-    	$branchs = Branch::all();
+        $company = Company::first();
+        $branchs = Branch::all();
         $path = Storage::disk('s3')->url('/');
 
-    	$classroom_categories = DB::table('classroom_categories')
+        $classroom_categories = DB::table('classroom_categories')
             ->select([
                 'id',
                 'name',
@@ -54,7 +54,6 @@ class VideoCourseController extends Controller
             ])
             ->first();
 
-
         $selected_category = null;
         $selected_sub_categories = null;
 
@@ -66,13 +65,14 @@ class VideoCourseController extends Controller
                     'classroom_categories.id',
                     'classroom_categories.name',
                     'classroom_categories.empty_message',
-                     DB::raw("CONCAT('{$path}',classroom_categories.empty_image) as image_url"),
+                    DB::raw("CONCAT('{$path}',classroom_categories.empty_image) as image_url"),
                 ])
                 ->leftJoin('sub_classroom_categories','sub_classroom_categories.classroom_category_id','=','classroom_categories.id')
                 ->whereNull([
                     'classroom_categories.deleted_at',
                     'sub_classroom_categories.deleted_at'
                 ])
+                ->where('first',true)
                 ->first();
 
             $sub_categories = DB::table('sub_classroom_categories')
@@ -80,43 +80,43 @@ class VideoCourseController extends Controller
                     'id',
                     'name',
                 ])
-                
                 ->whereNull([
                     'deleted_at'
                 ]);
 
             if($selected_category){
-                $sub_categories = $sub_categories->where('classroom_category_id',$selected_category->id);
+                $sub_categories = $sub_categories->where('classroom_category_id', $selected_category->id);
             }
-            
+
             $sub_categories = $sub_categories->get();
+
             if($sub_categories && $selected_category){
                 $selected_sub_categories = DB::table('sub_classroom_categories')
-                                            ->select([
-                                                'id',
-                                                'name',
-                                            ])
-                                            ->where('classroom_category_id',$selected_category->id)
-                                            ->whereNull([
-                                                'deleted_at'
-                                            ])
-                                            ->first();
+                    ->select([
+                        'id',
+                        'name',
+                    ])
+                    ->where('classroom_category_id', $selected_category->id)
+                    ->whereNull([
+                        'deleted_at'
+                    ])
+                    ->first();
             }
-            
+
             $is_has_video = DB::table('theory_videos')
-            ->select([
-                'theory_videos.session_video_id',
-                DB::raw("COUNT('theory_videos.session_video_id') as count_public_video")
-            ])
-            ->groupBy("theory_videos.session_video_id")
-            ->where('theory_videos.is_public',true)
-            ->whereNull("theory_videos.deleted_at");
+                ->select([
+                    'theory_videos.session_video_id',
+                    DB::raw("COUNT('theory_videos.session_video_id') as count_public_video")
+                ])
+                ->groupBy("theory_videos.session_video_id")
+                ->where('theory_videos.is_public',true)
+                ->whereNull("theory_videos.deleted_at");
 
             $video_courses = DB::table('session_videos')
                 ->select([
                     'session_videos.*',
                     'coaches.name as coach',
-                     DB::raw("CONCAT('{$path}',session_videos.image) as image_url"),
+                    DB::raw("CONCAT('{$path}',session_videos.image) as image_url"),
                 ])
                 ->leftJoin('coaches', 'coaches.id','=','session_videos.coach_id')
                 ->leftJoinSub($is_has_video, 'theory_videos', function($join){
@@ -126,19 +126,20 @@ class VideoCourseController extends Controller
                 ->whereNull([
                     'session_videos.deleted_at',
                     'coaches.deleted_at',
-                ]);
-            
+                ])
+                ->orderBy('number','asc');
+
             if($selected_sub_categories){
-                $video_courses = $video_courses->where('session_videos.sub_classroom_category_id',$selected_sub_categories->id)->get();
+                $video_courses = $video_courses->where('session_videos.sub_classroom_category_id', $selected_sub_categories->id)->get();
             }else{
                 $video_courses = collect();
             }
         }
 
-    	return view('cms.video-course.index', [
-            "company" => $company, 
+        return view('cms.video-course.index', [
+            "company" => $company,
             "branchs" => $branchs,
-            "banner" => $banner, 
+            "banner" => $banner,
             "classroom_categories" => $classroom_categories,
             "selected_category" => $selected_category,
             "sub_categories" => $sub_categories,
@@ -227,7 +228,7 @@ class VideoCourseController extends Controller
 
             // get selected content
             if($selected_sub_category){
-                $video_courses_html = $this->_get_video_courses($selected_category, $selected_sub_category->id);   
+                $video_courses_html = $this->_get_video_courses($selected_category, $selected_sub_category->id);
             }
 
 
@@ -309,44 +310,45 @@ class VideoCourseController extends Controller
             ->whereNull("theory_videos.deleted_at");
 
         $video_courses = DB::table('session_videos')
-                            ->select([
-                                'session_videos.*',
-                                'coaches.name as coach',
-                                DB::raw("CONCAT('{$path}',session_videos.image) as image_url"),
-                            ])
-                            ->leftJoin('coaches', 'coaches.id','=','session_videos.coach_id')
-                            ->leftJoinSub($is_has_video, 'theory_videos', function($join){
-                                $join->on("session_videos.id", "theory_videos.session_video_id");
-                            })
-                            ->where('session_videos.sub_classroom_category_id',$selected_sub_category_id)
-                            ->where('theory_videos.count_public_video','!=',null)
-                            ->whereNull([
-                                'session_videos.deleted_at',
-                                'coaches.deleted_at',
-                            ])
-                            ->get();
+            ->select([
+                'session_videos.*',
+                'coaches.name as coach',
+                DB::raw("CONCAT('{$path}',session_videos.image) as image_url"),
+            ])
+            ->leftJoin('coaches', 'coaches.id','=','session_videos.coach_id')
+            ->leftJoinSub($is_has_video, 'theory_videos', function($join){
+                $join->on("session_videos.id", "theory_videos.session_video_id");
+            })
+            ->where('session_videos.sub_classroom_category_id',$selected_sub_category_id)
+            ->where('theory_videos.count_public_video','!=',null)
+            ->whereNull([
+                'session_videos.deleted_at',
+                'coaches.deleted_at',
+            ])
+            ->orderBy('number','asc')
+            ->get();
 
         foreach ($video_courses as $key => $video_course) {
             $video_courses_html .= '<div class="row mb-5 pb-2">
-                                    <div class="col-xl-3 mb-3 mb-md-0">
-                                      <a href="#">
-                                        <figure><img src="'.(isset($video_course->image_url) ? $video_course->image_url:"").'" /></figure>
-                                      </a>
-                                    </div>
-                                    <div class="col-xl-9 px-4">
-                                      <div class="badge-left">
-                                        <a href="/video-course/'.$video_course->id.'/detail" target="_blank">
-                                          <h3 class="ml-2 mt-2 mt-md-4 mt-lg-0">'. (isset($video_course->name) ? $video_course->name:"") .'</h3>
-                                        </a>
-                                      </div>
-                                      <p class="mt-3 ml-3 desc__store-content">'. (isset($video_course->description) ? $video_course->description:"") .'</p>
-                                      <div class="detail__store-content ml-3 mt-3">
-                                        <div class="coach-name__store-content row-center mr-4">
-                                          <img src="/cms/assets/img/svg/User.svg" class="mr-2" alt="">'. (isset($video_course->coach) ? $video_course->coach:"") .'
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>';
+                    <div class="col-xl-3 mb-3 mb-md-0">
+                        <a href="#">
+                        <figure><img src="'.(isset($video_course->image_url) ? $video_course->image_url:"").'" /></figure>
+                        </a>
+                    </div>
+                    <div class="col-xl-9 px-4">
+                        <div class="badge-left">
+                            <a href="/video-course/'.$video_course->id.'/detail" target="_blank">
+                                <h3 class="ml-2 mt-2 mt-md-4 mt-lg-0">'. (isset($video_course->name) ? $video_course->name:"") .'</h3>
+                            </a>
+                        </div>
+                            <p class="mt-3 ml-3 desc__store-content">'. (isset($video_course->description) ? $video_course->description:"") .'</p>
+                            <div class="detail__store-content ml-3 mt-3">
+                            <div class="coach-name__store-content row-center mr-4">
+                                <img src="/cms/assets/img/svg/User.svg" class="mr-2" alt="">'. (isset($video_course->coach) ? $video_course->coach:"") .'
+                            </div>
+                        </div>
+                    </div>
+                </div>';
         }
 
         return $video_courses_html ? $video_courses_html:$default_html;

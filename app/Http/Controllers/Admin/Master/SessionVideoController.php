@@ -103,7 +103,8 @@ class SessionVideoController extends BaseMenu
                     'price' => $request->price,
                     'name' => $request->name,
                     'datetime' => date('Y-m-d H:i:s'),
-                    'image' => $path
+                    'image' => $path,
+                    'number' => $request->number,
                 ]);
 
                 return $result;
@@ -147,7 +148,8 @@ class SessionVideoController extends BaseMenu
                     'description' => $request->description,
                     'price' => $request->price,
                     'name' => $request->name,
-                    'image' => $path ? $path:$result->image
+                    'image' => $path ? $path:$result->image,
+                    'number' => $request->number,
                 ]);
 
                 return $result;

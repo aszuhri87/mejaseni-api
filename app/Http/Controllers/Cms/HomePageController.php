@@ -58,7 +58,7 @@ class HomePageController extends Controller
                 'deleted_at'
             ])
             ->first();
-        
+
         $sosmed = DB::table('sosmeds')
             ->select([
                 'sosmeds.id',
@@ -97,7 +97,7 @@ class HomePageController extends Controller
                 'coaches.deleted_at',
             ])
             ->get();
-        
+
         $programs = DB::table('programs')
             ->select([
                 'name',
@@ -109,7 +109,7 @@ class HomePageController extends Controller
             ])
             ->get();
 
-        
+
 
         $classroom_categories = DB::table('classroom_categories')
             ->select([
@@ -123,13 +123,14 @@ class HomePageController extends Controller
             ->whereNull([
                 'deleted_at'
             ])
+            ->orderBy('number', 'asc')
             ->get();
 
     	return view('cms.homepage.index',[
-            "company" => $company, 
+            "company" => $company,
             "branchs" => $branchs,
             "passion" => $passion,
-            "banner" => $banner, 
+            "banner" => $banner,
             "coachs" => $coachs,
             "programs" => $programs,
             "social_medias" => $social_medias,

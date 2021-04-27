@@ -37,6 +37,19 @@
                         </label>
                         <select name="profile_coach_video_id" id="profile-coach-video"></select>
                     </div>
+                    <div class="form-group">
+                        <label>
+                            Nomor Urut
+                        </label>
+                        <input type="number" name="number" class="form-control" placeholder="Number"/>
+                    </div>
+                    <span class="switch switch-sm">
+                        <label>
+                            <input type="checkbox" id="switch-first" name="first"/>
+                            <span></span>
+                        </label>
+                        Tampilkan pertama kali
+                    </span>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>

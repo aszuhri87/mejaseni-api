@@ -66,10 +66,11 @@
                 <tr>
                     <th>No</th>
                     <th width="20%">Nama</th>
-                    <th width="20%">Kategori</th>
+                    <th width="15%">Kategori</th>
                     <th width="20%">Coach</th>
-                    <th width="15%">Jumlah Video</th>
+                    <th width="10%">Jumlah Video</th>
                     <th width="15%">Harga</th>
+                    <th width="10%">Nomor Urut</th>
                     <th width="10%">Actions</th>
                 </tr>
             </thead>

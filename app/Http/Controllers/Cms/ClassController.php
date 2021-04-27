@@ -18,11 +18,13 @@ use Auth;
 
 class ClassController extends Controller
 {
-    public function index($category=null)
+    public function index($category = null)
     {
-    	$company = Company::first();
-    	$branchs = Branch::all();
+        $company = Company::first();
+        $branchs = Branch::all();
+
         $path = Storage::disk('s3')->url('/');
+
         $social_medias = DB::table('social_media')
             ->select([
                 'url',
@@ -46,11 +48,12 @@ class ClassController extends Controller
             ])
             ->first();
 
-    	$classroom_categories = DB::table('classroom_categories')
+        $classroom_categories = DB::table('classroom_categories')
             ->select(['id', 'name'])
             ->whereNull([
                 'deleted_at'
             ])
+            ->orderBy('number','asc')
             ->get();
 
         $selected_category = DB::table('classroom_categories')
@@ -76,7 +79,10 @@ class ClassController extends Controller
         if($category){
             $category = str_replace("-"," ",$category);
             $selected_category = $selected_category->where('classroom_categories.name', 'ilike', '%'.strtolower($category).'%');
+        }else{
+            $selected_category = $selected_category->where('first', true);
         }
+
         $selected_category = $selected_category->first();
 
         // jika parameter tidak valid
@@ -84,51 +90,32 @@ class ClassController extends Controller
             return abort(404);
         }
 
-
-        $sub_categories = null;
+        $sub_categories = [];
         $selected_sub_category = null;
-        $regular_classrooms = null;
+        $regular_classrooms = [];
 
         $special_class_type = 1;
         $regular_class_type = 2;
 
         if($selected_category){
             $sub_categories = DB::table('sub_classroom_categories')
-                    ->select([
-                        'sub_classroom_categories.id',
-                        'sub_classroom_categories.name',
-                        'profile_coach_videos.is_youtube',
-                        'profile_coach_videos.url',
-                        'coaches.name as coach',
-                        'coaches.description'
-                    ])
-                    ->where('sub_classroom_categories.classroom_category_id',$selected_category->id)
-                    ->leftJoin('profile_coach_videos','profile_coach_videos.id','=','sub_classroom_categories.profile_coach_video_id')
-                    ->leftJoin('coaches','coaches.id','=','profile_coach_videos.coach_id')
-                    ->whereNull([
-                        'sub_classroom_categories.deleted_at',
-                        'profile_coach_videos.deleted_at'
-                    ])
-                    ->get();
-
-            $selected_sub_category = DB::table('sub_classroom_categories')
                 ->select([
-                        'sub_classroom_categories.id',
-                        'sub_classroom_categories.name',
-                        'profile_coach_videos.is_youtube',
-                        'profile_coach_videos.url',
-                        'coaches.name as coach',
-                        'coaches.description'
-                    ])
-                    ->leftJoin('classrooms','classrooms.sub_classroom_category_id','=','sub_classroom_categories.id')
-                    ->leftJoin('profile_coach_videos','profile_coach_videos.id','=','sub_classroom_categories.profile_coach_video_id')
-                    ->leftJoin('coaches','coaches.id','=','profile_coach_videos.coach_id')
-                    ->whereNull([
-                        'sub_classroom_categories.deleted_at',
-                        'profile_coach_videos.deleted_at'
-                    ])
-                    ->where('classrooms.id',$selected_category->classroom_id)
-                    ->first();
+                    'sub_classroom_categories.id',
+                    'sub_classroom_categories.name',
+                    'profile_coach_videos.is_youtube',
+                    'profile_coach_videos.url',
+                    'coaches.name as coach',
+                    'coaches.description'
+                ])
+                ->where('sub_classroom_categories.classroom_category_id', $selected_category->id)
+                ->leftJoin('profile_coach_videos','profile_coach_videos.id','=','sub_classroom_categories.profile_coach_video_id')
+                ->leftJoin('coaches','coaches.id','=','profile_coach_videos.coach_id')
+                ->whereNull([
+                    'sub_classroom_categories.deleted_at',
+                    'profile_coach_videos.deleted_at'
+                ])
+                ->orderBy('sub_classroom_categories.number', 'asc')
+                ->get();
 
             $is_registered = DB::table('carts')
                     ->where('classroom_id','!=',null)
@@ -174,23 +161,18 @@ class ClassController extends Controller
                     'classrooms.deleted_at'
                 ])
                 ->where('classrooms.package_type',$regular_class_type)
-                ->where('classrooms.classroom_category_id',$selected_category->id);
-
-            if($selected_sub_category){
-                $regular_classrooms = $regular_classrooms->where('classrooms.sub_classroom_category_id', $selected_sub_category->id);
-            }
-
-            $regular_classrooms = $regular_classrooms->get();
+                ->where('classrooms.classroom_category_id',$selected_category->id)
+                ->orderBy('sub_classroom_categories.number', 'asc')
+                ->get();
         }
 
-    	return view('cms.class.index', [
+        return view('cms.class.index', [
             "company" => $company,
             "branchs" => $branchs,
             "banner" => $banner,
             "classroom_categories" => $classroom_categories,
             "selected_category" => $selected_category,
             "sub_categories" => $sub_categories,
-            "selected_sub_category" => $selected_sub_category,
             "regular_classrooms" => $regular_classrooms,
             "social_medias" => $social_medias
         ]);
@@ -395,35 +377,35 @@ class ClassController extends Controller
     {
         try {
             $selected_sub_category = DB::table('classrooms')
-                                        ->select([
-                                            'classrooms.sub_classroom_category_id as id'
-                                        ])
-                                        ->leftJoin('classroom_categories','classroom_categories.classroom_id','=','classrooms.id')
-                                        ->where('classroom_categories.id',$category_id)
-                                        ->first();
+                ->select([
+                    'classrooms.sub_classroom_category_id as id'
+                ])
+                ->leftJoin('classroom_categories','classroom_categories.classroom_id','=','classrooms.id')
+                ->where('classroom_categories.id',$category_id)
+                ->first();
 
             $sub_categories = DB::table('sub_classroom_categories')
-                    ->select([
-                        'sub_classroom_categories.id',
-                        'sub_classroom_categories.name',
-                        'profile_coach_videos.is_youtube',
-                        'profile_coach_videos.url',
-                        'coaches.name as coach',
-                        'coaches.description'
-                    ])
-                    ->leftJoin('profile_coach_videos','profile_coach_videos.id','=','sub_classroom_categories.profile_coach_video_id')
-                    ->leftJoin('coaches','coaches.id','=','profile_coach_videos.coach_id')
-                    ->where('sub_classroom_categories.classroom_category_id',$category_id)
-                    ->whereNull([
-                        'sub_classroom_categories.deleted_at',
-                        'profile_coach_videos.deleted_at'
-                    ])
-                    ->get();
+                ->select([
+                    'sub_classroom_categories.id',
+                    'sub_classroom_categories.name',
+                    'profile_coach_videos.is_youtube',
+                    'profile_coach_videos.url',
+                    'coaches.name as coach',
+                    'coaches.description'
+                ])
+                ->leftJoin('profile_coach_videos','profile_coach_videos.id','=','sub_classroom_categories.profile_coach_video_id')
+                ->leftJoin('coaches','coaches.id','=','profile_coach_videos.coach_id')
+                ->where('sub_classroom_categories.classroom_category_id',$category_id)
+                ->whereNull([
+                    'sub_classroom_categories.deleted_at',
+                    'profile_coach_videos.deleted_at'
+                ])
+                ->get();
 
             $video_coach = null;
             $selected_sub_category_id = null;
 
-            if(!($sub_category_id == "undefined")){
+            if($sub_category_id != "undefined"){
                 $video_coach = DB::table('sub_classroom_categories')
                     ->select([
                         'sub_classroom_categories.id',
@@ -442,7 +424,7 @@ class ClassController extends Controller
                     ->where('sub_classroom_categories.id',$sub_category_id)
                     ->first();
 
-            }else if(isset($selected_sub_category->id)){
+            }else if(isset($selected_sub_category)){
                 $video_coach = DB::table('sub_classroom_categories')
                     ->select([
                         'sub_classroom_categories.id',

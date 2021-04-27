@@ -19,7 +19,7 @@ class FaqController extends Controller
     {
     	$company = Company::first();
     	$branchs = Branch::all();
-    	$faqs = Faq::all();
+    	$faqs = Faq::orderBy('number','asc')->get();
 
         $path = Storage::disk('s3')->url('/');
     	$social_medias = DB::table('social_media')
@@ -33,8 +33,8 @@ class FaqController extends Controller
             ->get();
 
     	return view('cms.faq.index', [
-    		"company" => $company, 
-    		"branchs" => $branchs, 
+    		"company" => $company,
+    		"branchs" => $branchs,
     		"faqs" => $faqs,
     		"social_medias" => $social_medias
     	]);

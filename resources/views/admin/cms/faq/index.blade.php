@@ -64,7 +64,8 @@
                 <tr>
                     <th>No</th>
                     <th width="25%">Question</th>
-                    <th width="65%">Answer</th>
+                    <th width="50%">Answer</th>
+                    <th width="15%">Nomor Urut</th>
                     <th width="10%">Actions</th>
                 </tr>
             </thead>

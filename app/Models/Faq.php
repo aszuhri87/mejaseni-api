@@ -18,6 +18,7 @@ class Faq extends Model
     protected $fillable = [
         'title',
         'description',
+        'number',
     ];
 
     protected $dates = ['deleted_at'];

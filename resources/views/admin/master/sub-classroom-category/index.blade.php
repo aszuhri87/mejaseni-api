@@ -65,8 +65,9 @@
             <thead>
                 <tr>
                     <th>No</th>
-                    <th width="45%">Name</th>
-                    <th width="45%">Category</th>
+                    <th width="35%">Name</th>
+                    <th width="35%">Category</th>
+                    <th width="20%">Nomor Urut</th>
                     <th width="10%">Actions</th>
                 </tr>
             </thead>

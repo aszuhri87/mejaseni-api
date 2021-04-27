@@ -42,6 +42,7 @@ class SubClassroomCategoryController extends BaseMenu
             ->select([
                 'sub_classroom_categories.id',
                 'sub_classroom_categories.name',
+                'sub_classroom_categories.number',
                 'classroom_categories.name as category',
                 'sub_classroom_categories.classroom_category_id',
                 'sub_classroom_categories.profile_coach_video_id',
@@ -75,7 +76,8 @@ class SubClassroomCategoryController extends BaseMenu
                     'classroom_category_id' => $request->classroom_category_id,
                     'profile_coach_video_id' => $request->profile_coach_video_id,
                     'name' => $request->name,
-                    'image' => $path
+                    'image' => $path,
+                    'number' => $request->number,
                 ]);
 
                 return $result;
@@ -111,6 +113,7 @@ class SubClassroomCategoryController extends BaseMenu
                     'classroom_category_id' => $request->classroom_category_id,
                     'profile_coach_video_id' => $request->profile_coach_video_id,
                     'name' => $request->name,
+                    'number' => $request->number,
                 ]);
 
                 return $result;

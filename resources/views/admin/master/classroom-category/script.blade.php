@@ -22,6 +22,8 @@
                     columns: [
                         { data: 'DT_RowIndex' },
                         { data: 'name' },
+                        { data: 'number' },
+                        { data: 'first' },
                         { defaultContent: '' }
                         ],
                     columnDefs: [
@@ -30,6 +32,14 @@
                             searchable: false,
                             orderable: false,
                             className: "text-center"
+                        },
+                        {
+                            targets: 3,
+                            data: 'first',
+                            className: "text-center",
+                            render : function(data, type, full, meta) {
+                                return data ? '<i class="fas fa-check-square text-success"></i>' : '<i class="fas fa-window-close text-danger"></i>'
+                            }
                         },
                         {
                             targets: -1,
@@ -117,7 +127,14 @@
                     $('#form-classroom-category').attr('method','POST');
 
                     $('#form-classroom-category').find('input[name="name"]').val(data.name);
+                    $('#form-classroom-category').find('input[name="number"]').val(data.number);
                     $('#form-classroom-category').find('textarea[name="description"]').val(data.description);
+
+                    if(data.first){
+                        $('#switch-first').attr('checked', true);
+                    }else{
+                        $('#switch-first').attr('checked', false);
+                    }
 
                     $('#image').empty();
 

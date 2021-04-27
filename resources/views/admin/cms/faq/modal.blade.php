@@ -24,6 +24,12 @@
                         </label>
                         <textarea required name="description" class="form-control" placeholder="Answer" rows="4"></textarea>
                     </div>
+                    <div class="form-group">
+                        <label>
+                            Nomor Urut
+                        </label>
+                        <input type="number" name="number" class="form-control" placeholder="Number"/>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>

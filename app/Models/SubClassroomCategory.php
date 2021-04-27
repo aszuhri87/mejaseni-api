@@ -21,7 +21,8 @@ class SubClassroomCategory extends Model
         'classroom_category_id',
         'profile_coach_video_id',
         'name',
-        'image'
+        'image',
+        'number'
     ];
 
     public $cascadeDeletes = [

@@ -25,7 +25,8 @@ class SessionVideo extends Model
         'price',
         'name',
         'image',
-        'datetime'
+        'datetime',
+        'number'
     ];
 
     public $cascadeDeletes = [

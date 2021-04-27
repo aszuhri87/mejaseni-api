@@ -23,6 +23,7 @@
                         { data: 'DT_RowIndex' },
                         { data: 'name' },
                         { data: 'category' },
+                        { data: 'number' },
                         { defaultContent: '' }
                         ],
                     columnDefs: [
@@ -120,6 +121,7 @@
                     $('#form-sub-classroom-category').attr('method','POST');
 
                     $('#form-sub-classroom-category').find('input[name="name"]').val(data.name);
+                    $('#form-sub-classroom-category').find('input[name="number"]').val(data.number);
 
                     get_classroom_category(data.classroom_category_id)
                     get_profile_coach_video(data.profile_coach_video_id)

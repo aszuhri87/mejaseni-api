@@ -44,6 +44,8 @@ class ClassroomCategoryController extends BaseMenu
                 'image',
                 'description',
                 'profile_coach_video_id',
+                'number',
+                'first',
                 DB::raw("CONCAT('{$path}',image) as image_url"),
             ])
             ->whereNull([
@@ -74,7 +76,9 @@ class ClassroomCategoryController extends BaseMenu
                     'name' => $request->name,
                     'description' => $request->description,
                     'image' => $path,
-                    'profile_coach_video_id' => $request->profile_coach_video_id
+                    'profile_coach_video_id' => $request->profile_coach_video_id,
+                    'number' => $request->number,
+                    'first' => isset($request->first) ? true : false,
                 ]);
 
                 return $result;
@@ -102,7 +106,7 @@ class ClassroomCategoryController extends BaseMenu
     {
         try {
             $result = DB::transaction(function () use($request, $id){
-                $result = ClassroomCategory::find($id);
+                $classroom_category = ClassroomCategory::find($id);
                 $path = null;
 
                 if(isset($request->image)){
@@ -110,14 +114,22 @@ class ClassroomCategoryController extends BaseMenu
                     $path = Storage::disk('s3')->put('media', $file);
                 }
 
-                $result->update([
+                if(isset($request->first)){
+                    ClassroomCategory::where('id','!=', $id)->update(['first' => false]);
+                }
+
+                $classroom_category->update([
                     'name' => $request->name,
                     'description' => $request->description,
-                    'image' => $path ? $path:$result->image,
-                    'profile_coach_video_id' => $request->profile_coach_video_id
+                    'image' => $path ? $path : $classroom_category->image,
+                    'profile_coach_video_id' => $request->profile_coach_video_id,
+                    'number' => $request->number,
                 ]);
 
-                return $result;
+                $classroom_category->first = isset($request->first);
+                $classroom_category->update();
+
+                return $classroom_category;
             });
 
             return response([
