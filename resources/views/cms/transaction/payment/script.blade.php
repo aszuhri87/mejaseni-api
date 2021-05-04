@@ -14,7 +14,7 @@
                 $(document).on('click','#btn-next',function(event){
                     event.preventDefault();
 
-                    if($("input[name=payment_chanel]:checked").val() && $("input[name=payment_method]:checked").val()){
+                    if($("input[name=payment_method]:checked").val()){
                         $('#btn-next').html('<div id="loading" class="mr-1"></div> Loading...');
                         $('#btn-next').attr('disabled', true);
                         $.ajax({

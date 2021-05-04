@@ -17,12 +17,12 @@ class FaqController extends Controller
 {
     public function index()
     {
-    	$company = Company::first();
-    	$branchs = Branch::all();
-    	$faqs = Faq::orderBy('number','asc')->get();
+        $company = Company::first();
+        $branchs = Branch::all();
+        $faqs = Faq::orderBy('number','asc')->get();
 
         $path = Storage::disk('s3')->url('/');
-    	$social_medias = DB::table('social_media')
+        $social_medias = DB::table('social_media')
             ->select([
                 'url',
                 DB::raw("CONCAT('{$path}',image) as image_url"),
@@ -32,11 +32,11 @@ class FaqController extends Controller
             ])
             ->get();
 
-    	return view('cms.faq.index', [
-    		"company" => $company,
-    		"branchs" => $branchs,
-    		"faqs" => $faqs,
-    		"social_medias" => $social_medias
-    	]);
+        return view('cms.faq.index', [
+            "company" => $company,
+            "branchs" => $branchs,
+            "faqs" => $faqs,
+            "social_medias" => $social_medias
+        ]);
     }
 }

@@ -47,6 +47,12 @@
                     @endif
                     <input type="radio" class="r-input" name="payment_method" id="virtual-account" value="va" @if(!config('doku.cc_payment')) {{'checked'}} @endif>
                     <label class="mr-3" for="virtual-account">Virtual Account</label>
+
+                    <input type="radio" class="r-input" name="payment_method" id="alfamart" value="alfamart">
+                    <label class="mr-3" for="alfamart">Alfamart</label>
+
+                    {{-- <input type="radio" class="r-input" name="payment_method" id="ovo" value="ovo">
+                    <label class="mr-3" for="ovo">OVO</label> --}}
                 </div>
             </form>
         </div>

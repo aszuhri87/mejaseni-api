@@ -253,6 +253,10 @@ class CartController extends Controller
                     }
 
                     $transaction->payment_url = $doku['virtual_account_info']['how_to_pay_api'];
+                }else if(isset($doku['online_to_offline_info'])){
+                    $transaction->payment_type = 'alfamart';
+                    $transaction->payment_chanel = 'Alfamart';
+                    $transaction->payment_url = $doku['online_to_offline_info']['how_to_pay_api'];
                 }else{
                     $transaction->payment_type = 'cc';
                     $transaction->payment_chanel = 'Credit Card';

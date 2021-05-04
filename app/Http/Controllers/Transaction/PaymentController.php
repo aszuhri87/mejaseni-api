@@ -30,7 +30,7 @@ class PaymentController extends Controller
             return redirect('/payment-success');
         }
 
-        if ($transaction->payment_type == 'va') {
+        if ($transaction->payment_type == 'va' || $transaction->payment_type == 'alfamart') {
             $response = Http::get($transaction->payment_url);
             $response = json_decode($response->body());
         }else{

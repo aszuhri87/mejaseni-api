@@ -2,7 +2,7 @@
 
 @section('content')
 
-@if ($transaction->payment_type == 'va')
+@if ($transaction->payment_type == 'va' || $transaction->payment_type == 'alfamart')
     <div class="border-line stepper-line"></div>
     <div class="row column-center">
         <div class="col-12 column-center">
