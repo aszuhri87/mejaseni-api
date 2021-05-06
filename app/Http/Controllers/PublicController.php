@@ -15,9 +15,11 @@ class PublicController extends Controller
             $result = DB::table('classroom_categories')
                 ->select([
                     'id',
-                    'name'
+                    'name',
+                    'number'
                 ])
                 ->whereNull('deleted_at')
+                ->orderBy('number','asc')
                 ->get();
 
             return response([
@@ -207,9 +209,11 @@ class PublicController extends Controller
             $result = DB::table('sub_classroom_categories')
                 ->select([
                     'id',
-                    'name'
+                    'name',
+                    'number',
                 ])
                 ->whereNull('deleted_at')
+                ->orderBy('number','asc')
                 ->get();
 
             return response([

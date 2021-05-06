@@ -64,7 +64,7 @@ class VideoController extends BaseMenu
                     'session_videos.price',
                     'session_videos.coach_id',
                     'session_videos.expertise_id',
-                    DB::raw("CONCAT('{$path}',sub_classroom_categories.image) as image_url"),
+                    DB::raw("CONCAT('{$path}',session_videos.image) as image_url"),
                     'coaches.name as coach_name',
                     'expertises.name as expertise_name',
                 ])
@@ -141,6 +141,7 @@ class VideoController extends BaseMenu
                     }
                 })
                 ->where('transactions.student_id',Auth::guard('student')->user()->id)
+                ->whereNotNull('transaction_details.session_video_id')
                 ->get();
             return response([
                 "status" => 200,
@@ -193,7 +194,7 @@ class VideoController extends BaseMenu
                 'session_videos.price',
                 'coaches.name as coach_name',
                 'sub_classroom_categories.name as sub_classroom_category_name',
-                DB::raw("CONCAT('{$path}',sub_classroom_categories.image) as image_url"),
+                DB::raw("CONCAT('{$path}',session_videos.image) as image_url"),
             ])
             ->joinSub($coach, 'coaches', function ($join) {
                 $join->on('session_videos.coach_id', '=', 'coaches.id');
@@ -210,6 +211,7 @@ class VideoController extends BaseMenu
                 'theory_videos.name',
                 'theory_videos.is_youtube',
                 'theory_videos.youtube_url as url',
+                'theory_videos.video_url',
             ])
             ->where('theory_videos.session_video_id',$result->id)
             ->whereNull('theory_videos.deleted_at')

@@ -32,14 +32,15 @@
 
 <div class="row">
     <div class="col-lg-6">
-        <h5 class="mt-5 mb-5">Class Conference Package</h5>
+        <h5 class="mt-5 mb-5" id="init-class">Class Conference Package</h5>
     </div>
     <div class="col-lg-6 d-flex justify-content-end mb-5" >
-        <input type="hidden" name="init_class_filter" id="init_class_filter">
+        <input type="hidden" name="init_class_sub_category" id="init_class_sub_category">
+        <input type="hidden" name="init_class_category" id="init_class_category">
         <div class="btn-group" id="group-filter" role="group" aria-label="Basic example">
-            <button type="button" class="btn btn-outline-primary filter" data-package_type='1'>Special</button>
-            <button type="button" class="btn btn-outline-primary filter" data-package_type='2'>Regular</button>
-            <button type="button" class="btn btn-outline-primary master-lesson" data-package_type='3'>Master Lesson</button>
+            <button type="button" class="btn btn-outline-primary filter btn-filter" data-package_type='1' id="filter-1">Special</button>
+            <button type="button" class="btn btn-outline-primary filter btn-filter" data-package_type='2' id="filter-2">Regular</button>
+            <button type="button" class="btn btn-outline-primary master-lesson btn-filter" data-package_type='3' id="filter-3">Master Lesson</button>
         </div>
     </div>
 </div>

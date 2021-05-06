@@ -1,6 +1,7 @@
 <script type="text/javascript">
     var Page = function() {
         var _componentPage = function(){
+            let check_init_filter = false;
             let month = new Array();
                 month['01'] = 'Januari';
                 month['02'] = 'Februari';
@@ -19,10 +20,12 @@
                 getClassroomCategory();
                 formSubmit();
                 initAction();
-                getSubCategory();
+                // getSubCategory();
                 getSessionVideo();
-                initPackage();
+                // initPackage();
                 initSpecialOffer();
+
+
             });
 
             const initSplide = () => {
@@ -119,19 +122,30 @@
 
                 $(document).on('click','.master-lesson',function(event){
                     event.preventDefault();
+                    $('#init-class').html($(this).text()+' Class');
+                    $('.btn-filter').addClass('btn-outline-primary').removeClass('btn-primary');
+                    $(this).addClass('btn-primary').removeClass('btn-outline-primary');
                     getMasterLesson();
                 })
 
                 $(document).on('click','.filter',function(event){
                     event.preventDefault();
+                    $('#init-class').html($(this).text()+' Class');
+
+                    $('.btn-filter').addClass('btn-outline-primary').removeClass('btn-primary');
+                    $(this).addClass('btn-primary').removeClass('btn-outline-primary');
+
                     let package_type = $(this).data('package_type');
-                    let init_class_filter = $('#init_class_filter').val();
+                    let init_class_sub_category = $('#init_class_sub_category').val();
+                    let init_class_category = $('#init_class_category').val();
+
                     $.ajax({
                         url: `{{ url('student/new-package/get-package') }}`,
                         type: `GET`,
                         data:{
-                            package_type:package_type,
-                            init_class_filter: init_class_filter,
+                            package_type : package_type,
+                            init_class_category : init_class_category,
+                            init_class_sub_category : init_class_sub_category,
                         }
                     })
                     .done(function(res, xhr, meta) {
@@ -578,6 +592,13 @@
                         message: 'Processing...'
                     });
                     let id = $(this).data('id');
+
+                    $('.btn-category, btn-primary').addClass('btn-outline-primary').removeClass('btn-primary');
+                    $('.btn-filter').addClass('btn-outline-primary').removeClass('btn-primary');
+                    $(this).addClass('btn-primary').removeClass('btn-outline-primary');
+
+                    $('#init_class_sub_category').val($(this).data('id'));
+
                     getPackageBySubCategory(id);
                     getSessionVideo(id);
                 });
@@ -587,6 +608,8 @@
                     $(this).addClass('class-category-selected');
                     let classroom_category_id = $(this).data('id');
                     getSubCategory(classroom_category_id);
+
+                    $('#init_class_classroom').val( $(this).data('id'));
                 });
 
                 // paginate package
@@ -1493,17 +1516,32 @@
                     let element = ``;
                     if(res.data.length > 0){
                         $.each(res.data, function(index, data) {
-                            element += `
-                                <div class="mb-2 mr-2">
-                                    <button type="button" class="btn btn-outline-primary btn-category btn-pill" data-id="${data.id}">${data.name}</button>
-                                </div>
-                            `;
+                            if(index == 0){
+                                $('#init_class_sub_category').val(data.id);
+                                element += `
+                                    <div class="mb-2 mr-2">
+                                        <button type="button" class="btn btn-primary btn-category btn-pill" data-id="${data.id}">${data.name}</button>
+                                    </div>
+                                `;
+                            }
+                            else{
+                                element += `
+                                    <div class="mb-2 mr-2">
+                                        <button type="button" class="btn btn-outline-primary btn-category btn-pill" data-id="${data.id}">${data.name}</button>
+                                    </div>
+                                `;
+                            }
                         });
                         $('#category').html(element);
                     }
                     else{
                         $('#category').empty();
                         getPackageByCategory(classroom_category_id);
+                    }
+
+                    if(!check_init_filter){
+                        check_init_filter = true;
+                        $('#filter-2').click();
                     }
                 })
                 .fail(function(res, error) {
@@ -1521,19 +1559,35 @@
                 .done(function(res, xhr, meta) {
                     let element = ``;
                     $.each(res.data, function(index, data) {
-                        element += `
-                        <li class="splide__slide px-2">
-                            <div class="class-category-filter__wrapper" data-id=${data.id}>
-                                <div class="class-category-filter-overlay row-center">
-                                    <h4>${data.name}</h4>
+                        if(index == 0){
+                            $('#init_class_category').val(data.id);
+                            element += `
+                            <li class="splide__slide px-2">
+                                <div class="class-category-filter__wrapper class-category-selected" data-id=${data.id}>
+                                    <div class="class-category-filter-overlay row-center">
+                                        <h4>${data.name}</h4>
+                                    </div>
+                                    <img src="././assets/images/category-placeholder.png" alt="">
                                 </div>
-                                <img src="././assets/images/category-placeholder.png" alt="">
-                            </div>
-                        </li>
-                        `;
+                            </li>
+                            `;
+                        }
+                        else{
+                            element += `
+                            <li class="splide__slide px-2">
+                                <div class="class-category-filter__wrapper" data-id=${data.id}>
+                                    <div class="class-category-filter-overlay row-center">
+                                        <h4>${data.name}</h4>
+                                    </div>
+                                    <img src="././assets/images/category-placeholder.png" alt="">
+                                </div>
+                            </li>
+                            `;
+                        }
                     });
                     $('.splide__list').html(element);
                     initSplide();
+                    getSubCategory($('#init_class_category').val());
                 })
                 .fail(function(res, error) {
                     toastr.error(res.responseJSON.message, 'Failed')

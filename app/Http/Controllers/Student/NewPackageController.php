@@ -78,7 +78,15 @@ class NewPackageController extends BaseMenu
                 ->where('classrooms.is_discount', false)
                 ->where(function($query) use($request){
                     if($request->package_type){
-                        $query->where('package_type',$request->package_type);
+                        $query->where('classrooms.package_type',$request->package_type);
+                    }
+
+                    if($request->init_class_category){
+                        $query->where('classrooms.classroom_category_id',$request->init_class_category);
+                    }
+
+                    if($request->init_class_sub_category){
+                        $query->where('classrooms.sub_classroom_category_id',$request->init_class_sub_category);
                     }
                 })
                 ->whereNull('classrooms.deleted_at')
@@ -429,7 +437,8 @@ class NewPackageController extends BaseMenu
             $result = DB::table('sub_classroom_categories')
                 ->select([
                     'id',
-                    'name'
+                    'name',
+                    'number',
                 ])
                 ->where(function($query) use($request){
                     if(!empty($request->classroom_category_id)){
@@ -437,6 +446,7 @@ class NewPackageController extends BaseMenu
                     }
                 })
                 ->whereNull('deleted_at')
+                ->orderBy('number')
                 ->get();
 
             return response([

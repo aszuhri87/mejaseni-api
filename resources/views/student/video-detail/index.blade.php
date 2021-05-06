@@ -96,7 +96,7 @@
                                         @if($item->is_youtube)
                                             <a href="{{$item->url}}" class="btn btn-primary" target="_blank">
                                         @else
-                                            <a href="https://mejaseni.yk1.s3.gmedia.id/{{$item->url}}" class="btn btn-primary" target="_blank">
+                                            <a href="{{$item->video_url}}" class="btn btn-primary" target="_blank">
                                         @endif
                                             <span class="svg-icon"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">

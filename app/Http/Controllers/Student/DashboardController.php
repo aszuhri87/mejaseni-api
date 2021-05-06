@@ -500,35 +500,41 @@ class DashboardController extends BaseMenu
             $student_schedule = DB::table('student_schedules')
                 ->select([
                     'student_schedules.student_classroom_id',
-                    'coach_schedules.datetime',
+                    DB::raw('COUNT(student_schedules.student_classroom_id) as total'),
                 ])
                 ->leftJoinSub($coach_schedule, 'coach_schedules', function ($join) {
                     $join->on('student_schedules.coach_schedule_id', '=', 'coach_schedules.id');
                 })
                 ->whereRaw('coach_schedules.datetime::timestamp < now()')
-                ->whereNull('student_schedules.deleted_at');
+                ->whereNull('student_schedules.deleted_at')
+                ->groupBy('student_schedules.student_classroom_id');
 
             $sub_data = DB::table('student_classrooms')
                 ->select([
                     'student_classrooms.id',
-                    DB::raw('COUNT(student_schedules.student_classroom_id) as total'),
+                    'student_schedules.total',
                 ])
                 ->leftJoinSub($student_schedule, 'student_schedules', function ($join) {
                     $join->on('student_classrooms.id', '=', 'student_schedules.student_classroom_id');
                 })
                 ->whereNull('student_classrooms.deleted_at')
-                ->where('student_classrooms.student_id',Auth::guard('student')->user()->id)
-                ->groupBy('student_classrooms.id');
+                ->where('student_classrooms.student_id',Auth::guard('student')->user()->id);
 
             $classroom = DB::table('student_classrooms')
                 ->select([
                     'student_classrooms.id',
                     'student_classrooms.classroom_id',
+                    DB::raw("
+                        CASE
+                            WHEN sub_data.total is not null THEN
+                                sub_data.total
+                            ELSE
+                                0
+                        END AS total
+                    "),
                     'classrooms.session_total',
                     'classrooms.name as classroom_name',
                     'classrooms.image',
-                    'student_schedules.datetime',
-                    'sub_data.total',
                     DB::raw("CONCAT('{$path}',classrooms.image) as image"),
                     DB::raw("(1) as type")
                 ])
