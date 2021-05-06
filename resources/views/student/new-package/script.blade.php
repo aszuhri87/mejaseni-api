@@ -604,12 +604,12 @@
                 });
 
                 $(document).on('click','.class-category-filter__wrapper',function(event){
+                    $('#init_class_category').val( $(this).data('id'));
                     $('.class-category-filter__wrapper').removeClass('class-category-selected');
                     $(this).addClass('class-category-selected');
                     let classroom_category_id = $(this).data('id');
                     getSubCategory(classroom_category_id);
 
-                    $('#init_class_classroom').val( $(this).data('id'));
                 });
 
                 // paginate package
