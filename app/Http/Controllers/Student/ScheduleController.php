@@ -640,6 +640,211 @@ class ScheduleController extends BaseMenu
         }
     }
 
+    public function coach_list_new(){
+        try{
+            $path = Storage::disk('s3')->url('/');
+
+            $transaction_detail = DB::table('transaction_details')
+                ->select([
+                    'transaction_details.id',
+                    'transaction_details.cart_id',
+                    'transaction_details.transaction_id',
+                ])
+                ->Join('transactions','transaction_details.transaction_id','=','transactions.id')
+                ->whereNotNull('transactions.id')
+                ->where([
+                    'transactions.status' => 2,
+                    'transactions.student_id' => Auth::guard('student')->user()->id,
+                ])
+                ->whereNull([
+                    'transaction_details.deleted_at',
+                    'transactions.deleted_at',
+                ]);
+
+            $cart = DB::table('carts')
+                ->select([
+                    'carts.id',
+                    'carts.classroom_id',
+                    'transaction_details.id as transaction_detail_id',
+                ])
+                ->joinSub($transaction_detail, 'transaction_details', function ($join) {
+                    $join->on('carts.id', '=', 'transaction_details.cart_id');
+                })
+                ->where('student_id', Auth::guard('student')->user()->id)
+                ->whereNotNull('transaction_details.id')
+                ->whereNull('carts.deleted_at');
+
+            $classroom_feedback = DB::table('classroom_feedback')
+                ->select([
+                    'classroom_feedback.classroom_id',
+                    'classroom_feedback.star',
+                ])
+                ->where('classroom_feedback.deleted_at');
+
+            $sub_classroom = DB::table('classrooms')
+                ->select([
+                    'classrooms.id',
+                    DB::raw('round(AVG(classroom_feedback.star),1) as rating_classroom'),
+                    DB::raw('(COUNT(classroom_feedback.classroom_id)) as total_review_classroom')
+                ])
+                ->leftJoinSub($classroom_feedback, 'classroom_feedback', function ($join) {
+                    $join->on('classrooms.id', '=', 'classroom_feedback.classroom_id');
+                })
+                ->whereNull('classrooms.deleted_at')
+                ->whereNotNull('classroom_feedback.star')
+                ->groupBy('classrooms.id');
+
+            $classroom = DB::table('classrooms')
+                ->select([
+                    'classrooms.id',
+                    'classrooms.name',
+                    'carts.id as cart_id',
+                    DB::raw('
+                        CASE
+                            WHEN sub_classroom.total_review_classroom is not null THEN
+                                sub_classroom.total_review_classroom::integer
+                            ELSE
+                                0::integer
+                        END AS total_review_classroom
+                    '),
+                    DB::raw('
+                        CASE
+                            WHEN sub_classroom.rating_classroom is not null THEN
+                                sub_classroom.rating_classroom::integer
+                            ELSE
+                                0::integer
+                        END AS rating_classroom
+                    '),
+                ])
+                ->leftJoinSub($cart, 'carts', function ($join) {
+                    $join->on('classrooms.id', '=', 'carts.classroom_id');
+                })
+                ->leftJoinSub($sub_classroom, 'sub_classroom', function ($join) {
+                    $join->on('classrooms.id', '=', 'sub_classroom.id');
+                })
+                ->whereNotNull('carts.transaction_detail_id')
+                ->whereNull('classrooms.deleted_at');
+
+            // session star
+
+            $session_feedback = DB::table('session_feedback')
+                ->select([
+                    'session_feedback.student_schedule_id',
+                    DB::raw('SUM(session_feedback.star)::integer as star')
+                ])
+                ->whereNull('session_feedback.deleted_at')
+                ->whereNotNull('session_feedback.star')
+                ->groupBy('session_feedback.student_schedule_id');
+
+            $student_schedule = DB::table('student_schedules')
+                ->select([
+                    'student_schedules.coach_schedule_id',
+                    DB::raw('
+                        CASE
+                            WHEN session_feedback.star is not null THEN
+                                session_feedback.star::integer
+                            ELSE
+                                0
+                        END AS star
+                    '),
+                ])
+                ->leftJoinSub($session_feedback, 'session_feedback', function ($join) {
+                    $join->on('student_schedules.id', '=', 'session_feedback.student_schedule_id');
+                })
+                ->leftJoin('student_classrooms','student_schedules.student_classroom_id','=','student_classrooms.id')
+                ->whereNull('student_schedules.deleted_at')
+                ->where('student_classrooms.student_id',Auth::guard('student')->user()->id)
+                ->whereNotNull('session_feedback.student_schedule_id');
+
+            $coach_schedule = DB::table('coach_schedules')
+                ->select([
+                    'coach_schedules.coach_classroom_id',
+                    'student_schedules.star',
+                ])
+                ->leftJoinSub($student_schedule, 'student_schedules', function ($join) {
+                    $join->on('coach_schedules.id', '=', 'student_schedules.coach_schedule_id');
+                })
+                ->whereNull('coach_schedules.deleted_at')
+                ->whereNotNull('student_schedules.coach_schedule_id');
+
+            // end session star
+
+            $coach_classroom = DB::table('coach_classrooms')
+                ->select([
+                    'coach_classrooms.coach_id',
+                    DB::raw('(SUM(classrooms.total_review_classroom)::integer + COUNT(coach_schedules.star)) as total_review'),
+                    DB::raw('round(AVG(classrooms.rating_classroom),1) as rating_classroom'),
+                    DB::raw('round(AVG(coach_schedules.star),1) as rating_schedule'),
+                ])
+                ->rightJoinSub($classroom, 'classrooms', function ($join) {
+                    $join->on('coach_classrooms.classroom_id', '=', 'classrooms.id');
+                })
+                ->leftJoinSub($coach_schedule, 'coach_schedules', function ($join) {
+                    $join->on('coach_classrooms.id', '=', 'coach_schedules.coach_classroom_id');
+                })
+                ->whereNull('coach_classrooms.deleted_at')
+                ->groupBy([
+                    'coach_classrooms.coach_id',
+                ]);
+
+            // dd($coach_classroom->get());
+
+            $result = DB::table('coaches')
+                ->select([
+                    'coaches.id',
+                    'coaches.email',
+                    DB::raw("CONCAT('{$path}',coaches.image) as image"),
+                    DB::raw("(
+                        CASE
+                            WHEN coach_classrooms.rating_schedule IS NOT NULL AND coach_classrooms.rating_classroom IS NOT NULL THEN
+                                (coach_classrooms.rating_schedule::FLOAT + coach_classrooms.rating_classroom::FLOAT)/2
+                            WHEN coach_classrooms.rating_schedule IS NOT NULL AND coach_classrooms.rating_classroom IS NULL THEN
+                                coach_classrooms.rating_schedule::FLOAT
+                            WHEN coach_classrooms.rating_schedule IS NULL AND coach_classrooms.rating_classroom IS NOT NULL THEN
+                                coach_classrooms.rating_classroom::FLOAT
+                            ELSE
+                                0
+                        END
+                    )AS rating"),
+                    'coaches.phone',
+                    'coaches.name',
+                    // DB::raw('(
+                    //     CASE
+                    //         WHEN coach_classrooms.class_active IS NOT NULL THEN
+                    //             coach_classrooms.class_active
+                    //         ELSE
+                    //             0
+                    //     END
+                    // )as class_active'),
+                    DB::raw('(
+                        CASE
+                            WHEN coach_classrooms.total_review IS NOT NULL THEN
+                                coach_classrooms.total_review
+                            ELSE
+                                0
+                        END
+                    )as total_review'),
+                ])
+                ->rightJoinSub($coach_classroom, 'coach_classrooms', function ($join) {
+                    $join->on('coaches.id', '=', 'coach_classrooms.coach_id');
+                })
+                ->whereNull('coaches.deleted_at')
+                ->get();
+
+            return response([
+                "status" => 200,
+                "data"      => $result,
+                "message"   => 'OK!'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+
+    }
+
     public function coach_list()
     {
         try {
@@ -717,8 +922,8 @@ class ScheduleController extends BaseMenu
                 ->select([
                     'coach_classrooms.coach_id',
                     DB::raw('(SUM(classrooms.total_review_classroom)::integer + COUNT(coach_schedules.star)) as total_review'),
-                    DB::raw('round(AVG(coach_schedules.star),1) as rating_schedule'),
                     DB::raw('round(AVG(classrooms.rating_classroom),1) as rating_classroom'),
+                    DB::raw('round(AVG(coach_schedules.star),1) as rating_schedule'),
                     DB::raw('COUNT(sub_coach_schedules.coach_classroom_id) as class_active'),
                 ])
                 ->leftJoinSub($coach_schedule, 'coach_schedules', function ($join) {

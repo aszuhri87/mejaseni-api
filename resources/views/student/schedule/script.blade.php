@@ -570,7 +570,7 @@
                                         </div>
                                     </th>
                                     <td>${data.phone}</td>
-                                    <td>${data.class_active} Schedule</td>
+
                                     <td>`;
                                     let min_star = 5 - parseInt(data.rating);
                                     for(let i=0; i<parseInt(data.rating); i++){

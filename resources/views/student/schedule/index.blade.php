@@ -265,7 +265,7 @@
                                 <tr>
                                     <th scope="col">Coach</th>
                                     <th scope="col">Phone Number</th>
-                                    <th scope="col">Active Schedule</th>
+                                    {{-- <th scope="col">Active Schedule</th> --}}
                                     <th scope="col">Rating</th>
                                 </tr>
                             </thead>

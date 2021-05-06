@@ -771,6 +771,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
 
             Route::group(['prefix' => 'coach-list'], function () {
                 Route::get('/', [StudentScheduleController::class, 'coach_list']);
+                Route::get('new', [StudentScheduleController::class, 'coach_list_new']);
             });
         });
 

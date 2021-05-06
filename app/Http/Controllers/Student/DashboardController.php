@@ -563,7 +563,7 @@ class DashboardController extends BaseMenu
                 ->select([
                     'session_videos.id',
                     'session_videos.name',
-                    DB::raw("CONCAT('{$path}',sub_classroom_categories.image) as image"),
+                    DB::raw("CONCAT('{$path}',session_videos.image) as image"),
                 ])
                 ->leftJoinSub($sub_classroom_category, 'sub_classroom_categories', function ($join) {
                     $join->on('session_videos.sub_classroom_category_id', '=', 'sub_classroom_categories.id');
