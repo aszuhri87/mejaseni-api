@@ -11,7 +11,7 @@ use App\Traits\RestoreSoftDeletes;
 
 class GuestStar extends Model
 {
-    use HasFactory, Uuid, SoftDeletes, SoftDeleteCascade, RestoreSoftDeletes;
+    use HasFactory, Uuid, SoftDeletes;
 
     public $incrementing = false;
 
