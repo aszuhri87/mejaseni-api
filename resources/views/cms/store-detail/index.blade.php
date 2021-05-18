@@ -42,7 +42,7 @@
         <div class="row">
             <div class="col-md-12 mt-4 mt-lg-0">
                 <div class="mb-5 row-center">
-                    <a href="{{ url('store') }}">
+                    <a href="{{ url('video-course') }}">
                         <div class="rounded-circle back-wrapper row-center shadow">
                             <img src="{{ asset('cms/assets/img/svg/Arrow-left1.svg') }}" alt="">
                     </a>
@@ -63,7 +63,7 @@
                                 <iframe id="video-course" class="w-100 h-100" src="{{ $video_course_item_open->youtube_url }}" frameborder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                 allowfullscreen>
-                                    
+
                                 </iframe>
                             </div>
 
@@ -130,10 +130,10 @@
                                         @endif
 
                                     @endforeach
-                                    
+
                                 </ul>
-                                
-                                
+
+
                                 @if(Auth::guard('student')->check())
                                     @if(!$video_course->is_registered)
                                         <a class="btn btn-primary shadow row-center" data-toggle="modal" data-target="#eventRegisterModal">
