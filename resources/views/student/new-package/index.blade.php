@@ -38,8 +38,8 @@
         <input type="hidden" name="init_class_sub_category" id="init_class_sub_category">
         <input type="hidden" name="init_class_category" id="init_class_category">
         <div class="btn-group" id="group-filter" role="group" aria-label="Basic example">
-            <button type="button" class="btn btn-outline-primary filter btn-filter" data-package_type='1' id="filter-1">Special</button>
             <button type="button" class="btn btn-outline-primary filter btn-filter" data-package_type='2' id="filter-2">Regular</button>
+            <button type="button" class="btn btn-outline-primary filter btn-filter" data-package_type='1' id="filter-1">Special</button>
             <button type="button" class="btn btn-outline-primary master-lesson btn-filter" data-package_type='3' id="filter-3">Master Lesson</button>
         </div>
     </div>
@@ -55,7 +55,7 @@
         </div>
     </div>
 </div>
-<h5 class="mt-5 mb-5">Video Course</h5>
+<h5 class="mt-5 mb-5">Tutorial Video</h5>
 <div class="video-course">
 
 </div>
