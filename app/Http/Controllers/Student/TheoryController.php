@@ -126,7 +126,7 @@ class TheoryController extends BaseMenu
                 })
                 ->whereNull('student_schedules.deleted_at');
 
-            $result = DB::table('student_classrooms')
+            $sub_result = DB::table('student_classrooms')
                 ->select([
                     'student_classrooms.id',
                     'student_classrooms.student_id',
@@ -165,7 +165,16 @@ class TheoryController extends BaseMenu
                     }
                 })
                 ->whereRaw('student_schedules.datetime::timestamp <= now()::timestamp')
-                ->orderBy('classrooms.upload_date','asc')
+                ->distinct('classrooms.theory_id');
+
+            $result = DB::table('student_classrooms')
+                ->select([
+                    'sub_result.*'
+                ])
+                ->joinSub($sub_result, 'sub_result', function ($join) {
+                    $join->on('student_classrooms.id', '=', 'sub_result.id');
+                })
+                ->orderBy('sub_result.upload_date','asc')
                 ->get();
 
             foreach ($result as $key => $value) {
@@ -350,7 +359,7 @@ class TheoryController extends BaseMenu
                 })
                 ->whereNull('student_schedules.deleted_at');
 
-            $result = DB::table('student_classrooms')
+            $sub_result = DB::table('student_classrooms')
                 ->select([
                     'student_classrooms.id',
                     'student_classrooms.student_id',
@@ -379,18 +388,24 @@ class TheoryController extends BaseMenu
                 ->where('student_classrooms.student_id',Auth::guard('student')->user()->id)
                 ->where(function($query) use($request){
                     if(!empty($request->filter_theory)){
-                        if($request->filter_theory==1){
+                        if($request->filter_theory == 1){
                             $query->where('classrooms.is_premium',true);
-                        }elseif($request->filter_theory==0){
-                            $query->where('classrooms.is_premium',false);
                         }else{
-                            $query->where('classrooms.is_premium',false)
-                                ->orWhere('classrooms.is_premium',true);
+                            $query->where('classrooms.is_premium',false);
                         }
                     }
                 })
                 ->whereRaw('student_schedules.datetime::timestamp <= now()::timestamp')
-                ->orderBy('classrooms.upload_date','asc')
+                ->distinct('classrooms.theory_id');
+
+            $result = DB::table('student_classrooms')
+                ->select([
+                    'sub_result.*'
+                ])
+                ->joinSub($sub_result, 'sub_result', function ($join) {
+                    $join->on('student_classrooms.id', '=', 'sub_result.id');
+                })
+                ->orderBy('sub_result.upload_date','asc')
                 ->get();
 
             foreach ($result as $key => $value) {
@@ -429,7 +444,7 @@ class TheoryController extends BaseMenu
                     $value->is_buy = false;
                 }
             }
-
+            
             return response([
                 "status" => 200,
                 "data"      => $result,

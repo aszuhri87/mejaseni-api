@@ -81,6 +81,7 @@
                 $(document).on('change','#filter_theory',function(event){
                     event.preventDefault();
                     let filter_theory = $(this).val();
+
                     $.ajax({
                         url: `{{ url('student/theory/theory-class/filter_theory') }}`,
                         type: 'GET',
@@ -194,6 +195,7 @@
                                         </div>
                                     `;
                                 })
+                                $('#theory').html(element);
                             }
                             else{
                                 element = `
@@ -205,8 +207,8 @@
                                         </div>
                                     </div>
                                 `;
+                                $('#theory').html(element);
                             }
-                            $('#theory').html(element);
                         }
                     })
                     .fail(function(res, error) {
