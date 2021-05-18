@@ -15,7 +15,7 @@ class Classroom extends Model
     package_type :  1 special
                     2 regular
     */
-    use HasFactory, Uuid, SoftDeletes, SoftDeleteCascade, RestoreSoftDeletes;
+    use HasFactory, Uuid, SoftDeletes;
 
     public $incrementing = false;
 

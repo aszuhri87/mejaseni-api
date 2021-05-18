@@ -75,17 +75,11 @@ class PaymentController extends Controller
         });
 
         if($transaction && $request['transaction']['status'] == 'SUCCESS'){
-            if($request['service']['id'] == 'VIRTUAL_ACCOUNT'){
-                $transaction->confirmed = true;
-                $transaction->confirmed_at = date('Y-m-d H:i:s');
-                $transaction->status = 2;
-                $transaction->total = $request['order']['amount'];
-            }else if($request['service']['id'] == 'CREDIT_CARD'){
-                $transaction->confirmed = true;
-                $transaction->confirmed_at = date('Y-m-d H:i:s');
-                $transaction->status = 2;
-                $transaction->total = $request['order']['amount'];
-            }
+
+            $transaction->confirmed = true;
+            $transaction->confirmed_at = date('Y-m-d H:i:s');
+            $transaction->status = 2;
+            $transaction->total = $request['order']['amount'];
 
             $data = DB::transaction(function () use($request, $transaction){
 

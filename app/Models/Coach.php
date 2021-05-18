@@ -13,7 +13,7 @@ use App\Traits\RestoreSoftDeletes;
 
 class Coach extends Authenticatable
 {
-    use HasFactory, Notifiable, Uuid, SoftDeletes, HasRoles, SoftDeleteCascade, RestoreSoftDeletes;
+    use HasFactory, Notifiable, Uuid, SoftDeletes, HasRoles;
 
     public $incrementing = false;
 
