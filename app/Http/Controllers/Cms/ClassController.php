@@ -588,7 +588,14 @@ class ClassController extends Controller
                     ])
                     ->leftJoin('classroom_categories','classroom_categories.id','=','master_lessons.classroom_category_id')
                     ->leftJoin('platforms','platforms.id','=','master_lessons.platform_id')
-                    ->where('master_lessons.classroom_category_id',$classroom_category_id)
+                    ->where(function($query) use($sub_classroom_category_id, $classroom_category_id){
+                        if(Uuid::isValid($sub_classroom_category_id)){
+                            $query->where('master_lessons.sub_classroom_category_id', $sub_classroom_category_id);
+                        }else{
+                            $query->where('master_lessons.classroom_category_id', $classroom_category_id)
+                                ->whereNull('master_lessons.sub_classroom_category_id');
+                        }
+                    })
                     ->whereNull([
                         'master_lessons.deleted_at'
                     ])
