@@ -12,7 +12,13 @@
         <div class="row">
             <div class="col-lg-5 text-left d-flex" style="padding-right: 0 !important">
                 <div>
-                    <img src="{{$data->image_url}}" width="150px" height="150px" class="rounded">
+                    @if (preg_match("/https:/i", $data->image) > 0)
+                        <img src="{{$data->image}}" width="150px" height="150px" class="rounded">
+                    @elseif(preg_match("/https:/i", $data->image) == 0)
+                        <img src="{{$data->image_url}}" width="150px" height="150px" class="rounded">
+                    @else
+                        <img src="{{asset('assets/images/ava-student.png')}}" width="150px" height="150px" class="rounded">
+                    @endif
                 </div>
                 <div class="ml-5">
                     <p class="font-weight-bold font-size-h3" style="margin-bottom: 0 !important">{{$data->name}}</p>
