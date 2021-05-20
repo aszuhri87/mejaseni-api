@@ -78,7 +78,7 @@ class ClassController extends Controller
 
         if($category){
             $category = str_replace("-"," ",$category);
-            $selected_category = $selected_category->where('classroom_categories.name', 'ilike', '%'.strtolower($category).'%');
+            $selected_category = $selected_category->where('classroom_categories.name', $category);
         }else{
             $selected_category = $selected_category->where('first', true);
         }
