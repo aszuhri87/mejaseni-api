@@ -279,7 +279,7 @@ class NewPackageController extends BaseMenu
         }
     }
 
-    public function get_classroom_by_sub_category_id($sub_classroom_category_id)
+    public function get_classroom_by_sub_category_id(Request $request, $sub_classroom_category_id)
     {
         try {
             $path = Storage::disk('s3')->url('/');
@@ -329,6 +329,11 @@ class NewPackageController extends BaseMenu
                 })
                 ->where('classrooms.deleted_at')
                 ->where('classrooms.sub_classroom_category_id',$sub_classroom_category_id)
+                ->where(function($query) use($request) {
+                    if(!empty($request->type_classroom)){
+                        $query->where('classrooms.package_type',$request->type_classroom);
+                    }
+                })
                 ->distinct('classrooms.id')
                 ->paginate(6);
 
@@ -555,7 +560,7 @@ class NewPackageController extends BaseMenu
         }
     }
 
-    public function get_master_lesson()
+    public function get_master_lesson(Request $request)
     {
         try {
             $path = Storage::disk('s3')->url('/');
@@ -632,6 +637,11 @@ class NewPackageController extends BaseMenu
                 })
                 ->whereRaw('master_lessons.datetime::timestamp > now()::timestamp')
                 ->whereRaw('(master_lessons.slot::numeric - sub_master_lesson.total_booking::numeric) > 0')
+                ->where(function($query) use($request){
+                    if(!empty($request->sub_classroom_category)){
+                        $query->where('master_lessons.sub_classroom_category_id',$request->sub_classroom_category);
+                    }
+                })
                 ->whereNull('master_lessons.deleted_at')
                 ->paginate(10);
 

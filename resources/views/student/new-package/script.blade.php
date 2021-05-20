@@ -598,8 +598,8 @@
                     $(this).addClass('btn-primary').removeClass('btn-outline-primary');
 
                     $('#init_class_sub_category').val($(this).data('id'));
-
-                    getPackageBySubCategory(id);
+                    $('#filter-2').addClass('btn-primary').removeClass('btn-outline-primary');
+                    getPackageBySubCategory(id,2);
                     getSessionVideo(id);
                 });
 
@@ -1292,9 +1292,13 @@
                 });
             },
             getMasterLesson = () =>{
+                let init_sub_classroom_category = $('#init_class_sub_category').val();
                 $.ajax({
                     url: `{{ url('student/new-package/get-master-lesson') }}`,
                     type: 'get',
+                    data: {
+                        sub_classroom_category : init_sub_classroom_category
+                    }
                 })
                 .done(function(res, xhr, meta) {
                     let element = ``;
@@ -1806,10 +1810,13 @@
 
                 });
             },
-            getPackageBySubCategory = (sub_classroom_category_id) => {
+            getPackageBySubCategory = (sub_classroom_category_id, type_classroom = null) => {
                 $.ajax({
                     url: `{{ url('student/new-package/sub-classroom-category') }}/${sub_classroom_category_id}`,
                     type: `GET`,
+                    data: {
+                        type_classroom : type_classroom
+                    }
                 })
                 .done(function(res, xhr, meta) {
                     let element = ``;
