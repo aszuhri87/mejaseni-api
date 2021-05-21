@@ -520,7 +520,7 @@ class DashboardController extends BaseMenu
                 ->whereNull('student_classrooms.deleted_at')
                 ->where('student_classrooms.student_id',Auth::guard('student')->user()->id);
 
-            $classroom = DB::table('student_classrooms')
+            $student_classroom = DB::table('student_classrooms')
                 ->select([
                     'student_classrooms.id',
                     'student_classrooms.classroom_id',
@@ -548,6 +548,7 @@ class DashboardController extends BaseMenu
                     $join->on('student_classrooms.id', '=', 'student_schedules.student_classroom_id');
                 })
                 ->whereNull('student_classrooms.deleted_at')
+                ->whereNotNull('classrooms.id')
                 ->where('student_classrooms.student_id',Auth::guard('student')->user()->id)
                 ->get();
 
@@ -612,14 +613,14 @@ class DashboardController extends BaseMenu
 
             if(!empty($request->filter_course)){
                 if($request->filter_course == 0){
-                    foreach ($classroom as $key => $value) {
+                    foreach ($student_classroom as $key => $value) {
                         $data[] = $value;
                     }
                     foreach ($video as $key => $value) {
                         $data[] = $value;
                     }
                 }elseif($request->filter_course == 1){
-                    foreach ($classroom as $key => $value) {
+                    foreach ($student_classroom as $key => $value) {
                         $data[] = $value;
                     }
                 }elseif($request->filter_course == 2){
@@ -628,7 +629,7 @@ class DashboardController extends BaseMenu
                     }
                 }
             }else{
-                foreach ($classroom as $key => $value) {
+                foreach ($student_classroom as $key => $value) {
                     $data[] = $value;
                 }
                 foreach ($video as $key => $value) {

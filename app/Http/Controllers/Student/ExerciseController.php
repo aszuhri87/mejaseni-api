@@ -45,7 +45,7 @@ class ExerciseController extends BaseMenu
                     'classrooms.id as classroom_id',
                     'classrooms.name as classroom_name',
                 ])
-                ->leftJoinSub($classroom, 'classrooms', function ($join) {
+                ->joinSub($classroom, 'classrooms', function ($join) {
                     $join->on('student_classrooms.classroom_id', '=', 'classrooms.id');
                 })
                 ->where('student_id',$id)

@@ -394,6 +394,7 @@ class MyClassController extends BaseMenu
                 })
                 ->where('student_classrooms.student_id', $id)
                 ->whereNull('student_classrooms.deleted_at')
+                ->whereNotNull('classrooms.id')
                 ->get();
 
             return response([

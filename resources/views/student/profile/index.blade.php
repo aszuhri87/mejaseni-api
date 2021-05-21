@@ -80,10 +80,17 @@
                                                         id="kt_user_edit_avatar">
                                                         <div class="image-input-wrapper image">
                                                             @if(!empty(Auth::guard('student')->user()->image))
-                                                                <img src="{{ $path }}{{Auth::guard('student')->user()->image}}" class="img-profile-edit rounded" style="width:194px !important; height:194px !important;">
+                                                                @if (preg_match("/https:/i", Auth::guard('student')->user()->image) > 0)
+                                                                    <img src="{{Auth::guard('student')->user()->image}}" class="img-profile-edit rounded" style="width:194px !important; height:194px !important;">
+                                                                @elseif(preg_match("/https:/i", Auth::guard('student')->user()->image) == 0)
+                                                                    <img src="{{ $path }}{{Auth::guard('student')->user()->image}}" class="img-profile-edit rounded" style="width:194px !important; height:194px !important;">
+                                                                @else
+                                                                    <img src="{{asset('assets/images/ava-student.png')}}" class="img-profile-edit rounded" style="width:194px !important; height:194px !important;">
+                                                                @endif
                                                             @else
                                                                 <img src="{{ url('/assets/images/profile.png') }}" class="img-profile-edit rounded" style="width:194px !important; height:194px !important;">
                                                             @endif
+
                                                         </div>
 
                                                         <label
