@@ -2,7 +2,7 @@
 <div id="kt_header_mobile" class="header-mobile align-items-center  header-mobile-fixed ">
     <!--begin::Logo-->
     <a href="{{url('/')}}">
-        <img alt="Logo" src="assets/images/logo-white.png" />
+        <img alt="Logo" style="width:150px" src="{{asset('assets/images/mejaseni-logo-white.png')}}" />
     </a>
     <!--end::Logo-->
 

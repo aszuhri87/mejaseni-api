@@ -3,8 +3,7 @@
     <div class="row">
       <div class="col-lg-4 col-md-6 px-3 pr-md-5">
         <div class="badge__wrapper pb-4 pt-md-0">
-          <img class="logo mr-2" src="{{ asset('cms/assets/img/logo.png') }}" alt="">
-          <h1>mejaseni</h1>
+            <img class="logo mr-1" style="width: 215px;" src="{{ asset('assets/images/mejaseni-logo-black.png') }}" alt="">
         </div>
         <div class="mt-4">
           <h5>{{ isset($company->name) ? $company->name :'' }}</h5>
@@ -25,8 +24,8 @@
             </div>
           @endif
         @endforeach
-        
-        
+
+
       </div>
       <div class="col-lg-2 col-md-6 px-3 pr-md-5 mt-md-4">
         <h5 class="mb-2 mt-5 mt-md-0">Company</h5>
@@ -57,7 +56,7 @@
           @foreach ($branchs as $branch)
             <p>{{ isset($branch->telephone) ? $branch->telephone:'-'}}</p>
           @endforeach
-          
+
           <p>{{ isset($company->telephone) ? $company->telephone:'' }}</p>
         </div>
         <div class="mt-4">

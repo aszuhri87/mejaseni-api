@@ -4,8 +4,8 @@
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand row-center" href="{{ url('/') }}">
-      <img class="logo mr-1" src="{{ asset('cms/assets/img/logo.png') }}" alt="">
-    mejaseni</a>
+        <img class="logo mr-1" style="width: 215px;" src="{{ asset('assets/images/mejaseni-logo-black.png') }}" alt="">
+    </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -25,7 +25,7 @@
       <li class="nav-item @if($segment1 == 'store'){{'active'}}@endif">
         <a class="nav-link" href="{{ url('store') }}">E-Store</a>
       </li>
-      <li class="nav-item @if($segment1 == 'news-event' || $segment1 == 'event-list' 
+      <li class="nav-item @if($segment1 == 'news-event' || $segment1 == 'event-list'
       || $segment1 == 'event' || $segment1 == 'news' || $segment1 == 'news-list' ){{'active'}}@endif">
         <a class="nav-link" href="{{ url('news-event') }}">News & Event</a>
       </li>

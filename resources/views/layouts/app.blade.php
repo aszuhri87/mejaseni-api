@@ -50,7 +50,7 @@
 
                     <!--begin::Logo-->
                     <a href="{{ url('/') }}" class="brand-logo">
-                        <img alt="Logo" src="assets/images/logo-white.png" />
+                        <img alt="Logo" style="width:150px" src="{{asset('assets/images/mejaseni-logo-white.png')}}" />
                     </a>
                     <!--end::Logo-->
 
