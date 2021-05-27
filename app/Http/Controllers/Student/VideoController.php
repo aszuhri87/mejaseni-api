@@ -146,6 +146,7 @@ class VideoController extends BaseMenu
                 ])
                 ->whereNotNull('transaction_details.session_video_id')
                 ->whereNull('transactions.deleted_at')
+                ->orderBy('transactions.datetime','DESC')
                 ->get();
             return response([
                 "status" => 200,
