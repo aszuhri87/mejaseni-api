@@ -140,8 +140,12 @@ class VideoController extends BaseMenu
                         $query->where('transaction_details.sub_classroom_category_id',$request->sub_classroom_category_id);
                     }
                 })
-                ->where('transactions.student_id',Auth::guard('student')->user()->id)
+                ->where([
+                    'transactions.student_id'=>Auth::guard('student')->user()->id,
+                    'transactions.status'=>2,
+                ])
                 ->whereNotNull('transaction_details.session_video_id')
+                ->whereNull('transactions.deleted_at')
                 ->get();
             return response([
                 "status" => 200,

@@ -505,8 +505,12 @@ class ScheduleController extends BaseMenu
     {
         try {
             $result = DB::table('student_classrooms')
-                ->where('student_id',$student_id)
-                ->whereNull('deleted_at')
+                ->leftJoin('classrooms','student_classrooms.classroom_id','=','classrooms.id')
+                ->where('student_classrooms.student_id',$student_id)
+                ->whereNull([
+                    'student_classrooms.deleted_at',
+                    'classrooms.deleted_at'
+                ])
                 ->count();
 
             return response([
