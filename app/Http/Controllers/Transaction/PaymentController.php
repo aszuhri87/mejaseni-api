@@ -44,6 +44,27 @@ class PaymentController extends Controller
         ]);
     }
 
+    public function check_payment($id)
+    {
+        $transaction = Transaction::find($id);
+
+        if(!$transaction || $transaction->status == 0){
+            return response([
+                'data' => false
+            ]);
+        }
+
+        if($transaction->confirmed && $transaction->status == 2){
+            return response([
+                'data' => true
+            ]);
+        }
+
+        return response([
+            'data' => false
+        ]);
+    }
+
     public function success()
     {
         return view('cms.transaction.payment-success.index', [

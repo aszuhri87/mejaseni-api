@@ -269,6 +269,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::get('/student-cart', [CartController::class, 'data']);
         Route::get('/cancel-payment/{id}', [PaymentController::class, 'cancel_payment']);
         Route::get('/waiting-payment/{id}', [PaymentController::class, 'waiting']);
+        Route::get('/check-payment/{id}', [PaymentController::class, 'check_payment']);
         Route::get('/payment-success', [PaymentController::class, 'success']);
         Route::get('/redirect-payment-success', [PaymentController::class, 'redirect']);
     });

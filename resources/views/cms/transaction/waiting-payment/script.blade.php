@@ -39,6 +39,25 @@
 
                     popup({url: url, title: 'Mejaseni', w: 600, h: 500})
                 })
+
+                $(document).on('click', '.btn-check-payment', function(event){
+                    event.preventDefault()
+
+                    let url = $(this).attr('href');
+
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                    }).done(function(res, xhr, meta){
+                        if(res.data){
+                            window.location.reload();
+                        }else{
+                            alert('Pembayaran masih aktif, silakan lakukan pembayaran.');
+                        }
+                    }).fail(function(res, error) {
+                        alert('Proses gagal, silakan coba kembali.');
+                    });
+                })
             },
             popup = ({url, title, w, h}) => {
 
