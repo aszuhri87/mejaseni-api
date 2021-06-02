@@ -10,6 +10,7 @@ use Storage;
 use Auth;
 
 use App\Models\GuestStarMasterLesson;
+session_start();
 
 class NewPackageController extends BaseMenu
 {
@@ -380,6 +381,11 @@ class NewPackageController extends BaseMenu
     public function get_session_video(Request $request)
     {
         try {
+
+            if($request->sub_classroom_category_id){
+                $_SESSION["sub_classroom_category_id"] = $request->sub_classroom_category_id;
+            }
+            
             $path = Storage::disk('s3')->url('/');
             $expertise = DB::table('expertises')
                 ->select([
@@ -416,8 +422,8 @@ class NewPackageController extends BaseMenu
                     $join->on('session_videos.expertise_id', '=', 'expertises.id');
                 })
                 ->where(function($query) use($request){
-                    if(!empty($request->sub_classroom_category_id)){
-                        $query->where('session_videos.sub_classroom_category_id',$request->sub_classroom_category_id);
+                    if(!empty($_SESSION["sub_classroom_category_id"])){
+                        $query->where('session_videos.sub_classroom_category_id',$_SESSION["sub_classroom_category_id"]);
                     }
                 })
                 ->whereNull('session_videos.deleted_at')
