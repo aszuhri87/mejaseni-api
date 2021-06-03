@@ -66,7 +66,75 @@
                 $(document).on('click','#btn-reschedule',function(event){
                     event.preventDefault();
 
-                    showModal('modal-reschedule')
+                    $.ajax({
+                        url: `{{ url('student/schedule/regular-class/list-reschedule') }}`,
+                        type: `POST`,
+                        data: {
+                            student_classroom_id: $(this).data('student_classroom_id'),
+                            coach_schedule_id: $(this).data('coach_schedule_id'),
+                        },
+                    })
+                    .done(function(res, xhr, meta) {
+                        if(res.status == 200){
+                            if(res.data.length > 0){
+                                element = ``;
+
+                                $.each(res.data, function(index, data){
+                                    element += `
+                                        <li class="list-group-item">
+                                            <label class="radio radio-sm d-flex align-items-start">
+                                            <input type="radio" name="new_coach_schedule_id" value="${data.id}" required/>
+                                            <span class="mr-2"></span>
+                                            <div class="w-100">
+                                                <table class="table table-borderless" width="100%">
+                                                    <tr>
+                                                        <td>
+                                                            <label>Title</label>
+                                                            <h5>${data.title}</h5>
+                                                        </td>
+                                                        <td>
+                                                            <label>Date</label>
+                                                            <h5>${moment(data.start).format('DD MMMM YYYY')}</h5>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <label>Coach</label>
+                                                            <h5>${data.coach_name}</h5>
+                                                        </td>
+                                                        <td>
+                                                            <label>Date</label>
+                                                            <h5>${moment(data.start).format('HH:mm')}</h5>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+
+                                            </div>
+                                        </li>
+                                    `;
+                                });
+
+                                $('#old_coach_schedule_id').val(res.student_schedule.coach_schedule_id);
+                                $('#schedule_classroom_id').val(res.student_schedule.classroom_id);
+                                $('#confirm-reschedule').show();
+                                $('#ul-list-schedule').html(element);
+                            }else{
+                                $('#confirm-reschedule').hide();
+                                $('#ul-list-schedule').html(`
+                                    <li>
+                                        Jadwal tidak tersedia.
+                                    </li>
+                                `);
+                            }
+                            showModal('modal-reschedule');
+                        }
+                    })
+                    .fail(function(res, error) {
+                        toastr.error(res.responseJSON.message, 'Failed')
+                    })
+                    .always(function() {
+                        btn_loading_basic('stop')
+                    });
                 });
             },
             formSubmit = () => {
@@ -142,6 +210,31 @@
                     })
                     .always(function() {
                         btn_loading_master_lesson('stop',text)
+                    });
+                });
+
+                $('#form-reschedule').submit(function(event){
+                    event.preventDefault();
+
+                    btn_loading_cancel_schedule('start')
+                    $.ajax({
+                        url: `{{url('student/schedule/regular-class/new-reschedule')}}`,
+                        type: 'POST',
+                        data: $(this).serialize(),
+                    })
+                    .done(function(res, xhr, meta) {
+                        if(res.status == 200){
+                            toastr.success(res.message, 'Success');
+                            initCalendarSpecial();
+                            initCalendarReguler();
+                            hideModal('modal-reschedule');
+                        }
+                    })
+                    .fail(function(res, error) {
+                        toastr.error(res.responseJSON.message, 'Failed')
+                    })
+                    .always(function() {
+                        btn_loading_cancel_schedule('stop')
                     });
                 });
             },
@@ -370,7 +463,10 @@
                                 });
                             }
                             else if(info.event.extendedProps.status == 2){
-                                let coach_schedule_id = info.event.extendedProps.coach_schedule_id
+                                let coach_schedule_id = info.event.extendedProps.coach_schedule_id;
+
+                                $('#btn-reschedule').attr('data-student_classroom_id',info.event.extendedProps.student_classroom_id);
+                                $('#btn-reschedule').attr('data-coach_schedule_id',info.event.extendedProps.coach_schedule_id);
 
                                 showModal('modal-cancel-schedule');
                                 $.ajax({
@@ -435,7 +531,8 @@
                                     "className": `bg-${data.color} border-${data.color} p-1 ${data.color == 'primary' ? 'text-white' : ''}`,
                                     "allDay": false,
                                     "status": data.status,
-                                    "tanggal" : data.start
+                                    "tanggal" : data.start,
+                                    "student_classroom_id" : data.student_classroom_id
                                 });
                             }
                         })

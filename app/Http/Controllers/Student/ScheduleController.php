@@ -1182,4 +1182,215 @@ class ScheduleController extends BaseMenu
             ]);
         }
     }
+
+    public function list_reschedule(Request $request)
+    {
+        try {
+            /*
+                status
+                1 => Terlewat Tanggal
+                2 => Booking
+                3 => Tersedia
+            */
+
+            // search student schedule
+
+            $coach_classroom = DB::table('coach_classrooms')
+                ->select([
+                    'coach_classrooms.id',
+                    'coach_classrooms.classroom_id'
+                ])
+                ->whereNull('deleted_at');
+
+            $coach_schedule = DB::table('coach_schedules')
+                ->select([
+                    'coach_schedules.id',
+                    'coach_schedules.datetime',
+                    'coach_schedules.coach_classroom_id',
+                    'coach_classrooms.classroom_id',
+                ])
+                ->leftJoinSub($coach_classroom, 'coach_classrooms', function ($join) {
+                    $join->on('coach_schedules.coach_classroom_id', '=', 'coach_classrooms.id');
+                })
+                ->whereNull('coach_schedules.deleted_at');
+
+            $studentSchedule = DB::table('student_schedules')
+                ->select([
+                    'student_schedules.*',
+                    'coach_schedules.classroom_id',
+                    'coach_schedules.datetime',
+                ])
+                ->leftJoinSub($coach_schedule, 'coach_schedules', function ($join) {
+                    $join->on('student_schedules.coach_schedule_id', '=', 'coach_schedules.id');
+                })
+                ->where([
+                    'student_schedules.student_classroom_id' => $request->student_classroom_id,
+                    'student_schedules.coach_schedule_id' => $request->coach_schedule_id,
+                ])
+                ->whereNull('student_schedules.deleted_at')
+                ->first();
+
+            // end search student schedule
+
+            // add 3 day schedule before
+
+            $date_now = date('Y-m-d');
+            $max_date = date('Y-m-d', strtotime($studentSchedule->datetime. ' + 3 days'));
+            $min_date = date('Y-m-d', strtotime($date_now . ' + 1 days'));
+
+            // end add 3 day schedule before
+
+            $date = date('Y-m-d H:i:s');
+            $student_id = Auth::guard('student')->user()->id;
+
+            $classroom = DB::table('classrooms')
+                ->select([
+                    'classrooms.id',
+                    'classrooms.name',
+                    'classrooms.price',
+                ])
+                ->where([
+                    'package_type' => 2,
+                    'id' => $studentSchedule->classroom_id
+                ])
+                ->whereNull('deleted_at');
+
+            $coach_classroom = DB::table('coach_classrooms')
+                ->select([
+                    'coach_classrooms.id',
+                    'coach_classrooms.classroom_id',
+                    'coach_classrooms.coach_id',
+                    'classrooms.name as classroom_name',
+                    'classrooms.price',
+                    'coaches.name as coach_name',
+                ])
+                ->joinSub($classroom, 'classrooms', function ($join) {
+                    $join->on('coach_classrooms.classroom_id', '=', 'classrooms.id');
+                })
+                ->leftJoin('coaches','coach_classrooms.coach_id','=','coaches.id')
+                ->where([
+                    'coach_classrooms.classroom_id' => $studentSchedule->classroom_id
+                ])
+                ->whereNull([
+                    'coach_classrooms.deleted_at',
+                    'coaches.deleted_at',
+                ]);
+
+            $student_classroom = DB::table('student_classrooms')
+                ->select([
+                    'student_classrooms.id',
+                    'student_classrooms.classroom_id',
+                    'student_classrooms.student_id',
+                ])
+                ->where([
+                    'student_classrooms.classroom_id' => $studentSchedule->classroom_id
+                ])
+                ->whereNull('student_classrooms.deleted_at');
+
+            $student_schedule = DB::table('student_schedules')
+                ->select([
+                    'student_schedules.id',
+                    'student_schedules.coach_schedule_id',
+                    'student_schedules.student_classroom_id',
+                    'student_classrooms.student_id',
+                ])
+                ->leftJoinSub($student_classroom, 'student_classrooms', function ($join) {
+                    $join->on('student_schedules.student_classroom_id', '=', 'student_classrooms.id');
+                })
+                ->whereNull('student_schedules.deleted_at');
+
+            $result = DB::table('coach_schedules')
+                ->select([
+                    'coach_schedules.id',
+                    'coach_schedules.datetime as start',
+                    'coach_classrooms.classroom_name as title',
+                    'coach_classrooms.classroom_id',
+                    'student_classrooms.id as student_classroom_id',
+                    'student_classrooms.student_id',
+                    'student_schedules.coach_schedule_id',
+                    'coach_classrooms.coach_name',
+                    DB::raw("CASE
+                        WHEN
+                            student_schedules.coach_schedule_id IS NOT NULL AND
+                            '$date'::timestamp < coach_schedules.datetime
+                            THEN 'primary'
+                        WHEN coach_schedules.datetime::timestamp < (now()::timestamp + interval '6 hour')  THEN 'secondary'
+                        ELSE 'success'
+                    END color"),
+                    DB::raw("CASE
+                        WHEN student_schedules.coach_schedule_id IS NOT NULL AND
+                            '$date'::timestamp < coach_schedules.datetime
+                            THEN 2
+                        WHEN coach_schedules.datetime::timestamp < (now()::timestamp + interval '6 hour') AND
+                            '$date'::timestamp < coach_schedules.datetime::timestamp
+                            THEN 1
+                        ELSE 3
+                    END status"),
+                    DB::raw("(
+                        CASE
+                            WHEN
+                                coach_schedules.datetime::timestamp > now()::timestamp AND
+                                student_schedules.coach_schedule_id IS NULL
+                            THEN
+                                1
+                            WHEN
+                                coach_schedules.datetime::timestamp <= now()::timestamp AND
+                                student_schedules.coach_schedule_id IS NULL
+                            THEN
+                                1
+                            WHEN
+                                coach_schedules.datetime::timestamp > now()::timestamp AND
+                                student_schedules.coach_schedule_id IS NOT NULL AND
+                                student_classrooms.student_id = '$student_id' AND
+                                student_schedules.student_id = '$student_id'
+                            THEN
+                                1
+                            WHEN
+                                coach_schedules.datetime::timestamp <= now()::timestamp AND
+                                student_schedules.coach_schedule_id IS NOT NULL AND
+                                student_classrooms.student_id = '$student_id' AND
+                                student_schedules.student_id = '$student_id'
+                            THEN
+                                1
+                            ELSE
+                                0
+                        END
+                    ) as show")
+                ])
+                ->leftJoinSub($coach_classroom, 'coach_classrooms', function ($join) {
+                    $join->on('coach_schedules.coach_classroom_id', '=', 'coach_classrooms.id');
+                })
+                ->leftJoinSub($student_classroom, 'student_classrooms', function ($join) {
+                    $join->on('coach_classrooms.classroom_id', '=', 'student_classrooms.classroom_id');
+                })
+                ->leftJoinSub($student_schedule, 'student_schedules', function ($join) {
+                    $join->on('coach_schedules.id', '=', 'student_schedules.coach_schedule_id');
+                })
+                ->where([
+                    'student_classrooms.student_id' => Auth::guard('student')->user()->id,
+                    'coach_schedules.accepted' => true,
+                    'coach_classrooms.classroom_id' => $studentSchedule->classroom_id
+                ])
+                ->whereNull([
+                    'coach_schedules.deleted_at',
+                    'student_schedules.coach_schedule_id'
+                ])
+                ->whereNotIn('coach_schedules.id',[$request->coach_schedule_id])
+                ->whereBetween('coach_schedules.datetime',[$min_date,$max_date])
+                ->orderBy('coach_schedules.datetime','ASC')
+                ->get();
+
+            return response([
+                "status"  => 200,
+                "data"    => $result,
+                "student_schedule" => $studentSchedule,
+                "message" => 'OK!'
+            ],200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message" => $e->getMessage(),
+            ]);
+        }
+    }
 }

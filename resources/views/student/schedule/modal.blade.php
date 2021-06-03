@@ -233,16 +233,20 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" name="coach_schedule_id" id="coach_schedule_id">
-                    <input type="hidden" name="classroom_id" id="classroom_id">
-                    <input type="hidden" name="student_id" value="{{Auth::guard('student')->user()->id}}">
+                    <input type="hidden" name="coach_schedule_id" id="old_coach_schedule_id">
+                    <input type="hidden" name="classroom_id" id="schedule_classroom_id">
+                    <input type="hidden" name="student_id" id="student_id" value="{{Auth::guard('student')->user()->id}}">
                     <div class="row">
+                        <div class="col-12">
+                            <ul class="list-group list-group-flush" id="ul-list-schedule">
 
+                            </ul>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
-                    <button type="submit" class="btn btn-primary btn-loading-basic">Konfirmasi Reschedule</button>
+                    <button type="submit" class="btn btn-primary btn-loading-basic" id="confirm-reschedule">Konfirmasi Reschedule</button>
                 </div>
             </form>
         </div>

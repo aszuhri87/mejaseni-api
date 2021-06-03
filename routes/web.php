@@ -745,8 +745,10 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::group(['prefix' => 'regular-class'], function () {
                 Route::get('/', [StudentScheduleController::class, 'regular_class']);
                 Route::get('{coach_schedule_id}', [StudentScheduleController::class, 'coach_schedule']);
+                Route::post('list-reschedule',[StudentScheduleController::class, 'list_reschedule']);
                 Route::post('booking', [StudentScheduleController::class, 'booking']);
                 Route::post('reschedule', [StudentScheduleController::class, 'reschedule']);
+                Route::post('new-reschedule', [StudentScheduleController::class, 'new_reschedule']);
             });
 
             Route::group(['prefix' => 'special-class'], function () {
