@@ -29,15 +29,25 @@ class InvoiceController extends BaseMenu
     public function dt()
     {
         try {
+            date_default_timezone_set("Asia/Jakarta");
+
+            $now = date('Y-m-d H:i:s');
+
             $data = DB::table('transactions')
                 ->select([
                     'transactions.id',
                     'transactions.student_id',
                     'transactions.total',
                     'transactions.number',
-                    'transactions.datetime',
                     'transactions.status',
                     'transactions.confirmed',
+                    'transactions.datetime',
+                    DB::raw("CASE
+                        WHEN transactions.datetime::timestamp + INTERVAL '1 DAYS' < '$now'::timestamp
+                            AND transactions.status != 2
+                            THEN true
+                        ELSE false
+                    END expired")
                 ])
                 ->where('transactions.student_id',Auth::guard('student')->user()->id)
                 ->where(function($query){
@@ -47,6 +57,7 @@ class InvoiceController extends BaseMenu
                     })
                     ->orWhereNull('transactions.deleted_at');
                 })
+                ->orderBy('transactions.datetime', 'desc')
                 ->get();
 
             return DataTables::of($data)->addIndexColumn()->make(true);
@@ -66,36 +77,31 @@ class InvoiceController extends BaseMenu
                     'classrooms.id',
                     'classrooms.name as classroom_name',
                     'classrooms.package_type',
-                ])
-                ->whereNull('classrooms.deleted_at');
+                ]);
 
             $session_video = DB::table('session_videos')
                 ->select([
                     'session_videos.id',
                     'session_videos.name as session_video_name',
-                ])
-                ->whereNull('session_videos.deleted_at');
+                ]);
 
             $master_lesson = DB::table('master_lessons')
                 ->select([
                     'master_lessons.id',
                     'master_lessons.name as master_lesson_name',
-                ])
-                ->whereNull('master_lessons.deleted_at');
+                ]);
 
             $theory = DB::table('theories')
                 ->select([
                     'theories.id',
                     'theories.name as theory_name',
-                ])
-                ->whereNull('theories.deleted_at');
+                ]);
 
             $event = DB::table('events')
                 ->select([
                     'events.id',
                     'events.title as event_name',
-                ])
-                ->whereNull('events.deleted_at');
+                ]);
 
             $cart = DB::table('carts')
                 ->select([

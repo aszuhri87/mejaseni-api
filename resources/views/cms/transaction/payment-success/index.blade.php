@@ -8,7 +8,7 @@
         <h1>Pembelian Berhasil!</h1>
         <p class="my-4">Pemesanan Anda berhasil. Silahkan halaman "Kelas Saya" untuk mulai belajar.
         </p>
-        <a href="{{url('student/my-class')}}" class="btn btn-primary mt-2">Lihat Kelas Saya</a>
+        <a href="{{url('student/invoice')}}" class="btn btn-primary mt-2">Lihat Riwayat Pembelian</a>
         <a href="{{url('student/new-package')}}" class="mt-4 mb-5" alt=""> Lihat Kelas Lain</a>
     </div>
 </div>

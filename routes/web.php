@@ -223,8 +223,6 @@ Route::post('/notifications/payments', [PaymentController::class, 'notification'
 
 Route::get('/galery/{id}/detail',[GaleryDetailController::class, 'index']);
 
-
-
 Route::group(['middleware' => ['guest-handling']], function () {
 
     Route::get('email-verification/check/{token}',[RegisterController::class, 'email_verification']);
@@ -244,8 +242,6 @@ Route::group(['middleware' => ['guest-handling']], function () {
     Route::get('auth/{provider}', [ProviderController::class, 'redirect_provider']);
     Route::get('auth/{provider}/callback', [ProviderController::class, 'callback_provider']);
 });
-
-
 
 Route::group(['middleware' => ['auth-handling']], function () {
 
@@ -622,11 +618,6 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::get('class-preview/{category_id}/get-classroom', [ClassRoomReviewController::class, 'get_classrooms']);
             Route::resource('class-preview', ClassRoomReviewController::class);
 
-
-
-
-
-
         });
     });
 
@@ -742,7 +733,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
 
         Route::group(['prefix' => 'invoice'], function () {
             Route::get('/', [StudentInvoiceController::class, 'index']);
-            Route::get('dt', [StudentInvoiceController::class, 'dt']);
+            Route::post('dt', [StudentInvoiceController::class, 'dt']);
             Route::get('detail/{id}', [StudentInvoiceController::class, 'detail']);
         });
 
@@ -800,6 +791,13 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::get('classroom-category/{classroom_category_id}', [StudentNewPackageController::class, 'get_classroom_by_category_id']);
         });
 
+        Route::group(['prefix' => 'my-video'], function () {
+            Route::get('/', [StudentVideoController::class, 'index']);
+            Route::get('get-video', [StudentVideoController::class, 'get_video']);
+            Route::get('get-sub-classroom-category', [StudentVideoController::class, 'get_sub_classroom_category']);
+            Route::get('video-detail/{session_video_id}', [StudentVideoController::class, 'video_detail']);
+        });
+
         Route::group(['prefix' => 'theory'], function () {
             Route::group(['prefix' => 'theory-class'], function () {
                 Route::get('/', [StudentTheoryController::class, 'index']);
@@ -807,15 +805,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
                 Route::get('get-class/{student_id}', [StudentTheoryController::class, 'get_class']);
                 Route::get('filter_theory', [StudentTheoryController::class, 'filter_theory']);
             });
-
-            Route::group(['prefix' => 'video-class'], function () {
-                Route::get('/', [StudentVideoController::class, 'index']);
-                Route::get('get-video', [StudentVideoController::class, 'get_video']);
-                Route::get('get-sub-classroom-category', [StudentVideoController::class, 'get_sub_classroom_category']);
-                Route::get('video-detail/{session_video_id}', [StudentVideoController::class, 'video_detail']);
-            });
         });
-
 
         Route::group(['prefix' => 'exercise'], function () {
             Route::get('/', [StudentExerciseController::class, 'index']);
@@ -902,5 +892,5 @@ Route::get('redirect-failed', function () {
 });
 
 Route::get('--version', function () {
-    return '1.0.0';
+    return '1.0.2';
 });

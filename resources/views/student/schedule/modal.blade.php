@@ -58,7 +58,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
                     <button type="submit" class="btn btn-primary btn-loading-basic">Konfirmasi Booking</button>
                 </div>
             </form>
@@ -66,10 +66,10 @@
     </div>
 </div>
 
-<div class="modal" id="modal-reschedule" tabindex="-1" role="dialog">
+<div class="modal" id="modal-cancel-schedule" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <form id="form-reschedule" autocomplete="off">
+            <form id="form-cancel-schedule" autocomplete="off">
                 <div class="modal-header">
                     <h5 class="modal-title">Booking Kelas</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -123,9 +123,12 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <div id="btn-reschedule">
-                        <button type="submit" class="btn btn-primary btn-loading-reschedule">Reschedule</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
+                    <div id="btn-cancel-reschedule">
+                        <button type="submit" class="btn btn-danger btn-loading-reschedule">Cancel Schedule</button>
+                    </div>
+                    <div id="btn-reschedule-place">
+                        <button type="button" class="btn btn-primary" id="btn-reschedule">Reschedule</button>
                     </div>
                 </div>
             </form>
@@ -188,7 +191,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
                     <div id="btn-booking-master-lesson">
                         <button type="submit" class="btn btn-primary btn-loading-master-lesson">
                             Daftar Sekarang
@@ -213,6 +216,33 @@
                             Masuk Kelas
                         </a>
                     </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="modal-reschedule" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <form id="form-reschedule" autocomplete="off">
+                <div class="modal-header">
+                    <h5 class="modal-title">Reschedule</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i aria-hidden="true" class="ki ki-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="coach_schedule_id" id="coach_schedule_id">
+                    <input type="hidden" name="classroom_id" id="classroom_id">
+                    <input type="hidden" name="student_id" value="{{Auth::guard('student')->user()->id}}">
+                    <div class="row">
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
+                    <button type="submit" class="btn btn-primary btn-loading-basic">Konfirmasi Reschedule</button>
                 </div>
             </form>
         </div>

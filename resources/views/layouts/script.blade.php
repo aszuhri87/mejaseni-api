@@ -328,12 +328,12 @@
         }
     }
 
-    function btn_loading_reschedule(action) {
+    function btn_loading_cancel_schedule(action) {
         if (action == 'start') {
             $('.btn-loading-reschedule').html('<div id="loading" class="mr-1"></div> Loading...');
             $('.btn-loading-reschedule').attr('disabled', true);
         } else {
-            $('.btn-loading-reschedule').html('Reschedule');
+            $('.btn-loading-reschedule').html('Cancel Schedule');
             $('.btn-loading-reschedule').attr('disabled', false);
         }
     }

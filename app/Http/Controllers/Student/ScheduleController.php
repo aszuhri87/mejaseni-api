@@ -450,6 +450,7 @@ class ScheduleController extends BaseMenu
                     'session_id' => $session->id,
                     'coach_schedule_id' => $request->coach_schedule_id,
                 ]);
+
                 return $student_schedule;
             });
 
@@ -484,6 +485,79 @@ class ScheduleController extends BaseMenu
                     'student_classroom_id' => $student_classroom->id,
                     'coach_schedule_id' => $request->coach_schedule_id,
                 ])->delete();
+
+                return $student_schedule;
+            });
+
+            return response([
+                "status" => 200,
+                "data"      => $result,
+                "message"   => 'Successfully Reschedule!'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function new_reschedule(Request $request)
+    {
+        try {
+            $result = DB::transaction(function () use($request) {
+                $student_classroom = DB::table('coach_schedules')
+                    ->select([
+                        'student_classrooms.id',
+                    ])
+                    ->join('coach_classrooms','coach_schedules.coach_classroom_id','=','coach_classrooms.id')
+                    ->join('student_classrooms', 'coach_classrooms.classroom_id', '=', 'student_classrooms.classroom_id')
+                    ->where('coach_schedules.id',$request->coach_schedule_id)
+                    ->where('student_classrooms.student_id',$request->student_id)
+                    ->first();
+
+                $student_schedule = StudentSchedule::where([
+                    'student_classroom_id' => $student_classroom->id,
+                    'coach_schedule_id' => $request->coach_schedule_id,
+                ])->delete();
+
+                $student_classroom = DB::table('coach_schedules')
+                    ->select([
+                        'student_classrooms.id',
+                    ])
+                    ->join('coach_classrooms','coach_schedules.coach_classroom_id','=','coach_classrooms.id')
+                    ->join('student_classrooms', 'coach_classrooms.classroom_id', '=', 'student_classrooms.classroom_id')
+                    ->where('coach_schedules.id', $request->new_coach_schedule_id)
+                    ->where('student_classrooms.student_id', $request->student_id)
+                    ->first();
+
+                $check_session = DB::table('student_schedules')
+                    ->whereNull('student_schedules.deleted_at')
+                    ->where('student_schedules.student_classroom_id', $student_classroom->id)
+                    ->count();
+
+                $check_session += 1;
+
+                $session = DB::table('sessions')
+                    ->where([
+                        'classroom_id' => $request->classroom_id,
+                        'name' => $check_session
+                    ])
+                    ->whereNull('deleted_at')
+                    ->first();
+
+                if(empty($session)){
+                    $session = new Session;
+                    $session->classroom_id = $request->classroom_id;
+                    $session->name = $check_session;
+                    $session->save();
+                }
+
+                $student_schedule = StudentSchedule::create([
+                    'student_classroom_id' => $student_classroom->id,
+                    'session_id' => $session->id,
+                    'coach_schedule_id' => $request->new_coach_schedule_id,
+                ]);
 
                 return $student_schedule;
             });
@@ -1087,6 +1161,24 @@ class ScheduleController extends BaseMenu
             throw new Exception($e);
             return response([
                 "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function available_schedule($id)
+    {
+        try {
+
+
+            return response([
+                "status"  => 200,
+                "data"    => $data,
+                "message" => 'OK!'
+            ],200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message" => $e->getMessage(),
             ]);
         }
     }

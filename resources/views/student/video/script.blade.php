@@ -46,7 +46,7 @@
             },
             getSubClassroomCategory = () => {
                 $.ajax({
-                    url: `{{ url('student/theory/video-class/get-sub-classroom-category') }}`,
+                    url: `{{ url('student/my-video/get-sub-classroom-category') }}`,
                     type: 'GET',
                 })
                 .done(function(res, xhr, meta) {
@@ -67,7 +67,7 @@
             },
             getVideo = (sub_classroom_category) => {
                 $.ajax({
-                    url: `{{ url('student/theory/video-class/get-video') }}`,
+                    url: `{{ url('student/my-video/get-video') }}`,
                     type: `GET`,
                     data: {
                         sub_classroom_category_id:sub_classroom_category
@@ -84,13 +84,13 @@
                                         <img style="float: left !important;" src="${data.image_url}" class="rounded" width="20%" height="150px">
                                         <div class="row">
                                             <div class="col">
-                                                <a href="{{url('student/theory/video-class/video-detail')}}/${data.session_video_id}" style="color: black;">
+                                                <a href="{{url('student/my-video/video-detail')}}/${data.session_video_id}" style="color: black;">
                                                     <h4>${data.name}</h4>
                                                 </a>
                                                 <p>${data.description}</p>
                                                 <p>Mentored by ${data.coach_name}</p>
                                                 <p>
-                                                    <a href="{{url('student/theory/video-class/video-detail')}}/${data.session_video_id}" class="btn btn-primary">
+                                                    <a href="{{url('student/my-video/video-detail')}}/${data.session_video_id}" class="btn btn-primary">
                                                         <span class="svg-icon"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                             <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                                                 <rect x="0" y="0" width="24" height="24"/>

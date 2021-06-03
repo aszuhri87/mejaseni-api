@@ -500,6 +500,13 @@ class BaseMenu extends Controller
                 'icon' => $this->icon('my-class'),
             ],
             [
+                'key' => 'my-video',
+                'title' => 'My Video',
+                'url' => 'student/my-video',
+                'permission' => 'student_video',
+                'icon' => $this->icon('my-class'),
+            ],
+            [
                 'key' => 'theory',
                 'title' => 'Materi',
                 'permission' => 'student_theory',
@@ -510,12 +517,6 @@ class BaseMenu extends Controller
                         'key' => 'theory-class',
                         'title' => 'Materi Kelas',
                         'url' => 'student/theory/theory-class',
-                        'permission' => 'student_theory',
-                    ],
-                    [
-                        'key' => 'video-class',
-                        'title' => 'Video Kelas',
-                        'url' => 'student/theory/video-class',
                         'permission' => 'student_theory',
                     ],
                 ]

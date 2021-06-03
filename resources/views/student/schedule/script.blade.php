@@ -62,6 +62,12 @@
                         }
                     }
                 });
+
+                $(document).on('click','#btn-reschedule',function(event){
+                    event.preventDefault();
+
+                    showModal('modal-reschedule')
+                });
             },
             formSubmit = () => {
                 $('#form-booking').submit(function(event){
@@ -89,10 +95,10 @@
                     });
                 });
 
-                $('#form-reschedule').submit(function(event){
+                $('#form-cancel-schedule').submit(function(event){
                     event.preventDefault();
 
-                    btn_loading_reschedule('start')
+                    btn_loading_cancel_schedule('start')
                     $.ajax({
                         url: $(this).attr('action'),
                         type: $(this).attr('method'),
@@ -103,14 +109,14 @@
                             toastr.success(res.message, 'Success');
                             initCalendarSpecial();
                             initCalendarReguler();
-                            hideModal('modal-reschedule');
+                            hideModal('modal-cancel-schedule');
                         }
                     })
                     .fail(function(res, error) {
                         toastr.error(res.responseJSON.message, 'Failed')
                     })
                     .always(function() {
-                        btn_loading_reschedule('stop')
+                        btn_loading_cancel_schedule('stop')
                     });
                 });
 
@@ -137,6 +143,23 @@
                     .always(function() {
                         btn_loading_master_lesson('stop',text)
                     });
+                });
+            },
+            availableSchedule = (id) => {
+                $.ajax({
+                    url: `{{ url('student/schedule/available-schedule') }}/`+id,
+                    type: 'GET',
+                })
+                .done(function(res, xhr, meta) {
+                    if(res.status == 200){
+                        $('#total-class').html(res.data);
+                    }
+                })
+                .fail(function(res, error) {
+                    toastr.error(res.responseJSON.message, 'Failed')
+                })
+                .always(function() {
+
                 });
             },
             totalClassStudent = () => {
@@ -213,7 +236,7 @@
                             else if(info.event.extendedProps.status == 2){
                                 let coach_schedule_id = info.event.extendedProps.coach_schedule_id
 
-                                showModal('modal-reschedule');
+                                showModal('modal-cancel-schedule');
                                 $.ajax({
                                     url: `{{ url('student/schedule/special-class') }}/${coach_schedule_id}`,
                                     type: `GET`,
@@ -230,9 +253,9 @@
                                         $('#reschedule_coach_schedule_id').val(data.id);
                                         $('#reschedule_classroom_id').val(data.classroom_id);
 
-                                        $('#form-reschedule').trigger('reset');
-                                        $('#form-reschedule').attr('action',`{{ url('student/schedule/special-class/reschedule') }}`)
-                                        $('#form-reschedule').attr('method',`POST`);
+                                        $('#form-cancel-schedule').trigger('reset');
+                                        $('#form-cancel-schedule').attr('action',`{{ url('student/schedule/special-class/reschedule') }}`)
+                                        $('#form-cancel-schedule').attr('method',`POST`);
                                     }
                                 })
                                 .fail(function(res, error) {
@@ -243,9 +266,9 @@
                                 });
 
                                 if(moment(moment(info.event.extendedProps.tanggal).format('YYYY-MM-DD HH:mm:ss')).isAfter(moment().add(6, 'h').format('YYYY-MM-DD HH:mm:ss'))){
-                                    $('#btn-reschedule').show();
+                                    $('#btn-cancel-reschedule').show();
                                 }else{
-                                    $('#btn-reschedule').hide();
+                                    $('#btn-cancel-reschedule').hide();
                                 }
                             }
                         }
@@ -349,7 +372,7 @@
                             else if(info.event.extendedProps.status == 2){
                                 let coach_schedule_id = info.event.extendedProps.coach_schedule_id
 
-                                showModal('modal-reschedule');
+                                showModal('modal-cancel-schedule');
                                 $.ajax({
                                     url: `{{ url('student/schedule/regular-class') }}/${coach_schedule_id}`,
                                     type: `GET`,
@@ -366,9 +389,9 @@
                                         $('#reschedule_coach_schedule_id').val(data.id);
                                         $('#reschedule_classroom_id').val(data.classroom_id);
 
-                                        $('#form-reschedule').trigger('reset');
-                                        $('#form-reschedule').attr('action',`{{ url('student/schedule/regular-class/reschedule') }}`)
-                                        $('#form-reschedule').attr('method',`POST`);
+                                        $('#form-cancel-schedule').trigger('reset');
+                                        $('#form-cancel-schedule').attr('action',`{{ url('student/schedule/regular-class/reschedule') }}`)
+                                        $('#form-cancel-schedule').attr('method',`POST`);
                                     }
                                 })
                                 .fail(function(res, error) {
@@ -379,9 +402,9 @@
                                 });
 
                                 if(moment(moment(info.event.extendedProps.tanggal).format('YYYY-MM-DD HH:mm:ss')).isAfter(moment().add(6, 'h').format('YYYY-MM-DD HH:mm:ss'))){
-                                    $('#btn-reschedule').show();
+                                    $('#btn-cancel-reschedule').show();
                                 }else{
-                                    $('#btn-reschedule').hide();
+                                    $('#btn-cancel-reschedule').hide();
                                 }
                             }
                         }

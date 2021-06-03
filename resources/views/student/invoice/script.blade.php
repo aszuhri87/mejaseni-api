@@ -15,7 +15,7 @@
                     serverSide: true,
                     sScrollY: ($(window).height() < 700) ? $(window).height() - 200 : $(window).height() - 450,
                     ajax: {
-                        type: 'get',
+                        type: 'POST',
                         url: "{{ url('student/invoice/dt') }}",
                     },
                     columns: [
@@ -61,13 +61,14 @@
                             className: "text-center",
                             data:"status",
                             render: function(data, type, full, meta){
-                                if(data == 2){
+                                if(full.expired){
+                                    return `<span class="label label-secondary label-pill label-inline mr-2">Exxpired</span>`
+                                }else if(data == 2){
                                     return `<span class="label label-success label-pill label-inline mr-2">Success</span>`;
-                                }
-                                else if(data == 1){
+                                }else if(data == 1){
                                     return `<span class="label label-warning label-pill label-inline mr-2">Waiting</span>`;
                                 }else{
-                                    return `<span class="label label-danger label-pill label-inline mr-2">Cancel</span>`
+                                    return `<span class="label label-danger label-pill label-inline mr-2">Cancel</span>`;
                                 }
                             }
                         },
@@ -78,7 +79,11 @@
                             className: "text-center",
                             data:"confirmed",
                             render: function(data, type, full, meta){
-                                if(data){
+                                if(full.expired){
+                                    return `<span class="label label-secondary label-pill label-inline mr-2">Exxpired</span>`
+                                }else if(full.status == 0){
+                                    return `<span class="label label-danger label-pill label-inline mr-2">Dibatalkan</span>`;
+                                }else if(data){
                                     return `<span class="label label-success label-pill label-inline mr-2">Dikonfirmasi</span>`;
                                 }
                                 else{
@@ -93,12 +98,12 @@
                             className: "text-center",
                             data: "id",
                             render : function(data, type, full, meta) {
-                                if(full.status == 1){
+                                if(full.status == 1 && !full.expired){
                                     return `
-                                        <a href="{{ url('/waiting-payment') }}/${data}" title="Lanjutkan Pembayaran" data-toogle="tooltip" class="btn btn-primary btn-sm mr-2">
+                                        <a href="{{ url('/waiting-payment') }}/${data}" title="Lanjutkan Pembayaran" target="_blank" data-toogle="tooltip" class="btn btn-primary btn-sm mr-2">
                                             Pembayaran
                                         </a>
-                                        `;
+                                    `;
                                 }else{
                                     return `
                                         <a href="{{ url('student/invoice/detail') }}/${data}" title="Lihat Detail" data-toogle="tooltip" class="btn btn-detail btn-outline-primary btn-sm mr-2">
@@ -111,12 +116,11 @@
                                             </svg><!--end::Svg Icon--></span>
                                             Detail
                                         </a>
-                                        `;
+                                    `;
                                 }
                             }
                         },
                     ],
-                    order: [[1, 'asc']],
                     searching: true,
                     paging:true,
                     lengthChange:false,
@@ -152,33 +156,41 @@
                             $('#total').empty();
                             let total = 0;
                             $.each(res.data, function(index, data){
-                                total+=parseInt(data.price);
+                                total += parseInt(data.price);
 
                                 element += `
-                                    <div class="row">
-                                        <div class="col-6">
-                                        `;
-                                        if(data.classroom_id){
-                                            element += `<span>${data.classroom_name}</span>`;
-                                        }
-                                        else if(data.master_lesson_id){
-                                            element += `<span>${data.master_lesson_name}</span>`;
-                                        }
-                                        else if(data.theory_id){
-                                            element += `<span>${data.theory_name}</span>`;
-                                        }
-                                        else if(data.event_id){
-                                            element += `<span>${data.event_name}</span>`;
-                                        }
-                                        else{
-                                            element += `<span>${data.session_video_name}</span>`;
-                                        }
-                                        element += `
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div class="">`;
 
+                                        if(data.classroom_id){
+                                            element += `<span class="pt-2">${data.classroom_name} (Rp. ${numeral(data.price).format('0,0')})</span>`;
+                                        }else if(data.master_lesson_id){
+                                            element += `<span class="pt-2">${data.master_lesson_name} (Rp. ${numeral(data.price).format('0,0')})</span>`;
+                                        }else if(data.theory_id){
+                                            element += `<span class="pt-2">${data.theory_name} (Rp. ${numeral(data.price).format('0,0')})</span>`;
+                                        }else if(data.event_id){
+                                            element += `<span class="pt-2">${data.event_name} (Rp. ${numeral(data.price).format('0,0')})</span>`;
+                                        }else{
+                                            element += `<span class="pt-2">${data.session_video_name} (Rp. ${numeral(data.price).format('0,0')})</span>`;
+                                        }
+
+                                element += `
                                         </div>
-                                        <div class="col-6 text-right">
-                                            <h5>Rp. ${numeral(data.price).format('0,0')}</h5>
-                                        </div>
+                                            <div class="text-right">`;
+
+                                            if(data.classroom_id){
+                                                element += `<a class="btn btn-primary" href="{{ url('student/my-class') }}">Lihat</a>`;
+                                            }else if(data.master_lesson_id){
+                                                element += `<a class="btn btn-primary" href="{{ url('student/my-class') }}">Lihat</a>`;
+                                            }else if(data.theory_id){
+                                                element += `<a class="btn btn-primary" href="{{ url('student/my-class') }}">Lihat</a>`;
+                                            }else if(data.event_id){
+                                                element += `<a class="btn btn-primary" href="{{ url('student/my-class') }}">Lihat</a>`;
+                                            }else{
+                                                element += `<a class="btn btn-primary" href="{{ url('student/my-video') }}">Lihat</a>`;
+                                            }
+
+                                element += `</div>
                                     </div>
                                     <hr>
                                 `;
