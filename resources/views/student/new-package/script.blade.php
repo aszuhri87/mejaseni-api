@@ -598,6 +598,7 @@
                     $(this).addClass('btn-primary').removeClass('btn-outline-primary');
 
                     $('#init_class_sub_category').val($(this).data('id'));
+                    $('#init-class').html('Regular Class');
                     $('#filter-2').addClass('btn-primary').removeClass('btn-outline-primary');
                     getPackageBySubCategory(id,2);
                     getSessionVideo(id);
@@ -1527,6 +1528,9 @@
                                         <button type="button" class="btn btn-primary btn-category btn-pill" data-id="${data.id}">${data.name}</button>
                                     </div>
                                 `;
+
+                                getPackageBySubCategory(data.id,2);
+                                getSessionVideo(data.id);
                             }
                             else{
                                 element += `
@@ -1541,6 +1545,7 @@
                     else{
                         $('#category').empty();
                         getPackageByCategory(classroom_category_id);
+                        getSessionVideo('21ef9cb2-dd72-4304-8397-20b17ff35bef');
                     }
 
                     if(!check_init_filter){
