@@ -121,8 +121,8 @@
                             }else{
                                 $('#confirm-reschedule').hide();
                                 $('#ul-list-schedule').html(`
-                                    <li>
-                                        Jadwal tidak tersedia.
+                                    <li class="list-group-item text-center">
+                                        <strong>Jadwal tidak tersedia.</strong>
                                     </li>
                                 `);
                             }
@@ -159,7 +159,7 @@
                         toastr.error(res.responseJSON.message, 'Failed')
                     })
                     .always(function() {
-                        btn_loading_basic('stop')
+                        btn_loading_basic('stop','Konfirmasi Booking')
                     });
                 });
 
