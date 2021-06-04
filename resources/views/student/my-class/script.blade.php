@@ -474,24 +474,26 @@
                 $('#form-reschedule').submit(function(event){
                     event.preventDefault();
 
-                    btn_loading_basic('start')
-                    $.ajax({
-                        url: $(this).attr('action'),
-                        type: $(this).attr('method'),
-                    })
-                    .done(function(res, xhr, meta) {
-                        if(res.status == 200){
-                            toastr.success(res.message, 'Success')
-                            init_table.draw(false);
-                            hideModal('modal-reschedule');
-                        }
-                    })
-                    .fail(function(res, error) {
-                        toastr.error(res.responseJSON.message, 'Failed')
-                    })
-                    .always(function() {
-                        btn_loading_basic('stop');
-                    });
+                    window.location.href = `{{url('student/schedule')}}`;
+                    
+                    // btn_loading_basic('start')
+                    // $.ajax({
+                    //     url: $(this).attr('action'),
+                    //     type: $(this).attr('method'),
+                    // })
+                    // .done(function(res, xhr, meta) {
+                    //     if(res.status == 200){
+                    //         toastr.success(res.message, 'Success')
+                    //         init_table.draw(false);
+                    //         hideModal('modal-reschedule');
+                    //     }
+                    // })
+                    // .fail(function(res, error) {
+                    //     toastr.error(res.responseJSON.message, 'Failed')
+                    // })
+                    // .always(function() {
+                    //     btn_loading_basic('stop');
+                    // });
                 });
                 $('#form-review').submit(function(event){
                     event.preventDefault();

@@ -21,9 +21,9 @@
                 formSubmit();
                 initAction();
                 // getSubCategory();
-                getSessionVideo();
+                // getSessionVideo();
                 // initPackage();
-                initSpecialOffer();
+                // initSpecialOffer();
 
 
             });
@@ -608,6 +608,11 @@
                     $('#init_class_category').val( $(this).data('id'));
                     $('.class-category-filter__wrapper').removeClass('class-category-selected');
                     $(this).addClass('class-category-selected');
+
+                    $('#init-class').html('Regular Class');
+                    $('.btn-filter').addClass('btn-outline-primary').removeClass('btn-primary');
+                    $('#filter-2').addClass('btn-primary').removeClass('btn-outline-primary');
+
                     let classroom_category_id = $(this).data('id');
                     getSubCategory(classroom_category_id);
 
@@ -1544,6 +1549,7 @@
                     }
                     else{
                         $('#category').empty();
+                        $('#init_class_sub_category').val(null);
                         getPackageByCategory(classroom_category_id);
                         getSessionVideo('21ef9cb2-dd72-4304-8397-20b17ff35bef');
                     }

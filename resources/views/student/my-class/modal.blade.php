@@ -63,7 +63,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <div id="reschedule">
-                        <button type="submit" class="btn btn-outline-primary btn-loading-basic">Reschedule</button>
+                        <button type="submit" class="btn btn-outline-primary btn-loading-basic">Schedule</button>
                     </div>
                 </div>
             </form>
