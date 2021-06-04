@@ -369,7 +369,7 @@
                 });
 
                 renderSpecial();
-                calendar_special.render();
+
             },
             renderSpecial = () => {
                 if(calendar_special){
@@ -395,7 +395,8 @@
                                     "tanggal" : data.start
                                 });
                             }
-                        })
+                        });
+                        calendar_special.render();
                     }
                 })
                 .fail(function(res, error) {
@@ -508,7 +509,7 @@
                 });
 
                 renderRegular();
-                calendar_regular.render();
+
             },
             renderRegular = () => {
                 if(calendar_regular){
@@ -535,7 +536,8 @@
                                     "student_classroom_id" : data.student_classroom_id
                                 });
                             }
-                        })
+                        });
+                        calendar_regular.render();
                     }
                 })
                 .fail(function(res, error) {
@@ -625,7 +627,6 @@
                 });
 
                 renderMasterLesson();
-                calendar_master_lesson.render();
             },
             renderMasterLesson = () => {
                 if(calendar_master_lesson){
@@ -657,7 +658,8 @@
                                 "is_buy" : data.is_buy,
                                 "platform_link" : data.platform_link,
                             });
-                        })
+                        });
+                        calendar_master_lesson.render();
                     }
                 })
                 .fail(function(res, error) {
