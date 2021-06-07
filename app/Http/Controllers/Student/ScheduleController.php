@@ -328,6 +328,7 @@ class ScheduleController extends BaseMenu
                     'classrooms.name',
                     'classrooms.price',
                     'classrooms.session_total',
+                    'classrooms.package_type',
                 ])
                 ->whereNull('deleted_at');
 
@@ -338,6 +339,7 @@ class ScheduleController extends BaseMenu
                     'coach_classrooms.coach_id',
                     'classrooms.name as classroom_name',
                     'classrooms.price',
+                    'classrooms.package_type',
                     'classrooms.session_total',
                     'coaches.name as coach_name',
                 ])
@@ -355,6 +357,7 @@ class ScheduleController extends BaseMenu
                     'coach_schedules.platform_id',
                     'coach_classrooms.classroom_name as title',
                     'coach_classrooms.coach_name',
+                    'coach_classrooms.package_type',
                     'coach_classrooms.session_total',
                     'coach_classrooms.classroom_id',
                     'platforms.name as platform_name',
@@ -369,6 +372,48 @@ class ScheduleController extends BaseMenu
                 ])
                 ->whereNull('coach_schedules.deleted_at')
                 ->first();
+
+            $classroom = Classroom::find($result->classroom_id);
+
+            $student_classroom = DB::table('student_classrooms')
+                ->select([
+                    'student_classrooms.id',
+                    'transactions.datetime'
+                ])
+                ->join('transactions','student_classrooms.transaction_id','=','transactions.id')
+                ->where([
+                    'student_classrooms.student_id' => Auth::guard('student')->user()->id,
+                    'student_classrooms.classroom_id' => $result->classroom_id,
+                    'transactions.status' => 2
+                ])
+                ->whereNull([
+                    'student_classrooms.deleted_at',
+                    'transactions.deleted_at'
+                ]);
+
+            $count = DB::table('student_schedules')
+                ->joinSub($student_classroom, 'student_classrooms', function ($join) {
+                    $join->on('student_schedules.student_classroom_id', '=', 'student_classrooms.id');
+                })
+                ->whereNotNull('student_schedules.deleted_at')
+                ->count();
+
+            if($classroom->package_type == 2 ){
+                if($count >= 3){
+                    $result->status_reschedule = 2;
+                }
+                else{
+                    $result->status_reschedule = 1;
+                }
+            }
+            else{
+                if($count >= 1){
+                    $result->status_reschedule = 2;
+                }
+                else{
+                    $result->status_reschedule = 1;
+                }
+            }
 
             $student_schedule = DB::table('student_schedules')
                 ->select([
@@ -392,7 +437,34 @@ class ScheduleController extends BaseMenu
                 ->whereNotNull('student_schedules.id')
                 ->count();
 
-            $remaining = $result->session_total - $student_schedule;
+            $date_transaction = $student_classroom->first();
+
+            if($result->package_type == 2){
+                if(
+                    date('Y-m-d', strtotime($date_transaction->datetime . '+1 month')) > date('Y-m-d') &&
+                    $student_schedule < (intval($result->session_total /2))
+                ) {
+                    $remaining = (intval($result->session_total/2)) - intval($student_schedule);
+                }
+                elseif(
+                    date('Y-m-d', strtotime($date_transaction->datetime . '+2 month')) > date('Y-m-d') &&
+                    $student_schedule < $result->session_total
+                ) {
+                    $remaining = (intval($result->session_total - $student_schedule))-(intval($result->session_total/2));
+                }
+                else{
+                    $remaining = 0;
+                }
+            }else{
+                if(
+                    date('Y-m-d', strtotime($date_transaction->datetime . '+1 week')) > date('Y-m-d')
+                ){
+                    $remaining = (intval($result->session_total - $student_schedule));
+                }
+                else{
+                    $remaining = 0;
+                }
+            }
 
             $result->remaining = $remaining;
 
