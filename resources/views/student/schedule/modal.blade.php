@@ -47,7 +47,7 @@
                         <div class="col-6">
                             <div class="form-group">
                                 <label>
-                                    Sisa Pertemuan
+                                    Sisa Booking
                                     <span class="text-danger d-none">*</span>
                                 </label>
                                 <div class="border p-5 text-center" style="width: 100px !important">

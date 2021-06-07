@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\Session;
 use App\Models\StudentSchedule;
 use App\Models\Cart;
+use App\Models\Classroom;
 
 use Storage;
 use Auth;
@@ -59,6 +60,7 @@ class ScheduleController extends BaseMenu
                     'classrooms.id',
                     'classrooms.name',
                     'classrooms.price',
+                    'classrooms.package_type'
                 ])
                 ->where('package_type',2)
                 ->whereNull('deleted_at');
@@ -70,6 +72,7 @@ class ScheduleController extends BaseMenu
                     'coach_classrooms.coach_id',
                     'classrooms.name as classroom_name',
                     'classrooms.price',
+                    'classrooms.package_type',
                 ])
                 ->joinSub($classroom, 'classrooms', function ($join) {
                     $join->on('coach_classrooms.classroom_id', '=', 'classrooms.id');
@@ -102,6 +105,7 @@ class ScheduleController extends BaseMenu
                     'coach_schedules.datetime as start',
                     'coach_classrooms.classroom_name as title',
                     'coach_classrooms.classroom_id',
+                    'coach_classrooms.package_type',
                     'student_classrooms.id as student_classroom_id',
                     'student_classrooms.student_id',
                     'student_schedules.coach_schedule_id',
@@ -198,6 +202,7 @@ class ScheduleController extends BaseMenu
                     'classrooms.id',
                     'classrooms.name',
                     'classrooms.price',
+                    'classrooms.package_type',
                 ])
                 ->where('package_type',1)
                 ->whereNull('deleted_at');
@@ -209,6 +214,7 @@ class ScheduleController extends BaseMenu
                     'coach_classrooms.coach_id',
                     'classrooms.name as classroom_name',
                     'classrooms.price',
+                    'classrooms.package_type',
                 ])
                 ->joinSub($classroom, 'classrooms', function ($join) {
                     $join->on('coach_classrooms.classroom_id', '=', 'classrooms.id');
@@ -241,6 +247,7 @@ class ScheduleController extends BaseMenu
                     'coach_schedules.datetime as start',
                     'coach_classrooms.classroom_name as title',
                     'coach_classrooms.classroom_id',
+                    'coach_classrooms.package_type',
                     'student_classrooms.id as student_classroom_id',
                     'student_classrooms.student_id',
                     'student_schedules.id as student_schedule_id',
@@ -322,6 +329,9 @@ class ScheduleController extends BaseMenu
     public function coach_schedule($id)
     {
         try {
+            /*
+                status reschedule : 1 allowed, 2 not allowed
+            */
             $classroom = DB::table('classrooms')
                 ->select([
                     'classrooms.id',
@@ -370,6 +380,42 @@ class ScheduleController extends BaseMenu
                 ->whereNull('coach_schedules.deleted_at')
                 ->first();
 
+            $classroom = Classroom::find($result->classroom_id);
+
+            $student_classroom = DB::table('student_classrooms')
+                ->select([
+                    'id'
+                ])
+                ->where([
+                    'student_id' => Auth::guard('student')->user()->id,
+                    'classroom_id' => $result->classroom_id
+                ])
+                ->whereNull('deleted_at');
+
+            $count = DB::table('student_schedules')
+                ->joinSub($student_classroom, 'student_classrooms', function ($join) {
+                    $join->on('student_schedules.student_classroom_id', '=', 'student_classrooms.id');
+                })
+                ->whereNotNull('student_schedules.deleted_at')
+                ->count();
+
+            if($classroom->package_type == 2 ){
+                if($count >= 3){
+                    $result->status_reschedule = 2;
+                }
+                else{
+                    $result->status_reschedule = 1;
+                }
+            }
+            else{
+                if($count >= 1){
+                    $result->status_reschedule = 2;
+                }
+                else{
+                    $result->status_reschedule = 1;
+                }
+            }
+
             $student_schedule = DB::table('student_schedules')
                 ->select([
                     'student_schedules.id',
@@ -393,7 +439,7 @@ class ScheduleController extends BaseMenu
                 ->count();
 
             $remaining = $result->session_total - $student_schedule;
-
+            // $remaining = 0;
             $result->remaining = $remaining;
 
             return response([
@@ -505,6 +551,40 @@ class ScheduleController extends BaseMenu
     public function new_reschedule(Request $request)
     {
         try {
+            $classroom = Classroom::find($request->classroom_id);
+
+            $student_classroom = DB::table('student_classrooms')
+                ->select([
+                    'id'
+                ])
+                ->where([
+                    'student_id' => Auth::guard('student')->user()->id,
+                    'classroom_id' => $request->classroom_id
+                ])
+                ->whereNull('deleted_at');
+
+            $count = DB::table('student_schedules')
+                ->joinSub($student_classroom, 'student_classrooms', function ($join) {
+                    $join->on('student_schedules.student_classroom_id', '=', 'student_classrooms.id');
+                })
+                ->whereNotNull('student_schedules.deleted_at')
+                ->count();
+
+            if($classroom->package_type == 2 && $count > 3){
+                return response([
+                    "status" => 400,
+                    "data"      => $count,
+                    "message"   => 'Reschedule sudah lebih dari 3 kali!'
+                ], 400);
+            }
+            elseif($classroom->package_type == 2 && $count > 1){
+                return response([
+                    "status" => 400,
+                    "data"      => $count,
+                    "message"   => 'Reschedule sudah lebih dari 1 kali!'
+                ], 400);
+            }
+
             $result = DB::transaction(function () use($request) {
                 $student_classroom = DB::table('coach_schedules')
                     ->select([
@@ -1229,6 +1309,40 @@ class ScheduleController extends BaseMenu
                 ])
                 ->whereNull('student_schedules.deleted_at')
                 ->first();
+
+            $classroom = Classroom::find($studentSchedule->classroom_id);
+
+            $student_classroom = DB::table('student_classrooms')
+                ->select([
+                    'id'
+                ])
+                ->where([
+                    'student_id' => Auth::guard('student')->user()->id,
+                    'classroom_id' => $studentSchedule->classroom_id
+                ])
+                ->whereNull('deleted_at');
+
+            $count = DB::table('student_schedules')
+                ->joinSub($student_classroom, 'student_classrooms', function ($join) {
+                    $join->on('student_schedules.student_classroom_id', '=', 'student_classrooms.id');
+                })
+                ->whereNotNull('student_schedules.deleted_at')
+                ->count();
+
+            if($classroom->package_type == 2 && $count > 3){
+                return response([
+                    "status" => 400,
+                    "data"      => $count,
+                    "message"   => 'Reschedule sudah lebih dari 3 kali!'
+                ], 400);
+            }
+            elseif($classroom->package_type == 2 && $count > 1){
+                return response([
+                    "status" => 400,
+                    "data"      => $count,
+                    "message"   => 'Reschedule sudah lebih dari 1 kali!'
+                ], 400);
+            }
 
             // end search student schedule
 

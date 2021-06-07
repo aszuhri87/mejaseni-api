@@ -364,3 +364,7 @@ ul.ui-autocomplete {
 .class-owned{
     z-index: 11 !important;
 }
+
+.hover-list:hover{
+    background-color: #f7f7f9
+}

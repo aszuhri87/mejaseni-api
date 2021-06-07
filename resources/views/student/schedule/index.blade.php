@@ -3,6 +3,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.5.1/main.min.css" />
 @endpush
 @section('content')
+<input type="hidden" value="" id="package_type">
 <div class="card">
     <div class="card-body">
         <div class="row">

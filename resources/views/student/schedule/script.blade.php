@@ -81,8 +81,8 @@
 
                                 $.each(res.data, function(index, data){
                                     element += `
-                                        <li class="list-group-item">
-                                            <label class="radio radio-sm d-flex align-items-start">
+                                        <li class="list-group-item hover-list">
+                                            <label class="radio radio-lg d-flex align-items-center">
                                             <input type="radio" name="new_coach_schedule_id" value="${data.id}" required/>
                                             <span class="mr-2"></span>
                                             <div class="w-100">
@@ -150,8 +150,12 @@
                     .done(function(res, xhr, meta) {
                         if(res.status == 200){
                             toastr.success(res.message, 'Success');
-                            initCalendarSpecial();
-                            initCalendarReguler();
+                            if($('#package_type').val()==1){
+                                initCalendarSpecial();
+                            }
+                            else{
+                                initCalendarReguler();
+                            }
                             hideModal('modal-booking');
                         }
                     })
@@ -175,8 +179,12 @@
                     .done(function(res, xhr, meta) {
                         if(res.status == 200){
                             toastr.success(res.message, 'Success');
-                            initCalendarSpecial();
-                            initCalendarReguler();
+                            if($('#package_type').val()==1){
+                                initCalendarSpecial();
+                            }
+                            else{
+                                initCalendarReguler();
+                            }
                             hideModal('modal-cancel-schedule');
                         }
                     })
@@ -225,8 +233,12 @@
                     .done(function(res, xhr, meta) {
                         if(res.status == 200){
                             toastr.success(res.message, 'Success');
-                            initCalendarSpecial();
-                            initCalendarReguler();
+                            if($('#package_type').val()==1){
+                                initCalendarSpecial();
+                            }
+                            else{
+                                initCalendarReguler();
+                            }
                             hideModal('modal-reschedule');
                         }
                     })
@@ -292,7 +304,8 @@
                         if(moment(moment(info.event.extendedProps.tanggal).format('YYYY-MM-DD HH:mm:ss')).isAfter(moment().format('YYYY-MM-DD HH:mm:ss'))){
                             if(info.event.extendedProps.status == 3){
                                 let coach_schedule_id = info.event.extendedProps.coach_schedule_id
-                                showModal('modal-booking');
+                                $('#package_type').val(info.event.extendedProps.package_type);
+
                                 $.ajax({
                                     url: `{{ url('student/schedule/special-class') }}/${coach_schedule_id}`,
                                     type: `GET`,
@@ -313,9 +326,10 @@
                                             $('#form-booking').trigger('reset');
                                             $('#form-booking').attr('action',`{{ url('student/schedule/special-class/booking') }}`)
                                             $('#form-booking').attr('method',`POST`);
+                                            showModal('modal-booking');
                                         }
                                         else{
-                                            toastr.error('Batas Pesanan Sudah Maksimal', 'Failed')
+                                            toastr.error('Batas Booking Sudah Maksimal', 'Failed')
                                         }
                                     }
                                 })
@@ -327,9 +341,12 @@
                                 });
                             }
                             else if(info.event.extendedProps.status == 2){
-                                let coach_schedule_id = info.event.extendedProps.coach_schedule_id
+                                let coach_schedule_id = info.event.extendedProps.coach_schedule_id;
 
-                                showModal('modal-cancel-schedule');
+                                $('#package_type').val(info.event.extendedProps.package_type);
+                                $('#btn-reschedule').attr('data-student_classroom_id',info.event.extendedProps.student_classroom_id);
+                                $('#btn-reschedule').attr('data-coach_schedule_id',info.event.extendedProps.coach_schedule_id);
+
                                 $.ajax({
                                     url: `{{ url('student/schedule/special-class') }}/${coach_schedule_id}`,
                                     type: `GET`,
@@ -349,6 +366,17 @@
                                         $('#form-cancel-schedule').trigger('reset');
                                         $('#form-cancel-schedule').attr('action',`{{ url('student/schedule/special-class/reschedule') }}`)
                                         $('#form-cancel-schedule').attr('method',`POST`);
+
+                                        if(data.status_reschedule == 1){
+                                            $('#btn-reschedule').show();
+                                            $('#btn-cancel-reschedule').show();
+                                        }
+                                        else{
+                                            $('#btn-reschedule').hide();
+                                            $('#btn-cancel-reschedule').hide();
+                                        }
+
+                                        showModal('modal-cancel-schedule');
                                     }
                                 })
                                 .fail(function(res, error) {
@@ -392,7 +420,9 @@
                                     "className": `bg-${data.color} border-${data.color} p-1 ${data.color == 'primary' ? 'text-white' : ''}`,
                                     "allDay": false,
                                     "status": data.status,
-                                    "tanggal" : data.start
+                                    "tanggal" : data.start,
+                                    "student_classroom_id" : data.student_classroom_id,
+                                    "package_type" : data.package_type
                                 });
                             }
                         });
@@ -427,7 +457,8 @@
 
                             if(info.event.extendedProps.status == 3){
                                 let coach_schedule_id = info.event.extendedProps.coach_schedule_id
-                                showModal('modal-booking');
+                                $('#package_type').val(info.event.extendedProps.package_type);
+
                                 $.ajax({
                                     url: `{{ url('student/schedule/regular-class') }}/${coach_schedule_id}`,
                                     type: `GET`,
@@ -449,9 +480,10 @@
                                             $('#form-booking').trigger('reset');
                                             $('#form-booking').attr('action',`{{ url('student/schedule/regular-class/booking') }}`)
                                             $('#form-booking').attr('method',`POST`);
+                                            showModal('modal-booking');
                                         }
                                         else{
-                                            toastr.error('Batas Pesanan Sudah Maksimal', 'Failed')
+                                            toastr.error('Batas Booking Sudah Maksimal', 'Failed')
                                         }
 
                                     }
@@ -466,10 +498,10 @@
                             else if(info.event.extendedProps.status == 2){
                                 let coach_schedule_id = info.event.extendedProps.coach_schedule_id;
 
+                                $('#package_type').val(info.event.extendedProps.package_type);
                                 $('#btn-reschedule').attr('data-student_classroom_id',info.event.extendedProps.student_classroom_id);
                                 $('#btn-reschedule').attr('data-coach_schedule_id',info.event.extendedProps.coach_schedule_id);
 
-                                showModal('modal-cancel-schedule');
                                 $.ajax({
                                     url: `{{ url('student/schedule/regular-class') }}/${coach_schedule_id}`,
                                     type: `GET`,
@@ -489,6 +521,17 @@
                                         $('#form-cancel-schedule').trigger('reset');
                                         $('#form-cancel-schedule').attr('action',`{{ url('student/schedule/regular-class/reschedule') }}`)
                                         $('#form-cancel-schedule').attr('method',`POST`);
+
+                                        if(data.status_reschedule == 1){
+                                            $('#btn-reschedule').show();
+                                            $('#btn-cancel-reschedule').show();
+                                        }
+                                        else{
+                                            $('#btn-reschedule').hide();
+                                            $('#btn-cancel-reschedule').hide();
+                                        }
+
+                                        showModal('modal-cancel-schedule');
                                     }
                                 })
                                 .fail(function(res, error) {
@@ -533,7 +576,8 @@
                                     "allDay": false,
                                     "status": data.status,
                                     "tanggal" : data.start,
-                                    "student_classroom_id" : data.student_classroom_id
+                                    "student_classroom_id" : data.student_classroom_id,
+                                    "package_type" : data.package_type
                                 });
                             }
                         });
