@@ -130,6 +130,24 @@
                 </div>
                 @endif
             @endforeach
+            @foreach (\App\Libraries\SpecialClassroomReminder::classroom_check() as $item)
+                @if ($item->reminder_status)
+                <div class="col-12">
+                    <div class="card card-custom bg-light-warning card-shadowless gutter-b">
+                        <div class="card-body">
+                            <span class="card-title font-weight-bolder font-size-h6 text-warning mb-4">{{$item->classroom_name}}</span>
+                            <hr>
+                            <p class="font-weight-bold text-muted font-size-sm">
+                                Anda harus mengambil <span class="text-warning">jadwal pertemuan</span> sebelum tanggal <span class="text-warning">{{date('d-m-Y', strtotime($item->expired_date)).', Jam '.date('H:i:s', strtotime($item->expired_date))}}</span>.
+                            </p>
+                            <div class="d-flex justify-content-start">
+                                <a href="{{ url('student/schedule') }}" class="btn btn-sm btn-warning">Ambil Schedule</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endif
+            @endforeach
         </div>
         @endif
         @if (Auth::guard('coach')->check())

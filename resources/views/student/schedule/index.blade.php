@@ -102,7 +102,7 @@
                 </div>
             </div>
             <div class="col-lg-2 text-center">
-                <p>Sisa Pertemuan</p>
+                <p>Jadwal Tersisa</p>
                 <div>
                     <span class="display-3" id="last-meeting">0</span>
                 </div>

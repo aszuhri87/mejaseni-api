@@ -312,6 +312,10 @@ class MyClassController extends BaseMenu
     public function class_active($id)
     {
         try {
+            date_default_timezone_set("Asia/Jakarta");
+
+            $now = date('Y-m-d H:i:s');
+
             $path = Storage::disk('s3')->url('/');
 
             // count sisa pertemuan
@@ -322,7 +326,6 @@ class MyClassController extends BaseMenu
                 ])
                 ->whereNull('coach_schedules.deleted_at')
                 ->where('coach_schedules.accepted',true)
-                ->whereDate('coach_schedules.datetime','<=',date('Y-m-d'))
                 ->groupBy('coach_schedules.id');
 
             $student_schedule = DB::table('student_schedules')
@@ -333,8 +336,7 @@ class MyClassController extends BaseMenu
                     $join->on('student_schedules.coach_schedule_id', '=', 'coach_schedules.id');
                 })
                 ->whereNull('student_schedules.deleted_at')
-                ->whereNotNull('student_schedules.student_classroom_id')
-                ->groupBy('student_schedules.student_classroom_id');
+                ->whereNotNull('student_schedules.student_classroom_id');
 
             $sub_student_classroom = DB::table('student_classrooms')
                 ->select([
@@ -363,9 +365,22 @@ class MyClassController extends BaseMenu
                     'classrooms.id',
                     'classrooms.name',
                     'classrooms.session_total',
+                    'classrooms.package_type',
                     DB::raw("CONCAT('{$path}',image) as image"),
                 ])
                 ->whereNull('classrooms.deleted_at');
+
+            $transaction_classes = DB::table('transaction_details')
+                ->select([
+                    'classrooms.id',
+                    'transactions.datetime'
+                ])
+                ->leftJoin('transactions', 'transactions.id','transaction_details.transaction_id')
+                ->leftJoin('carts','carts.id','transaction_details.cart_id')
+                ->join('classrooms','classrooms.id','carts.classroom_id')
+                ->where('transactions.student_id', Auth::guard('student')->user()->id)
+                ->where('transactions.status', 2)
+                ->whereNull(['transactions.deleted_at']);
 
             $result = DB::table('student_classrooms')
                 ->select([
@@ -373,7 +388,27 @@ class MyClassController extends BaseMenu
                     'classrooms.name as classroom_name',
                     'classrooms.image',
                     'sub_student_classroom.last_meeting',
-                    DB::raw('(classrooms.session_total::integer - sub_student_classroom.last_meeting::integer)::integer as subtraction'),
+                    DB::raw("
+                        CASE
+                            WHEN classrooms.package_type = 2
+                                THEN
+                                    CASE
+                                        WHEN (transaction_classes.datetime::timestamp + INTERVAL '1 MONTH')::timestamp > '{$now}'::timestamp
+                                            AND sub_student_classroom.last_meeting < (classrooms.session_total::integer / 2)::integer
+                                            THEN ((classrooms.session_total::integer / 2)::integer) - sub_student_classroom.last_meeting::integer
+                                        WHEN (transaction_classes.datetime::timestamp + INTERVAL '2 MONTH')::timestamp > '{$now}'::timestamp
+                                            AND sub_student_classroom.last_meeting < classrooms.session_total
+                                            THEN (classrooms.session_total::integer - sub_student_classroom.last_meeting::integer) - (classrooms.session_total::integer / 2)::integer
+                                        ELSE 0
+                                    END
+                            ELSE
+                                CASE
+                                    WHEN (transaction_classes.datetime::timestamp + INTERVAL '1 WEEKS')::timestamp > '{$now}'::timestamp
+                                        THEN classrooms.session_total::integer  - sub_student_classroom.last_meeting::integer
+                                    ELSE 0
+                                END
+                        END subtraction
+                    "),
                     DB::raw('(
                         CASE
                             WHEN classroom_feedback.classroom_id IS NOT NULL THEN
@@ -391,6 +426,9 @@ class MyClassController extends BaseMenu
                 })
                 ->leftJoinSub($classroom_feedback, 'classroom_feedback', function ($join) {
                     $join->on('student_classrooms.classroom_id', '=', 'classroom_feedback.classroom_id');
+                })
+                ->leftJoinSub($transaction_classes, 'transaction_classes', function ($join) {
+                    $join->on('classrooms.id', '=', 'transaction_classes.id');
                 })
                 ->where('student_classrooms.student_id', $id)
                 ->whereNull('student_classrooms.deleted_at')
