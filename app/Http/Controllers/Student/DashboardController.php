@@ -73,7 +73,6 @@ class DashboardController extends BaseMenu
                 "message" => $e->getMessage(),
             ]);
         }
-
     }
 
     public function total_video()
@@ -84,7 +83,6 @@ class DashboardController extends BaseMenu
                     'carts.id'
                 ])
                 ->whereNotNull('carts.session_video_id');
-
 
             $transaction_detail = DB::table('transaction_details')
                 ->select([

@@ -68,8 +68,8 @@
                         <span class="navi-link p-0 pb-2">
                             <span class="navi-icon mr-1">
                                 <span class="svg-icon svg-icon-lg svg-icon-primary">
-                                    <!--begin::Svg Icon | path:assets/media/svg/icons/Communication/Mail-notification.svg--><svg
-                                        xmlns="http://www.w3.org/2000/svg"
+                                    <!--begin::Svg Icon | path:assets/media/svg/icons/Communication/Mail-notification.svg-->
+                                    <svg xmlns="http://www.w3.org/2000/svg"
                                         xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
                                         viewBox="0 0 24 24" version="1.1">
                                         <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -80,7 +80,8 @@
                                             <circle fill="#000000" opacity="0.3" cx="19.5" cy="17.5" r="2.5" />
                                         </g>
                                     </svg>
-                                    <!--end::Svg Icon--></span> </span>
+                                </span>
+                            </span>
                             <span class="navi-text text-muted text-hover-primary">{{$email}}</span>
                         </span>
                     </a>
@@ -109,38 +110,42 @@
                 </div>
             </div>
         </div>
-        {{-- <div class="separator separator-dashed mt-8 mb-5"></div>
+        <div class="separator separator-dashed mt-8 mb-5"></div>
         <div class="row">
-            <div class="col">
-                <div class="d-flex align-items-center mt-5">
-                    <span class="svg-icon svg-icon-primary svg-icon-2x"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-02-01-052524/theme/html/demo1/dist/../src/media/svg/icons/Shopping/Wallet.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                            <rect x="0" y="0" width="24" height="24"/>
-                            <circle fill="#000000" opacity="0.3" cx="20.5" cy="12.5" r="1.5"/>
-                            <rect fill="#000000" opacity="0.3" transform="translate(12.000000, 6.500000) rotate(-15.000000) translate(-12.000000, -6.500000) " x="3" y="3" width="18" height="7" rx="1"/>
-                            <path d="M22,9.33681558 C21.5453723,9.12084552 21.0367986,9 20.5,9 C18.5670034,9 17,10.5670034 17,12.5 C17,14.4329966 18.5670034,16 20.5,16 C21.0367986,16 21.5453723,15.8791545 22,15.6631844 L22,18 C22,19.1045695 21.1045695,20 20,20 L4,20 C2.8954305,20 2,19.1045695 2,18 L2,6 C2,4.8954305 2.8954305,4 4,4 L20,4 C21.1045695,4 22,4.8954305 22,6 L22,9.33681558 Z" fill="#000000"/>
-                        </g>
-                    </svg><!--end::Svg Icon--></span>
-                    <div class="d-flex flex-column ml-5">
-                        <a href="{{ url('student/rekening') }}" class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary">Rekening</a>
-                        <span class="text-muted">Kelola Rekening Saya</span>
+            @foreach (\App\Libraries\RegularClassroomReminder::classroom_check() as $item)
+                @if ($item->reminder_status)
+                <div class="col-12">
+                    <div class="card card-custom bg-light-danger card-shadowless gutter-b">
+                        <div class="card-body">
+                            <span class="card-title font-weight-bolder font-size-h6 text-danger mb-4">{{$item->classroom_name}}</span>
+                            <hr>
+                            <p class="font-weight-bold text-muted font-size-sm">
+                                Anda harus mengambil <span class="text-danger">{{$item->reminder_period == 1 ? 'minimal' : 'maksimal'}} {{$item->subtraction}} jadwal pertemuan</span> sebelum tanggal <span class="text-danger">{{date('d-m-Y', strtotime($item->expired_date)).', Jam '.date('H:i:s', strtotime($item->expired_date))}}</span>.
+                            </p>
+                            <div class="d-flex justify-content-start">
+                                <a href="{{ url('student/schedule') }}" class="btn btn-sm btn-danger">Ambil Schedule</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div> --}}
+                @endif
+            @endforeach
+        </div>
         @endif
         @if (Auth::guard('coach')->check())
         <div class="separator separator-dashed mt-8 mb-5"></div>
         <div class="row">
             <div class="col">
                 <div class="d-flex align-items-center mt-5">
-                    <span class="svg-icon svg-icon-primary svg-icon-2x"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-02-01-052524/theme/html/demo1/dist/../src/media/svg/icons/General/User.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                            <polygon points="0 0 24 0 24 24 0 24"/>
-                            <path d="M12,11 C9.790861,11 8,9.209139 8,7 C8,4.790861 9.790861,3 12,3 C14.209139,3 16,4.790861 16,7 C16,9.209139 14.209139,11 12,11 Z" fill="#000000" fill-rule="nonzero" opacity="0.3"/>
-                            <path d="M3.00065168,20.1992055 C3.38825852,15.4265159 7.26191235,13 11.9833413,13 C16.7712164,13 20.7048837,15.2931929 20.9979143,20.2 C21.0095879,20.3954741 20.9979143,21 20.2466999,21 C16.541124,21 11.0347247,21 3.72750223,21 C3.47671215,21 2.97953825,20.45918 3.00065168,20.1992055 Z" fill="#000000" fill-rule="nonzero"/>
-                        </g>
-                    </svg><!--end::Svg Icon--></span>
+                    <span class="svg-icon svg-icon-primary svg-icon-2x">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <polygon points="0 0 24 0 24 24 0 24"/>
+                                <path d="M12,11 C9.790861,11 8,9.209139 8,7 C8,4.790861 9.790861,3 12,3 C14.209139,3 16,4.790861 16,7 C16,9.209139 14.209139,11 12,11 Z" fill="#000000" fill-rule="nonzero" opacity="0.3"/>
+                                <path d="M3.00065168,20.1992055 C3.38825852,15.4265159 7.26191235,13 11.9833413,13 C16.7712164,13 20.7048837,15.2931929 20.9979143,20.2 C21.0095879,20.3954741 20.9979143,21 20.2466999,21 C16.541124,21 11.0347247,21 3.72750223,21 C3.47671215,21 2.97953825,20.45918 3.00065168,20.1992055 Z" fill="#000000" fill-rule="nonzero"/>
+                            </g>
+                        </svg>
+                    </span>
                     <div class="d-flex flex-column ml-5">
                         <a href="{{ url('coach/profile') }}" class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary">Profil Saya</a>
                         <span class="text-muted">Kelola Profil Saya</span>
