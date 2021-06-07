@@ -485,17 +485,51 @@ class ScheduleController extends BaseMenu
     public function booking(Request $request)
     {
         try {
-            $result = DB::transaction(function () use($request) {
+            $student_classroom = DB::table('coach_schedules')
+                ->select([
+                    'student_classrooms.id',
+                    'coach_schedules.datetime',
+                ])
+                ->join('coach_classrooms','coach_schedules.coach_classroom_id','=','coach_classrooms.id')
+                ->join('student_classrooms', 'coach_classrooms.classroom_id', '=', 'student_classrooms.classroom_id')
+                ->where('coach_schedules.id',$request->coach_schedule_id)
+                ->where('student_classrooms.student_id',$request->student_id)
+                ->first();
 
-                $student_classroom = DB::table('coach_schedules')
-                    ->select([
-                        'student_classrooms.id',
-                    ])
-                    ->join('coach_classrooms','coach_schedules.coach_classroom_id','=','coach_classrooms.id')
-                    ->join('student_classrooms', 'coach_classrooms.classroom_id', '=', 'student_classrooms.classroom_id')
-                    ->where('coach_schedules.id',$request->coach_schedule_id)
-                    ->where('student_classrooms.student_id',$request->student_id)
-                    ->first();
+            $student_classroom_count = DB::table('student_classrooms')
+                ->select([
+                    'student_classrooms.id',
+                    'student_classrooms.classroom_id'
+                ])
+                ->where([
+                    'student_classrooms.classroom_id' => $request->classroom_id
+                ])
+                ->whereNull('student_classrooms.deleted_at');
+
+            $count_classroom_day = DB::table('student_schedules')
+                ->leftJoinSub($student_classroom_count, 'student_classrooms', function ($join) {
+                    $join->on('student_schedules.student_classroom_id', '=', 'student_classrooms.id');
+                })
+                ->join('coach_schedules','student_schedules.coach_schedule_id','=','coach_schedules.id')
+                ->where([
+                    'student_classrooms.classroom_id' => $request->classroom_id
+                ])
+                ->whereDate('coach_schedules.datetime', $student_classroom->datetime)
+                ->whereNull([
+                    'student_schedules.deleted_at',
+                    'coach_schedules.deleted_at',
+                ])
+                ->count();
+
+            if($count_classroom_day > 2){
+                return response([
+                    "status" => 400,
+                    "message"   => 'pengambilan jadwal tidak dapat lebih dari 2 kali sehari!'
+                ], 400);
+            }
+            
+            $result = DB::transaction(function () use($request, $student_classroom) {
+
 
                 $check_session = DB::table('student_schedules')
                     ->whereNull('student_schedules.deleted_at')
