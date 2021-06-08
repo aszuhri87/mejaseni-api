@@ -85,7 +85,7 @@
 
                             </ul>
                         </div>
-                        <div class="see-all shadow row-center">
+                        <div class="see-all shadow row-center" style="display: none">
                             <a href="{{url('student/new-package')}}" class="text-white">
                                 <span class="svg-icon svg-icon-md text-white mr-2"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                     <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">

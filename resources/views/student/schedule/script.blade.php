@@ -810,6 +810,7 @@
                 .done(function(res, xhr, meta) {
                     if(res.status == 200){
                         if(res.data.length > 0){
+
                             let element = ``;
                             let selected = ``;
                             $.each(res.data, function(index, data){
@@ -838,6 +839,10 @@
                             });
                             $('#list-class-active').html(element);
                             $('.see-all').html(`<img src="{{asset('cms/assets/img/svg/layers.svg')}}" class="mr-2" alt=""> See All`);
+                            $('.see-all').show();
+                        }
+                        else{
+                            $('.see-all').show();
                         }
                     }
                 })
