@@ -358,7 +358,8 @@ class MyClassController extends BaseMenu
                     'classroom_feedback.classroom_id'
                 ])
                 ->where('classroom_feedback.student_id',Auth::guard('student')->user()->id)
-                ->whereNull('classroom_feedback.deleted_at');
+                ->whereNull('classroom_feedback.deleted_at')
+                ->groupBy('classroom_feedback.classroom_id');
 
             $classroom = DB::table('classrooms')
                 ->select([
@@ -452,9 +453,11 @@ class MyClassController extends BaseMenu
     {
         try {
             $result = DB::transaction(function () use($request) {
-                $rating = ClassroomFeedback::create([
+                $rating = ClassroomFeedback::updateOrCreate([
                     'student_id' => Auth::guard('student')->user()->id,
                     'classroom_id' => $request->classroom_id,
+                ],
+                [
                     'star' => $request->rating_class,
                     'description' => $request->description,
                 ]);

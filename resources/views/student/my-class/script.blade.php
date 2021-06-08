@@ -475,7 +475,7 @@
                     event.preventDefault();
 
                     window.location.href = `{{url('student/schedule')}}`;
-                    
+
                     // btn_loading_basic('start')
                     // $.ajax({
                     //     url: $(this).attr('action'),
@@ -530,8 +530,7 @@
                     })
                     .done(function(res, xhr, meta) {
                         if(res.status == 200){
-                            console.log(res.data);
-                            return;
+                            toastr.success(res.message, 'Success')
                             hideModal('modal-rating-class');
                         }
                     })
