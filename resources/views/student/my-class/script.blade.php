@@ -148,7 +148,6 @@
                             }
                         },
                     ],
-                    // order: [[1, 'asc']],
                     searching: true,
                     paging:true,
                     lengthChange:false,
@@ -316,6 +315,7 @@
                     $('#date').html(moment(data.datetime).format('DD MMMM YYYY'));
                     $('#time').html(moment(data.datetime).format('HH:mm'));
                     $('#coach-name').html(data.coach_name);
+                    $('#session').html(data.session);
                     var now = moment().format('YYYY-MM-DD H:mm:ss');
                     var date = moment(data.datetime).format('YYYY-MM-DD HH:mm:ss');
                     let day;

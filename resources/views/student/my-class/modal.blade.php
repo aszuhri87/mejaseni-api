@@ -47,6 +47,10 @@
                                 <label>Date</label>
                                 <h5 id="date"></h5>
                             </div>
+                            <div class="form-group">
+                                <label>Sesi</label>
+                                <h5 id="session"></h5>
+                            </div>
                         </div>
                         <div class="col-6">
                             <div class="form-group">
@@ -63,7 +67,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <div id="reschedule">
-                        <button type="submit" class="btn btn-outline-primary btn-loading-basic">Schedule</button>
+                        {{-- <button type="submit" class="btn btn-outline-primary btn-loading-basic">Schedule</button> --}}
                     </div>
                 </div>
             </form>
