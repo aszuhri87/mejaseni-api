@@ -12,9 +12,12 @@
         $email = Auth::guard('student')->user()->email;
         $expertise = Auth::guard('student')->user()->expertise;
     }
+
+    $segment1 = Request::segment(1);
+    $segment2 = Request::segment(2);
 @endphp
 <!-- begin::User Panel-->
-<div id="kt_quick_user" class="offcanvas offcanvas-right p-10">
+<div id="kt_quick_user" class="offcanvas offcanvas-right p-10 @if($segment1 == 'student' && $segment2 == 'schedule') {{'offcanvas-on'}} @endif">
     <!--begin::Header-->
     <div class="offcanvas-header d-flex align-items-center justify-content-between pb-5">
         <h3 class="font-weight-bold m-0">
@@ -122,8 +125,20 @@
                             <p class="font-weight-bold text-muted font-size-sm">
                                 Anda harus mengambil <span class="text-danger">{{$item->reminder_period == 1 ? 'minimal' : 'maksimal'}} {{$item->subtraction}} jadwal pertemuan</span> sebelum tanggal <span class="text-danger">{{date('d-m-Y', strtotime($item->expired_date)).', Jam '.date('H:i:s', strtotime($item->expired_date))}}</span>.
                             </p>
+                        </div>
+                    </div>
+                </div>
+                @else
+                <div class="col-12">
+                    <div class="card card-custom bg-light-success card-shadowless gutter-b">
+                        <div class="card-body">
+                            <span class="card-title font-weight-bolder font-size-h6 text-success mb-4">{{$item->classroom_name}}</span>
+                            <hr>
+                            <p class="font-weight-bold text-muted font-size-sm">
+                                Untuk melihat kelas yg anda pilih lihat menu my class
+                            </p>
                             <div class="d-flex justify-content-start">
-                                <a href="{{ url('student/schedule') }}" class="btn btn-sm btn-danger">Ambil Schedule</a>
+                                <a href="{{ url('student/my-class') }}" class="btn btn-sm btn-success">Go To My Class</a>
                             </div>
                         </div>
                     </div>
@@ -140,9 +155,6 @@
                             <p class="font-weight-bold text-muted font-size-sm">
                                 Anda harus mengambil <span class="text-warning">jadwal pertemuan</span> sebelum tanggal <span class="text-warning">{{date('d-m-Y', strtotime($item->expired_date)).', Jam '.date('H:i:s', strtotime($item->expired_date))}}</span>.
                             </p>
-                            <div class="d-flex justify-content-start">
-                                <a href="{{ url('student/schedule') }}" class="btn btn-sm btn-warning">Ambil Schedule</a>
-                            </div>
                         </div>
                     </div>
                 </div>

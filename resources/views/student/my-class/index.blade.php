@@ -70,7 +70,7 @@
                             </div>
                         </div>
                     </div>
-                    <a href="{{url('student/schedule')}}" class="btn btn-primary mt-5">Lihat Schedule</a>
+                    <a href="{{url('student/schedule')}}" class="btn btn-danger mt-5">Lihat Schedule</a>
                 </div>
             </div>
             <div class="col-5">

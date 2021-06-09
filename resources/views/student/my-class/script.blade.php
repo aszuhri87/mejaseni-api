@@ -153,6 +153,9 @@
                     lengthChange:false,
                     bInfo:true,
                     dom: '<"datatable-header"><tr><"datatable-footer"ip>',
+                    oLanguage: {
+                        sEmptyTable: "Anda belum memilih kelas, klik tombol lihat schedule."
+                    },
                     language: {
                         search: '<span>Search:</span> _INPUT_',
                         searchPlaceholder: 'Search.',
@@ -275,6 +278,9 @@
                     lengthChange:false,
                     bInfo:true,
                     dom: '<"datatable-header"><tr><"datatable-footer"ip>',
+                    oLanguage: {
+                        sEmptyTable: "Anda belum memilih kelas, klik tombol lihat schedule."
+                    },
                     language: {
                         search: '<span>Search:</span> _INPUT_',
                         searchPlaceholder: 'Search.',
