@@ -47,6 +47,7 @@
                         { data: 'datetime' },
                         { data: 'classroom_name' },
                         { data: 'coach_name' },
+                        { data: 'session' },
                         { data: 'datetime' },
                         { defaultContent: '' }
                         ],
@@ -147,7 +148,7 @@
                             }
                         },
                     ],
-                    order: [[1, 'asc']],
+                    // order: [[1, 'asc']],
                     searching: true,
                     paging:true,
                     lengthChange:false,

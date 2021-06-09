@@ -90,7 +90,9 @@ class MyClassController extends BaseMenu
                 ->joinSub($coach_schedule, 'coach_schedules', function ($join) {
                     $join->on('student_schedules.coach_schedule_id', '=', 'coach_schedules.id');
                 })
-                ->whereNull('student_schedules.deleted_at');
+                ->whereNull([
+                    'student_schedules.deleted_at',
+                ]);
 
             $classroom = DB::table('classrooms')
                 ->select([
@@ -103,6 +105,7 @@ class MyClassController extends BaseMenu
             $data = DB::table('student_classrooms')
                 ->select([
                     'student_schedules.id',
+                    'student_classrooms.classroom_id',
                     'classrooms.name as classroom_name',
                     'student_schedules.coach_name',
                     'student_schedules.coach_id',
@@ -112,7 +115,7 @@ class MyClassController extends BaseMenu
                         (student_schedules.datetime::timestamp + (classrooms.session_duration * INTERVAL '1 MINUTES')) as datetime_interval
                     ")
                 ])
-                ->rightJoinSub($student_schedule, 'student_schedules', function ($join) {
+                ->leftJoinSub($student_schedule, 'student_schedules', function ($join) {
                     $join->on('student_classrooms.id', '=', 'student_schedules.student_classroom_id');
                 })
                 ->joinSub($classroom, 'classrooms', function ($join) {
@@ -121,8 +124,23 @@ class MyClassController extends BaseMenu
                 ->where('student_classrooms.student_id',Auth::guard('student')->user()->id)
                 ->whereNull('student_classrooms.deleted_at')
                 ->whereRaw("(student_schedules.datetime::timestamp + (classrooms.session_duration * INTERVAL '1 MINUTES')) >= now()")
+                ->orderBy('classrooms.name','asc')
                 ->orderBy('student_schedules.datetime','asc')
                 ->get();
+
+            $classroom_id = null;
+            $index = 0;
+            foreach ($data as $key => $value) {
+                if($value->classroom_id != $classroom_id){
+                    $classroom_id = $value->classroom_id;
+                    $index = 1;
+                    $value->session = $index;
+                    $index++;
+                }else{
+                    $value->session = $index;
+                    $index++;
+                }
+            }
 
             return DataTables::of($data)
                 ->addIndexColumn()

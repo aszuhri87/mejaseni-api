@@ -176,9 +176,10 @@
                 <tr>
                     <th>No</th>
                     <th width="20%">Tanggal</th>
-                    <th width="15%">Waktu</th>
+                    <th width="10%">Waktu</th>
                     <th width="20%">Kelas</th>
                     <th width="20%">Coach</th>
+                    <th width="10%">Sesi</th>
                     <th width="10%">Status</th>
                     <th width="15%">Aksi</th>
                 </tr>
