@@ -33,6 +33,16 @@ class InvoiceController extends BaseMenu
 
             $now = date('Y-m-d H:i:s');
 
+            $max_transaction = DB::table('transactions')
+                ->select([
+                    'transactions.id',
+                ])
+                ->where('transactions.student_id',Auth::guard('student')->user()->id)
+                ->whereRaw("transactions.status = 2")
+                ->whereRaw("transactions.datetime::timestamp + INTERVAL '1 DAYS' < '$now'::timestamp")
+                ->orderBy('transactions.datetime','desc')
+                ->limit(1);
+
             $data = DB::table('transactions')
                 ->select([
                     'transactions.id',
@@ -47,8 +57,16 @@ class InvoiceController extends BaseMenu
                             AND transactions.status != 2
                             THEN true
                         ELSE false
-                    END expired")
+                    END expired"),
+                    DB::raw("CASE
+                        WHEN max_transaction.id IS NOT NULL
+                            THEN true
+                        ELSE false
+                    END latest")
                 ])
+                ->leftJoinSub($max_transaction, 'max_transaction', function ($join){
+                    $join->on('transactions.id', '=', 'max_transaction.id');
+                })
                 ->where('transactions.student_id',Auth::guard('student')->user()->id)
                 ->where(function($query){
                     $query->where(function($sub_query){

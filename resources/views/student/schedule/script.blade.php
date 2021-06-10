@@ -450,6 +450,7 @@
                     eventColor: '#fff',
                     editable: false,
                     selectable: true,
+                    contentHeight: 800,
                     eventClick: function(info) {
                         let check_date = moment(moment(info.event.extendedProps.tanggal).format('YYYY-MM-DD HH:mm:ss')).isAfter(moment().add(6, 'h').format('YYYY-MM-DD HH:mm:ss'));
 
