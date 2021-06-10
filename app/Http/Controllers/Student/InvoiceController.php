@@ -39,7 +39,6 @@ class InvoiceController extends BaseMenu
                 ])
                 ->where('transactions.student_id',Auth::guard('student')->user()->id)
                 ->whereRaw("transactions.status = 2")
-                ->whereRaw("transactions.datetime::timestamp + INTERVAL '1 DAYS' < '$now'::timestamp")
                 ->orderBy('transactions.datetime','desc')
                 ->limit(1);
 
