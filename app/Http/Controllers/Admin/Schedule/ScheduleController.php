@@ -266,7 +266,6 @@ class ScheduleController extends BaseMenu
                 ->leftJoin('student_classrooms','student_classrooms.id','=','student_schedules.student_classroom_id')
                 ->leftJoin('students','students.id','=','student_classrooms.student_id')
                 ->whereNull('coach_schedules.deleted_at')
-                ->whereNull('coach_schedules.deleted_at')
                 ->get()
                 ->toArray();
 
@@ -303,6 +302,15 @@ class ScheduleController extends BaseMenu
         try {
             $path = Storage::disk('s3')->url('/');
 
+            $student_schedules = DB::table('student_schedules')
+                ->whereNull('deleted_at');
+
+            $coach_classrooms = DB::table('coach_classrooms')
+                ->whereNull('deleted_at');
+
+            $coaches = DB::table('coaches')
+                ->whereNull('deleted_at');
+
             $result = DB::table('coach_schedules')
                 ->select([
                     'coach_schedules.id',
@@ -323,10 +331,16 @@ class ScheduleController extends BaseMenu
                         ELSE 4
                     END status")
                 ])
-                ->leftJoin('coach_classrooms','coach_schedules.coach_classroom_id','=','coach_classrooms.id')
-                ->leftJoin('coaches','coach_classrooms.coach_id','=','coaches.id')
+                ->leftJoinSub($coach_classrooms, 'coach_classrooms', function($join){
+                    $join->on('coach_classrooms.id','coach_schedules.coach_classroom_id');
+                })
+                ->leftJoinSub($coaches, 'coaches', function($join){
+                    $join->on('coaches.id','coach_classrooms.coach_id');
+                })
                 ->leftJoin('classrooms','coach_classrooms.classroom_id','=','classrooms.id')
-                ->leftJoin('student_schedules','student_schedules.coach_schedule_id','=','coach_schedules.id')
+                ->leftJoinSub($student_schedules, 'student_schedules', function($join){
+                    $join->on('student_schedules.coach_schedule_id','coach_schedules.id');
+                })
                 ->leftJoin('sessions','student_schedules.session_id','=','sessions.id')
                 ->leftJoin('student_classrooms','student_classrooms.id','=','student_schedules.student_classroom_id')
                 ->leftJoin('students','students.id','=','student_classrooms.student_id')
