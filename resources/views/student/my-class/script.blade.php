@@ -53,10 +53,8 @@
                         ],
                     columnDefs: [
                         {
-                            targets: 0,
-                            searchable: false,
-                            orderable: false,
-                            className: "text-center"
+                            visible: false,
+                            targets: 3
                         },
                         {
                             targets: 1,
@@ -152,6 +150,21 @@
                     paging:true,
                     lengthChange:false,
                     bInfo:true,
+                    drawCallback: function ( settings ) {
+                        var api = this.api();
+                        var rows = api.rows( {page:'current'} ).nodes();
+                        var last = null;
+
+                        api.column(3, {page:'current'} ).data().each( function ( group, i ) {
+                            if ( last !== group ) {
+                                $(rows).eq( i ).before(
+                                    '<tr class="group"><td colspan="7">'+group+'</td></tr>'
+                                );
+
+                                last = group;
+                            }
+                        } );
+                    },
                     dom: '<"datatable-header"><tr><"datatable-footer"ip>',
                     language: {
                         search: '<span>Search:</span> _INPUT_',
@@ -190,10 +203,8 @@
                         ],
                     columnDefs: [
                         {
-                            targets: 0,
-                            searchable: false,
-                            orderable: false,
-                            className: "text-center"
+                            visible: false,
+                            targets: 3
                         },
                         {
                             targets: 1,
@@ -274,6 +285,21 @@
                     paging:true,
                     lengthChange:false,
                     bInfo:true,
+                    drawCallback: function ( settings ) {
+                        var api = this.api();
+                        var rows = api.rows( {page:'current'} ).nodes();
+                        var last = null;
+
+                        api.column(3, {page:'current'} ).data().each( function ( group, i ) {
+                            if ( last !== group ) {
+                                $(rows).eq( i ).before(
+                                    '<tr class="group"><td colspan="7">'+group+'</td></tr>'
+                                );
+
+                                last = group;
+                            }
+                        } );
+                    },
                     dom: '<"datatable-header"><tr><"datatable-footer"ip>',
                     language: {
                         search: '<span>Search:</span> _INPUT_',

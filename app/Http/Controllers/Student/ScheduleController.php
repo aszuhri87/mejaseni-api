@@ -527,9 +527,8 @@ class ScheduleController extends BaseMenu
                     "message"   => 'pengambilan jadwal tidak dapat lebih dari 2 kali sehari!'
                 ], 400);
             }
-            
-            $result = DB::transaction(function () use($request, $student_classroom) {
 
+            $result = DB::transaction(function () use($request, $student_classroom) {
 
                 $check_session = DB::table('student_schedules')
                     ->whereNull('student_schedules.deleted_at')
@@ -545,6 +544,7 @@ class ScheduleController extends BaseMenu
                     ])
                     ->whereNull('deleted_at')
                     ->first();
+
                 if(empty($session)){
                     $session = new Session;
                     $session->classroom_id = $request->classroom_id;
@@ -557,6 +557,40 @@ class ScheduleController extends BaseMenu
                     'session_id' => $session->id,
                     'coach_schedule_id' => $request->coach_schedule_id,
                 ]);
+
+                $getSessionStudent = DB::table('student_schedules')
+                    ->select([
+                        'student_schedules.*',
+                        'sessions.name as session',
+                        'coach_schedules.datetime',
+                    ])
+                    ->join('sessions','student_schedules.session_id','=','sessions.id')
+                    ->join('coach_schedules','student_schedules.coach_schedule_id','=','coach_schedules.id')
+                    ->where('student_schedules.student_classroom_id',$student_classroom->id)
+                    ->whereNull([
+                        'student_schedules.deleted_at',
+                        'sessions.deleted_at',
+                        'coach_schedules.deleted_at'
+                    ])
+                    ->orderBy('coach_schedules.datetime','asc')
+                    ->get();
+
+                foreach($getSessionStudent as $key => $value){
+                    if(($key+1) != $value->session){
+                        $session = DB::table('sessions')
+                            ->where([
+                                'classroom_id' => $request->classroom_id,
+                                'name' => ($key+1)
+                            ])
+                            ->whereNull('deleted_at')
+                            ->first();
+
+                        $student_schedule = StudentSchedule::find($value->id)
+                            ->update([
+                                'session_id' => $session->id
+                            ]);
+                    }
+                }
 
                 return $student_schedule;
             });
@@ -592,6 +626,40 @@ class ScheduleController extends BaseMenu
                     'student_classroom_id' => $student_classroom->id,
                     'coach_schedule_id' => $request->coach_schedule_id,
                 ])->delete();
+
+                $getSessionStudent = DB::table('student_schedules')
+                    ->select([
+                        'student_schedules.*',
+                        'sessions.name as session',
+                        'coach_schedules.datetime',
+                    ])
+                    ->join('sessions','student_schedules.session_id','=','sessions.id')
+                    ->join('coach_schedules','student_schedules.coach_schedule_id','=','coach_schedules.id')
+                    ->where('student_schedules.student_classroom_id',$student_classroom->id)
+                    ->whereNull([
+                        'student_schedules.deleted_at',
+                        'sessions.deleted_at',
+                        'coach_schedules.deleted_at'
+                    ])
+                    ->orderBy('coach_schedules.datetime','asc')
+                    ->get();
+
+                foreach($getSessionStudent as $key => $value){
+                    if(($key+1) != $value->session){
+                        $session = DB::table('sessions')
+                            ->where([
+                                'classroom_id' => $request->classroom_id,
+                                'name' => ($key+1)
+                            ])
+                            ->whereNull('deleted_at')
+                            ->first();
+
+                        $student_schedule = StudentSchedule::find($value->id)
+                            ->update([
+                                'session_id' => $session->id
+                            ]);
+                    }
+                }
 
                 return $student_schedule;
             });
@@ -665,6 +733,40 @@ class ScheduleController extends BaseMenu
                     'session_id' => $session->id,
                     'coach_schedule_id' => $request->new_coach_schedule_id,
                 ]);
+
+                $getSessionStudent = DB::table('student_schedules')
+                    ->select([
+                        'student_schedules.*',
+                        'sessions.name as session',
+                        'coach_schedules.datetime',
+                    ])
+                    ->join('sessions','student_schedules.session_id','=','sessions.id')
+                    ->join('coach_schedules','student_schedules.coach_schedule_id','=','coach_schedules.id')
+                    ->where('student_schedules.student_classroom_id',$student_classroom->id)
+                    ->whereNull([
+                        'student_schedules.deleted_at',
+                        'sessions.deleted_at',
+                        'coach_schedules.deleted_at'
+                    ])
+                    ->orderBy('coach_schedules.datetime','asc')
+                    ->get();
+
+                foreach($getSessionStudent as $key => $value){
+                    if(($key+1) != $value->session){
+                        $session = DB::table('sessions')
+                            ->where([
+                                'classroom_id' => $request->classroom_id,
+                                'name' => ($key+1)
+                            ])
+                            ->whereNull('deleted_at')
+                            ->first();
+
+                        $student_schedule = StudentSchedule::find($value->id)
+                            ->update([
+                                'session_id' => $session->id
+                            ]);
+                    }
+                }
 
                 return $student_schedule;
             });

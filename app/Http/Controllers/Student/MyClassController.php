@@ -86,12 +86,15 @@ class MyClassController extends BaseMenu
                     'coach_schedules.datetime',
                     'coach_schedules.coach_name',
                     'coach_schedules.coach_id',
+                    'sessions.name as session',
                 ])
+                ->join('sessions','student_schedules.session_id','=','sessions.id')
                 ->joinSub($coach_schedule, 'coach_schedules', function ($join) {
                     $join->on('student_schedules.coach_schedule_id', '=', 'coach_schedules.id');
                 })
                 ->whereNull([
                     'student_schedules.deleted_at',
+                    'sessions.deleted_at'
                 ]);
 
             $classroom = DB::table('classrooms')
@@ -110,6 +113,7 @@ class MyClassController extends BaseMenu
                     'student_schedules.coach_name',
                     'student_schedules.coach_id',
                     'student_schedules.datetime',
+                    'student_schedules.session',
                     'classrooms.session_duration',
                     DB::raw("
                         (student_schedules.datetime::timestamp + (classrooms.session_duration * INTERVAL '1 MINUTES')) as datetime_interval
@@ -127,20 +131,6 @@ class MyClassController extends BaseMenu
                 ->orderBy('classrooms.name','asc')
                 ->orderBy('student_schedules.datetime','asc')
                 ->get();
-
-            $classroom_id = null;
-            $index = 0;
-            foreach ($data as $key => $value) {
-                if($value->classroom_id != $classroom_id){
-                    $classroom_id = $value->classroom_id;
-                    $index = 1;
-                    $value->session = $index;
-                    $index++;
-                }else{
-                    $value->session = $index;
-                    $index++;
-                }
-            }
 
             return DataTables::of($data)
                 ->addIndexColumn()
