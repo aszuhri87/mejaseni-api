@@ -320,9 +320,50 @@ class CoachController extends BaseMenu
             //     'deleted_at' => null
             // ]);
 
+            $getClassroomCoach = CoachClassroom::where('coach_id', $id)
+                ->select([
+                    'id',
+                ])
+                ->whereNotIn('classroom_id',$request->select ? $request->select : [])
+                ->get();
+
+            $ids = [];
+
+            foreach ($getClassroomCoach as $key => $value){
+                $ids[] = $value->id;
+            }
+
+            if(count($ids) > 0){
+
+                $student_schedule = DB::table('student_schedules')
+                    ->select([
+                        'student_schedules.coach_schedule_id',
+                    ])
+                    ->whereNull('deleted_at');
+
+                $cekSchedule = DB::table('coach_schedules')
+                    ->select([
+                        'coach_schedules.id'
+                    ])
+                    ->joinSub($student_schedule, 'student_schedule', function ($join) {
+                        $join->on('coach_schedules.id', '=', 'student_schedule.coach_schedule_id');
+                    })
+                    ->whereIn('coach_schedules.coach_classroom_id',$ids)
+                    ->whereNull('coach_schedules.deleted_at')
+                    ->count();
+
+                if($cekSchedule > 0){
+                    return response([
+                        "status"=>400,
+                        "data"  => $cekSchedule,
+                        "message"=> 'Terdapat pesanan pada kelas siswa!'
+                    ], 400);
+                }
+            }
+
             $result = CoachClassroom::where('coach_id', $id)
-            ->whereNotIn('classroom_id',$request->select ? $request->select : [])
-            ->delete();
+                ->whereNotIn('classroom_id',$request->select ? $request->select : [])
+                ->delete();
 
             if(!empty($request->select)){
                 foreach ($request->select as $key => $value) {

@@ -655,20 +655,12 @@
                     .done(function(res, xhr, meta) {
                         toastr.success(res.message, 'Success');
                         init_table.draw(false);
+
                         hideModal('modal-config');
                     })
                     .fail(function(res, error) {
                         if (res.status == 400 || res.status == 422) {
-                            $.each(res.responseJSON.errors, function(index, err) {
-                                if (Array.isArray(err)) {
-                                    $.each(err, function(index, val) {
-                                        toastr.error(val, 'Failed')
-                                    });
-                                }
-                                else {
-                                    toastr.error(err, 'Failed')
-                                }
-                            });
+                            toastr.error(res.responseJSON.message, 'Failed');
                         }
                         else {
                             toastr.error(res.responseJSON.message, 'Failed')
