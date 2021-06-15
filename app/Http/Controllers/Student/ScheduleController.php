@@ -485,6 +485,21 @@ class ScheduleController extends BaseMenu
     public function booking(Request $request)
     {
         try {
+            $cek_coach_schedule = DB::table('student_schedules')
+                ->where([
+                    'coach_schedule_id' => $request->coach_schedule_id
+                ])
+                ->whereNull('deleted_at')
+                ->first();
+
+            if(!empty($cek_coach_schedule)){
+                return response([
+                    "status"    => 400,
+                    "data"      => $cek_coach_schedule,
+                    "message"   => 'Schedule has been booked by another student!'
+                ], 400);
+            }
+
             $student_classroom = DB::table('coach_schedules')
                 ->select([
                     'student_classrooms.id',
@@ -680,7 +695,23 @@ class ScheduleController extends BaseMenu
     public function new_reschedule(Request $request)
     {
         try {
+            $cek_coach_schedule = DB::table('student_schedules')
+                ->where([
+                    'coach_schedule_id' => $request->new_coach_schedule_id
+                ])
+                ->whereNull('deleted_at')
+                ->first();
+
+            if(!empty($cek_coach_schedule)){
+                return response([
+                    "status"    => 400,
+                    "data"      => $cek_coach_schedule,
+                    "message"   => 'Schedule has been booked by another student!'
+                ], 400);
+            }
+
             $result = DB::transaction(function () use($request) {
+
                 $student_classroom = DB::table('coach_schedules')
                     ->select([
                         'student_classrooms.id',
