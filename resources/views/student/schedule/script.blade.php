@@ -240,6 +240,7 @@
                                 initCalendarReguler();
                             }
                             hideModal('modal-reschedule');
+                            hideModal('modal-cancel-schedule');
                         }
                     })
                     .fail(function(res, error) {
