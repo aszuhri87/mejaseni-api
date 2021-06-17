@@ -52,8 +52,10 @@
                                     return `Transaction Success`;
                                 }else if(data == 2){
                                     return `Schedule Confirmed`;
+                                }else if(data > 10){
+                                    return `Schedule Notification`;
                                 }else{
-                                    return `Reschedule`;
+                                    return 'Reschedule';
                                 }
                             }
                         },
