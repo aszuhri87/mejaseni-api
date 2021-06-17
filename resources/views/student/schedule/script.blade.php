@@ -368,13 +368,21 @@
                                         $('#form-cancel-schedule').attr('action',`{{ url('student/schedule/special-class/reschedule') }}`)
                                         $('#form-cancel-schedule').attr('method',`POST`);
 
-                                        if(data.status_reschedule == 1){
-                                            $('#btn-reschedule').show();
-                                            $('#btn-cancel-reschedule').show();
-                                        }
-                                        else{
-                                            $('#btn-reschedule').hide();
+                                        if(check_date){
+                                            if(data.status_reschedule == 1){
+                                                $('#btn-reschedule').show();
+                                                $('#btn-cancel-reschedule').show();
+                                                $('.show-hide').removeAttr('style');
+                                            }
+                                            else{
+                                                $('#btn-reschedule').hide();
+                                                $('#btn-cancel-reschedule').hide();
+                                                $('.show-hide').attr('style','display:none !important');
+                                            }
+                                        }else{
                                             $('#btn-cancel-reschedule').hide();
+                                            $('#btn-reschedule').hide();
+                                            $('.show-hide').attr('style','display:none !important');
                                         }
 
                                         showModal('modal-cancel-schedule');
@@ -387,12 +395,9 @@
 
                                 });
 
-                                if(moment(moment(info.event.extendedProps.tanggal).format('YYYY-MM-DD HH:mm:ss')).isAfter(moment().add(6, 'h').format('YYYY-MM-DD HH:mm:ss'))){
-                                    $('#btn-cancel-reschedule').show();
-                                }else{
-                                    $('#btn-cancel-reschedule').hide();
-                                }
                             }
+
+
                         }
                     }
                 });
@@ -524,13 +529,21 @@
                                         $('#form-cancel-schedule').attr('action',`{{ url('student/schedule/regular-class/reschedule') }}`)
                                         $('#form-cancel-schedule').attr('method',`POST`);
 
-                                        if(data.status_reschedule == 1){
-                                            $('#btn-reschedule').show();
-                                            $('#btn-cancel-reschedule').show();
-                                        }
-                                        else{
-                                            $('#btn-reschedule').hide();
+                                        if(check_date){
+                                            if(data.status_reschedule == 1){
+                                                $('#btn-reschedule').show();
+                                                $('#btn-cancel-reschedule').show();
+                                                $('.show-hide').removeAttr('style');
+                                            }
+                                            else{
+                                                $('#btn-reschedule').hide();
+                                                $('#btn-cancel-reschedule').hide();
+                                                $('.show-hide').attr('style','display:none !important');
+                                            }
+                                        }else{
                                             $('#btn-cancel-reschedule').hide();
+                                            $('#btn-reschedule').hide();
+                                            $('.show-hide').attr('style','display:none !important');
                                         }
 
                                         showModal('modal-cancel-schedule');
@@ -543,11 +556,7 @@
 
                                 });
 
-                                if(moment(moment(info.event.extendedProps.tanggal).format('YYYY-MM-DD HH:mm:ss')).isAfter(moment().add(6, 'h').format('YYYY-MM-DD HH:mm:ss'))){
-                                    $('#btn-cancel-reschedule').show();
-                                }else{
-                                    $('#btn-cancel-reschedule').hide();
-                                }
+
                             }
                         }
                     }
