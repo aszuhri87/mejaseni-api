@@ -17,9 +17,9 @@ class Income extends Model
 
     protected $fillable = [
         'session_video_id',
-        'classroom_id',
+        'student_schedule_id',
         'coach_id',
-        'transaction_id',
+        'formula',
         'amount'
     ];
 

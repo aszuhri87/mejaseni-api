@@ -167,33 +167,14 @@ class PaymentController extends Controller
                     ->get();
 
                 foreach ($carts as $key_cart => $cart) {
-                    if($cart->type_class == 1){
-                        $coach_classrooms = DB::table('coach_classrooms')
-                            ->where('classroom_id', $cart->classroom_id)
-                            ->whereNull('deleted_at')
-                            ->get();
-
-                        if(count($coach_classrooms) > 0){
-                            $salary = ((int)$cart->price * 0.45) / count($coach_classrooms);
-
-                            foreach ($coach_classrooms as $key_coach_classroom => $coach_classroom) {
-                                Income::create([
-                                    'classroom_id' => $cart->classroom_id,
-                                    'coach_id' => $coach_classroom->coach_id,
-                                    'transaction_id' => $transaction->id,
-                                    'amount' => $salary,
-                                ]);
-                            }
-                        }
-                    }else{
-
+                    if($cart->type_class != 1){
                         $salary = (int)$cart->price * 0.3;
 
                         Income::create([
                             'session_video_id' => $cart->session_video_id,
                             'coach_id' => $cart->session_video_coach_id,
-                            'transaction_id' => $transaction->id,
                             'amount' => $salary,
+                            'formula' => "{$cart->price}*0.3",
                         ]);
                     }
                 }

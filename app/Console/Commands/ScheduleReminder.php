@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 use App\Models\StudentNotification;
 use App\Models\CoachNotification;
+use App\Models\Income;
 
 use Mail;
 use DateTime;
@@ -124,6 +125,8 @@ class ScheduleReminder extends Command
                     'coaches.email as coach_email',
                     'coaches.name as coach_name',
                     'classrooms.name as classroom',
+                    'classrooms.price as price_classroom',
+                    'classrooms.session_total',
                     'status_schedules.*',
                 ])
                 ->joinSub($coach_classrooms, 'coach_classrooms', function($join){
@@ -157,6 +160,18 @@ class ScheduleReminder extends Command
                 $schedule->message = $messages[$schedule->status];
 
                 DB::transaction(function () use($schedule){
+                    if($schedule->status == 1){
+
+                        $salary = ($schedule->price_classroom / $schedule->session_total) * 0.45;
+
+                        Income::create([
+                            'student_schedule_id' => $schedule->student_schedule_id,
+                            'coach_id' => $schedule->coach_id,
+                            'amount' => $salary,
+                            'formula' => "({$schedule->price_classroom}/{$schedule->session_total})*0.45",
+                        ]);
+                    }
+
                     CoachNotification::create([
                         'coach_id' => $schedule->coach_id,
                         'coach_schedule_id' => $schedule->id,
