@@ -41,8 +41,6 @@ class BankAccountController extends BaseMenu
             $validatedData = $request->validate([
                 'bank' => [
                     'required',
-                    Rule::unique(BankAccount::class, 'bank')
-                        ->ignore($id),
                     'max:255'
                 ],
                 'bank_number' => [

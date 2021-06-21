@@ -2,6 +2,9 @@
     var Page = function() {
         var _componentPage = function(){
             let check_init_filter = false;
+            let package_type = null;
+            let init_class_sub_category = null;
+            let init_class_category = null;
             let month = new Array();
                 month['01'] = 'Januari';
                 month['02'] = 'Februari';
@@ -135,9 +138,9 @@
                     $('.btn-filter').addClass('btn-outline-primary').removeClass('btn-primary');
                     $(this).addClass('btn-primary').removeClass('btn-outline-primary');
 
-                    let package_type = $(this).data('package_type');
-                    let init_class_sub_category = $('#init_class_sub_category').val();
-                    let init_class_category = $('#init_class_category').val();
+                    package_type = $(this).data('package_type');
+                    init_class_sub_category = $('#init_class_sub_category').val();
+                    init_class_category = $('#init_class_category').val();
 
                     $.ajax({
                         url: `{{ url('student/new-package/get-package') }}`,
@@ -626,6 +629,11 @@
                     $.ajax({
                         url: $(this).attr('href'),
                         type: `GET`,
+                        data: {
+                            package_type : package_type,
+                            init_class_sub_category : init_class_sub_category,
+                            init_class_category : init_class_category,
+                        }
                     })
                     .done(function(res, xhr, meta) {
                         let element = ``;
