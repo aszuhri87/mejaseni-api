@@ -54,15 +54,19 @@ class BankAccountController extends BaseMenu
 
             $getAccount = BankAccount::where('coach_id',$id)->first();
 
-            if($getAccount->bank_number != $request->bank_number){
-                $check = BankAccount::where('bank_number',$request->bank_number)->first();
+            if(!empty($getAccount)){
 
-                if(!empty($check)){
-                    return response([
-                        "status"    => 400,
-                        "data"      => $check,
-                        "message"   => 'Bank number already exist!'
-                    ], 400);
+                if($getAccount->bank_number != $request->bank_number){
+
+                    $check = BankAccount::where('bank_number',$request->bank_number)->first();
+
+                    if(!empty($check)){
+                        return response([
+                            "status"    => 400,
+                            "data"      => $check,
+                            "message"   => 'Bank number already exist!'
+                        ], 400);
+                    }
                 }
             }
 
