@@ -45,8 +45,6 @@ class BankAccountController extends BaseMenu
                 ],
                 'bank_number' => [
                     'required',
-                    Rule::unique(BankAccount::class, 'bank_number')
-                        ->ignore($id)
                 ],
                 'name_account' => [
                     'required',
@@ -54,7 +52,23 @@ class BankAccountController extends BaseMenu
                 ]
             ]);
 
+            $getAccount = BankAccount::where('coach_id',$id)->first();
+
+            if($getAccount->bank_number != $request->bank_number){
+                $check = BankAccount::where('bank_number',$request->bank_number)->first();
+
+                if(!empty($check)){
+                    return response([
+                        "status"    => 400,
+                        "data"      => $check,
+                        "message"   => 'Bank number already exist!'
+                    ], 400);
+                }
+            }
+
             $result = DB::transaction(function () use ($request,$id){
+
+
                 $update = BankAccount::updateOrCreate(
                     ['coach_id' => $id],
                     [
