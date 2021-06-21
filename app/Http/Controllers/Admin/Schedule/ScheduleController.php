@@ -11,6 +11,8 @@ use App\Models\MasterLesson;
 use App\Models\CoachNotification;
 use App\Models\StudentNotification;
 
+use App\Libraries\SocketIO;
+
 use Storage;
 use Auth;
 
@@ -208,10 +210,15 @@ class ScheduleController extends BaseMenu
                         ]);
 
                         event(new \App\Events\StudentNotification($notification, $data->student_id));
+
+                        SocketIO::message($data->student_id, 'notification_'.$data->student_id, $notification);
                     }
 
                     event(new \App\Events\CoachNotification($notification, $data->coach_id));
                     event(new \App\Events\AdminNotification($notification));
+
+                    SocketIO::message($data->coach_id, 'notification_'.$data->coach_id, $notification);
+                    SocketIO::message('admin', 'notification_admin', $notification);
                 });
             }
 
@@ -484,10 +491,15 @@ class ScheduleController extends BaseMenu
                     ]);
 
                     event(new \App\Events\StudentNotification($notification, $data->student_id));
+
+                    SocketIO::message($data->student_id, 'notification_'.$data->student_id, $notification);
                 }
 
                 event(new \App\Events\CoachNotification($notification, $data->coach_id));
                 event(new \App\Events\AdminNotification($notification));
+
+                SocketIO::message($data->coach_id, 'notification_'.$data->coach_id, $notification);
+                SocketIO::message('admin', 'notification_admin', $notification);
             });
 
             return response([
@@ -531,6 +543,9 @@ class ScheduleController extends BaseMenu
 
                 event(new \App\Events\CoachNotification($notification, $data->coach_id));
                 event(new \App\Events\AdminNotification($notification));
+
+                SocketIO::message($data->coach_id, 'notification_'.$data->coach_id, $notification);
+                SocketIO::message('admin', 'notification_admin', $notification);
             });
 
             return response([

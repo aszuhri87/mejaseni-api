@@ -12,6 +12,8 @@ use App\Models\CoachNotification;
 
 use App\Exports\IncomeExport;
 
+use App\Libraries\SocketIO;
+
 use DataTables;
 use Storage;
 use Auth;
@@ -210,6 +212,8 @@ class CoachController extends BaseMenu
                 ]);
 
                 event(new \App\Events\CoachNotification($notification, $data->coach_id));
+
+                SocketIO::message($data->coach_id, 'notification_'.$data->coach_id, $notification);
 
                 return $data;
             });

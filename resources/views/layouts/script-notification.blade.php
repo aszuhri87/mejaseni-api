@@ -1,5 +1,5 @@
-<script src="{{ asset('/js/app.js') }}"></script>
-<script type="text/javascript">
+<script src="https://cdn.socket.io/3.1.3/socket.io.min.js"></script>
+<script>
     var Notification = function() {
         var _componentNotification = function(){
 
@@ -48,25 +48,38 @@
                 })
             },
             initSocket = () => {
+                const server_url = "https://client.socket.var-x.id";
+
+                const socket = io(server_url, {
+                    auth: {
+                        token: "{{config('socket.token')}}",
+                    },
+                    query: {
+                        @if(Auth::guard('student')->check())
+                            user_id: "{{Auth::guard('student')->user()->id}}"
+                        @elseif(Auth::guard('coach')->check())
+                            user_id: "{{Auth::guard('coach')->user()->id}}"
+                        @else
+                            user_id: "{{Auth::guard('admin')->user()->id}}"
+                        @endif
+                    }
+                });
+
                 @if(Auth::guard('student')->check())
-                    Echo.channel('laravel_database_student-notification')
-                        .listen('.student.notification.{{Auth::guard('student')->user()->id}}', e => {
-                            initNotification();
-                        })
+                    socket.on("{{config('socket.token')}}_notification_{{Auth::guard('student')->user()->id}}", function (data) {
+                        initNotification();
+                    });
                 @elseif(Auth::guard('coach')->check())
-                    Echo.channel('laravel_database_coach-notification')
-                        .listen('.coach.notification.{{Auth::guard('coach')->user()->id}}', e => {
-                            initNotification();
-                        })
+                    socket.on("{{config('socket.token')}}_notification_{{Auth::guard('coach')->user()->id}}", function (data) {
+                        initNotification();
+                    });
                 @else
-                    Echo.channel('laravel_database_admin-notification')
-                        .listen('.admin.notification', e => {
-                            initNotification();
-                        })
+                    socket.on("{{config('socket.token')}}_notification_admin", function (data) {
+                        initNotification();
+                    });
                 @endif
             }
         };
-
         return {
             init: function(){
                 _componentNotification();

@@ -12,6 +12,8 @@ use App\Models\StudentClassroom;
 use App\Models\StudentNotification;
 use App\Models\Income;
 
+use App\Libraries\SocketIO;
+
 use Auth;
 use Redirect;
 use Http;
@@ -185,6 +187,10 @@ class PaymentController extends Controller
             event(new \App\Events\StudentNotification($data, $transaction->student_id));
             event(new \App\Events\PaymentNotification(true, $transaction->id));
             event(new \App\Events\AdminNotification($data));
+
+            SocketIO::message($transaction->student_id, 'notification_'.$transaction->student_id, $data);
+            SocketIO::message($transaction->student_id, 'payment_'.$transaction->id, $data);
+            SocketIO::message('admin', 'notification_admin', $data);
         }
 
         return true;
