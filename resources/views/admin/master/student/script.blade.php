@@ -49,11 +49,11 @@
                                 targets: 1,
                                 data: "name",
                                 render: function(data, type, full, meta) {
-
+                                    let image_check = /^https?:\/\//.test(full.image);
                                     return `
                                         <div class="d-flex align-items-center">
                                             <div class="mr-5">
-                                                <img src="${full.image_url}" class="rounded" width="50" height="50"/>
+                                                <img src="${image_check ? full.image : full.image_url}" class="rounded" width="50" height="50"/>
                                             </div>
                                             <div class="d-flex flex-column font-weight-bold">
                                                 <span>${data}</span>
