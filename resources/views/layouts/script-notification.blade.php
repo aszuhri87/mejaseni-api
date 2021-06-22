@@ -1,4 +1,4 @@
-<script src="https://cdn.socket.io/3.1.3/socket.io.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.4.0/socket.io.js"></script>
 <script>
     var Notification = function() {
         var _componentNotification = function(){
@@ -51,10 +51,8 @@
                 const server_url = "https://client.socket.var-x.id";
 
                 const socket = io(server_url, {
-                    auth: {
-                        token: "{{config('socket.token')}}",
-                    },
                     query: {
+                        token: "{{config('socket.token')}}",
                         @if(Auth::guard('student')->check())
                             user_id: "{{Auth::guard('student')->user()->id}}"
                         @elseif(Auth::guard('coach')->check())
