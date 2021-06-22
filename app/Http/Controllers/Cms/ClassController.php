@@ -117,10 +117,6 @@ class ClassController extends Controller
                 ->orderBy('sub_classroom_categories.number', 'asc')
                 ->get();
 
-            $is_registered = DB::table('carts')
-                    ->where('classroom_id','!=',null)
-                    ->whereNull('deleted_at');
-
             $classroom_feedback = DB::table('classroom_feedback')
                 ->select([
                     'classroom_feedback.classroom_id',
@@ -135,7 +131,6 @@ class ClassController extends Controller
                     'classrooms.*',
                     'classroom_categories.name as category',
                     'sub_classroom_categories.name as sub_category',
-                    'is_registered.id as is_registered',
                     DB::raw("CONCAT('{$path}',classrooms.image) as image_url"),
                     DB::raw("(
                         CASE
@@ -151,9 +146,6 @@ class ClassController extends Controller
                 ])
                 ->leftJoin('classroom_categories','classroom_categories.id','=','classrooms.classroom_category_id')
                 ->leftJoin('sub_classroom_categories','sub_classroom_categories.id','=','classrooms.sub_classroom_category_id')
-                ->leftJoinSub($is_registered, 'is_registered', function($join){
-                    $join->on('classrooms.id','is_registered.classroom_id');
-                })
                 ->leftJoinSub($classroom_feedback, 'classroom_feedback', function ($join) {
                     $join->on('classrooms.id', '=', 'classroom_feedback.classroom_id');
                 })
@@ -284,6 +276,7 @@ class ClassController extends Controller
                     ])
                     ->where('classroom_id',$classroom_id)
                     ->leftJoin('tools','classroom_tools.tool_id','=','tools.id')
+                    ->whereNull('classroom_tools.deleted_at')
                     ->get();
 
             $tools_html = $this->_get_tools_html($tools);
@@ -945,7 +938,7 @@ class ClassController extends Controller
                           <li class="tab-detail" data-id="'. $classroom->id .'" href="tab-coach">Coach</li>
                           <li class="tab-detail" data-id="'. $classroom->id .'" href="tab-tools">Tools</li>
                         </ul>
-                        <div id="description">
+                        <div id="description-'. $classroom->id .'">
                             <div class="content-tab-detail" style="">
                                 <div class="desc__class-tab my-4">
                                   <p class="text-justify readmore">
@@ -1043,7 +1036,7 @@ class ClassController extends Controller
                             <li class="active tab-detail" data-id="'. $master_lesson->id.'" href="tab-master-lession-description">Deskripsi</li>
                             <li class="tab-detail" data-id="'. $master_lesson->id.'" href="tab-master-lession-guest-start">Guest Star</li>
                         </ul>
-                        <div id="description">
+                        <div id="description-'. $classroom->id .'">
                             <div class="desc__class-tab my-4">
                                 <p class="text-justify readmore">'.(isset($master_lesson->description) ? $master_lesson->description:"").'</p>
                             </div>

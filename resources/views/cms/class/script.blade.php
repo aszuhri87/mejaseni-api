@@ -113,10 +113,13 @@
             var splide_sub_category;
             var splide_classroom;
             var splide_class;
+            var splide_index = 0;
+
             $(document).ready(function () {
 
                 @if(!$regular_classrooms->isEmpty())
-                splide();
+                splide()
+                splide_class.go(splide_index)
                 @endif
 
                 @if(!$classroom_categories->isEmpty())
@@ -263,7 +266,7 @@
 
                         $("#classroom-content").html(html)
                     }
-                    
+
                 })
                 .fail(function(res, error) {
                     toastr.error(res.responseJSON.message, 'Failed')
@@ -297,6 +300,7 @@
                         $("#class-content-modal").html(res.data.list_classroom_html)
                         TabDetailListener()
                         splide()
+                        splide_class.go(splide_index)
                         initReadMore()
                     }else{
                         $("#class-content").html(`
@@ -321,9 +325,10 @@
                 })
                 .done(function(res, xhr, meta) {
                     splide_class.destroy()
-                    $("#description").html(res.data.html)
+                    $("#description-"+classroom_id).html(res.data.html)
                     splide()
                     initReadMore()
+                    splide_class.go(splide_index)
                 })
                 .fail(function(res, error) {
                     toastr.error(res.responseJSON.message, 'Failed')
@@ -341,8 +346,9 @@
                 })
                 .done(function(res, xhr, meta) {
                     splide_class.destroy()
-                    $("#description").html(res.data.html)
+                    $("#description-"+classroom_id).html(res.data.html)
                     splide()
+                    splide_class.go(splide_index)
                 })
                 .fail(function(res, error) {
                     toastr.error(res.responseJSON.message, 'Failed')
@@ -360,8 +366,9 @@
                 })
                 .done(function(res, xhr, meta) {
                     splide_class.destroy()
-                    $("#description").html(res.data.html)
+                    $("#description-"+classroom_id).html(res.data.html)
                     splide()
+                    splide_class.go(splide_index)
                 })
                 .fail(function(res, error) {
                     toastr.error(res.responseJSON.message, 'Failed')
@@ -379,8 +386,9 @@
                 })
                 .done(function(res, xhr, meta) {
                     splide_class.destroy()
-                    $("#description").html(res.data.html)
+                    $("#description-"+classroom_id).html(res.data.html)
                     splide()
+                    splide_class.go(splide_index)
                 })
                 .fail(function(res, error) {
                     toastr.error(res.responseJSON.message, 'Failed')
@@ -397,8 +405,9 @@
                 })
                 .done(function(res, xhr, meta) {
                     splide_class.destroy()
-                    $("#description").html(res.data.html)
+                    $("#description-"+classroom_id).html(res.data.html)
                     splide()
+                    splide_class.go(splide_index)
                 })
                 .fail(function(res, error) {
                     toastr.error(res.responseJSON.message, 'Failed')
@@ -485,6 +494,9 @@
                     }
                 }).mount();
 
+                splide_class.on( 'moved', function() {
+                    splide_index = splide_class.index;
+                } );
 
                 // if(splide_sub_category){
                 //     splide_sub_category.destroy()

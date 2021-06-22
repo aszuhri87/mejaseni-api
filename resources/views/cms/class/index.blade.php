@@ -48,7 +48,7 @@
                                         <li class="tab-detail" data-id="{{ $regular_classroom->id }}" href="tab-tools">Tools</li>
                                     </ul>
 
-                                    <div id="description">
+                                    <div id="description-{{ $regular_classroom->id }}">
                                         <div class="content-tab-detail" style="">
                                             <div class="desc__class-tab my-4">
                                                 <p class="text-justify readmore">
