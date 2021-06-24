@@ -108,7 +108,6 @@
                                                     <div class="row-center-start w-80">
                                                         <div class="circle-border-icon mr-3">
                                                             <img src="{{ asset('cms/assets/img/svg/Play1.svg') }}" alt="">
-
                                                         </div>
                                                         <span class="title__video-item">{{ isset($video_course_item->name) ? $video_course_item->name:''}}</span>
                                                     </div>

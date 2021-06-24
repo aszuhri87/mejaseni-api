@@ -137,10 +137,10 @@ class StoreDetailController extends Controller
                 'session_video_feedback.deleted_at',
                 'students.deleted_at'
             ])
-            ->get();      
+            ->get();
 
         return view('cms.store-detail.index', [
-            "company" => $company, 
+            "company" => $company,
             "branchs" => $branchs,
             "banner" => $banner,
             "video_course_items" => $video_course_items,
@@ -152,12 +152,12 @@ class StoreDetailController extends Controller
         ]);
     }
 
-    
+
     public function get_videos($id)
     {
-        
+
         try {
-            
+
 
             $video_course_item_open_videos = DB::table('theory_videos')
                                                     ->select([
@@ -219,6 +219,6 @@ class StoreDetailController extends Controller
         }
 
         return $html;
-                                
+
     }
 }

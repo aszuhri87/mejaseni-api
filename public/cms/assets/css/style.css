@@ -22171,8 +22171,8 @@ body .class-owned__wrapper .class-owned-selected-overlay {
 	max-width: 100%;
 	padding: 2px 0;
 	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap
+	/* text-overflow: ellipsis; */
+	/* white-space: nowrap; */
 }
 
 .playlist__wrapper .unlocked {
