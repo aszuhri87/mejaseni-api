@@ -73,7 +73,7 @@ class QuestionController extends BaseMenu
                 $answer = $request->answer;
                 Mail::send('mail.reply', compact('question', 'answer','name'), function($message) use ($request){
                     $message->to($request->email, $request->name)
-                        ->from(config('mail.from.address'), config('mail.from.name'))
+                        ->from('info@mejaseni.com', 'MEJASENI')
                         ->subject('FAQ');
                 });
 
@@ -81,7 +81,7 @@ class QuestionController extends BaseMenu
                     'is_reply' => true
                 ]);
             });
-            
+
 
             return response([
                 "message"   => 'Successfully send!'
@@ -91,7 +91,7 @@ class QuestionController extends BaseMenu
             return response([
                 "message"=> "Internal Server Error"
             ]);
-         } 
+         }
     }
 
     /**
