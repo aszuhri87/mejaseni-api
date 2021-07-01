@@ -39,6 +39,9 @@
                         if(moment(start).isSameOrAfter(end)){
                             $('#form-schedule').trigger("reset");
 
+                            init_classroom.set('')
+                            init_platform.set('')
+
                             $('.timepicker').val(moment(info.start).format('HH:mm:ss') == '00:00:00' ? moment().format('HH:mm:ss') : moment(info.start).format('HH:mm:ss'))
                             $('.datepicker-with-stardate').val(moment(info.start).format('D MMMM YYYY'))
 

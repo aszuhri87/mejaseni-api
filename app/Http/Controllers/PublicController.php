@@ -428,6 +428,10 @@ class PublicController extends Controller
     public function get_classroom_coach()
     {
         try {
+            $coach_classrooms = DB::table('coach_classrooms')
+                ->where('coach_classrooms.coach_id', Auth::guard('coach')->id())
+                ->whereNull('deleted_at');
+
             $result = DB::table('classrooms')
                 ->select([
                     'classrooms.id',
@@ -435,8 +439,10 @@ class PublicController extends Controller
                     'classroom_category_id',
                     'sub_classroom_category_id',
                 ])
-                ->join('coach_classrooms','coach_classrooms.classroom_id','classrooms.id')
-                ->where('coach_classrooms.coach_id',Auth::guard('coach')->id())
+                ->joinSub($coach_classrooms, 'coach_classrooms', function($join){
+                    $join->on('coach_classrooms.classroom_id','classrooms.id');
+                })
+                ->where('coach_classrooms.coach_id', Auth::guard('coach')->id())
                 ->whereNull('classrooms.deleted_at')
                 ->distinct()
                 ->orderBy('classrooms.name','asc')
