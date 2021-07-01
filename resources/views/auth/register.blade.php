@@ -96,28 +96,28 @@
                             <!--begin::Form group-->
                             <div class="form-group">
                                 <label class="font-size-h6 font-weight-bolder text-dark">Nama</label>
-                                <input required class="form-control form-control-solid h-auto py-7 px-6 rounded-lg border-0" type="text" name="name" autocomplete="off" />
+                                <input required class="form-control form-control-solid h-auto py-7 px-6 rounded-lg border-0" type="text" value="{{old('name')}}" name="name" autocomplete="off" />
                             </div>
                             <!--end::Form group-->
 
                             <!--begin::Form group-->
                             <div class="form-group">
                                 <label class="font-size-h6 font-weight-bolder text-dark">Nomor Hp</label>
-                                <input required class="form-control form-control-solid h-auto py-7 px-6 rounded-lg border-0" type="text" name="phone" autocomplete="off" />
+                                <input required class="form-control form-control-solid h-auto py-7 px-6 rounded-lg border-0" type="text" value="{{old('phone')}}" name="phone" autocomplete="off" />
                             </div>
                             <!--end::Form group-->
 
                             <!--begin::Form group-->
                             <div class="form-group">
                                 <label class="font-size-h6 font-weight-bolder text-dark">Email</label>
-                                <input required class="form-control form-control-solid h-auto py-7 px-6 rounded-lg border-0" type="email" name="email" autocomplete="off" />
+                                <input required class="form-control form-control-solid h-auto py-7 px-6 rounded-lg border-0" type="email" value="{{old('email')}}" name="email" autocomplete="off" />
                             </div>
                             <!--end::Form group-->
 
                             <!--begin::Form group-->
                             <div class="form-group">
                                 <label class="font-size-h6 font-weight-bolder text-dark">Username</label>
-                                <input required class="form-control form-control-solid h-auto py-7 px-6 rounded-lg border-0" type="text" name="username" autocomplete="off" />
+                                <input required class="form-control form-control-solid h-auto py-7 px-6 rounded-lg border-0" type="text" value="{{old('username')}}" name="username" autocomplete="off" />
                             </div>
                             <!--end::Form group-->
 

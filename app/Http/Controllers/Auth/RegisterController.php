@@ -55,7 +55,15 @@ class RegisterController extends Controller
             ->where('username', $request->username)
             ->first();
 
-        if($username_check){
+        $username_admin_check = DB::table('admins')
+            ->where('username', $request->username)
+            ->first();
+
+        $username_coach_check = DB::table('coaches')
+            ->where('username', $request->username)
+            ->first();
+
+        if($username_check || $username_admin_check || $username_coach_check || !preg_match('/^[a-zA-Z0-9._]+$/', $request->username)){
             return Redirect::back()
                 ->withErrors(['message' => 'Register gagal!, username tidak tersedia.'])
                 ->withInput();
