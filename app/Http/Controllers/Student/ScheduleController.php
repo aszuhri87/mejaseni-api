@@ -451,7 +451,7 @@ class ScheduleController extends BaseMenu
                     date('Y-m-d', strtotime($date_transaction->datetime . '+2 month')) > date('Y-m-d') &&
                     $student_schedule < $result->session_total
                 ) {
-                    $remaining = (intval($result->session_total - $student_schedule))-(intval($result->session_total/2));
+                    $remaining = (intval($result->session_total - $student_schedule));
                 }
                 else{
                     $remaining = 0;
