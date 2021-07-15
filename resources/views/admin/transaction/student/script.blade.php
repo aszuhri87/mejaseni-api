@@ -61,10 +61,11 @@
                             className: "text-center",
                             data:"status",
                             render: function(data, type, full, meta){
-                                if(data == 2){
+                                if(full.expired){
+                                    return `<span class="label label-secondary label-pill label-inline mr-2">Exxpired</span>`
+                                }else if(data == 2){
                                     return `<span class="label label-success label-pill label-inline mr-2">Success</span>`;
-                                }
-                                else if(data == 1){
+                                }else if(data == 1){
                                     return `<span class="label label-warning label-pill label-inline mr-2">Waiting</span>`;
                                 }else{
                                     return `<span class="label label-danger label-pill label-inline mr-2">Cancel</span>`
@@ -93,7 +94,7 @@
                             }
                         },
                     ],
-                    order: [[1, 'asc']],
+                    order: [[1, 'desc']],
                     searching: true,
                     paging:true,
                     lengthChange:false,

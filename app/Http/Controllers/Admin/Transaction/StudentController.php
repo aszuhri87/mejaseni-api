@@ -35,6 +35,10 @@ class StudentController extends BaseMenu
     public function dt()
     {
         try {
+            date_default_timezone_set("Asia/Jakarta");
+
+            $now = date('Y-m-d H:i:s');
+
             $data = DB::table('transactions')
                 ->select([
                     'transactions.id',
@@ -48,9 +52,16 @@ class StudentController extends BaseMenu
                         WHEN transactions.deleted_at IS NOT NULL AND transactions.status = 0
                             THEN 0
                         ELSE transactions.status
-                    END as status")
+                    END as status"),
+                    DB::raw("CASE
+                        WHEN transactions.datetime::timestamp + INTERVAL '1 DAYS' < '$now'::timestamp
+                            AND transactions.status != 2
+                            THEN true
+                        ELSE false
+                    END expired"),
                 ])
                 ->leftJoin('students', 'students.id','=','transactions.student_id')
+                ->orderBy('transactions.datetime', 'asc')
                 ->get();
 
             return DataTables::of($data)->addIndexColumn()->make(true);
