@@ -232,7 +232,7 @@
                                                                 <span>${data.session_total} Sesi </span><span>@${data.session_duration}Menit</span>
                                                             </div>
                                                             `;
-                                                            if(!data.is_buy){
+                                                            // if(!data.is_buy){
                                                                 element +=`
                                                                 <div id="${data.classroom_id}">
                                                                     <button type="button" class="btn btn-primary btn-registration" data-type="1" data-id="${data.classroom_id}" data-classroom_name="${data.classroom_name}" data-price="${data.price}">
@@ -246,7 +246,7 @@
                                                                         Daftar Kelas
                                                                     </button>
                                                                 </div>`;
-                                                            }
+                                                            // }
                                                     element+=`
                                                         </div>
                                                     </div>
@@ -455,7 +455,7 @@
                                                             <span>${data.session_total} Sesi </span><span>@${data.session_duration}Menit</span>
                                                         </div>
                                                         `;
-                                                        if(!data.is_buy){
+                                                        // if(!data.is_buy){
                                                             element +=`
                                                             <div id="${data.classroom_id}">
                                                                 <button type="button" class="btn btn-primary btn-registration" data-type="1" data-id="${data.classroom_id}" data-classroom_name="${data.classroom_name}" data-price="${data.price}">
@@ -469,7 +469,7 @@
                                                                     Daftar Kelas
                                                                 </button>
                                                             </div>`;
-                                                        }
+                                                        // }
                                                 element+=`
                                                     </div>
                                                 </div>
@@ -715,7 +715,7 @@
                                                             <span>${data.session_total} Sesi </span><span>@${data.session_duration}Menit</span>
                                                         </div>
                                                         `;
-                                                        if(!data.is_buy){
+                                                        // if(!data.is_buy){
                                                             element +=`
                                                             <div id="${data.classroom_id}">
                                                                 <button type="button" class="btn btn-primary btn-registration" data-type="1" data-id="${data.classroom_id}" data-classroom_name="${data.classroom_name}" data-price="${data.price}">
@@ -729,7 +729,7 @@
                                                                     Daftar Kelas
                                                                 </button>
                                                             </div>`;
-                                                        }
+                                                        // }
                                                 element+=`
                                                     </div>
                                                 </div>
@@ -903,7 +903,7 @@
                                                                     <span>${data.session_total} Sesi </span><span>@${data.session_duration}Menit</span>
                                                                 </div>
                                                                 `;
-                                                                if(!data.is_buy){
+                                                                // if(!data.is_buy){
                                                                     element +=`
                                                                     <div id="${data.classroom_id}">
                                                                         <button type="button" class="btn btn-primary btn-registration" data-type="1" data-id="${data.classroom_id}" data-classroom_name="${data.classroom_name}" data-price="${data.price}">
@@ -917,7 +917,7 @@
                                                                             Daftar Kelas
                                                                         </button>
                                                                     </div>`;
-                                                                }
+                                                                // }
                                                         element+=`
                                                             </div>
                                                         </div>
@@ -1096,7 +1096,7 @@
                                                                     <span>${data.session_total} Sesi </span><span>@${data.session_duration}Menit</span>
                                                                 </div>
                                                                 `;
-                                                                if(!data.is_buy){
+                                                                // if(!data.is_buy){
                                                                     element +=`
                                                                     <div id="${data.classroom_id}">
                                                                         <button type="button" class="btn btn-primary btn-registration" data-type="1" data-id="${data.classroom_id}" data-classroom_name="${data.classroom_name}" data-price="${data.price}">
@@ -1110,7 +1110,7 @@
                                                                             Daftar Kelas
                                                                         </button>
                                                                     </div>`;
-                                                                }
+                                                                // }
                                                         element+=`
                                                             </div>
                                                         </div>
@@ -1392,7 +1392,7 @@
                                                             <span> <h4>Rp. ${numeral(data.price).format('0,0')},-</h4> </span>
                                                         </div>
                                                         `;
-                                                        if(!data.is_buy && !data.is_exist_cart){
+                                                        if(!data.is_exist_cart){
                                                             element +=`
                                                             <div id="${data.id}">
                                                                 <button type="button" class="btn btn-primary btn-registration-master-lesson" data-type="2" data-id="${data.id}" data-master_lesson_name="${data.name}" data-price="${data.price}">
@@ -1705,7 +1705,7 @@
                                                             <span>${data.session_total} Sesi </span><span>@${data.session_duration}Menit</span>
                                                         </div>
                                                         `;
-                                                        if(!data.is_buy){
+                                                        // if(!data.is_buy){
                                                             element +=`
                                                             <div id="${data.classroom_id}">
                                                                 <button type="button" class="btn btn-primary btn-registration" data-type="1" data-id="${data.classroom_id}" data-classroom_name="${data.classroom_name}" data-price="${data.price}">
@@ -1719,7 +1719,7 @@
                                                                     Daftar Kelas
                                                                 </button>
                                                             </div>`;
-                                                        }
+                                                        // }
                                                 element+=`
                                                     </div>
                                                 </div>
@@ -1918,7 +1918,7 @@
                                                             <span>${data.session_total} Sesi </span><span>@${data.session_duration}Menit</span>
                                                         </div>
                                                         `;
-                                                        if(!data.is_buy){
+                                                        // if(!data.is_buy){
                                                             element +=`
                                                             <div id="${data.classroom_id}">
                                                                 <button type="button" class="btn btn-primary btn-registration" data-type="1" data-id="${data.classroom_id}" data-classroom_name="${data.classroom_name}" data-price="${data.price}">
@@ -1932,7 +1932,7 @@
                                                                     Daftar Kelas
                                                                 </button>
                                                             </div>`;
-                                                        }
+                                                        // }
                                                         element+=`
                                                     </div>
                                                 </div>
@@ -2228,7 +2228,7 @@
                                                         <div class="pt-3">
                                                             <span>${data.session_total} Sesi </span><span>@${data.session_duration}Menit</span>
                                                         </div>`;
-                                                        if(!data.is_buy){
+                                                        // if(!data.is_buy){
                                                         element +=`
                                                             <div id="${data.classroom_id}">
                                                                 <button type="button" class="btn btn-primary btn-registration" data-type="1" data-id="${data.classroom_id}" data-classroom_name="${data.classroom_name}" data-price="${data.price}">
@@ -2242,7 +2242,7 @@
                                                                     Daftar Kelas
                                                                 </button>
                                                             </div>`;
-                                                        }
+                                                        // }
                                                     element +=`</div>
                                                 </div>
                                                 {{-- end description --}}

@@ -385,7 +385,7 @@ class NewPackageController extends BaseMenu
             if($request->sub_classroom_category_id){
                 $_SESSION["sub_classroom_category_id"] = $request->sub_classroom_category_id;
             }
-            
+
             $path = Storage::disk('s3')->url('/');
             $expertise = DB::table('expertises')
                 ->select([
