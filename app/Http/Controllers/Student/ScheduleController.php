@@ -848,6 +848,7 @@ class ScheduleController extends BaseMenu
                 1 => Terlewat Tanggal
                 2 => Tersedia
                 3 => Penuh
+                4 => Terbooking
             */
 
             $path = Storage::disk('s3')->url('/');
@@ -869,7 +870,8 @@ class ScheduleController extends BaseMenu
                 ->leftJoinSub($transaction, 'transactions', function ($join) {
                     $join->on('transaction_details.transaction_id', '=', 'transactions.id');
                 })
-                ->whereNull('transaction_details.deleted_at');
+                ->whereNull('transaction_details.deleted_at')
+                ->whereNotNull('transactions.id');
 
             $cart = DB::table('carts')
                 ->select([
@@ -880,9 +882,6 @@ class ScheduleController extends BaseMenu
                 ->joinSub($transaction_detail, 'transaction_details', function ($join) {
                     $join->on('carts.id', '=', 'transaction_details.cart_id');
                 })
-                ->where([
-                    'carts.student_id' => Auth::guard('student')->user()->id
-                ])
                 ->whereNull('carts.deleted_at')
                 ->whereNotNull('transaction_details.id');
 
@@ -895,6 +894,19 @@ class ScheduleController extends BaseMenu
                     $join->on('master_lessons.id', '=', 'carts.master_lesson_id');
                 })
                 ->groupBy('master_lessons.id');
+
+            $myCart = DB::table('carts')
+                ->select([
+                    'carts.master_lesson_id',
+                    'transaction_details.id as transaction_detail_id',
+                    'transaction_details.status'
+                ])
+                ->joinSub($transaction_detail, 'transaction_details', function ($join) {
+                    $join->on('carts.id', '=', 'transaction_details.cart_id');
+                })
+                ->where('carts.student_id', Auth::guard('student')->user()->id)
+                ->whereNull('carts.deleted_at')
+                ->whereNotNull('transaction_details.id');
 
             $master_lesson = DB::table('master_lessons')
                 ->select([
@@ -911,25 +923,35 @@ class ScheduleController extends BaseMenu
                         CASE
                             WHEN master_lessons.datetime::timestamp < now()::timestamp THEN
                                 1
-                            WHEN (master_lessons.slot::numeric - sub_master_lesson.total_booking::numeric) = 0 THEN
-                                3
+                            WHEN my_cart.status = 2 THEN
+                                4
                             ELSE
-                                2
+                                CASE
+                                    WHEN (master_lessons.slot::numeric - sub_master_lesson.total_booking::numeric) = 0 THEN
+                                        3
+                                    ELSE
+                                        2
+                                END
                         END
                     ) as status"),
                     DB::raw("(
                         CASE
                             WHEN master_lessons.datetime::timestamp < now()::timestamp THEN
                                 'secondary'
-                            WHEN (master_lessons.slot::numeric - sub_master_lesson.total_booking::numeric) = 0 THEN
-                                'danger'
+                            WHEN my_cart.status = 2 THEN
+                                'primary'
                             ELSE
-                                'success'
+                                CASE
+                                    WHEN (master_lessons.slot::numeric - sub_master_lesson.total_booking::numeric) = 0 THEN
+                                        'danger'
+                                    ELSE
+                                        'success'
+                                END
                         END
                     ) as color"),
                     DB::raw("(
                         CASE
-                            WHEN carts.status = 2 THEN
+                            WHEN my_cart.status = 2 THEN
                                 1
                             ELSE
                                 0
@@ -942,7 +964,11 @@ class ScheduleController extends BaseMenu
                 ->leftJoinSub($cart, 'carts', function ($join) {
                     $join->on('master_lessons.id', '=', 'carts.master_lesson_id');
                 })
+                ->leftJoinSub($myCart, 'my_cart', function ($join) {
+                    $join->on('master_lessons.id', '=', 'my_cart.master_lesson_id');
+                })
                 ->whereNull('master_lessons.deleted_at')
+                ->distinct('master_lessons.id')
                 ->get();
 
             return response([

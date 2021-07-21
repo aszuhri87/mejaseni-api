@@ -638,17 +638,17 @@
                         }else{
                             $('#to-class').hide();
                         }
+                        $('#master-lesson-id').val(id);
+                        $('#master-lesson-title').html(name);
+                        $('#poster').attr('src',`${poster}`);
+                        $('#price').html(`Rp. ${numeral(price).format('0,0')}`);
+                        $('#date').html(`<h5 class="text-muted">${moment(datetime).format('DD MMMM YYYY')}</h5>`);
+                        $('#time').html(`<h5 class="text-muted">${moment(datetime).format('HH:mm')}</h5>`);
+                        $('#total-booking').html(`<h5 class="text-muted">${total_booking}/${slot} booking</h5>`);
+                        $('#description').html(description);
+
                         if(total_booking < slot){
                             if(moment(datetime).isSameOrAfter(moment().format('YYYY-MM-DD HH:mm:ss'))){
-
-                                $('#master-lesson-id').val(id);
-                                $('#master-lesson-title').html(name);
-                                $('#poster').attr('src',`${poster}`);
-                                $('#price').html(`Rp. ${numeral(price).format('0,0')}`);
-                                $('#date').html(`<h5 class="text-muted">${moment(datetime).format('DD MMMM YYYY')}</h5>`);
-                                $('#time').html(`<h5 class="text-muted">${moment(datetime).format('HH:mm')}</h5>`);
-                                $('#total-booking').html(`<h5 class="text-muted">${total_booking}/${slot} booking</h5>`);
-                                $('#description').html(description);
 
                                 $('#form-booking-master-lesson').trigger('reset');
                                 $('#form-booking-master-lesson').attr('action',`{{ url('student/schedule/master-lesson/booking') }}/${id}`);
@@ -664,19 +664,24 @@
                             }
                         }
                         else{
-                            Swal.fire({
-                                title: 'Master lesson class is full!',
-                                text: "Participant quota has been fulfilled!",
-                                icon: 'warning',
-                                showCancelButton: false,
-                                confirmButtonColor: '#7F16A7',
-                                confirmButtonText: 'Close',
-                            }).then(function (result) {
-                                if (result.value) {
+                            if(is_buy){
+                                $('#btn-booking-master-lesson').hide();
+                                showModal('modal-booking-master-lesson');
+                            }else{
+                                Swal.fire({
+                                    title: 'Master lesson class is full!',
+                                    text: "Participant quota has been fulfilled!",
+                                    icon: 'warning',
+                                    showCancelButton: false,
+                                    confirmButtonColor: '#7F16A7',
+                                    confirmButtonText: 'Close',
+                                }).then(function (result) {
+                                    if (result.value) {
 
-                                }
-                            })
-                            $('.swal2-title').addClass('justify-content-center')
+                                    }
+                                })
+                                $('.swal2-title').addClass('justify-content-center')
+                            }
                         }
                     }
                 });
