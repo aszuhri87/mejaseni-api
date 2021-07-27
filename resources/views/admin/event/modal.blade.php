@@ -123,7 +123,8 @@
                         <tr>
                             <th>No</th>
                             <th width="25%">Image</th>
-                            <th width="50%">Name</th>
+                            <th width="30%">Name</th>
+                            <th width="20%">Email</th>
                             <th width="15%">Phone</th>
                             <th width="10%">Aksi</th>
                         </tr>

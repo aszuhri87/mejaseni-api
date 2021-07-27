@@ -105,7 +105,6 @@
                     $('#form-galery-home').attr('action','{{url('admin/cms/galery-home')}}');
                     $('#form-galery-home').attr('method','POST');
 
-                    $('#form-galery-home').find('input[name="number"]').prop('readonly', false);
                     $('#image').html('<input type="file" name="image" class="dropify image"/>');
                     $('.dropify').dropify();
 
@@ -123,7 +122,7 @@
                     $('#form-galery-home').attr('method','POST');
 
 
-                    $('#form-galery-home').find('input[name="number"]').val(data.number).prop('readonly', true)
+                    $('#form-galery-home').find('input[name="number"]').val(data.number);
                     $('#image').empty();
 
                     if(data.image_url){

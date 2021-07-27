@@ -149,6 +149,7 @@
                         { data: 'DT_RowIndex' },
                         { data: 'image_url' },
                         { data: 'name' },
+                        { data: 'email' },
                         { data: 'phone' },
                         { defaultContent: '' }
                         ],
