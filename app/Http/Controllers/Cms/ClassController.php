@@ -1036,7 +1036,7 @@ class ClassController extends Controller
                             <li class="active tab-detail" data-id="'. $master_lesson->id.'" href="tab-master-lession-description">Deskripsi</li>
                             <li class="tab-detail" data-id="'. $master_lesson->id.'" href="tab-master-lession-guest-start">Guest Star</li>
                         </ul>
-                        <div id="description-'. $classroom->id .'">
+                        <div id="description-'. $master_lesson->id .'">
                             <div class="desc__class-tab my-4">
                                 <p class="text-justify readmore">'.(isset($master_lesson->description) ? $master_lesson->description:"").'</p>
                             </div>
