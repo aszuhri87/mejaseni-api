@@ -201,6 +201,8 @@ class ScheduleReminder extends Command
                     });
                 });
             }
+
+            $this->info('Running');
         } catch (Exception $e) {
             throw new Exception($e);
         }
