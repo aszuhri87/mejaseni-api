@@ -111,7 +111,7 @@ class ScheduleReminder extends Command
                 })
                 ->leftJoin('student_classrooms','student_classrooms.id','=','student_schedules.student_classroom_id')
                 ->leftJoin('students','students.id','=','student_classrooms.student_id')
-                ->whereRaw("coach_schedules.datetime::timestamp > '{$now}'::timestamp")
+                // ->whereRaw("coach_schedules.datetime::timestamp > '{$now}'::timestamp")
                 ->whereNotNull('students.id')
                 ->whereNull('coach_schedules.deleted_at');
 
@@ -140,7 +140,7 @@ class ScheduleReminder extends Command
                 })
                 ->leftJoin('platforms','coach_schedules.platform_id','=','platforms.id')
                 ->leftJoin('classrooms','coach_classrooms.classroom_id','=','classrooms.id')
-                ->whereRaw("coach_schedules.datetime::timestamp > '{$now}'::timestamp")
+                // ->whereRaw("coach_schedules.datetime::timestamp > '{$now}'::timestamp")
                 ->whereRaw("status_schedules.status != 0")
                 ->whereNull('coach_schedules.deleted_at')
                 ->orderBy('coach_schedules.datetime', 'asc')
@@ -187,18 +187,18 @@ class ScheduleReminder extends Command
                         'text' => $schedule->message,
                         'datetime' => date('Y-m-d H:i:s')
                     ]);
+                });
 
-                    Mail::send('mail.coach-class-reminder', compact('schedule'), function($message) use($schedule){
-                        $message->to($schedule->coach_email, $schedule->coach_name)
-                            ->from('info@mejaseni.com', 'MEJASENI')
-                            ->subject('Class Reminder');
-                    });
+                Mail::send('mail.coach-class-reminder', compact('schedule'), function($message) use($schedule){
+                    $message->to($schedule->coach_email, $schedule->coach_name)
+                        ->from('info@mejaseni.com', 'MEJASENI')
+                        ->subject('Class Reminder');
+                });
 
-                    Mail::send('mail.student-class-reminder', compact('schedule'), function($message) use($schedule){
-                        $message->to($schedule->student_email, $schedule->student_name)
-                            ->from('info@mejaseni.com', 'MEJASENI')
-                            ->subject('Class Reminder');
-                    });
+                Mail::send('mail.student-class-reminder', compact('schedule'), function($message) use($schedule){
+                    $message->to($schedule->student_email, $schedule->student_name)
+                        ->from('info@mejaseni.com', 'MEJASENI')
+                        ->subject('Class Reminder');
                 });
             }
 
