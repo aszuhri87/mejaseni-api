@@ -1392,7 +1392,7 @@
                                                             <span> <h4>Rp. ${numeral(data.price).format('0,0')},-</h4> </span>
                                                         </div>
                                                         `;
-                                                        if(!data.is_exist_cart){
+                                                        if(!data.is_exist_cart && data.total_booking < data.slot){
                                                             element +=`
                                                             <div id="${data.id}">
                                                                 <button type="button" class="btn btn-primary btn-registration-master-lesson" data-type="2" data-id="${data.id}" data-master_lesson_name="${data.name}" data-price="${data.price}">

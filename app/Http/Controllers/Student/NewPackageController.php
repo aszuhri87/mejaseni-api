@@ -599,9 +599,9 @@ class NewPackageController extends BaseMenu
                 ->joinSub($transaction_detail, 'transaction_details', function ($join) {
                     $join->on('carts.id', '=', 'transaction_details.cart_id');
                 })
-                ->where([
-                    'carts.student_id' => Auth::guard('student')->user()->id
-                ])
+                // ->where([
+                //     'carts.student_id' => Auth::guard('student')->user()->id
+                // ])
                 ->whereNull('carts.deleted_at')
                 ->whereNotNull('transaction_details.id');
 
