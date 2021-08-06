@@ -55,11 +55,9 @@ class AdminNotification implements ShouldBroadcastNow
 
     public function email_notification($notification, $id = null)
     {
-        $user = \Auth::guard('admin')->user();
-
         try {
-            Mail::send('mail.notification', compact('notification'), function($message) use($user){
-                $message->to($user->email, $user->name)
+            Mail::send('mail.notification', compact('notification'), function($message){
+                $message->to('mtaufiikh@gmail.com', 'Admin Mejaseni')
                     ->from('info@mejaseni.com', 'MEJASENI')
                     ->subject('Mejaseni Notification');
             });

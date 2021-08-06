@@ -12,7 +12,7 @@
                 <div class="modal-body">
                     <input type="hidden" name="coach_schedule_id" id="coach_schedule_id">
                     <input type="hidden" name="classroom_id" id="classroom_id">
-                    <input type="hidden" name="student_id" value="{{Auth::guard('student')->user()->id}}" id="classroom_id">
+                    <input type="hidden" name="student_id" value="{{Auth::guard('student')->user()->id}}">
                     <div class="row">
                         <div class="col-6">
                             <div class="form-group">
@@ -243,6 +243,45 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
                     <button type="submit" class="btn btn-primary btn-loading-basic" id="confirm-reschedule">Konfirmasi Reschedule</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal" id="modal-request-schedule" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <form id="form-request-schedule" autocomplete="off">
+                <div class="modal-header">
+                    <h5 class="modal-title">Request Schedule</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i aria-hidden="true" class="ki ki-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="subtraction" id="i-subtraction">
+                    <div class="form-group">
+                        <label>Kelas<span class="text-danger">*</span></label>
+                        <select name="classroom_id" id="select-classroom" class="form-control">
+                            <option value="">Pilih Kelas</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Frekuensi Mingguan<span class="text-danger">*</span></label>
+                        <select name="type" id="select-frequency" class="form-control">
+                            <option value="">Pilih Frekuensi</option>
+                            <option value="2">2X Seminggu</option>
+                            <option value="3">3X Seminggu</option>
+                            <option value="4">4X Seminggu</option>
+                        </select>
+                    </div>
+                    <div id="time-place"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
+                    <button type="submit" class="btn btn-primary btn-loading-basic">Submit</button>
                 </div>
             </form>
         </div>

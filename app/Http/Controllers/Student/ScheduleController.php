@@ -366,7 +366,7 @@ class ScheduleController extends BaseMenu
                 ->joinSub($coach_classroom, 'coach_classrooms', function ($join) {
                     $join->on('coach_schedules.coach_classroom_id', '=', 'coach_classrooms.id');
                 })
-                ->join('platforms','coach_schedules.platform_id','=','platforms.id')
+                ->leftJoin('platforms','coach_schedules.platform_id','=','platforms.id')
                 ->where([
                     'coach_schedules.accepted' => true,
                     'coach_schedules.id' => $id

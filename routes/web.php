@@ -44,6 +44,7 @@ use App\Http\Controllers\Admin\Transaction\StudentController as TransactionStude
 use App\Http\Controllers\Admin\Transaction\CoachController as TransactionCoachController;
 use App\Http\Controllers\Admin\Schedule\ScheduleController;
 use App\Http\Controllers\Admin\Schedule\ListController;
+use App\Http\Controllers\Admin\Schedule\RequestScheduleController;
 use App\Http\Controllers\Admin\Reporting\Review\Coach\CoachController as AdminCoachController;
 use App\Http\Controllers\Admin\Reporting\Review\Coach\Detail\CoachDetailController;
 use App\Http\Controllers\Admin\Reporting\Review\Student\StudentController as AdminStudentController;
@@ -71,6 +72,7 @@ use App\Http\Controllers\Coach\Schedule\ScheduleController as CoachScheduleContr
 use App\Http\Controllers\Coach\Exercise\AssignmentController;
 use App\Http\Controllers\Coach\Exercise\ReviewAssignmentController;
 use App\Http\Controllers\Coach\Notification\NotificationController as CoachNotificationController;
+use App\Http\Controllers\Coach\Schedule\RequestScheduleController as CoachRequestScheduleController;
 /*
 |--------------------------------------------------------------------------
 | Student Controller
@@ -88,6 +90,7 @@ use App\Http\Controllers\Student\ProfileController as StudentProfileController;
 use App\Http\Controllers\Student\CartController as StudentCartController;
 use App\Http\Controllers\Student\ExerciseController as StudentExerciseController;
 use App\Http\Controllers\Student\ReviewController as StudentReviewController;
+use App\Http\Controllers\Student\RequestScheduleController as StudentRequestScheduleController;
 use App\Http\Controllers\Student\NotificationController as StudentNotificationController;
 
 
@@ -193,8 +196,6 @@ Route::get('/classroom_category/{category_id}/sub_classroom_category', [VideoCou
 Route::get('/classroom_category/sub_classroom_category/{sub_category_id}/video-course', [VideoCourseController::class, 'get_video_courses']);
 
 Route::get('/store', [StoreController::class, 'index']);
-
-
 
 Route::get('/news-event', [NewsEventController::class, 'index']);
 Route::get('/event-list', [EventListController::class, 'index']);
@@ -476,6 +477,9 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::get('schedule-list', [ListController::class, 'index']);
         Route::post('schedule-list/dt', [ListController::class, 'dt']);
 
+        Route::post('schedule-request/dt', [RequestScheduleController::class, 'dt']);
+        Route::resource('schedule-request', RequestScheduleController::class);
+
         Route::post('event/dt', [EventController::class, 'dt']);
         Route::post('event/{id}/participants/dt',[EventController::class, 'participants_dt']);
         Route::delete('cart/{id}', [CartController::class, 'destroy']);
@@ -687,6 +691,9 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::post('schedule/update/{id}', [CoachScheduleController::class, 'update_time']);
         Route::post('schedule/delete/{id}', [CoachScheduleController::class, 'delete']);
 
+        Route::post('schedule-request/dt', [CoachRequestScheduleController::class, 'dt']);
+        Route::resource('schedule-request', CoachRequestScheduleController::class);
+
         Route::group(['prefix' => 'withdraw'], function () {
             Route::post('/detail/dt', [CoachTransactionController::class, 'withdraw_dt']);
             Route::get('/detail', [CoachTransactionController::class, 'withdraw']);
@@ -766,6 +773,12 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::group(['prefix' => 'coach-list'], function () {
                 Route::get('/', [StudentScheduleController::class, 'coach_list']);
                 Route::get('new', [StudentScheduleController::class, 'coach_list_new']);
+            });
+
+            Route::group(['prefix' => 'request'], function () {
+                Route::post('/', [StudentRequestScheduleController::class, 'store']);
+                Route::post('dt', [StudentRequestScheduleController::class, 'dt']);
+                Route::get('/classroom', [StudentRequestScheduleController::class, 'classroom']);
             });
         });
 

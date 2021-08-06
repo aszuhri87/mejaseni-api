@@ -1,7 +1,7 @@
 <script type="text/javascript">
     var Page = function() {
         var _componentPage = function(){
-            var init_table, calendar, calendar_regular, calendar_special, calendar_master_lesson;
+            var init_table, calendar, calendar_regular, calendar_special, calendar_master_lesson, init_classroom, init_table_request;
 
             $(document).ready(function() {
                 formSubmit();
@@ -29,6 +29,11 @@
                 $(document).on('click','.tab-master-lesson',function(event){
                     event.preventDefault();
                     calendar_master_lesson.render();
+                });
+
+                $(document).on('click','.tab-schedule-request',function(event){
+                    event.preventDefault();
+                    table_request();
                 });
 
                 $(document).on('click','.see-all',function(event){
@@ -60,6 +65,69 @@
                         else{
                             $('#rating-class').show();
                         }
+                    }
+                });
+
+                $(document).on('click','.btn-request-schedule', function(event){
+                    event.preventDefault();
+
+                    get_classroom();
+
+                    $('#select-frequency').val('');
+                    $('#time-place').empty();
+
+                    showModal('modal-request-schedule');
+                });
+
+                $(document).on('change','#select-frequency',function(event){
+                    event.preventDefault();
+
+                    let element = '';
+
+                    let options = `<option value="Monday">Senin</option>
+                        <option value="Tuesday">Selasa</option>
+                        <option value="Wednesday">Rabu</option>
+                        <option value="Thursday">Kamis</option>
+                        <option value="Friday">Jumat</option>
+                        <option value="Saturday">Sabtu</option>
+                        <option value="Sunday">Minggu</option>`;
+
+                    if($(this).val()){
+                        let value = parseInt($(this).val());
+                        for (let index = 0; index < value; index++) {
+                            element += `<div class="row">
+                                <div class="col-12">
+                                    <h6>Sesi ${index + 1}</h6>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Hari<span class="text-danger">*</span></label>
+                                        <select name="day[${index}]" class="form-control">
+                                            ${options}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Waktu Mulai<span class="text-danger">*</span></label>
+                                        <input type="text" name="time[${index}]" class="form-control timepicker" required placeholder="Time" style="width: 100% !important">
+                                    </div>
+                                </div>
+                                <div class="col-12 mt-0 pt-0">
+                                    <hr>
+                                </div>
+                            </div>`;
+                        }
+
+                        $('#time-place').html(element);
+
+                        $('.timepicker').timepicker({
+                            minuteStep: 1,
+                            showSeconds: true,
+                            showMeridian: false
+                        });
+                    }else{
+                        $('#time-place').html('');
                     }
                 });
 
@@ -248,6 +316,33 @@
                     })
                     .always(function() {
                         btn_loading_cancel_schedule('stop')
+                    });
+                });
+
+                $('#form-request-schedule').submit(function(event){
+                    event.preventDefault();
+
+                    btn_loading_basic('start')
+                    $.ajax({
+                        url: "{{url('student/schedule/request')}}",
+                        type: 'POST',
+                        data: $(this).serialize(),
+                    })
+                    .done(function(res, xhr, meta) {
+                        if(res.status == 200){
+                            $('#select-frequency').val('');
+                            $('#time-place').empty();
+                            table_request()
+
+                            hideModal('modal-request-schedule');
+                            toastr.success(res.message, 'Success')
+                        }
+                    })
+                    .fail(function(res, error) {
+                        toastr.error(res.responseJSON.message, 'Failed')
+                    })
+                    .always(function() {
+                        btn_loading_basic('stop','Submit')
                     });
                 });
             },
@@ -868,6 +963,86 @@
                 .always(function() {
 
                 });
+            },
+            get_classroom = (category_id, sub_category_id, select_id) => {
+                if(init_classroom){
+                    init_classroom.destroy();
+                }
+
+                $.ajax({
+                    url: '{{url('student/schedule/request/classroom')}}',
+                    type: 'GET',
+                    dataType: 'json',
+                })
+                .done(function(res, xhr, meta) {
+                    let element = `<option value="" data-subtraction="">Select Class</option>`
+
+                    $.each(res.data, function(index, data) {
+                        element += `<option value="${data.id}" data-subtraction="${data.subtraction}">${data.name}</option>`;
+                    });
+
+                    $('#select-classroom').html(element);
+                })
+            },
+            table_request = () => {
+                if(init_table_request){
+                    init_table_request.draw(false);
+                }else{
+                    init_table_request = $('#init-table-request').DataTable({
+                        destroy: true,
+                        processing: true,
+                        serverSide: true,
+                        sScrollY: ($(window).height() < 700) ? $(window).height() - 200 : $(window).height() - 450,
+                        ajax: {
+                            type: 'POST',
+                            url: "{{ url('student/schedule/request/dt') }}",
+                        },
+                        columns: [
+                            { data: 'DT_RowIndex' },
+                            { data: 'classroom' },
+                            { data: 'datetime' },
+                            { data: 'status' },
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                searchable: false,
+                                orderable: false,
+                                className: "text-center"
+                            },
+                            {
+                                targets: 2,
+                                data: "datetime",
+                                render: function(data, type, full, meta){
+                                    return `${moment(data).format('DD MMMM YYYY, HH:mm')}`;
+                                }
+                            },
+                            {
+                                targets: 3,
+                                data:"status",
+                                render: function(data, type, full, meta){
+                                    return `
+                                        <div class="d-flex flex-column font-weight-bold">
+                                            <p class="mb-1 font-size-lg text-${full.status_color}">${data}</p>
+                                        </div>
+                                    `;
+                                }
+                            }
+                        ],
+                        order: [[1, 'asc']],
+                        searching: true,
+                        paging:true,
+                        lengthChange:false,
+                        bInfo:true,
+                        dom: '<"datatable-header"><tr><"datatable-footer"ip>',
+                        language: {
+                            search: '<span>Search:</span> _INPUT_',
+                            searchPlaceholder: 'Search.',
+                            lengthMenu: '<span>Show:</span> _MENU_',
+                            processing: '<div class="d-flex justify-content-center align-items-center"><div class="mr-1 my-spinner-loading"></div>Loading...</div>',
+                        },
+                    });
+                }
             }
 
         };

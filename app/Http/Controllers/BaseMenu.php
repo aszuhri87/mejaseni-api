@@ -262,6 +262,13 @@ class BaseMenu extends Controller
                 'icon' => $this->icon('master'),
             ],
             [
+                'key' => 'schedule-request',
+                'title' => 'Schedule Request',
+                'url' => 'admin/schedule-request',
+                'permission' => 'schedule_request',
+                'icon' => $this->icon('master'),
+            ],
+            [
                 'key' => 'report',
                 'title' => 'Reporting',
                 'url' => '#',
@@ -568,6 +575,13 @@ class BaseMenu extends Controller
                 'url' => 'coach/schedule',
                 'permission' => 'schedule',
                 'icon' => $this->icon('schedule'),
+            ],
+            [
+                'key' => 'schedule-request',
+                'title' => 'Schedule Request',
+                'url' => 'coach/schedule-request',
+                'permission' => 'schedule_request',
+                'icon' => $this->icon('master'),
             ],
             [
                 'key' => 'theory',
