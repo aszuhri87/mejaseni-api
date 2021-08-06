@@ -57,7 +57,7 @@ class AdminNotification implements ShouldBroadcastNow
     {
         try {
             Mail::send('mail.notification', compact('notification'), function($message){
-                $message->to('mtaufiikh@gmail.com', 'Admin Mejaseni')
+                $message->to('admin@mejaseni.com', 'Admin Mejaseni')
                     ->from('info@mejaseni.com', 'MEJASENI')
                     ->subject('Mejaseni Notification');
             });
