@@ -97,7 +97,7 @@ class ScheduleController extends BaseMenu
                 })
                 ->whereNull('student_schedules.deleted_at');
 
-            $result = DB::table('coach_schedules')
+            $sub_coach_schedules = DB::table('coach_schedules')
                 ->select([
                     'coach_schedules.id',
                     'coach_schedules.datetime as start',
@@ -164,8 +164,17 @@ class ScheduleController extends BaseMenu
                     $join->on('coach_schedules.id', '=', 'student_schedules.coach_schedule_id');
                 })
                 ->where('student_classrooms.student_id',Auth::guard('student')->user()->id)
-                ->where('coach_schedules.accepted',true)
-                ->whereNull('coach_schedules.deleted_at')
+                ->where('coach_schedules.accepted', true)
+                ->whereNull('coach_schedules.deleted_at');
+
+            $result = DB::table('coach_schedules')
+                ->select([
+                    'sub_coach_schedules.*'
+                ])
+                ->leftJoinSub($sub_coach_schedules, 'sub_coach_schedules', function ($join) {
+                    $join->on('coach_schedules.id', 'sub_coach_schedules.id');
+                })
+                ->wherein('sub_coach_schedules.status', [1,2])
                 ->get();
 
             return response([

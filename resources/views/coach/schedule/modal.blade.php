@@ -10,7 +10,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
+                    <div class="row" style="display: none !important">
                         <div class="col-12 select-classroom">
                             <div class="form-group">
                                 <label>
@@ -54,7 +54,7 @@
                             </label>
                         </div>
                     </div>
-                    <hr>
+                    {{-- <hr> --}}
                     <div class="row form-package">
                         <div class="col-12">
                             <div class="form-group">
@@ -169,7 +169,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn function-btn btn-delete btn-danger" style="display: none">Hapus</button>
-                    <button type="button" class="btn function-btn btn-edit btn-success" style="display: none">Ubah</button>
+                    <button type="button" class="btn function-btn btn-edit btn-success" style="display: none">Ubah Link Media</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
                 </div>
             </form>

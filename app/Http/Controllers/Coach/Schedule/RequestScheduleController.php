@@ -88,6 +88,7 @@ class RequestScheduleController extends BaseMenu
                     ->first();
 
                 $coach_schedule = CoachSchedule::create([
+                    'schedule_request_id' => $id,
                     'coach_classroom_id' => $coach_classroom->id,
                     'accepted' => true,
                     'datetime' => $schedule_request->datetime,
@@ -173,6 +174,61 @@ class RequestScheduleController extends BaseMenu
             ], 200);
         } catch (\Exception $e) {
             throw new \Exception($e);
+            return response([
+                "message" => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function destroy($id)
+    {
+        try {
+            $result = DB::transaction(function () use($id){
+                $schedule_request = ScheduleRequest::find($id);
+
+                $schedule_request->update([
+                    'coach_confirmed' => false,
+                ]);
+
+                return true;
+            });
+
+            if($result){
+                $schedule_request = DB::table('schedule_requests')
+                    ->select([
+                        'schedule_requests.*',
+                        'classrooms.name as classroom',
+                        'students.name as student',
+                        'coaches.name as coach',
+                    ])
+                    ->leftJoin('classrooms','classrooms.id','=','schedule_requests.classroom_id')
+                    ->leftJoin('students','students.id','=','schedule_requests.student_id')
+                    ->leftJoin('coaches','coaches.id','=','schedule_requests.coach_id')
+                    ->where('schedule_requests.id', $id)
+                    ->first();
+
+                $classroom = Classroom::find($schedule_request->classroom_id);
+
+                $notification = \App\Models\CoachNotification::create([
+                    'coach_id' => Auth::guard('coach')->user()->id,
+                    'type' => 4,
+                    'text' => Auth::guard('coach')->user()->name.' menolak jadwal dari '.$schedule_request->student.', kelas '.$classroom->name.' yang akan dilaksanakan pada '.$schedule_request->datetime,
+                    'datetime' => date('Y-m-d H:i:s'),
+                ]);
+
+                event(new \App\Events\CoachNotification($notification, Auth::guard('coach')->user()->id));
+                event(new \App\Events\AdminNotification($notification));
+
+                SocketIO::message(Auth::guard('coach')->user()->id, 'notification_'.Auth::guard('coach')->user()->id, $notification);
+                SocketIO::message('admin', 'notification_admin', $notification);
+            }
+
+            return response([
+                'data' => $result,
+                "message"   => 'Successfully saved!'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
             return response([
                 "message" => $e->getMessage(),
             ]);

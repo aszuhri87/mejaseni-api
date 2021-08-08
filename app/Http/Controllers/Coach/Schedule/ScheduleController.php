@@ -77,7 +77,7 @@ class ScheduleController extends BaseMenu
                     break;
                 }
             }
-            
+
             if($datetime){
                 if($schedule > $datetime_interval){
                     $schedule = Carbon::create($schedule);
@@ -432,7 +432,7 @@ class ScheduleController extends BaseMenu
                     $join->on('coaches.id','coach_classrooms.coach_id');
                 })
                 ->leftJoin('classrooms','coach_classrooms.classroom_id','=','classrooms.id')
-                ->leftJoinSub($student_schedules, 'student_schedules', function($join){
+                ->joinSub($student_schedules, 'student_schedules', function($join){
                     $join->on('student_schedules.coach_schedule_id','coach_schedules.id');
                 })
                 ->leftJoin('sessions','student_schedules.session_id','=','sessions.id')

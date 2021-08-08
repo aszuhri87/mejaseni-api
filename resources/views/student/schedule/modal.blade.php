@@ -125,7 +125,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
                     <button type="submit" id="btn-cancel-reschedule" class="btn btn-danger btn-loading-reschedule show-hide">Cancel Schedule</button>
-                    <button type="button" class="btn btn-primary show-hide" id="btn-reschedule">Reschedule</button>
+                    <button type="button" class="btn btn-primary" id="btn-reschedule" style="display: none !important;">Reschedule</button>
                 </div>
             </form>
         </div>

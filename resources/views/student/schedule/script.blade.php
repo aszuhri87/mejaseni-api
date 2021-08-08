@@ -465,7 +465,7 @@
 
                                         if(check_date){
                                             if(data.status_reschedule == 1){
-                                                $('#btn-reschedule').show();
+                                                $('#btn-reschedule').hide();
                                                 $('#btn-cancel-reschedule').show();
                                                 $('.show-hide').removeAttr('style');
                                             }
@@ -626,7 +626,7 @@
 
                                         if(check_date){
                                             if(data.status_reschedule == 1){
-                                                $('#btn-reschedule').show();
+                                                $('#btn-reschedule').hide();
                                                 $('#btn-cancel-reschedule').show();
                                                 $('.show-hide').removeAttr('style');
                                             }

@@ -73,6 +73,7 @@ class RequestScheduleController extends BaseMenu
         try {
             $result = ScheduleRequest::find($id)->update([
                 'coach_id' => $request->coach_id,
+                'coach_confirmed' => null,
             ]);
 
             if($result){

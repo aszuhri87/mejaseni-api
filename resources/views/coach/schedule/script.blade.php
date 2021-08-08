@@ -33,63 +33,64 @@
                     selectable: true,
                     height: 750,
                     select: function(info) {
-                        let start = moment(info.start).format('DD MMMM YYYY');
-                        let end = moment(new Date()).format('DD MMMM YYYY');
+                        // let start = moment(info.start).format('DD MMMM YYYY');
+                        // let end = moment(new Date()).format('DD MMMM YYYY');
 
-                        if(moment(start).isSameOrAfter(end)){
-                            $('#form-schedule').trigger("reset");
+                        // if(moment(start).isSameOrAfter(end)){
+                        //     $('#form-schedule').trigger("reset");
 
-                            init_classroom.set('')
-                            init_platform.set('')
+                        //     init_classroom.set('')
+                        //     init_platform.set('')
 
-                            $('.timepicker').val(moment(info.start).format('HH:mm:ss') == '00:00:00' ? moment().format('HH:mm:ss') : moment(info.start).format('HH:mm:ss'))
-                            $('.datepicker-with-stardate').val(moment(info.start).format('D MMMM YYYY'))
+                        //     $('.timepicker').val(moment(info.start).format('HH:mm:ss') == '00:00:00' ? moment().format('HH:mm:ss') : moment(info.start).format('HH:mm:ss'))
+                        //     $('.datepicker-with-stardate').val(moment(info.start).format('D MMMM YYYY'))
 
-                            $('#form-schedule').attr('action','{{url('coach/schedule')}}');
-                            $('#form-schedule').attr('method','POST');
+                        //     $('#form-schedule').attr('action','{{url('coach/schedule')}}');
+                        //     $('#form-schedule').attr('method','POST');
 
-                            showModal('modal-schedule');
-                        }
+                        //     showModal('modal-schedule');
+                        // }
                     },
                     eventDrop: function(info) {
-                        let old_start = moment(info.oldEvent.start).format('DD MMMM YYYY');
-                        let end = moment(new Date()).format('DD MMMM YYYY');
-                        let start = moment(info.event.start).format('DD MMMM YYYY');
+                        // let old_start = moment(info.oldEvent.start).format('DD MMMM YYYY');
+                        // let end = moment(new Date()).format('DD MMMM YYYY');
+                        // let start = moment(info.event.start).format('DD MMMM YYYY');
 
-                        if(moment(old_start).isSameOrBefore(end)){
-                            info.revert();
-                            return false;
-                        }
+                        // if(moment(old_start).isSameOrBefore(end)){
+                        //     info.revert();
+                        //     return false;
+                        // }
 
-                        if(moment(start).isAfter(end)){
-                            Swal.fire({
-                                title: 'Ubah Jadwal?',
-                                icon: 'warning',
-                                showCancelButton: true,
-                                confirmButtonColor: '#7F16A7',
-                                confirmButtonText: 'Ya, Ubah',
-                            }).then(function (result) {
-                                if (result.value) {
-                                    $.ajax({
-                                        url: "{{url('coach/schedule/update')}}/"+info.event.id,
-                                        type: 'POST',
-                                        data: {
-                                            date: moment(info.event.start).format('DD MMMM YYYY'),
-                                            time: moment(info.event.start).format('HH:mm:ss')
-                                        },
-                                    })
-                                    .done(function(res, xhr, meta) {
-                                        renderCalender()
-                                    });
-                                }else{
-                                    info.revert();
-                                }
-                            })
+                        // if(moment(start).isAfter(end)){
+                        //     Swal.fire({
+                        //         title: 'Ubah Jadwal?',
+                        //         icon: 'warning',
+                        //         showCancelButton: true,
+                        //         confirmButtonColor: '#7F16A7',
+                        //         confirmButtonText: 'Ya, Ubah',
+                        //     }).then(function (result) {
+                        //         if (result.value) {
+                        //             $.ajax({
+                        //                 url: "{{url('coach/schedule/update')}}/"+info.event.id,
+                        //                 type: 'POST',
+                        //                 data: {
+                        //                     date: moment(info.event.start).format('DD MMMM YYYY'),
+                        //                     time: moment(info.event.start).format('HH:mm:ss')
+                        //                 },
+                        //             })
+                        //             .done(function(res, xhr, meta) {
+                        //                 renderCalender()
+                        //             });
+                        //         }else{
+                        //             info.revert();
+                        //         }
+                        //     })
 
-                            $('.swal2-title').addClass('justify-content-center')
-                        }else{
-                            info.revert();
-                        }
+                        //     $('.swal2-title').addClass('justify-content-center')
+                        // }else{
+                        //     info.revert();
+                        // }
+                        info.revert();
                     },
                     eventClick: function(info) {
                         calendarDetail(info.event.id);
@@ -142,18 +143,19 @@
 
                     $('.function-btn').attr('data-id', res.data.id);
 
-                    if(res.data.status == 1){
-                        $('.btn-edit').hide()
-                        $('.btn-delete').hide()
-                    }else if(res.data.status == 2){
-                        $('.btn-edit').show()
-                        $('.btn-delete').show()
-                    }else if(res.data.status == 3){
-                        $('.btn-edit').hide()
-                        $('.btn-delete').hide()
-                    }else if(res.data.status == 4){
-                        $('.btn-delete').show()
-                    }
+                    $('.btn-edit').show()
+
+                    // if(res.data.status == 1){
+                    //     $('.btn-edit').hide()
+                    //     $('.btn-delete').hide()
+                    // }else if(res.data.status == 2){
+                    //     $('.btn-delete').show()
+                    // }else if(res.data.status == 3){
+                    //     $('.btn-edit').hide()
+                    //     $('.btn-delete').hide()
+                    // }else if(res.data.status == 4){
+                    //     $('.btn-delete').show()
+                    // }
 
                     showModal('modal-schedule-detail');
                 });
@@ -254,12 +256,11 @@
                         processData: false,
                     })
                     .done(function(res, xhr, meta) {
-                        if(res.status == 200){
-                            toastr.success(res.message, 'Success')
-                            arr_path = [];
-                            hideModal('modal-schedule');
-                            renderCalender()
-                        }
+                        console.log('meta');
+                        toastr.success(res.message, 'Success')
+                        arr_path = [];
+                        hideModal('modal-schedule');
+                        renderCalender()
                     })
                     .fail(function(res, error) {
                         toastr.error(res.responseJSON.message, 'Failed')

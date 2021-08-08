@@ -23,7 +23,8 @@ class CoachSchedule extends Model
         'platform_id',
         'platform_link',
         'accepted',
-        'datetime'
+        'datetime',
+        'schedule_request_id'
     ];
 
     public $cascadeDeletes = [
