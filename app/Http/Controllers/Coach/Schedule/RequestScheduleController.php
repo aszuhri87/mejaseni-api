@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 use App\Models\ScheduleRequest;
 use App\Models\Session as SessionModel;
-use App\models\CoachSchedule;
+use App\Models\CoachSchedule;
 use App\Models\StudentSchedule;
 use App\Models\Classroom;
 
