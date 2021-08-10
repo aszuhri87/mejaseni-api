@@ -778,6 +778,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
             Route::group(['prefix' => 'request'], function () {
                 Route::post('/', [StudentRequestScheduleController::class, 'store']);
                 Route::post('dt', [StudentRequestScheduleController::class, 'dt']);
+                Route::post('/single', [StudentRequestScheduleController::class, 'single_request']);
                 Route::get('/classroom', [StudentRequestScheduleController::class, 'classroom']);
             });
         });

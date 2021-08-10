@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\ScheduleRequest;
 use App\Models\StudentNotification;
 use App\Models\Classroom;
+use App\Models\StudentSchedule;
 
 use App\Libraries\SocketIO;
 
@@ -80,6 +81,67 @@ class RequestScheduleController extends Controller
 
             if($result){
                 $classroom = Classroom::find($request->classroom_id);
+
+                $notification = StudentNotification::create([
+                    'student_id' => Auth::guard('student')->user()->id,
+                    'type' => 4,
+                    'text' => Auth::guard('student')->user()->name.' mengajukan jadwal untuk kelas '.$classroom->name,
+                    'datetime' => date('Y-m-d H:i:s')
+                ]);
+
+                event(new \App\Events\StudentNotification($notification, Auth::guard('student')->user()->id));
+                event(new \App\Events\AdminNotification($notification));
+
+                SocketIO::message(Auth::guard('student')->user()->id, 'notification_'.Auth::guard('student')->user()->id, $notification);
+                SocketIO::message('admin', 'notification_admin', $notification);
+            }
+
+            return response([
+                "status"    => 200,
+                "message"   => 'Permintaan terkirim'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message"=> $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function single_request(Request $request)
+    {
+        try {
+            $result = DB::transaction(function () use($request){
+                $coach_schedule = DB::table('coach_schedules')
+                    ->select([
+                        'coach_schedules.id',
+                        'coach_classrooms.classroom_id',
+                        'sessions.name as session',
+                        'student_schedules.student_classroom_id',
+                    ])
+                    ->leftJoin('coach_classrooms', 'coach_classrooms.id','=', 'coach_schedules.coach_classroom_id')
+                    ->leftJoin('student_schedules', 'student_schedules.coach_schedule_id','=', 'coach_schedules.id')
+                    ->leftJoin('sessions', 'student_schedules.session_id','=', 'sessions.id')
+                    ->where('coach_schedules.id', $request->coach_schedule_id)
+                    ->first();
+
+                StudentSchedule::where([
+                    'student_classroom_id' => $coach_schedule->student_classroom_id,
+                    'coach_schedule_id' => $coach_schedule->id,
+                ])->delete();
+
+                $request_schedule = ScheduleRequest::create([
+                    'classroom_id' => $coach_schedule->classroom_id,
+                    'student_id' => Auth::guard('student')->user()->id,
+                    'datetime' => date('Y-m-d H:i:s', strtotime($request->date.' '.$request->time)),
+                    'session' => $coach_schedule->session
+                ]);
+
+                return $request_schedule;
+            });
+
+            if($result){
+                $classroom = Classroom::find($result->classroom_id);
 
                 $notification = StudentNotification::create([
                     'student_id' => Auth::guard('student')->user()->id,

@@ -124,7 +124,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
-                    <button type="submit" id="btn-cancel-reschedule" class="btn btn-danger btn-loading-reschedule show-hide">Cancel Schedule</button>
+                    <button type="submit" id="btn-cancel-reschedule" class="btn btn-danger btn-loading-reschedule" style="display: none !important;">Cancel Schedule</button>
                     <button type="button" class="btn btn-primary" id="btn-reschedule" style="display: none !important;">Reschedule</button>
                 </div>
             </form>
@@ -232,13 +232,16 @@
                     <input type="hidden" name="coach_schedule_id" id="old_coach_schedule_id">
                     <input type="hidden" name="classroom_id" id="schedule_classroom_id">
                     <input type="hidden" name="student_id" id="student_id" value="{{Auth::guard('student')->user()->id}}">
-                    <div class="row">
-                        <div class="col-12">
-                            <ul class="list-group list-group-flush" id="ul-list-schedule">
 
-                            </ul>
-                        </div>
+                    <div class="form-group">
+                        <label>Tanggal<span class="text-danger">*</span></label>
+                        <input type="text" name="date" class="form-control datepicker-with-stardate" required placeholder="Date" style="width: 100% !important">
                     </div>
+                    <div class="form-group">
+                        <label>Waktu Mulai<span class="text-danger">*</span></label>
+                        <input type="text" name="time" class="form-control timepicker" required placeholder="Time" style="width: 100% !important">
+                    </div>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>

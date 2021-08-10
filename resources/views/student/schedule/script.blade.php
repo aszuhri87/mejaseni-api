@@ -134,75 +134,10 @@
                 $(document).on('click','#btn-reschedule',function(event){
                     event.preventDefault();
 
-                    $.ajax({
-                        url: `{{ url('student/schedule/regular-class/list-reschedule') }}`,
-                        type: `POST`,
-                        data: {
-                            student_classroom_id: $(this).data('student_classroom_id'),
-                            coach_schedule_id: $(this).data('coach_schedule_id'),
-                        },
-                    })
-                    .done(function(res, xhr, meta) {
-                        if(res.status == 200){
-                            if(res.data.length > 0){
-                                element = ``;
+                    $('#confirm-reschedule').show();
+                    $('#old_coach_schedule_id').val($(this).data('coach_schedule_id'))
 
-                                $.each(res.data, function(index, data){
-                                    element += `
-                                        <li class="list-group-item hover-list">
-                                            <label class="radio radio-lg d-flex align-items-center">
-                                            <input type="radio" name="new_coach_schedule_id" value="${data.id}" required/>
-                                            <span class="mr-2"></span>
-                                            <div class="w-100">
-                                                <table class="table table-borderless" width="100%">
-                                                    <tr>
-                                                        <td>
-                                                            <label>Title</label>
-                                                            <h5>${data.title}</h5>
-                                                        </td>
-                                                        <td>
-                                                            <label>Date</label>
-                                                            <h5>${moment(data.start).format('DD MMMM YYYY')}</h5>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <label>Coach</label>
-                                                            <h5>${data.coach_name}</h5>
-                                                        </td>
-                                                        <td>
-                                                            <label>Date</label>
-                                                            <h5>${moment(data.start).format('HH:mm')}</h5>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-
-                                            </div>
-                                        </li>
-                                    `;
-                                });
-
-                                $('#old_coach_schedule_id').val(res.student_schedule.coach_schedule_id);
-                                $('#schedule_classroom_id').val(res.student_schedule.classroom_id);
-                                $('#confirm-reschedule').show();
-                                $('#ul-list-schedule').html(element);
-                            }else{
-                                $('#confirm-reschedule').hide();
-                                $('#ul-list-schedule').html(`
-                                    <li class="list-group-item text-center">
-                                        <strong>Jadwal tidak tersedia.</strong>
-                                    </li>
-                                `);
-                            }
-                            showModal('modal-reschedule');
-                        }
-                    })
-                    .fail(function(res, error) {
-                        toastr.error(res.responseJSON.message, 'Failed')
-                    })
-                    .always(function() {
-                        btn_loading_basic('stop')
-                    });
+                    showModal('modal-reschedule');
                 });
             },
             formSubmit = () => {
@@ -294,7 +229,7 @@
 
                     btn_loading_cancel_schedule('start')
                     $.ajax({
-                        url: `{{url('student/schedule/regular-class/new-reschedule')}}`,
+                        url: `{{url('student/schedule/request/single')}}`,
                         type: 'POST',
                         data: $(this).serialize(),
                     })
@@ -465,8 +400,8 @@
 
                                         if(check_date){
                                             if(data.status_reschedule == 1){
-                                                $('#btn-reschedule').hide();
-                                                $('#btn-cancel-reschedule').show();
+                                                $('#btn-reschedule').show();
+                                                $('#btn-cancel-reschedule').hide();
                                                 $('.show-hide').removeAttr('style');
                                             }
                                             else{
@@ -626,8 +561,8 @@
 
                                         if(check_date){
                                             if(data.status_reschedule == 1){
-                                                $('#btn-reschedule').hide();
-                                                $('#btn-cancel-reschedule').show();
+                                                $('#btn-reschedule').show();
+                                                $('#btn-cancel-reschedule').hide();
                                                 $('.show-hide').removeAttr('style');
                                             }
                                             else{
