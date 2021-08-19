@@ -127,6 +127,28 @@
                                             <input required type="number" name="price" class="form-control" placeholder="Price"/>
                                         </div>
                                     </div>
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <span class="switch switch-sm">
+                                                <label>
+                                                    <input type="checkbox" id="switch-buy-btn-disable" name="buy_btn_disable"/>
+                                                    <span></span>
+                                                </label>
+                                                Disable Tombol Beli
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <span class="switch switch-sm">
+                                                <label>
+                                                    <input type="checkbox" id="switch-hide" name="hide"/>
+                                                    <span></span>
+                                                </label>
+                                                Sembunyikan Kelas
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

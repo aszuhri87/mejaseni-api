@@ -85,6 +85,8 @@ class ClassroomController extends BaseMenu
                     'price' => $request->price,
                     'description' => $request->description,
                     'image' => $path,
+                    'buy_btn_disable' => isset($request->buy_btn_disable) ? true : false,
+                    'hide' => isset($request->hide) ? true : false,
                 ]);
 
                 if(isset($request->tools)){
@@ -154,6 +156,8 @@ class ClassroomController extends BaseMenu
                     'session_duration' => $request->duration,
                     'price' => $request->price,
                     'description' => $request->description,
+                    'buy_btn_disable' => isset($request->buy_btn_disable) ? true : false,
+                    'hide' => isset($request->hide) ? true : false,
                 ]);
 
                 if(isset($request->image)){

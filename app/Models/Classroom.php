@@ -32,7 +32,9 @@ class Classroom extends Model
         'image',
         'price',
         'session_total',
-        'session_duration'
+        'session_duration',
+        'buy_btn_disable',
+        'hide',
     ];
 
     public $cascadeDeletes = [

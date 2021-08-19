@@ -154,6 +154,7 @@ class ClassController extends Controller
                 ])
                 ->where('classrooms.package_type',$regular_class_type)
                 ->where('classrooms.classroom_category_id',$selected_category->id)
+                ->where('classrooms.hide','!=', true)
                 ->orderBy('sub_classroom_categories.number', 'asc')
                 ->get();
         }
@@ -631,6 +632,7 @@ class ClassController extends Controller
                     ->whereNull([
                         'classrooms.deleted_at'
                     ])
+                    ->where('classrooms.hide','!=', true)
                     ->where('classrooms.package_type',$package)
                     ->where('classroom_categories.id',$classroom_category_id);
 
@@ -698,32 +700,55 @@ class ClassController extends Controller
     {
         $html = "";
         foreach ($classrooms as $key => $classroom) {
-            $html .= '<div class="col-lg-4 col-md-12 col-sm-12 p-2">
-                        <div class="card card-custom card-shadowless h-100">
-                            <div class="card-body p-0">
-                                <div class="overlay">
-                                    <div class="overlay-wrapper rounded bg-light text-center">
-                                        <img src="'.(isset($classroom->image_url) ? $classroom->image_url : '' ).'" alt="" class="mw-100 h-200px" />
+            if($classroom->buy_btn_disable != true){
+                $html .= '<div class="col-lg-4 col-md-12 col-sm-12 p-2">
+                            <div class="card card-custom card-shadowless h-100">
+                                <div class="card-body p-0">
+                                    <div class="overlay">
+                                        <div class="overlay-wrapper rounded bg-light text-center">
+                                            <img src="'.(isset($classroom->image_url) ? $classroom->image_url : '' ).'" alt="" class="mw-100 h-200px" />
+                                        </div>
+                                    </div>
+                                    <div class="text-center mt-3 mb-md-0 mb-lg-5 mb-md-0 mb-lg-5 mb-lg-0 mb-5 d-flex flex-column p-1">
+                                        <a class="font-size-h5 font-weight-bolder text-dark-75 text-hover-primary mb-1">'.( isset($classroom->name) ? $classroom->name : '' ).'</a>
+                                        <div class="d-flex flex-column">
+                                            <p>'.( isset($classroom->session_total) ? $classroom->session_total : '' ).' Sesi | @ '.( isset($classroom->session_duration) ? $classroom->session_duration : '' ).'menit |
+                                              <span class="fa fa-star checked mr-1" style="font-size: 15px;"></span> '.( isset($classroom->rating) ? $classroom->rating < 4 ? '4.6':$classroom->rating : '4.6' ).'
+                                          </p>
+                                            <span class="mt-2">Rp.'.number_format($classroom->price, 2).'</span>
+                                          </div>
+
+                                        <a class="btn btn-primary shadow mt-5" onclick="'.$this->_is_authenticated($classroom->id, $type).'">Daftar
+                                            Sekarang
+                                            <img class="ml-2" src="cms/assets/img/svg/Sign-in.svg">
+                                        </a>
+
                                     </div>
                                 </div>
-                                <div class="text-center mt-3 mb-md-0 mb-lg-5 mb-md-0 mb-lg-5 mb-lg-0 mb-5 d-flex flex-column p-1">
-                                    <a class="font-size-h5 font-weight-bolder text-dark-75 text-hover-primary mb-1">'.( isset($classroom->name) ? $classroom->name : '' ).'</a>
-                                    <div class="d-flex flex-column">
-                                        <p>'.( isset($classroom->session_total) ? $classroom->session_total : '' ).' Sesi | @ '.( isset($classroom->session_duration) ? $classroom->session_duration : '' ).'menit |
-                                          <span class="fa fa-star checked mr-1" style="font-size: 15px;"></span> '.( isset($classroom->rating) ? $classroom->rating < 4 ? '4.6':$classroom->rating : '4.6' ).'
-                                      </p>
-                                        <span class="mt-2">Rp.'.number_format($classroom->price, 2).'</span>
-                                      </div>
-
-                                    <a class="btn btn-primary shadow mt-5" onclick="'.$this->_is_authenticated($classroom->id, $type).'">Daftar
-                                        Sekarang
-                                        <img class="ml-2" src="cms/assets/img/svg/Sign-in.svg">
-                                      </a>
-
-                                </div>
+                            </div>
+                        </div>';
+            }else{
+                $html .= '<div class="col-lg-4 col-md-12 col-sm-12 p-2">
+                <div class="card card-custom card-shadowless h-100">
+                    <div class="card-body p-0">
+                        <div class="overlay">
+                            <div class="overlay-wrapper rounded bg-light text-center">
+                                <img src="'.(isset($classroom->image_url) ? $classroom->image_url : '' ).'" alt="" class="mw-100 h-200px" />
                             </div>
                         </div>
-                    </div>';
+                        <div class="text-center mt-3 mb-md-0 mb-lg-5 mb-md-0 mb-lg-5 mb-lg-0 mb-5 d-flex flex-column p-1">
+                            <a class="font-size-h5 font-weight-bolder text-dark-75 text-hover-primary mb-1">'.( isset($classroom->name) ? $classroom->name : '' ).'</a>
+                            <div class="d-flex flex-column">
+                                <p>'.( isset($classroom->session_total) ? $classroom->session_total : '' ).' Sesi | @ '.( isset($classroom->session_duration) ? $classroom->session_duration : '' ).'menit |
+                                  <span class="fa fa-star checked mr-1" style="font-size: 15px;"></span> '.( isset($classroom->rating) ? $classroom->rating < 4 ? '4.6':$classroom->rating : '4.6' ).'
+                              </p>
+                                <span class="mt-2">Rp.'.number_format($classroom->price, 2).'</span>
+                              </div>
+                        </div>
+                    </div>
+                </div>
+            </div>';
+            }
         }
         return $html;
     }
@@ -774,40 +799,71 @@ class ClassController extends Controller
 
     public function _get_description_html($classroom)
     {
-        $html = '<div class="content-tab-detail" style="">
-                    <div class="desc__class-tab my-4">
-                      <p class="text-justify readmore">
-                        '. (isset($classroom->description) ? $classroom->description:"") .'
-                      </p>
-                    </div>
-                  </div>
-                  <div class="class-tab-summary mb-4">
-                    <div class="row">
-                        <div class="col col-12 mt-4">
-                            <div class="d-flex flex-column">
-                              <p>'. (isset($classroom->session_total) ? $classroom->session_total:"") .' Sesi | @ '. (isset($classroom->session_duration) ? $classroom->session_duration:"") .'menit |
-                                <span class="fa fa-star checked mr-1" style="font-size: 15px;"></span> '.(isset($classroom->rating) ? $classroom->rating < 4 ? "4.6":$classroom->rating : "4.6").'
-                              </p>
-                                <span class="mt-2">Rp.'.(isset($classroom->price) ? number_format($classroom->price, 2):"").' </span>
+        if($classroom->buy_btn_disable != true){
+            $html = '<div class="content-tab-detail" style="">
+                        <div class="desc__class-tab my-4">
+                          <p class="text-justify readmore">
+                            '. (isset($classroom->description) ? $classroom->description:"") .'
+                          </p>
+                        </div>
+                      </div>
+                      <div class="class-tab-summary mb-4">
+                        <div class="row">
+                            <div class="col col-12 mt-4">
+                                <div class="d-flex flex-column">
+                                  <p>'. (isset($classroom->session_total) ? $classroom->session_total:"") .' Sesi | @ '. (isset($classroom->session_duration) ? $classroom->session_duration:"") .'menit |
+                                    <span class="fa fa-star checked mr-1" style="font-size: 15px;"></span> '.(isset($classroom->rating) ? $classroom->rating < 4 ? "4.6":$classroom->rating : "4.6").'
+                                  </p>
+                                    <span class="mt-2">Rp.'.(isset($classroom->price) ? number_format($classroom->price, 2):"").' </span>
+                                </div>
+                            </div>
+                            <div class="col col-12 mt-4 justify-content-md-end">
+                                <div class="d-flex justify-content-start">
+                                <div class="mr-2">
+                                  <a class="btn btn-primary shadow"  onclick="'.$this->_is_authenticated($classroom->id, 1).'">Daftar
+                                    Sekarang
+                                    <img class="ml-2" src="cms/assets/img/svg/Sign-in.svg">
+                                  </a>
+                                </div>
+                                <div>
+                                  <a class="btn btn-primary shadow" onclick="showModalClass()">Lihat Kelas
+                                    <img class="ml-2" src="cms/assets/img/svg/Sign-in.svg">
+                                  </a>
+                                </div>
+                              </div>
                             </div>
                         </div>
-                        <div class="col col-12 mt-4 justify-content-md-end">
-                            <div class="d-flex justify-content-start">
-                            <div class="mr-2">
-                              <a class="btn btn-primary shadow"  onclick="'.$this->_is_authenticated($classroom->id, 1).'">Daftar
-                                Sekarang
-                                <img class="ml-2" src="cms/assets/img/svg/Sign-in.svg">
-                              </a>
-                            </div>
-                            <div>
-                              <a class="btn btn-primary shadow" onclick="showModalClass()">Lihat Kelas
-                                <img class="ml-2" src="cms/assets/img/svg/Sign-in.svg">
-                              </a>
-                            </div>
-                          </div>
+                      </div>';
+        }else{
+            $html = '<div class="content-tab-detail" style="">
+                <div class="desc__class-tab my-4">
+                <p class="text-justify readmore">
+                    '. (isset($classroom->description) ? $classroom->description:"") .'
+                </p>
+                </div>
+            </div>
+            <div class="class-tab-summary mb-4">
+                <div class="row">
+                    <div class="col col-12 mt-4">
+                        <div class="d-flex flex-column">
+                        <p>'. (isset($classroom->session_total) ? $classroom->session_total:"") .' Sesi | @ '. (isset($classroom->session_duration) ? $classroom->session_duration:"") .'menit |
+                            <span class="fa fa-star checked mr-1" style="font-size: 15px;"></span> '.(isset($classroom->rating) ? $classroom->rating < 4 ? "4.6":$classroom->rating : "4.6").'
+                        </p>
+                            <span class="mt-2">Rp.'.(isset($classroom->price) ? number_format($classroom->price, 2):"").' </span>
                         </div>
                     </div>
-                  </div>';
+                    <div class="col col-12 mt-4 justify-content-md-end">
+                        <div class="d-flex justify-content-start">
+                        <div>
+                        <a class="btn btn-primary shadow" onclick="showModalClass()">Lihat Kelas
+                            <img class="ml-2" src="cms/assets/img/svg/Sign-in.svg">
+                        </a>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>';
+        }
 
         return $html;
     }
@@ -856,6 +912,7 @@ class ClassController extends Controller
                 'classrooms.classroom_category_id',
             ])
             ->whereNull("classrooms.deleted_at")
+            ->where('classrooms.hide','!=', true)
             ->where('classrooms.package_type', $special_class_type);
 
         $regular_class = DB::table('classrooms')
@@ -863,6 +920,7 @@ class ClassController extends Controller
                 'classrooms.classroom_category_id',
             ])
             ->whereNull("classrooms.deleted_at")
+            ->where('classrooms.hide','!=', true)
             ->where('classrooms.package_type', $regular_class_type);
 
 
@@ -928,7 +986,56 @@ class ClassController extends Controller
         foreach ($classrooms as $key => $classroom) {
             $session_total = isset($classroom->session_total) ? $classroom->session_total:0;
             $session_duration = isset($classroom->session_duration) ? $classroom->session_duration:0;
-            $html .= '<li class="splide__slide px-2">
+            
+            if($classroom->buy_btn_disable != true){
+                $html .= '<li class="splide__slide px-2">
+                            <img class="w-100 rounded" src="'. $classroom->image_url .'" alt="">
+                            <div class="badge-left">
+                              <h3 class="mt-4 ml-2">'. $classroom->name.'</h3>
+                            </div>
+                            <ul class="row-center-start class-tab mt-5 mt-md-4">
+                              <li class="active tab-detail" data-id="'. $classroom->id .'" href="tab-description">Deskripsi</li>
+                              <li class="tab-detail" data-id="'. $classroom->id .'" href="tab-coach">Coach</li>
+                              <li class="tab-detail" data-id="'. $classroom->id .'" href="tab-tools">Tools</li>
+                            </ul>
+                            <div id="description-'. $classroom->id .'">
+                                <div class="content-tab-detail" style="">
+                                    <div class="desc__class-tab my-4">
+                                      <p class="text-justify readmore">
+                                        '. (isset($classroom->description) ? $classroom->description:"") .'
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <div class="class-tab-summary mb-4">
+                                    <div class="row">
+                                        <div class="col col-12 mt-4">
+                                            <div class="d-flex flex-column">
+                                                <p>'. (isset($classroom->session_total) ? $classroom->session_total:"") .' Sesi | @ '. (isset($classroom->session_duration) ? $classroom->session_duration:"") .'menit | <span class="fa fa-star checked mr-1" style="font-size: 15px;"></span> '.(isset($classroom->rating) ? $classroom->rating < 4 ? "4.6":$classroom->rating : "4.6").'
+                                                </p>
+                                                <span class="mt-2">Rp.'. (isset($classroom->price) ? number_format($classroom->price, 2):"").'</span>
+                                            </div>
+                                        </div>
+                                        <div class="col col-12 mt-4 justify-content-md-end">
+                                            <div class="d-flex justify-content-start">
+                                                <div class="mr-2">
+                                                  <a class="btn btn-primary shadow"  onclick="'.$this->_is_authenticated($classroom->id, 1).'">Daftar
+                                                    Sekarang
+                                                    <img class="ml-2" src="cms/assets/img/svg/Sign-in.svg">
+                                                  </a>
+                                                </div>
+                                                <div>
+                                                  <a class="btn btn-primary shadow" onclick="showModalClass()">Lihat Kelas
+                                                    <img class="ml-2" src="cms/assets/img/svg/Sign-in.svg">
+                                                  </a>
+                                                </div>
+                                              </div>
+                                        </div>
+                                    </div>
+                                  </div>
+                            </div>
+                          </li>';
+            }else{
+                $html .= '<li class="splide__slide px-2">
                         <img class="w-100 rounded" src="'. $classroom->image_url .'" alt="">
                         <div class="badge-left">
                           <h3 class="mt-4 ml-2">'. $classroom->name.'</h3>
@@ -957,12 +1064,6 @@ class ClassController extends Controller
                                     </div>
                                     <div class="col col-12 mt-4 justify-content-md-end">
                                         <div class="d-flex justify-content-start">
-                                            <div class="mr-2">
-                                              <a class="btn btn-primary shadow"  onclick="'.$this->_is_authenticated($classroom->id, 1).'">Daftar
-                                                Sekarang
-                                                <img class="ml-2" src="cms/assets/img/svg/Sign-in.svg">
-                                              </a>
-                                            </div>
                                             <div>
                                               <a class="btn btn-primary shadow" onclick="showModalClass()">Lihat Kelas
                                                 <img class="ml-2" src="cms/assets/img/svg/Sign-in.svg">
@@ -974,6 +1075,7 @@ class ClassController extends Controller
                               </div>
                         </div>
                       </li>';
+            }
         }
 
         $html .= '</ul>

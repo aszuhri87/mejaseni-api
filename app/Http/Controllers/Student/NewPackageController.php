@@ -58,6 +58,7 @@ class NewPackageController extends BaseMenu
                 ->select([
                     'classrooms.id as classroom_id',
                     'classrooms.name as classroom_name',
+                    'classrooms.buy_btn_disable',
                     'classrooms.description',
                     'classrooms.image',
                     'classrooms.price',
@@ -91,6 +92,7 @@ class NewPackageController extends BaseMenu
                     }
                 })
                 ->whereNull('classrooms.deleted_at')
+                ->where('classrooms.hide','!=', true)
                 ->distinct('classrooms.id')
                 ->paginate(6);
 
@@ -199,6 +201,7 @@ class NewPackageController extends BaseMenu
                 ->select([
                     'classrooms.id',
                     'classrooms.name as classroom_name',
+                    'classrooms.buy_btn_disable',
                     'classrooms.description',
                     'classrooms.image',
                     'classrooms.price',
@@ -218,6 +221,7 @@ class NewPackageController extends BaseMenu
                     $join->on('classrooms.id', '=', 'carts.classroom_id');
                 })
                 ->whereNull('classrooms.deleted_at')
+                ->where('classrooms.hide','!=', true)
                 ->distinct('classrooms.id');
 
             $result = DB::table('discounts')
@@ -226,6 +230,7 @@ class NewPackageController extends BaseMenu
                     'discounts.classroom_id',
                     'discounts.discount',
                     'classrooms.classroom_name',
+                    'classrooms.buy_btn_disable',
                     'classrooms.description',
                     'classrooms.image',
                     'classrooms.price',
@@ -239,6 +244,7 @@ class NewPackageController extends BaseMenu
                     $join->on('discounts.classroom_id', '=', 'classrooms.id');
                 })
                 ->where('discounts.id', $id)
+                ->where('classrooms.hide','!=', true)
                 ->whereNull('discounts.deleted_at')
                 ->first();
 
@@ -309,6 +315,7 @@ class NewPackageController extends BaseMenu
                 ->select([
                     'classrooms.id as classroom_id',
                     'classrooms.name as classroom_name',
+                    'classrooms.buy_btn_disable',
                     'classrooms.description',
                     'classrooms.image',
                     'classrooms.price',
@@ -336,6 +343,7 @@ class NewPackageController extends BaseMenu
                     }
                 })
                 ->distinct('classrooms.id')
+                ->where('classrooms.hide','!=', true)
                 ->paginate(6);
 
             foreach ($result as $key => $value) {
@@ -501,6 +509,7 @@ class NewPackageController extends BaseMenu
                 ->select([
                     'classrooms.id as classroom_id',
                     'classrooms.name as classroom_name',
+                    'classrooms.buy_btn_disable',
                     'classrooms.description',
                     'classrooms.classroom_category_id',
                     'classrooms.image',
@@ -523,6 +532,7 @@ class NewPackageController extends BaseMenu
                 })
                 ->where('classrooms.deleted_at')
                 ->where('classrooms.classroom_category_id',$id)
+                ->where('classrooms.hide','!=', true)
                 ->distinct('classrooms.id')
                 ->paginate(6);
 

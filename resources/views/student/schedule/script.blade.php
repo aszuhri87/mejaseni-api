@@ -13,6 +13,7 @@
                 initCoachList();
                 studentRating();
                 getClass();
+                actionTableRequest();
             });
 
             const initAction = () => {
@@ -978,6 +979,36 @@
                         },
                     });
                 }
+            },
+            actionTableRequest = () => {
+                $.ajax({
+                    url: `{{ url('student/my-class/class-active') }}/{{Auth::guard('student')->user()->id}}`,
+                    type: `GET`,
+                })
+                .done(function(res, xhr, meta) {
+                    let element = '<option value="">Semuanya</option>';
+                    $.each(res.data, function(index, value){
+                        element += `<option value="${value.classroom_name}">${value.classroom_name}</option>`
+                    })
+
+                    $('#class-filter').html(element);
+                });
+
+                $(document).on('change', '#class-filter', function(){
+                    init_table_request.column(1).search( this.value ).draw(false);
+                })
+
+                $(document).on('change', '#status-filter', function(){
+                    init_table_request.column(3).search( this.value ).draw(false);
+                })
+
+                $(document).on('change', '#date-filter', function(){
+                    if(this.value != ''){
+                        init_table_request.column(2).search( moment(this.value).format('YY-MM-DD') ).draw(false);
+                    }else{
+                        init_table_request.column(2).search('').draw(false);
+                    }
+                })
             }
 
         };

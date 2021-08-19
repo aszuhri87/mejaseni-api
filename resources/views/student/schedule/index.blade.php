@@ -314,6 +314,23 @@
                 {{-- change password form --}}
                 <div class="tab-pane px-7" id="shedule-request" role="tabpanel">
                     <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4 col-sm-12">
+                                <select class="form-control" id="class-filter"> 
+                                </select>
+                            </div>
+                            <div class="col-md-4 col-sm-12">
+                                <input type="text" id="date-filter" class="form-control datepicker" required placeholder="Date" style="width: 100% !important">
+                            </div>
+                            <div class="col-md-4 col-sm-12">
+                                <select class="form-control" id="status-filter">
+                                    <option value="">Semuanya</option>
+                                    <option value="Menunggu Admin">Menunggu Admin</option>
+                                    <option value="Menunggu Coach">Menunggu Coach</option>
+                                    <option value="Dikonfirmasi Coach">Dikonfirmasi Coach</option>
+                                </select>
+                            </div>
+                        </div>
                         <table class="table table-separate table-head-custom mb-0 pb-0" width="100%" id="init-table-request">
                             <thead>
                                 <tr>

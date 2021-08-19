@@ -188,6 +188,8 @@
                     $("input[name=package_type]").attr('checked', false);
                     $("input[name=sub_package_type]").attr('checked', false);
                     $('#switch-sub-package').attr('checked', false);
+                    $('#switch-buy-btn-disable').attr('checked', false);
+                    $('#switch-hide').attr('checked', false);
                     $('#sub-classroom-category').val('');
                     $('#classroom-category').val('');
 
@@ -219,6 +221,14 @@
                     }else{
                         $("input[name=package_type][value=" + data.package_type + "]").attr('checked', 'checked');
                         $('.switch-sub-package').hide();
+                    }
+
+                    if(data.buy_btn_disable){
+                        $('#switch-buy-btn-disable').attr('checked', 'checked');
+                    }
+
+                    if(data.hide){
+                        $('#switch-hide').attr('checked', 'checked');
                     }
 
                     $('#image').empty();
@@ -480,13 +490,11 @@
 
                     let validate = ss_validate([
                         'classroom-category',
-                        'sub-classroom-category'
                     ]);
 
                     if(!validate){
                         return false;
                     }
-
                     let form_data = new FormData(this)
 
                     for (var i = 0; i < arr_tools.length; i++) {

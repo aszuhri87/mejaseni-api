@@ -233,6 +233,7 @@
                                                             </div>
                                                             `;
                                                             // if(!data.is_buy){
+                                                            if(data.buy_btn_disable != true){
                                                                 element +=`
                                                                 <div id="${data.classroom_id}">
                                                                     <button type="button" class="btn btn-primary btn-registration" data-type="1" data-id="${data.classroom_id}" data-classroom_name="${data.classroom_name}" data-price="${data.price}">
@@ -246,6 +247,7 @@
                                                                         Daftar Kelas
                                                                     </button>
                                                                 </div>`;
+                                                            }
                                                             // }
                                                     element+=`
                                                         </div>
@@ -456,6 +458,7 @@
                                                         </div>
                                                         `;
                                                         // if(!data.is_buy){
+                                                        if(data.buy_btn_disable != true){
                                                             element +=`
                                                             <div id="${data.classroom_id}">
                                                                 <button type="button" class="btn btn-primary btn-registration" data-type="1" data-id="${data.classroom_id}" data-classroom_name="${data.classroom_name}" data-price="${data.price}">
@@ -469,6 +472,7 @@
                                                                     Daftar Kelas
                                                                 </button>
                                                             </div>`;
+                                                        }
                                                         // }
                                                 element+=`
                                                     </div>
@@ -716,6 +720,7 @@
                                                         </div>
                                                         `;
                                                         // if(!data.is_buy){
+                                                        if(data.buy_btn_disable != true){
                                                             element +=`
                                                             <div id="${data.classroom_id}">
                                                                 <button type="button" class="btn btn-primary btn-registration" data-type="1" data-id="${data.classroom_id}" data-classroom_name="${data.classroom_name}" data-price="${data.price}">
@@ -729,6 +734,7 @@
                                                                     Daftar Kelas
                                                                 </button>
                                                             </div>`;
+                                                        }
                                                         // }
                                                 element+=`
                                                     </div>
@@ -904,6 +910,7 @@
                                                                 </div>
                                                                 `;
                                                                 // if(!data.is_buy){
+                                                                if(data.buy_btn_disable != true){
                                                                     element +=`
                                                                     <div id="${data.classroom_id}">
                                                                         <button type="button" class="btn btn-primary btn-registration" data-type="1" data-id="${data.classroom_id}" data-classroom_name="${data.classroom_name}" data-price="${data.price}">
@@ -917,6 +924,7 @@
                                                                             Daftar Kelas
                                                                         </button>
                                                                     </div>`;
+                                                                }
                                                                 // }
                                                         element+=`
                                                             </div>
@@ -1097,6 +1105,7 @@
                                                                 </div>
                                                                 `;
                                                                 // if(!data.is_buy){
+                                                                if(data.buy_btn_disable != true){
                                                                     element +=`
                                                                     <div id="${data.classroom_id}">
                                                                         <button type="button" class="btn btn-primary btn-registration" data-type="1" data-id="${data.classroom_id}" data-classroom_name="${data.classroom_name}" data-price="${data.price}">
@@ -1110,6 +1119,7 @@
                                                                             Daftar Kelas
                                                                         </button>
                                                                     </div>`;
+                                                                }
                                                                 // }
                                                         element+=`
                                                             </div>
@@ -1706,6 +1716,7 @@
                                                         </div>
                                                         `;
                                                         // if(!data.is_buy){
+                                                        if(data.buy_btn_disable != true){
                                                             element +=`
                                                             <div id="${data.classroom_id}">
                                                                 <button type="button" class="btn btn-primary btn-registration" data-type="1" data-id="${data.classroom_id}" data-classroom_name="${data.classroom_name}" data-price="${data.price}">
@@ -1719,6 +1730,7 @@
                                                                     Daftar Kelas
                                                                 </button>
                                                             </div>`;
+                                                        }
                                                         // }
                                                 element+=`
                                                     </div>
@@ -1919,6 +1931,7 @@
                                                         </div>
                                                         `;
                                                         // if(!data.is_buy){
+                                                        if(data.buy_btn_disable != true){
                                                             element +=`
                                                             <div id="${data.classroom_id}">
                                                                 <button type="button" class="btn btn-primary btn-registration" data-type="1" data-id="${data.classroom_id}" data-classroom_name="${data.classroom_name}" data-price="${data.price}">
@@ -1932,6 +1945,7 @@
                                                                     Daftar Kelas
                                                                 </button>
                                                             </div>`;
+                                                        }
                                                         // }
                                                         element+=`
                                                     </div>
@@ -2229,6 +2243,7 @@
                                                             <span>${data.session_total} Sesi </span><span>@${data.session_duration}Menit</span>
                                                         </div>`;
                                                         // if(!data.is_buy){
+                                                        if(data.buy_btn_disable != true){
                                                         element +=`
                                                             <div id="${data.classroom_id}">
                                                                 <button type="button" class="btn btn-primary btn-registration" data-type="1" data-id="${data.classroom_id}" data-classroom_name="${data.classroom_name}" data-price="${data.price}">
@@ -2242,6 +2257,7 @@
                                                                     Daftar Kelas
                                                                 </button>
                                                             </div>`;
+                                                        }
                                                         // }
                                                     element +=`</div>
                                                 </div>
