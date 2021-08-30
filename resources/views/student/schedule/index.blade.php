@@ -69,6 +69,9 @@
                         <div class="col-lg-6 d-flex mt-5" style="padding-right: 0 !important">
                             <button class="btn btn-primary btn-request-schedule" type="button">Request Schedule</button>
                         </div>
+                        <div class="col-lg-6 d-flex mt-5" style="padding-right: 0 !important">
+                            <a href="{{ url('/student/schedule/print')}}" class="btn btn-primary" target="_blank">Print Schedule</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -316,7 +319,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-4 col-sm-12">
-                                <select class="form-control" id="class-filter"> 
+                                <select class="form-control" id="class-filter">
                                 </select>
                             </div>
                             <div class="col-md-4 col-sm-12">

@@ -37,7 +37,17 @@
                             targets: 3,
                             data: "datetime",
                             render: function(data, type, full, meta){
-                                return `${moment(data).format('DD MMMM YYYY, HH:mm')}`;
+                                let day = {
+                                    Sunday: "Minggu",
+                                    Monday: "Senin",
+                                    Tuesday: "Selasa",
+                                    Wednesday: "Rabu",
+                                    Thursday: "Kamis",
+                                    Friday: "Jumat",
+                                    Saturday: "Sabtu",
+                                };
+
+                                return `${day[moment(data).format('dddd')]}, ${moment(data).format('DD MMMM YYYY, HH:mm')}`;
                             }
                         },
                         {

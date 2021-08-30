@@ -98,7 +98,7 @@
                         for (let index = 0; index < value; index++) {
                             element += `<div class="row">
                                 <div class="col-12">
-                                    <h6>Sesi ${index + 1}</h6>
+                                    <h6>Jadwal ${index + 1}</h6>
                                 </div>
                                 <div class="col-md-6 col-sm-12">
                                     <div class="form-group">
@@ -950,7 +950,17 @@
                                 targets: 2,
                                 data: "datetime",
                                 render: function(data, type, full, meta){
-                                    return `${moment(data).format('DD MMMM YYYY, HH:mm')}`;
+                                    let day = {
+                                        Sunday: "Minggu",
+                                        Monday: "Senin",
+                                        Tuesday: "Selasa",
+                                        Wednesday: "Rabu",
+                                        Thursday: "Kamis",
+                                        Friday: "Jumat",
+                                        Saturday: "Sabtu",
+                                    };
+
+                                    return `${day[moment(data).format('dddd')]}, ${moment(data).format('DD MMMM YYYY, HH:mm')}`;
                                 }
                             },
                             {

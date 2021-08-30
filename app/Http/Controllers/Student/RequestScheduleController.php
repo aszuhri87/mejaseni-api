@@ -111,6 +111,31 @@ class RequestScheduleController extends Controller
     public function single_request(Request $request)
     {
         try {
+            $schedule_check = DB::table('coach_schedules')
+                ->select([
+                    'coach_schedules.id',
+                    'schedule_requests.datetime'
+                ])
+                ->leftJoin('coach_classrooms', 'coach_classrooms.id','=', 'coach_schedules.coach_classroom_id')
+                ->leftJoin('student_schedules', 'student_schedules.coach_schedule_id','=', 'coach_schedules.id')
+                ->leftJoin('schedule_requests', 'schedule_requests.id','=', 'coach_schedules.schedule_request_id')
+                ->leftJoin('sessions', 'student_schedules.session_id','=', 'sessions.id')
+                ->where('coach_schedules.id', $request->coach_schedule_id)
+                ->first();
+
+            if($schedule_check){
+                $date = date('Y-m-d', strtotime($schedule_check->datetime));
+
+                $end_date = date('Y-m-d', strtotime($date. ' + 7 days'));
+
+                if(date('Y-m-d', strtotime($request->date)) > $end_date){
+                    return response([
+                        "status"    => 400,
+                        "message"   => 'Reschedule maksimal 7 hari dari tanggal sebelumnya'
+                    ], 400);
+                }
+            }
+
             $result = DB::transaction(function () use($request){
                 $coach_schedule = DB::table('coach_schedules')
                     ->select([
@@ -360,27 +385,7 @@ class RequestScheduleController extends Controller
                     'classrooms.id',
                     'classrooms.name',
                     'sub_student_classroom.last_meeting',
-                    DB::raw("
-                        CASE
-                            WHEN classrooms.package_type = 2
-                                THEN
-                                    CASE
-                                        WHEN (transaction_classes.datetime::timestamp + INTERVAL '1 MONTH')::timestamp > '{$now}'::timestamp
-                                            AND sub_student_classroom.last_meeting < (classrooms.session_total::integer / 2)::integer
-                                            THEN ((classrooms.session_total::integer / 2)::integer) - sub_student_classroom.last_meeting::integer
-                                        WHEN (transaction_classes.datetime::timestamp + INTERVAL '2 MONTH')::timestamp > '{$now}'::timestamp
-                                            AND sub_student_classroom.last_meeting < classrooms.session_total
-                                            THEN (classrooms.session_total::integer - sub_student_classroom.last_meeting::integer) - (classrooms.session_total::integer / 2)::integer
-                                        ELSE 0
-                                    END
-                            ELSE
-                                CASE
-                                    WHEN (transaction_classes.datetime::timestamp + INTERVAL '1 WEEKS')::timestamp > '{$now}'::timestamp
-                                        THEN classrooms.session_total::integer  - sub_student_classroom.last_meeting::integer
-                                    ELSE 0
-                                END
-                        END subtraction
-                    "),
+                    DB::raw("classrooms.session_total::integer - sub_student_classroom.last_meeting::integer as subtraction"),
                 ])
                 ->joinSub($classroom, 'classrooms', function ($join) {
                     $join->on('student_classrooms.classroom_id', '=', 'classrooms.id');

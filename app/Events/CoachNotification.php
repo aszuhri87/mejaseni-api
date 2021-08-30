@@ -66,8 +66,10 @@ class CoachNotification implements ShouldBroadcastNow
             ->where('id', $id)
             ->first();
 
+        $is_coach = true;
+
         try {
-            Mail::send('mail.notification', compact('notification'), function($message) use($user){
+            Mail::send('mail.notification', compact('notification', 'is_coach'), function($message) use($user){
                 $message->to($user->email, $user->name)
                     ->from('info@mejaseni.com', 'MEJASENI')
                     ->subject('Mejaseni Notification');

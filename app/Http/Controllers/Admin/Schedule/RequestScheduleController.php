@@ -99,6 +99,8 @@ class RequestScheduleController extends BaseMenu
                     'datetime' => date('Y-m-d H:i:s'),
                 ]);
 
+                $notification->schedule_url = url("/coach/schedule-request");
+
                 event(new \App\Events\CoachNotification($notification, $schedule_request->coach_id));
                 event(new \App\Events\AdminNotification($notification));
 

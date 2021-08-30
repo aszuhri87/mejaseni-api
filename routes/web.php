@@ -781,6 +781,8 @@ Route::group(['middleware' => ['auth-handling']], function () {
                 Route::post('/single', [StudentRequestScheduleController::class, 'single_request']);
                 Route::get('/classroom', [StudentRequestScheduleController::class, 'classroom']);
             });
+
+            Route::get('/print', [StudentScheduleController::class, 'print']);
         });
 
         Route::group(['prefix' => 'my-class'], function () {

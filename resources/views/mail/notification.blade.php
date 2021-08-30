@@ -24,45 +24,47 @@
 									<tr>
 										<td>
 											<table role="presentation" border="0" cellpadding="0" cellspacing="0"
-                                            class="btn btn-primary" style="width: auto;">
-											<tbody>
-												<tr>
-													<p><b>{{$notification->text}}</b></p>
-												</tr>
-											</tbody>
-										</table>
-										<br>
-										<p>Salam,</p>
-										<p>Tim Mejaseni</p>
-										<br>
-										<p>Pesan ini di-generate secara otomatis, jangan balas pesan ini.</p>
-									</td>
-								</tr>
-							</table>
-						</td>
-					</tr>
+                                                class="btn btn-primary" style="width: auto;">
+                                                <tbody>
+                                                    <tr>
+                                                        <p><b>{{$notification->text}}</b></p>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            @if ($is_coach)
+                                            <a href="{{ $notification->schedule_url }}" target="_blank" style="background-color: #ffffff; border: solid 1px #21C68A; border-radius: 5px; box-sizing: border-box; color: #21C68A; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none; text-transform: capitalize; background-color: #21C68A; border-color: #21C68A; color: #ffffff;">Lihat Request Schedule</a> </td>
+                                            @endif
+                                            <br>
+                                            <p>Salam,</p>
+                                            <p>Tim Mejaseni</p>
+                                            <br>
+                                            <p>Pesan ini di-generate secara otomatis, jangan balas pesan ini.</p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <!-- END MAIN CONTENT AREA -->
+                    </table>
+                    <!-- END CENTERED WHITE CONTAINER -->
 
-					<!-- END MAIN CONTENT AREA -->
-				</table>
-				<!-- END CENTERED WHITE CONTAINER -->
+                    <!-- START FOOTER -->
+                    <div  style="color: #999999; font-size: 12px;text-align: center;">
+                        <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td style=" color: #999999; font-size: 12px; text-align: center; padding-bottom: 10px; padding-top: 10px;">
+                                    Powered by <a href="http://www.mejaseni.com" style=" color: #999999; font-size: 12px; text-align: center; text-decoration: none;">Mejaseni</a>.
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <!-- END FOOTER -->
 
-				<!-- START FOOTER -->
-				<div  style="color: #999999; font-size: 12px;text-align: center;">
-					<table role="presentation" border="0" cellpadding="0" cellspacing="0">
-						<tr>
-							<td style=" color: #999999; font-size: 12px; text-align: center; padding-bottom: 10px; padding-top: 10px;">
-								Powered by <a href="http://www.mejaseni.com" style=" color: #999999; font-size: 12px; text-align: center; text-decoration: none;">Mejaseni</a>.
-							</td>
-						</tr>
-					</table>
-				</div>
-				<!-- END FOOTER -->
-
-			</div>
-		</td>
-		<td>&nbsp;</td>
-	</tr>
-</table>
+                </div>
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+    </table>
 </body>
 
 </html>
