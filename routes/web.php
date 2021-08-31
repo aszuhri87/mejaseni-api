@@ -690,6 +690,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::post('schedule/{id}', [CoachScheduleController::class, 'update']);
         Route::post('schedule/update/{id}', [CoachScheduleController::class, 'update_time']);
         Route::post('schedule/delete/{id}', [CoachScheduleController::class, 'delete']);
+        Route::get('schedule-print', [CoachScheduleController::class, 'print']);
 
         Route::post('schedule-request/dt', [CoachRequestScheduleController::class, 'dt']);
         Route::resource('schedule-request', CoachRequestScheduleController::class);

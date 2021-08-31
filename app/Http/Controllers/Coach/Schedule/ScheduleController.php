@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 use Carbon\Carbon;
-
+use PDF;
 
 class ScheduleController extends BaseMenu
 {
@@ -571,5 +571,47 @@ class ScheduleController extends BaseMenu
                 "message"=> $e->getMessage(),
             ]);
         }
+    }
+
+    public function print()
+    {
+        $student_schedules = DB::table('student_schedules')
+            ->whereNull('deleted_at');
+
+        $coach_classrooms = DB::table('coach_classrooms')
+            ->whereNull('deleted_at');
+
+        $coaches = DB::table('coaches')
+            ->whereNull('deleted_at');
+
+        $result = DB::table('coach_schedules')
+            ->select([
+                'coach_schedules.id',
+                'coach_schedules.datetime as start',
+                'classrooms.name as title',
+                "students.name as student"
+            ])
+            ->joinSub($coach_classrooms, 'coach_classrooms', function($join){
+                $join->on('coach_classrooms.id','coach_schedules.coach_classroom_id');
+            })
+            ->joinSub($coaches, 'coaches', function($join){
+                $join->on('coaches.id','coach_classrooms.coach_id');
+            })
+            ->leftJoin('classrooms','coach_classrooms.classroom_id','=','classrooms.id')
+            ->joinSub($student_schedules, 'student_schedules', function($join){
+                $join->on('student_schedules.coach_schedule_id','coach_schedules.id');
+            })
+            ->leftJoin('sessions','student_schedules.session_id','=','sessions.id')
+            ->leftJoin('student_classrooms','student_classrooms.id','=','student_schedules.student_classroom_id')
+            ->leftJoin('students','students.id','=','student_classrooms.student_id')
+            ->whereNull('coach_schedules.deleted_at')
+            ->whereNull('coach_schedules.deleted_at')
+            ->where('coach_classrooms.coach_id', Auth::guard('coach')->id())
+            ->whereRaw("datetime::timestamp > now()::timestamp")
+            ->orderBy('coach_schedules.datetime', 'asc')
+            ->get();
+
+        $pdf = PDF::loadView('exports.pdf.coach-schedule', compact('result'));
+        return $pdf->stream('schedule.pdf');
     }
 }
