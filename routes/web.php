@@ -477,6 +477,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::get('schedule-list', [ListController::class, 'index']);
         Route::post('schedule-list/dt', [ListController::class, 'dt']);
 
+        Route::get('schedule-request/list', [RequestScheduleController::class, 'request_list']);
         Route::post('schedule-request/dt', [RequestScheduleController::class, 'dt']);
         Route::resource('schedule-request', RequestScheduleController::class);
 
@@ -692,6 +693,7 @@ Route::group(['middleware' => ['auth-handling']], function () {
         Route::post('schedule/delete/{id}', [CoachScheduleController::class, 'delete']);
         Route::get('schedule-print', [CoachScheduleController::class, 'print']);
 
+        Route::get('schedule-request/list', [CoachRequestScheduleController::class, 'request_list']);
         Route::post('schedule-request/dt', [CoachRequestScheduleController::class, 'dt']);
         Route::resource('schedule-request', CoachRequestScheduleController::class);
 
@@ -778,9 +780,11 @@ Route::group(['middleware' => ['auth-handling']], function () {
 
             Route::group(['prefix' => 'request'], function () {
                 Route::post('/', [StudentRequestScheduleController::class, 'store']);
+                Route::get('/list', [StudentRequestScheduleController::class, 'request_list']);
                 Route::post('dt', [StudentRequestScheduleController::class, 'dt']);
                 Route::post('/single', [StudentRequestScheduleController::class, 'single_request']);
                 Route::get('/classroom', [StudentRequestScheduleController::class, 'classroom']);
+                Route::get('/list/{id}', [StudentRequestScheduleController::class, 'show']);
             });
 
             Route::get('/print', [StudentScheduleController::class, 'print']);

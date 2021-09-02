@@ -427,8 +427,6 @@
                                 });
 
                             }
-
-
                         }
                     }
                 });
@@ -590,11 +588,14 @@
 
                             }
                         }
+
+                        if(info.event.extendedProps.source_type == 3){
+                            requestDetail(info.event.id)
+                        }
                     }
                 });
 
                 renderRegular();
-
             },
             renderRegular = () => {
                 if(calendar_regular){
@@ -623,15 +624,26 @@
                                 });
                             }
                         });
-                        calendar_regular.render();
                     }
-                })
-                .fail(function(res, error) {
-                    toastr.error(res.responseJSON.message, 'Failed')
-                })
-                .always(function() {
-
                 });
+
+                $.ajax({
+                    url: `{{ url('student/schedule/request/list') }}`,
+                    type: `GET`,
+                })
+                .done(function(res, xhr, meta) {
+                    $.each(res.data, function(index, data){
+                        calendar_regular.addEvent({
+                            "id": data.id,
+                            "title": data.name,
+                            "start": data.datetime,
+                            "className": `bg-${data.status_color} border-${data.status_color} p-1 ${data.status_color == 'dark' ? 'text-white' : ''}`,
+                            "source_type": data.type
+                        });
+                    });
+                });
+
+                calendar_regular.render();
             }
             initCalendarMasterLesson = () => {
                 var element = document.getElementById('calendar-master-lesson');
@@ -1019,6 +1031,25 @@
                         init_table_request.column(2).search('').draw(false);
                     }
                 })
+            },
+            requestDetail = (id) => {
+                $.ajax({
+                    url: "{{url('student/schedule/request/list')}}/"+id,
+                    type: 'GET',
+                    dataType: 'json',
+                })
+                .done(function(res, xhr, meta) {
+                    $('.request-class-name').text(res.data.classroom)
+                    $('.request-coach-name').text(res.data.coach ? res.data.coach : '-')
+                    $('.request-date-place').text(moment(res.data.datetime).format('dddd, DD MMMM YYYY'))
+                    $('.request-time-place').text(moment(res.data.datetime).format('HH:mm'))
+                    $('.request-status-place').html(`<span class="text-${res.data.status_color}">${res.data.status}</span>`)
+                    $('.request-reschedule-place').text(res.data.reschedule ? 'Reschedule' : 'New Request')
+
+                    $('.request-function-btn').attr('data-id', res.data.id);
+
+                    showModal('modal-schedule-request-detail');
+                });
             }
 
         };

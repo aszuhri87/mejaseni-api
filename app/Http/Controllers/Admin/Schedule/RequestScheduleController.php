@@ -41,15 +41,15 @@ class RequestScheduleController extends BaseMenu
                     'students.name as student',
                     'coaches.name as coach',
                     DB::raw("CASE
-                        WHEN coaches.id IS NULL THEN 'Menunggu Admin'
-                        WHEN schedule_requests.coach_confirmed IS NULL THEN 'Menunggu Coach'
+                        WHEN coaches.id IS NULL THEN 'Menunggu Konfirmasi Admin'
+                        WHEN schedule_requests.coach_confirmed IS NULL THEN 'Menunggu Konfirmasi Coach'
                         WHEN schedule_requests.coach_confirmed = true THEN 'Dikonfirmasi Coach'
                         ELSE 'Ditolak Coach'
                     END status"),
                     DB::raw("CASE
-                        WHEN coaches.id IS NULL THEN 'danger'
-                        WHEN schedule_requests.coach_confirmed IS NULL THEN 'warning'
-                        WHEN schedule_requests.coach_confirmed = true THEN 'success'
+                        WHEN coaches.id IS NULL THEN 'warning'
+                        WHEN schedule_requests.coach_confirmed IS NULL THEN 'success'
+                        WHEN schedule_requests.coach_confirmed = true THEN 'primary'
                         ELSE 'dark'
                     END status_color")
                 ])
@@ -112,6 +112,91 @@ class RequestScheduleController extends BaseMenu
                 "message"   => 'Successfully saved!'
             ], 200);
         } catch (\Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message" => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function show($id)
+    {
+        try {
+            $result = DB::table('schedule_requests')
+                ->select([
+                    'schedule_requests.*',
+                    'classrooms.name as classroom',
+                    'students.name as student',
+                    'coaches.name as coach',
+                    DB::raw("CASE
+                        WHEN coaches.id IS NULL THEN 'Menunggu Konfirmasi Admin'
+                        WHEN schedule_requests.coach_confirmed IS NULL THEN 'Menunggu Konfirmasi Coach'
+                        WHEN schedule_requests.coach_confirmed = true THEN 'Dikonfirmasi Coach'
+                        ELSE 'Ditolak Coach'
+                    END status"),
+                    DB::raw("CASE
+                        WHEN coaches.id IS NULL THEN 'warning'
+                        WHEN schedule_requests.coach_confirmed IS NULL THEN 'success'
+                        WHEN schedule_requests.coach_confirmed = true THEN 'primary'
+                        ELSE 'dark'
+                    END status_color")
+                ])
+                ->leftJoin('classrooms','classrooms.id','=','schedule_requests.classroom_id')
+                ->leftJoin('students','students.id','=','schedule_requests.student_id')
+                ->leftJoin('coaches','coaches.id','=','schedule_requests.coach_id')
+                ->whereNull('schedule_requests.deleted_at')
+                ->where('schedule_requests.id', $id)
+                ->first();
+
+            return response([
+                'data' => $result,
+                "message"   => 'OK!'
+            ], 200);
+        } catch (Exception $e) {
+            throw new Exception($e);
+            return response([
+                "message" => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function request_list()
+    {
+        try {
+            $data = DB::table('schedule_requests')
+                ->select([
+                    'schedule_requests.id',
+                    'schedule_requests.datetime',
+                    'classrooms.name',
+                    DB::raw("CASE
+                        WHEN coaches.id IS NULL THEN 'Menunggu Konfirmasi Admin'
+                        WHEN schedule_requests.coach_confirmed IS NULL THEN 'Menunggu Konfirmasi Coach'
+                        WHEN schedule_requests.coach_confirmed = true THEN 'Dikonfirmasi Coach'
+                        ELSE 'Ditolak Coach'
+                    END status"),
+                    DB::raw("CASE
+                        WHEN coaches.id IS NULL THEN 'warning'
+                        WHEN schedule_requests.coach_confirmed IS NULL THEN 'success'
+                        WHEN schedule_requests.coach_confirmed = true THEN 'primary'
+                        ELSE 'dark'
+                    END status_color"),
+                    DB::raw("2 as type")
+                ])
+                ->leftJoin('classrooms','classrooms.id','=','schedule_requests.classroom_id')
+                ->leftJoin('students','students.id','=','schedule_requests.student_id')
+                ->leftJoin('coaches','coaches.id','=','schedule_requests.coach_id')
+                ->where(function($query){
+                    $query->where('schedule_requests.coach_confirmed',false)
+                        ->orWhereNull('schedule_requests.coach_confirmed');
+                })
+                ->whereNull('schedule_requests.deleted_at')
+                ->get();
+
+            return response([
+                "data"      => $data,
+                "message"   => 'OK!'
+            ], 200);
+        } catch (Exception $e) {
             throw new Exception($e);
             return response([
                 "message" => $e->getMessage(),

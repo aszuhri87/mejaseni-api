@@ -56,11 +56,13 @@ class AdminNotification implements ShouldBroadcastNow
     public function email_notification($notification, $id = null)
     {
         try {
-            Mail::send('mail.notification', compact('notification'), function($message){
-                $message->to('admin@mejaseni.com', 'Admin Mejaseni')
-                    ->from('info@mejaseni.com', 'MEJASENI')
-                    ->subject('Mejaseni Notification');
-            });
+            if(config('app.env') == 'production') {
+                Mail::send('mail.notification', compact('notification'), function($message){
+                    $message->to('admin@mejaseni.com', 'Admin Mejaseni')
+                        ->from('info@mejaseni.com', 'MEJASENI')
+                        ->subject('Mejaseni Notification');
+                });
+            }
         } catch (\Exception $th) {
             return false;
         }

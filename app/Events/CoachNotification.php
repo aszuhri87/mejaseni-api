@@ -69,11 +69,13 @@ class CoachNotification implements ShouldBroadcastNow
         $is_coach = true;
 
         try {
-            Mail::send('mail.notification', compact('notification', 'is_coach'), function($message) use($user){
-                $message->to($user->email, $user->name)
-                    ->from('info@mejaseni.com', 'MEJASENI')
-                    ->subject('Mejaseni Notification');
-            });
+            if(config('app.env') == 'production') {
+                Mail::send('mail.notification', compact('notification', 'is_coach'), function($message) use($user){
+                    $message->to($user->email, $user->name)
+                        ->from('info@mejaseni.com', 'MEJASENI')
+                        ->subject('Mejaseni Notification');
+                });
+            }
         } catch (\Exception $th) {
             return false;
         }

@@ -93,7 +93,11 @@
                         info.revert();
                     },
                     eventClick: function(info) {
-                        calendarDetail(info.event.id);
+                        if(info.event._def.extendedProps.source_type == 1){
+                            calendarDetail(info.event.id);
+                        }else{
+                            requestDetail(info.event.id)
+                        }
                     }
                 });
 
@@ -123,6 +127,24 @@
                         });
                     })
 
+                });
+
+                $.ajax({
+                    url: "{{url('coach/schedule-request/list')}}",
+                    type: 'GET',
+                    dataType: 'json',
+                })
+                .done(function(res, xhr, meta) {
+
+                    $.each(res.data, function(index, data){
+                        calendar.addEvent({
+                            "id": data.id,
+                            "title": data.name,
+                            "start": data.datetime,
+                            "className": `bg-${data.status_color} border-${data.status_color} p-1 ${data.status_color == 'dark' ? 'text-white' : ''}`,
+                            "source_type": data.type
+                        });
+                    })
                 });
             },
             calendarDetail = (id) => {
@@ -158,6 +180,35 @@
                     // }
 
                     showModal('modal-schedule-detail');
+                });
+            },
+            requestDetail = (id) => {
+                $.ajax({
+                    url: "{{url('coach/schedule-request')}}/"+id,
+                    type: 'GET',
+                    dataType: 'json',
+                })
+                .done(function(res, xhr, meta) {
+                    $('.request-class-name').text(res.data.classroom)
+                    $('.request-student-name').text(res.data.student ? res.data.student : '-')
+                    $('.request-date-place').text(moment(res.data.datetime).format('dddd, DD MMMM YYYY'))
+                    $('.request-time-place').text(moment(res.data.datetime).format('HH:mm'))
+                    $('.request-status-place').html(`<span class="text-${res.data.status_color}">${res.data.status}</span>`)
+                    $('.request-reschedule-place').text(res.data.reschedule ? 'Reschedule' : 'New Request')
+
+                    $('.request-function-btn').attr('data-id', res.data.id);
+
+                    if(res.data.coach_confirmed == true || res.data.coach_confirmed == false) {
+                        $('.btn-back-request').show()
+                        $('.btn-confirm-request').hide()
+                        $('.btn-decline-request').hide()
+                    }else{
+                        $('.btn-back-request').hide()
+                        $('.btn-confirm-request').show()
+                        $('.btn-decline-request').show()
+                    }
+
+                    showModal('modal-schedule-request-detail');
                 });
             },
             initAction = () => {
@@ -222,6 +273,70 @@
 
                     $('.swal2-title').addClass('justify-content-center')
                 })
+
+                $(document).on('click', '.btn-confirm-request', function(event){
+                    event.preventDefault();
+
+                    var id = $(this).attr('data-id');
+
+                    Swal.fire({
+                        title: 'Confirm Request',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#7F16A7',
+                        confirmButtonText: 'Yes, Confirm',
+                    }).then(function (result) {
+                        if (result.value) {
+                            $.ajax({
+                                url: "{{url('coach/schedule-request')}}/"+id,
+                                type: 'PUT',
+                                dataType: 'json',
+                            })
+                            .done(function(res, xhr, meta) {
+                                renderCalender()
+                                hideModal('modal-schedule-request-detail');
+                            })
+                            .fail(function(res, error) {
+                                toastr.error(res.responseJSON.message, 'Failed')
+                            })
+                            .always(function() { });
+                        }
+                    })
+
+                    $('.swal2-title').addClass('justify-content-center')
+                });
+
+                $(document).on('click', '.btn-decline-request', function(event){
+                    event.preventDefault();
+
+                    var id = $(this).attr('data-id');
+
+                    Swal.fire({
+                        title: 'Decline Request',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#7F16A7',
+                        confirmButtonText: 'Yes, Decline',
+                    }).then(function (result) {
+                        if (result.value) {
+                            $.ajax({
+                                url: "{{url('coach/schedule-request')}}/"+id,
+                                type: 'DELETE',
+                                dataType: 'json',
+                            })
+                            .done(function(res, xhr, meta) {
+                                renderCalender()
+                                hideModal('modal-schedule-request-detail');
+                            })
+                            .fail(function(res, error) {
+                                toastr.error(res.responseJSON.message, 'Failed')
+                            })
+                            .always(function() { });
+                        }
+                    })
+
+                    $('.swal2-title').addClass('justify-content-center')
+                });
             },
             classroom_detail = (id) => {
                 $.ajax({

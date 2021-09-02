@@ -252,7 +252,6 @@
     </div>
 </div>
 
-
 <div class="modal" id="modal-request-schedule" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -287,6 +286,71 @@
                     <button type="submit" class="btn btn-primary btn-loading-basic">Submit</button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="modal-schedule-request-detail" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Schedule Request Detail</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i aria-hidden="true" class="ki ki-close"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card card-custom bg-light-secondary card-stretch gutter-b p-7 mt-0 mb-0">
+                    <div class="d-flex align-items-between">
+                        <div class="d-flex flex-column flex-grow-1 font-weight-bold">
+                            <span class="text-muted">Class</span>
+                            <p class="text-dark mb-1 font-size-lg request-class-name">-</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="d-flex flex-column flex-grow-1 font-weight-bold">
+                                <span class="text-muted">Coach</span>
+                                <p class="text-dark mb-1 font-size-lg request-coach-name">-</p>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="d-flex flex-column flex-grow-1 font-weight-bold">
+                                <span class="text-muted">Tanggal</span>
+                                <p class="text-dark mb-1 font-size-lg request-date-place">-</p>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="d-flex flex-column flex-grow-1 font-weight-bold">
+                                <span class="text-muted">Waktu</span>
+                                <p class="text-dark mb-1 font-size-lg request-time-place">-</p>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="d-flex flex-column flex-grow-1 font-weight-bold">
+                                <span class="text-muted">Status</span>
+                                <p class="mb-1 font-size-lg request-status-place">-</p>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="d-flex flex-column flex-grow-1 font-weight-bold">
+                                <span class="text-muted">Type</span>
+                                <p class="mb-1 font-size-lg request-reschedule-place">-</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-back-request" data-dismiss="modal">Kembali</button>
+            </div>
         </div>
     </div>
 </div>

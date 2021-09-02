@@ -21,7 +21,8 @@ class ScheduleRequest extends Model
         'coach_id',
         'coach_confirmed',
         'datetime',
-        'session'
+        'session',
+        'reschedule'
     ];
 
     protected $dates = ['deleted_at'];

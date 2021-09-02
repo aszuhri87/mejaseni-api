@@ -67,11 +67,13 @@ class StudentNotification implements ShouldBroadcastNow
             ->first();
 
         try {
-            Mail::send('mail.notification', compact('notification'), function($message) use($user){
-                $message->to($user->email, $user->name)
-                    ->from('info@mejaseni.com', 'MEJASENI')
-                    ->subject('Mejaseni Notification');
-            });
+            if(config('app.env') == 'production') {
+                Mail::send('mail.notification', compact('notification'), function($message) use($user){
+                    $message->to($user->email, $user->name)
+                        ->from('info@mejaseni.com', 'MEJASENI')
+                        ->subject('Mejaseni Notification');
+                });
+            }
         } catch (\Exception $th) {
             return false;
         }

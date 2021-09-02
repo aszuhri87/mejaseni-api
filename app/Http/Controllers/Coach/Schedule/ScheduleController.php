@@ -445,7 +445,7 @@ class ScheduleController extends BaseMenu
 
             return response([
                 "data"      => $coach_schedules,
-                "message"   => 'Successfully saved!'
+                "message"   => 'OK!'
             ], 200);
         } catch (Exception $e) {
             throw new Exception($e);
