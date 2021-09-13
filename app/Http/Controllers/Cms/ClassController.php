@@ -700,7 +700,7 @@ class ClassController extends Controller
     {
         $html = "";
         foreach ($classrooms as $key => $classroom) {
-            if($classroom->buy_btn_disable != true){
+            if(isset($classroom->buy_btn_disable) && $classroom->buy_btn_disable != true){
                 $html .= '<div class="col-lg-4 col-md-12 col-sm-12 p-2">
                             <div class="card card-custom card-shadowless h-100">
                                 <div class="card-body p-0">
@@ -986,7 +986,7 @@ class ClassController extends Controller
         foreach ($classrooms as $key => $classroom) {
             $session_total = isset($classroom->session_total) ? $classroom->session_total:0;
             $session_duration = isset($classroom->session_duration) ? $classroom->session_duration:0;
-            
+
             if($classroom->buy_btn_disable != true){
                 $html .= '<li class="splide__slide px-2">
                             <img class="w-100 rounded" src="'. $classroom->image_url .'" alt="">

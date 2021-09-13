@@ -47,8 +47,21 @@ class EventDetailController extends Controller
             ->first();
 
         $is_registered = DB::table('carts')
-                ->whereNull('deleted_at');
-
+            ->select([
+                'carts.*'
+            ])
+            ->leftJoin('transaction_details', 'transaction_details.cart_id', '=', 'carts.id')
+            ->leftJoin('transactions', 'transactions.id', '=', 'transaction_details.transaction_id')
+            ->where('carts.event_id',$event_id)
+            ->where("transactions.status", 2)
+            ->where(function($query){
+                if(Auth::guard('student')->check()){
+                    $query->where('carts.student_id', Auth::guard('student')->user()->id);
+                }else{
+                    $query->where('transactions.status', 99);
+                }
+            })
+            ->whereNull('carts.deleted_at');
 
         $carts = DB::table('carts')
             ->select([
@@ -69,7 +82,6 @@ class EventDetailController extends Controller
                     WHEN carts.count_participants < events.quota THEN 0
                     ELSE 1
                 END is_full")
-
             ])
             ->leftJoinSub($is_registered, 'is_registered', function($join){
                 $join->on('events.id','is_registered.event_id');

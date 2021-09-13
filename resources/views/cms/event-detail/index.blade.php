@@ -12,14 +12,14 @@
     <div class="row py-0 py-lg-4 my-0 my-lg-5 mt-md-0 column-center">
         <div class="col-12 col-lg-8 mb-0 mb-lg-4 my-0 my-lg-5 column-center event-wrapper">
             <div class="row">
-                <div class="col-12 col-lg-8 px-0">
+                <div class="col-12 col-lg-12 px-0">
                     <div class="event-image__wrapper">
                         <img class="w-100" src="{{ isset($event->image_url) ? $event->image_url:'' }}" alt="">
                     </div>
                 </div>
-                <div class="col-12 col-lg-4 px-0">
+                <div class="col-12 col-lg-12 px-0">
                     <div class="event-detail__wrapper">
-                        <div class="d-flex flex-column justify-content-between p-4 h-100"style="background-color: #ffffff3a; backdrop-filter: blur(50px);">
+                        <div class="d-flex flex-column justify-content-between p-4">
                             <div>
                                 <h4>{{ isset($event->title) ? $event->title:'' }}</h4>
                                 <div class="mt-3">
@@ -43,9 +43,13 @@
                                         <p class="label">Biaya</p>
                                         <p class="event-fee">Rp.@convert($event->total)</p>
                                     </div>
+                                    <div class="mb-3">
+                                        <p class="label">Diskripsi</p>
+                                        <p>{{ isset($event->description) ? $event->description:''  }}</p>
+                                    </div>
                                 </div>
                             </div>
-                            @if(!$event->is_full)
+                            @if(!$event->is_full && !Auth::guard('admin')->check())
                                 @if($event->is_registered)
                                 <a  class="btn btn-primary w-100" data-toggle="modal" data-target="">Anda Sudah Terdaftar</a>
                                 @else
@@ -55,13 +59,13 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 px-0">
+                {{-- <div class="col-12 px-0">
                     <div class="event-desc__wrapper p-5">
                         <h4>{{ isset($event->title) ? $event->title:'' }}</h4>
                         <p class="mt-3">{{ isset($event->description) ? $event->description:''  }}
                         </p>
                     </div>
-                </div>
+                </div> --}}
             </div>
         </div>
     </div>

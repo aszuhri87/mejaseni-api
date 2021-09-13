@@ -21801,7 +21801,7 @@ body .class-owned__wrapper .class-owned-selected-overlay {
 }
 
 .event-wrapper .event-image__wrapper {
-	height: 460px;
+	/* height: 460px; */
 	overflow: hidden
 }
 
@@ -21813,7 +21813,7 @@ body .class-owned__wrapper .class-owned-selected-overlay {
 }
 
 .event-wrapper .event-detail__wrapper {
-	height: 460px;
+	/* height: 460px; */
 	background: rgba(196, 28, 212, .05)
 }
 
