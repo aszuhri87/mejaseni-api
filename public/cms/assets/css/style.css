@@ -21812,29 +21812,29 @@ body .class-owned__wrapper .class-owned-selected-overlay {
 	object-fit: cover
 }
 
-.event-wrapper .event-detail__wrapper {
+.event-wrapper .event-detail__wrapper-new {
 	/* height: 460px; */
 	background: rgba(196, 28, 212, .05)
 }
 
-.event-wrapper .event-detail__wrapper .event-title {
+.event-wrapper .event-detail__wrapper-new .event-title {
 	display: -webkit-box;
 	overflow: hidden;
 	-webkit-line-clamp: 3;
 	-webkit-box-orient: vertical
 }
 
-.event-wrapper .event-detail__wrapper .label {
+.event-wrapper .event-detail__wrapper-new .label {
 	font-size: 12px;
 	color: #6c7293
 }
 
-.event-wrapper .event-detail__wrapper .event-quota {
+.event-wrapper .event-detail__wrapper-new .event-quota {
 	font-weight: 600;
 	color: #0bb783
 }
 
-.event-wrapper .event-detail__wrapper .event-fee {
+.event-wrapper .event-detail__wrapper-new .event-fee {
 	font-weight: 600;
 	color: #1a1a1a
 }

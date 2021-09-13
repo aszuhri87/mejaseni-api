@@ -18,7 +18,7 @@
                     </div>
                 </div>
                 <div class="col-12 col-lg-12 px-0">
-                    <div class="event-detail__wrapper">
+                    <div class="event-detail__wrapper-new">
                         <div class="d-flex flex-column justify-content-between p-4">
                             <div>
                                 <h4>{{ isset($event->title) ? $event->title:'' }}</h4>
