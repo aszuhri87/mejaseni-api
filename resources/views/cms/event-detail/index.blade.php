@@ -8,6 +8,34 @@
 
 
 @section('content')
+<style>
+    .event-wrapper .event-detail__wrapper-new {
+        /* height: 460px; */
+        background: rgba(196, 28, 212, .05)
+    }
+
+    .event-wrapper .event-detail__wrapper-new .event-title {
+        display: -webkit-box;
+        overflow: hidden;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical
+    }
+
+    .event-wrapper .event-detail__wrapper-new .label {
+        font-size: 12px;
+        color: #6c7293
+    }
+
+    .event-wrapper .event-detail__wrapper-new .event-quota {
+        font-weight: 600;
+        color: #0bb783
+    }
+
+    .event-wrapper .event-detail__wrapper-new .event-fee {
+        font-weight: 600;
+        color: #1a1a1a
+    }
+</style>
 <section>
     <div class="row py-0 py-lg-4 my-0 my-lg-5 mt-md-0 column-center">
         <div class="col-12 col-lg-8 mb-0 mb-lg-4 my-0 my-lg-5 column-center event-wrapper">
