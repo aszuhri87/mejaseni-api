@@ -77,7 +77,7 @@
                                     </div>
                                 </div>
                             </div>
-                            @if(!$event->is_full && !Auth::guard('admin')->check())
+                            @if(!$event->is_full && !Auth::guard('admin')->check() && date('Y-m-d H:i',strtotime($event->start_at)) > date("Y-m-d H:i"))
                                 @if($event->is_registered)
                                 <a  class="btn btn-primary w-100" data-toggle="modal" data-target="">Anda Sudah Terdaftar</a>
                                 @else

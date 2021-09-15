@@ -43,6 +43,9 @@ class EventController extends BaseMenu
                 'carts.event_id',
                 DB::raw("COUNT('carts.event_id') as count_participants")
             ])
+            ->leftJoin('transaction_details', 'transaction_details.cart_id', '=', 'carts.id')
+            ->leftJoin('transactions', 'transactions.id', '=', 'transaction_details.transaction_id') 
+            ->where("transactions.status", 2)
             ->groupBy("carts.event_id")
             ->whereNull("carts.deleted_at");
 
@@ -73,13 +76,25 @@ class EventController extends BaseMenu
     {
         $path = Storage::disk('s3')->url('/');
 
+        $carts = DB::table('carts')
+            ->select([
+                'carts.*'
+            ])
+            ->leftJoin('transaction_details', 'transaction_details.cart_id', '=', 'carts.id')
+            ->leftJoin('transactions', 'transactions.id', '=', 'transaction_details.transaction_id')
+            ->where('carts.event_id',$id)
+            ->where("transactions.status", 2)
+            ->whereNull('carts.deleted_at');
+
         $data = DB::table('students')
             ->select([
                 'students.*',
                 'carts.id as cart_id',
                 DB::raw("CONCAT('{$path}',image) as image_url"),
             ])
-            ->leftJoin('carts','carts.student_id','=','students.id')
+            ->leftJoinSub($carts, 'carts', function($join){
+                $join->on('carts.student_id','=','students.id');
+            })
             ->where('carts.event_id',$id)
             ->whereNull([
                 'students.deleted_at'
