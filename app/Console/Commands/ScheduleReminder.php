@@ -163,43 +163,42 @@ class ScheduleReminder extends Command
                     if($schedule->status == 1){
 
                         $salary = ($schedule->price_classroom / $schedule->session_total) * 0.45;
-                        dump($schedule->coach_id);
-                        // Income::create([
-                        //     'student_schedule_id' => $schedule->student_schedule_id,
-                        //     'coach_id' => $schedule->coach_id,
-                        //     'amount' => $salary,
-                        //     'formula' => "({$schedule->price_classroom}/{$schedule->session_total})*0.45",
-                        // ]);
+                        Income::create([
+                            'student_schedule_id' => $schedule->student_schedule_id,
+                            'coach_id' => $schedule->coach_id,
+                            'amount' => $salary,
+                            'formula' => "({$schedule->price_classroom}/{$schedule->session_total})*0.45",
+                        ]);
                     }
 
-                    // CoachNotification::create([
-                    //     'coach_id' => $schedule->coach_id,
-                    //     'coach_schedule_id' => $schedule->id,
-                    //     'type' => (int)"2".$schedule->status,
-                    //     'text' =>  $schedule->message,
-                    //     'datetime' => date('Y-m-d H:i:s')
-                    // ]);
+                    CoachNotification::create([
+                        'coach_id' => $schedule->coach_id,
+                        'coach_schedule_id' => $schedule->id,
+                        'type' => (int)"2".$schedule->status,
+                        'text' =>  $schedule->message,
+                        'datetime' => date('Y-m-d H:i:s')
+                    ]);
 
-                    // StudentNotification::create([
-                    //     'student_id' => $schedule->student_id,
-                    //     'student_schedule_id' => $schedule->student_schedule_id,
-                    //     'type' => (int)"1".$schedule->status,
-                    //     'text' => $schedule->message,
-                    //     'datetime' => date('Y-m-d H:i:s')
-                    // ]);
+                    StudentNotification::create([
+                        'student_id' => $schedule->student_id,
+                        'student_schedule_id' => $schedule->student_schedule_id,
+                        'type' => (int)"1".$schedule->status,
+                        'text' => $schedule->message,
+                        'datetime' => date('Y-m-d H:i:s')
+                    ]);
                 });
 
-                // Mail::send('mail.coach-class-reminder', compact('schedule'), function($message) use($schedule){
-                //     $message->to($schedule->coach_email, $schedule->coach_name)
-                //         ->from('info@mejaseni.com', 'MEJASENI')
-                //         ->subject('Class Reminder');
-                // });
+                Mail::send('mail.coach-class-reminder', compact('schedule'), function($message) use($schedule){
+                    $message->to($schedule->coach_email, $schedule->coach_name)
+                        ->from('info@mejaseni.com', 'MEJASENI')
+                        ->subject('Class Reminder');
+                });
 
-                // Mail::send('mail.student-class-reminder', compact('schedule'), function($message) use($schedule){
-                //     $message->to($schedule->student_email, $schedule->student_name)
-                //         ->from('info@mejaseni.com', 'MEJASENI')
-                //         ->subject('Class Reminder');
-                // });
+                Mail::send('mail.student-class-reminder', compact('schedule'), function($message) use($schedule){
+                    $message->to($schedule->student_email, $schedule->student_name)
+                        ->from('info@mejaseni.com', 'MEJASENI')
+                        ->subject('Class Reminder');
+                });
             }
 
             $this->info('Running');
