@@ -184,9 +184,9 @@ class PaymentController extends Controller
                 return $notification;
             });
 
-            event(new \App\Events\StudentNotification($data, $transaction->student_id));
+            event(new \App\Events\StudentNotification($data, $transaction->student_id, "Transaksi Berhasil!"));
             event(new \App\Events\PaymentNotification(true, $transaction->id));
-            event(new \App\Events\AdminNotification($data));
+            event(new \App\Events\AdminNotification($data,  "Transaksi Berhasil!"));
 
             SocketIO::message($transaction->student_id, 'notification_'.$transaction->student_id, $data);
             SocketIO::message($transaction->student_id, 'payment_'.$transaction->id, $data);
@@ -208,11 +208,23 @@ class PaymentController extends Controller
             return Redirect::back()->withErrors(['message' => 'Permintaan ditolak.']);
         }
 
+        $notification = [
+            "number" => $transaction->number
+        ];
+
         DB::transaction(function () use($transaction){
             $transaction->status = 0;
             $transaction->update();
             $transaction->delete();
         });
+
+        if(config('app.env') == 'production') {
+            \Mail::send('mail.cancel-payment', compact('notification'), function($message){
+                $message->to(Auth::guard('student')->user()->email, Auth::guard('student')->user()->name)
+                    ->from('info@mejaseni.com', 'MEJASENI')
+                    ->subject("Transaksi Dibatalkan");
+            });
+        }
 
         return redirect('cart');
     }

@@ -269,6 +269,34 @@ class CartController extends Controller
                     $transaction->update();
                 });
 
+                $transaction = Transaction::find($transaction->id);
+
+                $data_doku = json_decode($transaction->json_transaction);
+
+                if($transaction->payment_type == 'va'){
+                    $va_number = $data_doku->virtual_account_info->virtual_account_number;
+                }else if($transaction->payment_type == 'alfamart'){
+                    $va_number = $data_doku->online_to_offline_info->payment_code;
+                }else{
+                    $va_number = $data_doku->order->invoice_number;
+                }
+
+                $notification = [
+                    "number" => $transaction->number,
+                    "due_date" => date('Y-m-d H:i:s', strtotime($transaction->date_time. " + 1 DAYS")),
+                    "total" => $transaction->total,
+                    "payment_chanel" => $transaction->payment_chanel,
+                    "va_number" => $va_number,
+                ];
+
+                if(config('app.env') == 'production') {
+                    \Mail::send('mail.waiting-payment', compact('notification'), function($message){
+                        $message->to(Auth::guard('student')->user()->email, Auth::guard('student')->user()->name)
+                            ->from('info@mejaseni.com', 'MEJASENI')
+                            ->subject("Menunggu Pembayaran");
+                    });
+                }
+
                 return response([
                     "data"      => $transaction,
                     "redirect_url" => url("waiting-payment/".$transaction->id),

@@ -18,15 +18,17 @@ class AdminNotification implements ShouldBroadcastNow
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $data;
+    public $subject;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($data)
+    public function __construct($data, $subject = 'Mejaseni Notification')
     {
         $this->data = $data;
+        $this->subject = $subject;
     }
 
     public function broadcastAs()
@@ -60,7 +62,7 @@ class AdminNotification implements ShouldBroadcastNow
                 Mail::send('mail.notification', compact('notification'), function($message){
                     $message->to('admin@mejaseni.com', 'Admin Mejaseni')
                         ->from('info@mejaseni.com', 'MEJASENI')
-                        ->subject('Mejaseni Notification');
+                        ->subject($this->subject);
                 });
             }
         } catch (\Exception $th) {

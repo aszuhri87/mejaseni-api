@@ -76,8 +76,7 @@
                         <div class="payment-method-item__img">
                             <img src="assets/img/bca.png" alt="">
                         </div>
-                        <input type="radio" name="payment_chanel" id="bca-virtual-account"
-                            value="bca-virtual-account">
+                        <input type="radio" name="payment_chanel" id="bca-virtual-account" value="bca-virtual-account">
                         <label class="mr-0 mr-md-3 mt-2 mt-md-0" for="bca-virtual-account">Bank BCA</label>
                     </div>
                     @endif

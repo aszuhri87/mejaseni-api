@@ -19,16 +19,18 @@ class StudentNotification implements ShouldBroadcastNow
 
     public $data;
     public $id;
+    public $subject;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($data, $id)
+    public function __construct($data, $id, $subject = 'Mejaseni Notification')
     {
         $this->data = $data;
         $this->id = $id;
+        $this->subject = $subject;
     }
 
     public function broadcastAs()
@@ -71,7 +73,7 @@ class StudentNotification implements ShouldBroadcastNow
                 Mail::send('mail.notification', compact('notification'), function($message) use($user){
                     $message->to($user->email, $user->name)
                         ->from('info@mejaseni.com', 'MEJASENI')
-                        ->subject('Mejaseni Notification');
+                        ->subject($this->subject);
                 });
             }
         } catch (\Exception $th) {
