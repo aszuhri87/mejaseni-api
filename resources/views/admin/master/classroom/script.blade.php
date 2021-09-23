@@ -507,7 +507,7 @@
                         type: $(this).attr('method'),
                         data: form_data,
                         contentType: false,
-                        cache: false,s
+                        cache: false,
                         processData: false,
                     })
                     .done(function(res, xhr, meta) {
