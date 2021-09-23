@@ -184,9 +184,30 @@ class PaymentController extends Controller
                 return $notification;
             });
 
-            event(new \App\Events\StudentNotification($data, $transaction->student_id, "Transaksi Berhasil!"));
-            event(new \App\Events\PaymentNotification(true, $transaction->id));
-            event(new \App\Events\AdminNotification($data,  "Transaksi Berhasil!"));
+            if(config('app.env') == 'production') {
+                $notification = $data;
+                $is_coach = false;
+
+                $student = DB::table('students')
+                    ->select([
+                        'email',
+                        'name'
+                    ])
+                    ->where('id', $transaction->student_id)
+                    ->first();
+
+                \Mail::send('mail.notification', compact('notification', 'is_coach'), function($message) use($student){
+                    $message->to($student->email, $student->name)
+                        ->from('info@mejaseni.com', 'MEJASENI')
+                        ->subject("Transaksi Berhasil!");
+                });
+
+                \Mail::send('mail.notification', compact('notification', 'is_coach'), function($message){
+                    $message->to('admin@mejaseni.com', 'Admin Mejaseni')
+                        ->from('info@mejaseni.com', 'MEJASENI')
+                        ->subject("Transaksi Berhasil!");
+                });
+            }
 
             SocketIO::message($transaction->student_id, 'notification_'.$transaction->student_id, $data);
             SocketIO::message($transaction->student_id, 'payment_'.$transaction->id, $data);
