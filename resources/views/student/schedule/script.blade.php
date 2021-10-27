@@ -334,45 +334,45 @@
                         let check_date = moment(moment(info.event.extendedProps.tanggal).format('YYYY-MM-DD HH:mm:ss')).isAfter(moment().add(6, 'h').format('YYYY-MM-DD HH:mm:ss'));
 
                         if(moment(moment(info.event.extendedProps.tanggal).format('YYYY-MM-DD HH:mm:ss')).isAfter(moment().format('YYYY-MM-DD HH:mm:ss'))){
-                            if(info.event.extendedProps.status == 3){
-                                let coach_schedule_id = info.event.extendedProps.coach_schedule_id
-                                $('#package_type').val(info.event.extendedProps.package_type);
+                            // if(info.event.extendedProps.status == 3){
+                            //     let coach_schedule_id = info.event.extendedProps.coach_schedule_id
+                            //     $('#package_type').val(info.event.extendedProps.package_type);
 
-                                $.ajax({
-                                    url: `{{ url('student/schedule/special-class') }}/${coach_schedule_id}`,
-                                    type: `GET`,
-                                })
-                                .done(function(res, xhr, meta) {
-                                    if(res.status == 200){
-                                        let data = res.data;
-                                        if(data.remaining > 0){
-                                            $('#booking-classroom-name').html(data.title);
-                                            $('#booking-date').html(`${moment(data.start).format('DD MMMM YYYY')}`);
-                                            $('#booking-time').html(`${moment(data.start).format('H:mm')}`);
-                                            $('#booking-coach').html(data.coach_name);
-                                            $('#booking-remaining').html(data.remaining);
+                            //     $.ajax({
+                            //         url: `{{ url('student/schedule/special-class') }}/${coach_schedule_id}`,
+                            //         type: `GET`,
+                            //     })
+                            //     .done(function(res, xhr, meta) {
+                            //         if(res.status == 200){
+                            //             let data = res.data;
+                            //             if(data.remaining > 0){
+                            //                 $('#booking-classroom-name').html(data.title);
+                            //                 $('#booking-date').html(`${moment(data.start).format('DD MMMM YYYY')}`);
+                            //                 $('#booking-time').html(`${moment(data.start).format('H:mm')}`);
+                            //                 $('#booking-coach').html(data.coach_name);
+                            //                 $('#booking-remaining').html(data.remaining);
 
-                                            $('#coach_schedule_id').val(data.id);
-                                            $('#classroom_id').val(data.classroom_id);
+                            //                 $('#coach_schedule_id').val(data.id);
+                            //                 $('#classroom_id').val(data.classroom_id);
 
-                                            $('#form-booking').trigger('reset');
-                                            $('#form-booking').attr('action',`{{ url('student/schedule/special-class/booking') }}`)
-                                            $('#form-booking').attr('method',`POST`);
-                                            showModal('modal-booking');
-                                        }
-                                        else{
-                                            toastr.error('Batas Booking Sudah Maksimal', 'Failed')
-                                        }
-                                    }
-                                })
-                                .fail(function(res, error) {
-                                    toastr.error(res.responseJSON.message, 'Failed')
-                                })
-                                .always(function() {
+                            //                 $('#form-booking').trigger('reset');
+                            //                 $('#form-booking').attr('action',`{{ url('student/schedule/special-class/booking') }}`)
+                            //                 $('#form-booking').attr('method',`POST`);
+                            //                 showModal('modal-booking');
+                            //             }
+                            //             else{
+                            //                 toastr.error('Batas Booking Sudah Maksimal', 'Failed')
+                            //             }
+                            //         }
+                            //     })
+                            //     .fail(function(res, error) {
+                            //         toastr.error(res.responseJSON.message, 'Failed')
+                            //     })
+                            //     .always(function() {
 
-                                });
-                            }
-                            else if(info.event.extendedProps.status == 2){
+                            //     });
+                            // }
+                            // else if(info.event.extendedProps.status == 2){
                                 let coach_schedule_id = info.event.extendedProps.coach_schedule_id;
 
                                 $('#package_type').val(info.event.extendedProps.package_type);
@@ -426,7 +426,7 @@
 
                                 });
 
-                            }
+                            // }
                         }
                     }
                 });
@@ -491,47 +491,47 @@
 
                         if(moment(moment(info.event.extendedProps.tanggal).format('YYYY-MM-DD HH:mm:ss')).isAfter(moment().format('YYYY-MM-DD HH:mm:ss'))){
 
-                            if(info.event.extendedProps.status == 3){
-                                let coach_schedule_id = info.event.extendedProps.coach_schedule_id
-                                $('#package_type').val(info.event.extendedProps.package_type);
+                            // if(info.event.extendedProps.status == 3){
+                            //     let coach_schedule_id = info.event.extendedProps.coach_schedule_id
+                            //     $('#package_type').val(info.event.extendedProps.package_type);
 
-                                $.ajax({
-                                    url: `{{ url('student/schedule/regular-class') }}/${coach_schedule_id}`,
-                                    type: `GET`,
-                                })
-                                .done(function(res, xhr, meta) {
-                                    if(res.status == 200){
-                                        let data = res.data;
-                                        if(data.remaining > 0){
+                            //     $.ajax({
+                            //         url: `{{ url('student/schedule/regular-class') }}/${coach_schedule_id}`,
+                            //         type: `GET`,
+                            //     })
+                            //     .done(function(res, xhr, meta) {
+                            //         if(res.status == 200){
+                            //             let data = res.data;
+                            //             if(data.remaining > 0){
 
-                                            $('#booking-classroom-name').html(data.title);
-                                            $('#booking-date').html(`${moment(data.start).format('DD MMMM YYYY')}`);
-                                            $('#booking-time').html(`${moment(data.start).format('H:mm')}`);
-                                            $('#booking-coach').html(data.coach_name);
-                                            $('#booking-remaining').html(data.remaining);
+                            //                 $('#booking-classroom-name').html(data.title);
+                            //                 $('#booking-date').html(`${moment(data.start).format('DD MMMM YYYY')}`);
+                            //                 $('#booking-time').html(`${moment(data.start).format('H:mm')}`);
+                            //                 $('#booking-coach').html(data.coach_name);
+                            //                 $('#booking-remaining').html(data.remaining);
 
-                                            $('#coach_schedule_id').val(data.id);
-                                            $('#classroom_id').val(data.classroom_id);
+                            //                 $('#coach_schedule_id').val(data.id);
+                            //                 $('#classroom_id').val(data.classroom_id);
 
-                                            $('#form-booking').trigger('reset');
-                                            $('#form-booking').attr('action',`{{ url('student/schedule/regular-class/booking') }}`)
-                                            $('#form-booking').attr('method',`POST`);
-                                            showModal('modal-booking');
-                                        }
-                                        else{
-                                            toastr.error('Batas Booking Sudah Maksimal', 'Failed')
-                                        }
+                            //                 $('#form-booking').trigger('reset');
+                            //                 $('#form-booking').attr('action',`{{ url('student/schedule/regular-class/booking') }}`)
+                            //                 $('#form-booking').attr('method',`POST`);
+                            //                 showModal('modal-booking');
+                            //             }
+                            //             else{
+                            //                 toastr.error('Batas Booking Sudah Maksimal', 'Failed')
+                            //             }
 
-                                    }
-                                })
-                                .fail(function(res, error) {
-                                    toastr.error(res.responseJSON.message, 'Failed')
-                                })
-                                .always(function() {
+                            //         }
+                            //     })
+                            //     .fail(function(res, error) {
+                            //         toastr.error(res.responseJSON.message, 'Failed')
+                            //     })
+                            //     .always(function() {
 
-                                });
-                            }
-                            else if(info.event.extendedProps.status == 2){
+                            //     });
+                            // }
+                            // else if(info.event.extendedProps.status == 2){
                                 let coach_schedule_id = info.event.extendedProps.coach_schedule_id;
 
                                 $('#package_type').val(info.event.extendedProps.package_type);
@@ -586,7 +586,7 @@
                                 });
 
 
-                            }
+                            // }
                         }
 
                         if(info.event.extendedProps.source_type == 3){
