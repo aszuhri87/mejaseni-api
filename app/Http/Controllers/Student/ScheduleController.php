@@ -84,6 +84,8 @@ class ScheduleController extends BaseMenu
                     'student_classrooms.classroom_id',
                     'student_classrooms.student_id',
                 ])
+                ->distinct('student_classrooms.classroom_id')
+                ->where('student_classrooms.student_id', $student_id)
                 ->whereNull('student_classrooms.deleted_at');
 
             $student_schedule = DB::table('student_schedules')
@@ -93,7 +95,7 @@ class ScheduleController extends BaseMenu
                     'student_schedules.student_classroom_id',
                     'student_classrooms.student_id',
                 ])
-                ->leftJoinSub($student_classroom, 'student_classrooms', function ($join) {
+                ->joinSub($student_classroom, 'student_classrooms', function ($join) {
                     $join->on('student_schedules.student_classroom_id', '=', 'student_classrooms.id');
                 })
                 ->whereNull('student_schedules.deleted_at');
@@ -175,7 +177,7 @@ class ScheduleController extends BaseMenu
                 ->leftJoinSub($sub_coach_schedules, 'sub_coach_schedules', function ($join) {
                     $join->on('coach_schedules.id', 'sub_coach_schedules.id');
                 })
-                ->whereIn('sub_coach_schedules.status', [1,2])
+                ->whereIn('sub_coach_schedules.status', [1,2,3])
                 ->get();
 
             return response([

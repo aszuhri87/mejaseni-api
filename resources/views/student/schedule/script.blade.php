@@ -926,7 +926,7 @@
                     let element = `<option value="" data-subtraction="">Select Class</option>`
 
                     $.each(res.data, function(index, data) {
-                        element += `<option value="${data.id}" data-subtraction="${data.subtraction}">${data.name}</option>`;
+                        element += `<option value="${data.id}" data-subtraction="${data.subtraction}">${data.transaction_number} | ${data.name}</option>`;
                     });
 
                     $('#select-classroom').html(element);

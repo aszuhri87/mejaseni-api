@@ -266,7 +266,7 @@
                     <input type="hidden" name="subtraction" id="i-subtraction">
                     <div class="form-group">
                         <label>Kelas<span class="text-danger">*</span></label>
-                        <select name="classroom_id" id="select-classroom" class="form-control">
+                        <select name="student_classroom_id" id="select-classroom" class="form-control">
                             <option value="">Pilih Kelas</option>
                         </select>
                     </div>

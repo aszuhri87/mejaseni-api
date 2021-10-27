@@ -18,6 +18,7 @@ class ScheduleRequest extends Model
     protected $fillable = [
         'classroom_id',
         'student_id',
+        'student_classroom_id',
         'coach_id',
         'coach_confirmed',
         'datetime',

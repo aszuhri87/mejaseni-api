@@ -52,9 +52,13 @@ class RequestScheduleController extends Controller
             $result = DB::transaction(function () use($request){
                 $message = false;
 
-                $session = $this->get_subtraction($request->classroom_id); $i = 0; $loop = 0;
+                $session = $this->get_subtraction($request->student_classroom_id); $i = 0; $loop = 0;
 
-                $startDate = $this->start_date($request->classroom_id);
+                $startDate = $this->start_date($request->student_classroom_id);
+
+                $student_classroom = DB::table('student_classrooms')
+                    ->where('id', $request->student_classroom_id)
+                    ->first();
 
                 while ($i < $session){
 
@@ -65,7 +69,8 @@ class RequestScheduleController extends Controller
                     for ($index=0; $index < count($request->day); $index++) {
                         if($request->day[$index] == $day){
                             ScheduleRequest::create([
-                                'classroom_id' => $request->classroom_id,
+                                'student_classroom_id' => $student_classroom->id,
+                                'classroom_id' => $student_classroom->classroom_id,
                                 'student_id' => Auth::guard('student')->user()->id,
                                 'datetime' => date('Y-m-d H:i:s', strtotime($date.' '.$request->time[$index])),
                                 'session' => $i + 1
@@ -83,7 +88,11 @@ class RequestScheduleController extends Controller
             });
 
             if($result){
-                $classroom = Classroom::find($request->classroom_id);
+                $student_classroom = DB::table('student_classrooms')
+                    ->where('id', $request->student_classroom_id)
+                    ->first();
+
+                $classroom = Classroom::find($student_classroom->classroom_id);
 
                 $notification = StudentNotification::create([
                     'student_id' => Auth::guard('student')->user()->id,
@@ -159,6 +168,7 @@ class RequestScheduleController extends Controller
                 ])->delete();
 
                 $request_schedule = ScheduleRequest::create([
+                    'student_classroom_id' => $coach_schedule->student_classroom_id,
                     'classroom_id' => $coach_schedule->classroom_id,
                     'student_id' => Auth::guard('student')->user()->id,
                     'datetime' => date('Y-m-d H:i:s', strtotime($request->date.' '.$request->time)),
@@ -207,107 +217,23 @@ class RequestScheduleController extends Controller
 
             $id = Auth::guard('student')->user()->id;
 
-            // count sisa pertemuan
-            $coach_schedule = DB::table('coach_schedules')
+            $student_classrooms = DB::table('student_classrooms')
                 ->select([
-                    'coach_schedules.id',
-                    'coach_schedules.datetime',
+                    'classrooms.id as classroom_id',
+                    'student_classrooms.id as id',
+                    'classrooms.name as name',
+                    'student_classrooms.created_at as date',
+                    'transactions.number as transaction_number',
                 ])
-                ->whereNull('coach_schedules.deleted_at')
-                ->where('coach_schedules.accepted',true)
-                ->groupBy('coach_schedules.id');
-
-            $student_schedule = DB::table('student_schedules')
-                ->select([
-                    'student_schedules.student_classroom_id',
-                ])
-                ->rightJoinSub($coach_schedule, 'coach_schedules', function ($join) {
-                    $join->on('student_schedules.coach_schedule_id', '=', 'coach_schedules.id');
-                })
-                ->whereNull('student_schedules.deleted_at')
-                ->whereNotNull('student_schedules.student_classroom_id');
-
-            $sub_student_classroom = DB::table('student_classrooms')
-                ->select([
-                    'student_classrooms.id',
-                    DB::raw("COUNT(student_schedules.student_classroom_id) as last_meeting")
-
-                ])
-                ->leftJoinSub($student_schedule, 'student_schedules', function ($join) {
-                    $join->on('student_classrooms.id', '=', 'student_schedules.student_classroom_id');
-                })
+                ->leftJoin('classrooms','classrooms.id','=','student_classrooms.classroom_id')
+                ->leftJoin('transactions','transactions.id','=','student_classrooms.transaction_id')
                 ->where('student_classrooms.student_id', $id)
-                ->whereNull('student_classrooms.deleted_at')
-                ->groupBy('student_classrooms.id');
-
-            // end
-
-            $classroom = DB::table('classrooms')
-                ->select([
-                    'classrooms.id',
-                    'classrooms.name',
-                    'classrooms.session_total',
-                    'classrooms.package_type',
-                ])
-                ->where('package_type',2)
-                ->whereNull('classrooms.deleted_at');
-
-            $transaction_classes = DB::table('transaction_details')
-                ->select([
-                    'classrooms.id',
-                    'transactions.datetime'
-                ])
-                ->leftJoin('transactions', 'transactions.id','transaction_details.transaction_id')
-                ->leftJoin('carts','carts.id','transaction_details.cart_id')
-                ->join('classrooms','classrooms.id','carts.classroom_id')
-                ->where('transactions.student_id', $id)
-                ->where('transactions.status', 2)
-                ->whereNull(['transactions.deleted_at']);
-
-            $result = DB::table('student_classrooms')
-                ->select([
-                    'classrooms.id',
-                    'classrooms.name',
-                    'sub_student_classroom.last_meeting',
-                    DB::raw("
-                        CASE
-                            WHEN classrooms.package_type = 2
-                                THEN
-                                    CASE
-                                        WHEN (transaction_classes.datetime::timestamp + INTERVAL '1 MONTH')::timestamp > '{$now}'::timestamp
-                                            AND sub_student_classroom.last_meeting < (classrooms.session_total::integer / 2)::integer
-                                            THEN ((classrooms.session_total::integer / 2)::integer) - sub_student_classroom.last_meeting::integer
-                                        WHEN (transaction_classes.datetime::timestamp + INTERVAL '2 MONTH')::timestamp > '{$now}'::timestamp
-                                            AND sub_student_classroom.last_meeting < classrooms.session_total
-                                            THEN (classrooms.session_total::integer - sub_student_classroom.last_meeting::integer) - (classrooms.session_total::integer / 2)::integer
-                                        ELSE 0
-                                    END
-                            ELSE
-                                CASE
-                                    WHEN (transaction_classes.datetime::timestamp + INTERVAL '1 WEEKS')::timestamp > '{$now}'::timestamp
-                                        THEN classrooms.session_total::integer  - sub_student_classroom.last_meeting::integer
-                                    ELSE 0
-                                END
-                        END subtraction
-                    "),
-                ])
-                ->joinSub($classroom, 'classrooms', function ($join) {
-                    $join->on('student_classrooms.classroom_id', '=', 'classrooms.id');
-                })
-                ->leftJoinSub($sub_student_classroom, 'sub_student_classroom', function ($join) {
-                    $join->on('student_classrooms.id', '=', 'sub_student_classroom.id');
-                })
-                ->leftJoinSub($transaction_classes, 'transaction_classes', function ($join) {
-                    $join->on('classrooms.id', '=', 'transaction_classes.id');
-                })
-                ->where('student_classrooms.student_id', $id)
-                ->whereNull('student_classrooms.deleted_at')
-                ->whereNotNull('classrooms.id')
+                ->orderBy('student_classrooms.created_at', 'desc')
                 ->get();
 
             return response([
                 "status"    => 200,
-                "data"      => $result,
+                "data"      => $student_classrooms,
                 "message"   => 'OK!'
             ], 200);
         } catch (Exception $e) {
@@ -323,10 +249,15 @@ class RequestScheduleController extends Controller
         try {
             date_default_timezone_set("Asia/Jakarta");
 
+            $student_classroom = DB::table('student_classrooms')
+                ->where('id', $id)
+                ->first();
+
             $request_count = DB::table('schedule_requests')
                 ->whereNull('schedule_requests.deleted_at')
                 ->where('schedule_requests.student_id', Auth::guard('student')->user()->id)
-                ->where('classroom_id', $id)
+                ->where('student_classroom_id', $student_classroom->id)
+                ->where('classroom_id', $student_classroom->classroom_id)
                 ->where(function($query){
                     $query->where('coach_confirmed', true)
                         ->orWhereNull('coach_confirmed');
@@ -338,7 +269,7 @@ class RequestScheduleController extends Controller
                     'classrooms.id',
                     'classrooms.session_total',
                 ])
-                ->where('id', $id)
+                ->where('id', $student_classroom->classroom_id)
                 ->first();
 
             return $classroom ? $classroom->session_total - $request_count : 0;
@@ -348,12 +279,17 @@ class RequestScheduleController extends Controller
         }
     }
 
-    public function start_date($classroom_id)
+    public function start_date($id)
     {
+        $student_classroom = DB::table('student_classrooms')
+            ->where('id', $id)
+            ->first();
+
         $data = DB::table('schedule_requests')
             ->whereNull('schedule_requests.deleted_at')
             ->where('schedule_requests.student_id', Auth::guard('student')->user()->id)
-            ->where('classroom_id', $classroom_id)
+            ->where('student_classroom_id', $student_classroom->id)
+            ->where('classroom_id', $student_classroom->classroom_id)
             ->orderBy('datetime','desc')
             ->whereNull('schedule_requests.deleted_at')
             ->first();
