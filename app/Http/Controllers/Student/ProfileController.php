@@ -15,6 +15,7 @@ use App\Models\Student;
 
 class ProfileController extends BaseMenu
 {
+
     public function index()
     {
         $navigation = [
@@ -33,8 +34,9 @@ class ProfileController extends BaseMenu
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Auth::id=$id)
     {
+
         try {
 
             date_default_timezone_set("Asia/Jakarta");
