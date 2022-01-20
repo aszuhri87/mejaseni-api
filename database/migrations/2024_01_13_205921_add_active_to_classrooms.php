@@ -4,13 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class RenameTableToTermOfServices extends Migration
+class AddActiveToClassrooms extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     /**
      * Run the migrations.
      *
@@ -18,7 +13,9 @@ class RenameTableToTermOfServices extends Migration
      */
     public function up()
     {
-        Schema::rename('privacy_policy_items','term_of_services');
+        Schema::table('classrooms', function (Blueprint $table) {
+            $table->boolean('active')->default(false);
+        });
     }
 
     /**
@@ -27,8 +24,9 @@ class RenameTableToTermOfServices extends Migration
      * @return void
      */
     public function down()
-    {   
-        Schema::drop('privacy_policy_items');
-        Schema::dropIfExists('privacy_policy_items');
+    {
+        Schema::table('classrooms', function (Blueprint $table) {
+            $table->dropColumn('active');
+        });
     }
 }

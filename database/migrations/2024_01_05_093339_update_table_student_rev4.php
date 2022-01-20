@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class UpdateTableStudent extends Migration
+class UpdateTableStudentRev4 extends Migration
 {
     /**
      * Run the migrations.
@@ -15,6 +15,7 @@ class UpdateTableStudent extends Migration
     {
         Schema::table('students', function (Blueprint $table) {
             $table->string('reset_token')->nullable();
+            $table->string('avatar')->nullable();
         });
     }
 
@@ -25,6 +26,9 @@ class UpdateTableStudent extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('students', function (Blueprint $table) {
+            $table->dropColumn('reset_token');
+            $table->dropColumn('avatar');
+        });
     }
 }

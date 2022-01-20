@@ -26,7 +26,7 @@ class AddAddressToStudents extends Migration
     public function down()
     {
         Schema::table('students', function (Blueprint $table) {
-            //
+            $table->dropColumn('address');
         });
     }
 }

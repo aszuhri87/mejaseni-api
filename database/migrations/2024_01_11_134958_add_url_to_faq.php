@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddResetToCoaches extends Migration
+class AddUrlToFaq extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,9 @@ class AddResetToCoaches extends Migration
      */
     public function up()
     {
-        Schema::table('coaches', function (Blueprint $table) {
-           
-    
-                $table->string('reset_token')->nullable();
-         
+        Schema::table('faqs', function (Blueprint $table) {
+            $table->string('url_link')->nullable();
+            $table->string('image_url')->nullable();
         });
     }
 
@@ -28,8 +26,9 @@ class AddResetToCoaches extends Migration
      */
     public function down()
     {
-        Schema::table('coaches', function (Blueprint $table) {
-            //
+        Schema::table('faq', function (Blueprint $table) {
+            $table->dropColumn('url_link');
+            $table->dropColumn('image_url');
         });
     }
 }

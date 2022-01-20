@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddPreviewToTheoryVideos extends Migration
+class AddRatingToSessionVideos extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddPreviewToTheoryVideos extends Migration
      */
     public function up()
     {
-        Schema::table('theory_videos', function (Blueprint $table) {
-            $table->boolean('preview')->default(false);
+        Schema::table('session_videos', function (Blueprint $table) {
+            $table->decimal('ratings',2,1)->nullable();
         });
     }
 
@@ -25,8 +25,8 @@ class AddPreviewToTheoryVideos extends Migration
      */
     public function down()
     {
-        Schema::table('theory_videos', function (Blueprint $table) {
-            //
+        Schema::table('session_videos', function (Blueprint $table) {
+            $table->dropColumn('ratings');
         });
     }
 }

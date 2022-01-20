@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class RenameDescriptionToPolicy extends Migration
+class AddResetToCoaches extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,11 @@ class RenameDescriptionToPolicy extends Migration
      */
     public function up()
     {
-        Schema::table('privacy_policies', function (Blueprint $table) {
-            $table->renameColumn('description','policy');
+        Schema::table('coaches', function (Blueprint $table) {
+           
+    
+                $table->string('reset_token')->nullable();
+         
         });
     }
 
@@ -25,8 +28,8 @@ class RenameDescriptionToPolicy extends Migration
      */
     public function down()
     {
-        Schema::table('policy', function (Blueprint $table) {
-            //
+        Schema::table('coaches', function (Blueprint $table) {
+            $table->dropColumn('reset_token');
         });
     }
 }

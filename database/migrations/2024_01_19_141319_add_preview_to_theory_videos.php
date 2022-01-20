@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddUrlToFaq extends Migration
+class AddPreviewToTheoryVideos extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class AddUrlToFaq extends Migration
      */
     public function up()
     {
-        Schema::table('faqs', function (Blueprint $table) {
-            $table->string('url_link')->nullable();
-            $table->string('image_url')->nullable();
+        Schema::table('theory_videos', function (Blueprint $table) {
+            $table->boolean('preview')->default(false);
         });
     }
 
@@ -26,8 +25,8 @@ class AddUrlToFaq extends Migration
      */
     public function down()
     {
-        Schema::table('faq', function (Blueprint $table) {
-            //
+        Schema::table('theory_videos', function (Blueprint $table) {
+            $table->dropColumn('preview');
         });
     }
 }
