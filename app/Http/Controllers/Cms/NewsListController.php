@@ -18,10 +18,11 @@ class NewsListController extends Controller
     public function index(Request $request)
     {
 
-    	$company = Company::first();
-    	$branchs = Branch::all();
+        $company = Company::first();
+        $branchs = Branch::all();
         $path = Storage::disk('s3')->url('/');
         $is_registered = Auth::guard('student')->check() ? 'registered':'unregistered';
+
         $banner = DB::table('banners')
             ->select([
                 'title',
@@ -51,15 +52,15 @@ class NewsListController extends Controller
 
 
         $news = DB::table('news')
-                    ->select([
-                        'id',
-                        'title',
-                        'description',
-                        'created_at',
-                         DB::raw("CONCAT('{$path}',image) as image_url"),
-                    ])
-                    ->whereNull('deleted_at')
-                    ->orderBy('created_at','desc');
+            ->select([
+                'id',
+                'title',
+                'description',
+                'created_at',
+                DB::raw("CONCAT('{$path}',image) as image_url"),
+            ])
+            ->whereNull('deleted_at')
+            ->orderBy('created_at','desc');
 
         if($classroom_category){
             $is_valid = Uuid::isValid($classroom_category);
@@ -82,13 +83,13 @@ class NewsListController extends Controller
 
         $news = $news->get();
 
-    	return view('cms.news-list.index', [
-    		"company" => $company,
-    		"branchs" => $branchs,
+        return view('cms.news-list.index', [
+            "company" => $company,
+            "branchs" => $branchs,
             "banner" => $banner,
-    		"news" => $news,
+            "news" => $news,
             "social_medias" => $social_medias
-    	]);
+        ]);
     }
 
 

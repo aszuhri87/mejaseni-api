@@ -8,12 +8,12 @@
 <style>
     @media only screen and (max-width: 1500px) {
         .lg-xl {
-           display: none;
-           padding: 0;
+            display: none;
+            padding: 0;
         }
 
         .lg-sm {
-           display: block;
+            display: block;
         }
     }
 
@@ -89,7 +89,7 @@
                 <div class="splide__track">
                     <ul class="splide__list">
                         @foreach($image_galeries as $image_galery)
-                        <li class="splide__slide pb-md-0 pb-5">
+                        <li class="splide__slide pb-md-0 pb-5" data-link="{{ isset($image_galery->link) ? $image_galery->link:''}}" style="{{ isset($image_galery->link) ? 'cursor:pointer':''}}">
                             <div class="content-embed__wrapper">
                                 <img src="{{ isset($image_galery->image_url) ? $image_galery->image_url:''}}"
                                     data-splide-lazy="path-to-the-image" alt="">

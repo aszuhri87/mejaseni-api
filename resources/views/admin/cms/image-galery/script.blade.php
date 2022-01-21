@@ -123,6 +123,7 @@
 
 
                     $('#form-galery-home').find('input[name="number"]').val(data.number);
+                    $('#form-galery-home').find('input[name="link"]').val(data.link);
                     $('#image').empty();
 
                     if(data.image_url){

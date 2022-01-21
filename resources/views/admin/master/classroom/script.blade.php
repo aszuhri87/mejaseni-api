@@ -162,6 +162,7 @@
                     $("input[name=package_type]").attr('checked', false);
                     $("input[name=sub_package_type]").attr('checked', false);
                     $('#switch-sub-package').attr('checked', false);
+                    $('.select-sub-package').hide();
                     $('#sub-classroom-category').val('');
                     $('#classroom-category').val('');
 
@@ -225,10 +226,14 @@
 
                     if(data.buy_btn_disable){
                         $('#switch-buy-btn-disable').attr('checked', 'checked');
+                    }else{
+                        $('#switch-buy-btn-disable').removeAttr('checked');
                     }
 
                     if(data.hide){
                         $('#switch-hide').attr('checked', 'checked');
+                    }else{
+                        $('#switch-hide').removeAttr('checked');
                     }
 
                     $('#image').empty();
@@ -295,39 +300,40 @@
                         $('.select-sub-package').show();
                     }else{
                         $('.select-sub-package').hide();
+                        $("input[name=sub_package_type]").removeAttr('checked');
                     }
                 })
 
-                $(document).on('change', '.sub-package-type', function(){
-                    if($('input[name="switch_sub"]:checked').length == 1){
-                        let category = $("#classroom-category option:selected" ).text(),
-                            sub_category = $("#sub-classroom-category option:selected" ).text(),
-                            val_sub_category = $("#sub-classroom-category" ).val(),
-                            name;
+                // $(document).on('change', '.sub-package-type', function(){
+                //     if($('input[name="switch_sub"]:checked').length == 1){
+                //         let category = $("#classroom-category option:selected" ).text(),
+                //             sub_category = $("#sub-classroom-category option:selected" ).text(),
+                //             val_sub_category = $("#sub-classroom-category" ).val(),
+                //             name;
 
-                        if(!!val_sub_category && val_sub_category != ''){
-                            if($(this).val() == 1){
-                                name = sub_category + ' Basic'
-                            }else if($(this).val() == 2){
-                                name = sub_category + ' Intermediate'
-                            }else{
-                                name = sub_category + ' Advanced'
-                            }
-                        }else{
-                            if($(this).val() == 1){
-                                name = category + ' Basic'
-                            }else if($(this).val() == 2){
-                                name = category + ' Intermediate'
-                            }else{
-                                name = category + ' Advanced'
-                            }
-                        }
+                //         if(!!val_sub_category && val_sub_category != ''){
+                //             if($(this).val() == 1){
+                //                 name = sub_category + ' Basic'
+                //             }else if($(this).val() == 2){
+                //                 name = sub_category + ' Intermediate'
+                //             }else{
+                //                 name = sub_category + ' Advanced'
+                //             }
+                //         }else{
+                //             if($(this).val() == 1){
+                //                 name = category + ' Basic'
+                //             }else if($(this).val() == 2){
+                //                 name = category + ' Intermediate'
+                //             }else{
+                //                 name = category + ' Advanced'
+                //             }
+                //         }
 
-                        $('#form-classroom').find('input[name="name"]').val(name);
-                    }else{
-                        $('#form-classroom').find('input[name="name"]').val('');
-                    }
-                })
+                //         $('#form-classroom').find('input[name="name"]').val(name);
+                //     }else{
+                //         $('#form-classroom').find('input[name="name"]').val('');
+                //     }
+                // })
 
                 $(document).on('change', '#classroom-category', function(){
                     if($('#classroom-category').val() == ""){

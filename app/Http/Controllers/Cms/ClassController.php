@@ -590,6 +590,7 @@ class ClassController extends Controller
                                 ->whereNull('master_lessons.sub_classroom_category_id');
                         }
                     })
+                    ->where('master_lessons.hide', false)
                     ->whereNull([
                         'master_lessons.deleted_at'
                     ])
@@ -634,7 +635,8 @@ class ClassController extends Controller
                     ])
                     ->where('classrooms.hide','!=', true)
                     ->where('classrooms.package_type',$package)
-                    ->where('classroom_categories.id',$classroom_category_id);
+                    ->where('classroom_categories.id',$classroom_category_id)
+                    ->orderBy('classrooms.sub_package_type', 'asc');
 
                 $is_valid = Uuid::isValid($sub_classroom_category_id);
                 $classrooms = $is_valid ?
@@ -983,6 +985,7 @@ class ClassController extends Controller
         $html ='<div class="splide" id="splide1">
               <div class="splide__track">
                 <ul class="splide__list" id="classrooms">';
+
         foreach ($classrooms as $key => $classroom) {
             $session_total = isset($classroom->session_total) ? $classroom->session_total:0;
             $session_duration = isset($classroom->session_duration) ? $classroom->session_duration:0;
@@ -1119,10 +1122,17 @@ class ClassController extends Controller
         foreach ($master_lessons as $key => $master_lesson) {
 
             if($master_lesson->datetime > $now){
-                $button = '<div class="mt-3">
-                        <a class="btn btn-primary shadow" onclick="'.$this->_is_authenticated($master_lesson->id, 3).'">Daftar Sekarang
-                            <img class="ml-2" src="/cms/assets/img/svg/Sign-in.svg" alt=""></a>
-                    </div>';
+                if($master_lesson->buy_btn_disable){
+                    $button = '<div class="mt-3">
+                            <a class="btn btn-primary shadow disabled">Daftar Sekarang
+                                <img class="ml-2" src="/cms/assets/img/svg/Sign-in.svg" alt=""></a>
+                        </div>';
+                }else{
+                    $button = '<div class="mt-3">
+                            <a class="btn btn-primary shadow" onclick="'.$this->_is_authenticated($master_lesson->id, 3).'">Daftar Sekarang
+                                <img class="ml-2" src="/cms/assets/img/svg/Sign-in.svg" alt=""></a>
+                        </div>';
+                }
             }else{
                 $button = '<div class="mt-3">
                     <label class="text-muted">Sudah terlaksana</label>

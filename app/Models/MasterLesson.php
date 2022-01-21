@@ -26,6 +26,8 @@ class MasterLesson extends Model
         'slot',
         'platform_link',
         'description',
+        'buy_btn_disable',
+        'hide',
     ];
 
     protected $dates = ['deleted_at'];

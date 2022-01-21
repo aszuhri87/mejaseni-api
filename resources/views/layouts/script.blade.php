@@ -129,7 +129,8 @@
     $('.timepicker').timepicker({
         minuteStep: 1,
         showSeconds: true,
-        showMeridian: false
+        showMeridian: false,
+        format: 'HH:mm'
     });
 
     $.ajaxSetup({

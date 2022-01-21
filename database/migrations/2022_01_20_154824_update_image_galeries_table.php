@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class RenameDescriptionToPolicy extends Migration
+class UpdateImageGaleriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class RenameDescriptionToPolicy extends Migration
      */
     public function up()
     {
-        Schema::table('privacy_policies', function (Blueprint $table) {
-            $table->renameColumn('description','policy');
+        Schema::table('image_galeries', function (Blueprint $table) {
+            $table->string('link')->nullable();
         });
     }
 
@@ -25,8 +25,8 @@ class RenameDescriptionToPolicy extends Migration
      */
     public function down()
     {
-        Schema::table('policy', function (Blueprint $table) {
-            //
+        Schema::table('image_galeries', function (Blueprint $table) {
+            $table->dropColumn('link');
         });
     }
 }

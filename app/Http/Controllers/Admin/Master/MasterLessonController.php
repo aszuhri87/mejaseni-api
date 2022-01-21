@@ -98,6 +98,8 @@ class MasterLessonController extends BaseMenu
                     'slot' => $request->slot,
                     'platform_link' => $request->platform_link,
                     'description' => $request->description,
+                    'buy_btn_disable' => isset($request->buy_btn_disable) ? true : false,
+                    'hide' => isset($request->hide) ? true : false,
                 ]);
 
                 if(isset($request->guests) && count($request->guests) > 0){
@@ -145,6 +147,8 @@ class MasterLessonController extends BaseMenu
                     'slot' => $request->slot,
                     'platform_link' => $request->platform_link,
                     'description' => $request->description,
+                    'buy_btn_disable' => isset($request->buy_btn_disable) ? true : false,
+                    'hide' => isset($request->hide) ? true : false,
                 ]);
 
                 if(isset($request->guests) && count($request->guests) > 0){

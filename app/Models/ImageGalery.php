@@ -17,7 +17,8 @@ class ImageGalery extends Model
 
     protected $fillable = [
         'image',
-        'number'
+        'number',
+        'link'
     ];
 
     protected $dates = ['deleted_at'];
