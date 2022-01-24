@@ -52,6 +52,7 @@ class NewPackageController extends BaseMenu
                 ->where([
                     'carts.student_id' => Auth::guard('student')->user()->id
                 ])
+                ->distinct('carts.classroom_id')
                 ->whereNull('carts.deleted_at');
 
             $result = DB::table('classrooms')
@@ -93,7 +94,7 @@ class NewPackageController extends BaseMenu
                 })
                 ->whereNull('classrooms.deleted_at')
                 ->where('classrooms.hide','!=', true)
-                ->distinct('classrooms.id')
+                ->orderBy('classrooms.sub_package_type', 'asc')
                 ->paginate(6);
 
             foreach ($result as $key => $value) {
@@ -465,6 +466,7 @@ class NewPackageController extends BaseMenu
                     }
                 })
                 ->whereNull('deleted_at')
+                ->orderBy('number')
                 ->orderBy('number')
                 ->get();
 

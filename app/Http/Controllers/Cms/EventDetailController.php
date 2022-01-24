@@ -103,10 +103,13 @@ class EventDetailController extends Controller
             ])
             ->get();
 
-            return response([
-                'status' => 200,
-                'message' => 'success',
-                'data' => $event,
+            return view('cms.event-detail.index', [
+                "company" => $company,
+                "branchs" => $branchs,
+                "banner" => $banner,
+                "event" => $event,
+                "social_medias" => $social_medias
             ]);
+
     }
 }

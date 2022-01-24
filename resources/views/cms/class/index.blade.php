@@ -92,7 +92,7 @@
             @else
                 <div class="col-12 pr-0 pr-lg-4 column-center">
                     <img style="width: 200px;" src="/cms/assets/img/svg/empty-store.svg" alt="">
-                    <h4 class="mt-3 text-center">Wah, Class belum tersedia</h4>
+                    {{-- <h4 class="mt-3 text-center">Wah, Class belum tersedia</h4> --}}
                 </div>
             @endif
             </div>

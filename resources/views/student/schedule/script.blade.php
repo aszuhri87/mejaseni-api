@@ -124,8 +124,8 @@
 
                         $('.timepicker').timepicker({
                             minuteStep: 1,
-                            showSeconds: true,
-                            showMeridian: false
+                            showSeconds: false,
+                            showMeridian: false,
                         });
                     }else{
                         $('#time-place').html('');

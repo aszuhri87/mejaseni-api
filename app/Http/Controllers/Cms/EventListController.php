@@ -34,6 +34,7 @@ class EventListController extends Controller
             ->first();
 
         $classroom_categories = DB::table('classroom_categories')->whereNull('deleted_at')->get();
+
         $social_medias = DB::table('social_media')
             ->select([
                 'url',
@@ -51,19 +52,19 @@ class EventListController extends Controller
 
         $page = $request->query('page');
 
-
     	$events = DB::table('events')
-    				->select([
-    					'events.id',
-    					'events.title',
-    					'events.description',
-    					'events.start_at as date',
-                        'classroom_categories.name as category',
-    					 DB::raw("CONCAT('{$path}',events.image) as image_url"),
-    				])
-                    ->leftJoin('classroom_categories','classroom_categories.id','events.classroom_category_id')
-    				->whereNull('events.deleted_at')
-    				->orderBy('events.start_at','desc');
+            ->select([
+                'events.id',
+                'events.title',
+                'events.description',
+                'events.start_at as date',
+                'classroom_categories.name as category',
+                DB::raw("CONCAT('{$path}',events.image) as image_url"),
+            ])
+            ->leftJoin('classroom_categories','classroom_categories.id','events.classroom_category_id')
+            ->whereNull('events.deleted_at')
+            ->orderBy('events.start_at','desc')
+            ->distinct();
 
         if($classroom_category){
             $is_valid = Uuid::isValid($classroom_category);
@@ -85,11 +86,12 @@ class EventListController extends Controller
             $events = $events->where('title', 'ilike', '%'.strtolower($search).'%');
         }
 
-        if($page){
-            $events = $events->skip($page * 5);
-        }
+        // if($page){
+        //     $events = $events->skip($page * 5);
+        // }
 
-        $events = $events->take(5)->get();
+        // $events = $events->take(5)->get();
+        $events = $events->get();
 
 
     	return view('cms.event-list.index', [
@@ -115,17 +117,18 @@ class EventListController extends Controller
 
 
         $events = DB::table('events')
-                    ->select([
-                        'events.id',
-                        'events.title',
-                        'events.description',
-                        'events.start_at as date',
-                        'classroom_categories.name as category',
-                         DB::raw("CONCAT('{$path}',events.image) as image_url"),
-                    ])
-                    ->leftJoin('classroom_categories','classroom_categories.id','events.classroom_category_id')
-                    ->whereNull('events.deleted_at')
-                    ->orderBy('events.start_at','desc');
+            ->select([
+                'events.id',
+                'events.title',
+                'events.description',
+                'events.start_at as date',
+                'classroom_categories.name as category',
+                    DB::raw("CONCAT('{$path}',events.image) as image_url"),
+            ])
+            ->leftJoin('classroom_categories','classroom_categories.id','events.classroom_category_id')
+            ->whereNull('events.deleted_at')
+            ->orderBy('events.start_at','desc')
+            ->distinct();
 
         if($classroom_category){
             $events = $events->where('classroom_category_id',$classroom_category);
@@ -142,12 +145,12 @@ class EventListController extends Controller
         if($search){
             $events = $events->where('title', 'ilike', '%'.strtolower($search).'%');
         }
-        
+
         if($page){
             $events = $events->skip($page * 5);
         }
 
-        $events = $events->take(5)->get();
+        $events = $events->take(0)->get();
 
 
         return response([

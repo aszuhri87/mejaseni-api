@@ -38,6 +38,7 @@ class HomePageController extends Controller
         $image_galeries = DB::table('image_galeries')
             ->select([
                 DB::raw("CONCAT('{$path}',image) as image_url"),
+                'link'
             ])
             ->whereNull([
                 'deleted_at'

@@ -98,7 +98,8 @@ class ImageGaleryController extends BaseMenu
 
                 $result = ImageGalery::create([
                     'image' => $path,
-                    'number' => $request->number
+                    'number' => $request->number,
+                    'link' => $request->link
                 ]);
 
                 return $result;
@@ -159,7 +160,8 @@ class ImageGaleryController extends BaseMenu
 
                 $result->update([
                     'image' => $path ? $path:$result->image,
-                    'number' => $request->number
+                    'number' => $request->number,
+                    'link' => $request->link,
                 ]);
 
                 return $result;

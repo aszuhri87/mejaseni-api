@@ -24,6 +24,12 @@
                         </label>
                         <div id="image"></div>
                     </div>
+                    <div class="form-group">
+                        <label>
+                            Link
+                        </label>
+                        <input type="url" min="1" name="link" class="form-control" placeholder="Link"/>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>

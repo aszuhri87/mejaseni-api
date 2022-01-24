@@ -16,22 +16,22 @@ class NewsEventController extends Controller
 {
     public function index()
     {
-    	$company = Company::first();
-    	$branchs = Branch::all();
-    	$path = Storage::disk('s3')->url('/');
+        $company = Company::first();
+        $branchs = Branch::all();
+        $path = Storage::disk('s3')->url('/');
 
-    	$events = DB::table('events')
-    				->select([
-    					'id',
-    					'title',
-    					'description',
-    					'start_at as date',
-    					 DB::raw("CONCAT('{$path}',image) as image_url"),
-    				])
-    				->whereNull('deleted_at')
-    				->orderBy('start_at','desc')
-                    ->take(3)
-    				->get();
+        $events = DB::table('events')
+            ->select([
+                'id',
+                'title',
+                'description',
+                'start_at as date',
+                    DB::raw("CONCAT('{$path}',image) as image_url"),
+            ])
+            ->whereNull('deleted_at')
+            ->orderBy('start_at','desc')
+            ->take(3)
+            ->get();
 
         $is_registered = Auth::guard('student')->check() ? 'registered':'unregistered';
         $banner = DB::table('banners')
@@ -45,18 +45,18 @@ class NewsEventController extends Controller
                 'deleted_at'
             ])
             ->first();
-                    
+
         $news = DB::table('news')
-                    ->select([
-                        'id',
-                        'title',
-                        'description',
-                         DB::raw("CONCAT('{$path}',image) as image_url"),
-                    ])
-                    ->whereNull('deleted_at')
-                    ->orderBy('created_at','desc')
-                    ->take(3)
-                    ->get();
+            ->select([
+                'id',
+                'title',
+                'description',
+                    DB::raw("CONCAT('{$path}',image) as image_url"),
+            ])
+            ->whereNull('deleted_at')
+            ->orderBy('created_at','desc')
+            ->take(3)
+            ->get();
 
         $social_medias = DB::table('social_media')
             ->select([
@@ -68,10 +68,10 @@ class NewsEventController extends Controller
             ])
             ->get();
 
-    	return view('cms.news-event.index', [
-            "company" => $company, 
+        return view('cms.news-event.index', [
+            "company" => $company,
             "branchs" => $branchs,
-            "banner" => $banner, 
+            "banner" => $banner,
             "events" => $events,
             "news" => $news,
             "social_medias" => $social_medias

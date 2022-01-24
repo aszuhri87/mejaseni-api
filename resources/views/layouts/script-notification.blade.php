@@ -16,6 +16,10 @@
                 .done(function(res, xhr, meta) {
                     let element = '';
 
+                    if(res.data.length > 0){
+                        $('#icon-notification').addClass('pulse pulse-primary')
+                    }
+
                     $.each(res.data, function(index, data){
                         let icon = '';
 

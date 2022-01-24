@@ -202,6 +202,18 @@
                     $('#form-master-lesson').find('input[name="platform_link"]').val(data.platform_link);
                     $('#form-master-lesson').find('textarea[name="description"]').val(data.description);
 
+                    if(data.buy_btn_disable){
+                        $('#switch-buy-btn-disable').attr('checked', 'checked');
+                    }else{
+                        $('#switch-buy-btn-disable').removeAttr('checked');
+                    }
+
+                    if(data.hide){
+                        $('#switch-hide').attr('checked', 'checked');
+                    }else{
+                        $('#switch-hide').removeAttr('checked');
+                    }
+
                     arr_guest = [];
                     initDataGuest(global_id);
                     get_classroom_category(data.classroom_category_id)
