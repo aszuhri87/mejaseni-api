@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddRatingToSessionVideos extends Migration
+class UpdateStudentFeedbackTableRev1 extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class AddRatingToSessionVideos extends Migration
      */
     public function up()
     {
-        Schema::table('session_videos', function (Blueprint $table) {
-            $table->string('link')->nullable();
-            $table->integer('ratings')->nullable();
+        Schema::table('student_feedback', function (Blueprint $table) {
+            $table->float('star',1,1)->change();
         });
     }
 
@@ -26,12 +25,8 @@ class AddRatingToSessionVideos extends Migration
      */
     public function down()
     {
-
-        Schema::table('session_videos', function (Blueprint $table) {
-            $table->dropColumn('ratings');
-
-            $table->dropColumn('link');
-
+        Schema::table('student_feedback', function (Blueprint $table) {
+            $table->dropColumn('star');
         });
     }
 }

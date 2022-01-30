@@ -28,7 +28,7 @@
 											<table role="presentation" border="0" cellpadding="0" cellspacing="0"
                                             class="btn btn-primary" style="width: auto;">
                                             @php
-                                                $link = url('email-verification/check/'.$account->token_verification);
+                                                $link = url('api.app.mejaseni.var-x.id/api/v1/email-verification/check/'.$account->token_verification);
                                             @endphp
 											<tbody>
 												<tr>
