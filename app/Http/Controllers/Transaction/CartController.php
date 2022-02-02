@@ -206,7 +206,7 @@ class CartController extends Controller
 
                 if($tran_number){
                     $str = explode("MJSN".date('Y'), $tran_number->number);
-                    $number = sprintf("%04d", (int)$str[1] + 1);
+                    $number = sprintf("%04d", (int)$str[0] + 1);
                     $number = "MJSN".date('Y').$number;
                 }else{
                     $number = "MJSN".date('Y').'0123';
