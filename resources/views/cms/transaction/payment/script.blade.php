@@ -25,7 +25,7 @@
                                 va_chanel:  $("input[name=payment_chanel]:checked").val()
                             }
                         }).done(function(res, xhr, meta){
-                            // window.location = res.redirect_url;
+                            window.location = res.redirect_url;
                         }).fail(function(res, error) {
                             alert('Proses gagal, silakan coba kembali.')
                         })
