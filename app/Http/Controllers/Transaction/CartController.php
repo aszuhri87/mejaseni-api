@@ -202,14 +202,14 @@ class CartController extends Controller
             $carts =  $carts->get();
 
             $transaction = DB::transaction(function () use($carts, $request, $amount){
-                $tran_number = Transaction::orderBy(DB::raw("SUBSTRING(number, 9, 4)::INTEGER"),'desc')->withTrashed()->first();
+                $tran_number = Transaction::whereYear('created_at', date('Y'))->orderBy(DB::raw("SUBSTRING(number, 9, 4)::INTEGER"),'desc')->withTrashed()->first();
 
                 if($tran_number){
                     $str = explode("MJSN".date('Y'), $tran_number->number);
-                    $number = sprintf("%04d", (int)$str[0] + 1);
+                    $number = sprintf("%04d", (int)$str[1] + 1);
                     $number = "MJSN".date('Y').$number;
                 }else{
-                    $number = "MJSN".date('Y').'0123';
+                    $number = "MJSN".date('Y').'0001';
                 }
 
                 $trans = Transaction::create([
