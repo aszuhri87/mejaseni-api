@@ -379,8 +379,8 @@
                     toastr.error(res.responseJSON.message, 'Failed')
                 })
                 .always(function() {
-                   hideLoader()
-               });
+                    hideLoader()
+                });
             }
 
             var getGuests = (master_lession_id)=>{
@@ -391,7 +391,7 @@
                 })
                 .done(function(res, xhr, meta) {
                     splide_class.destroy()
-                    $("#description-"+classroom_id).html(res.data.html)
+                    $("#description-"+master_lession_id).html(res.data.html)
                     splide()
                     splide_class.go(splide_index)
                 })

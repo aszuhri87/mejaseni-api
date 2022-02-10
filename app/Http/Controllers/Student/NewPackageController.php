@@ -660,6 +660,7 @@ class NewPackageController extends BaseMenu
                         $query->where('master_lessons.sub_classroom_category_id',$request->sub_classroom_category);
                     }
                 })
+                ->where('master_lessons.hide', false)
                 ->whereNull('master_lessons.deleted_at')
                 ->paginate(10);
 
