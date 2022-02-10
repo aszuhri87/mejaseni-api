@@ -127,28 +127,52 @@
                                             <input required type="number" name="price" class="form-control" placeholder="Price"/>
                                         </div>
                                     </div>
-                                    <div class="col-6">
+                                    <div class="col-12">
                                         <div class="form-group">
-                                            <span class="switch switch-sm">
-                                                <label>
-                                                    <input type="checkbox" id="switch-buy-btn-disable" name="buy_btn_disable"/>
-                                                    <span></span>
-                                                </label>
-                                                Disable Tombol Beli
-                                            </span>
+                                            <label>
+                                                Home Course Price
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <input type="number" name="price_home_course" class="form-control" placeholder="Home Course Price"/>
                                         </div>
                                     </div>
-                                    <div class="col-6">
-                                        <div class="form-group">
-                                            <span class="switch switch-sm">
-                                                <label>
-                                                    <input type="checkbox" id="switch-hide" name="hide"/>
-                                                    <span></span>
-                                                </label>
-                                                Sembunyikan Kelas
-                                            </span>
-                                        </div>
-                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <span class="switch switch-sm">
+                                        <label>
+                                            <input type="checkbox" id="switch-buy-btn-disable" name="buy_btn_disable"/>
+                                            <span></span>
+                                        </label>
+                                        Disable Tombol Beli
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <span class="switch switch-sm">
+                                        <label>
+                                            <input type="checkbox" id="switch-hide" name="hide"/>
+                                            <span></span>
+                                        </label>
+                                        Sembunyikan Kelas
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <span class="switch switch-sm">
+                                        <label>
+                                            <input type="checkbox" id="switch-home-course-available" name="home_course_available"/>
+                                            <span></span>
+                                        </label>
+                                        Home Course
+                                    </span>
                                 </div>
                             </div>
                         </div>

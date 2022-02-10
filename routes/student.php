@@ -22,6 +22,8 @@ use App\Http\Controllers\Student\ReviewController as StudentReviewController;
 use App\Http\Controllers\Student\RequestScheduleController as StudentRequestScheduleController;
 use App\Http\Controllers\Student\NotificationController as StudentNotificationController;
 
+use App\Http\Controllers\Cms\ClassController as ClassController;
+
 /*
 |--------------------------------------------------------------------------
 | Students Route

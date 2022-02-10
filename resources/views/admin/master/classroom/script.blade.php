@@ -198,6 +198,7 @@
                     $('#form-classroom').find('input[name="session"]').val(data.session_total);
                     $('#form-classroom').find('input[name="duration"]').val(data.session_duration);
                     $('#form-classroom').find('input[name="price"]').val(data.price);
+                    $('#form-classroom').find('input[name="price_home_course"]').val(data.price_home_course);
                     $('#form-classroom').find('textarea[name="description"]').val(data.description);
 
                     get_classroom_category(data.classroom_category_id)
@@ -234,6 +235,12 @@
                         $('#switch-hide').attr('checked', 'checked');
                     }else{
                         $('#switch-hide').removeAttr('checked');
+                    }
+
+                    if(data.home_course_available){
+                        $('#switch-home-course-available').attr('checked', 'checked');
+                    }else{
+                        $('#switch-home-course-available').removeAttr('checked');
                     }
 
                     $('#image').empty();
