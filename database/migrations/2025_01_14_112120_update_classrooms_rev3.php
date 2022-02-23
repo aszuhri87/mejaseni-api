@@ -11,16 +11,16 @@ class UpdateClassroomsRev3 extends Migration
      *
      * @return void
      */
-   
+
         public function up()
         {
             Schema::table('classrooms', function (Blueprint $table) {
-          
-                    $table->string('class_type')->nullable();
-            
+
+                $table->dropColumn('class_type');
+
             });
         }
-    
+
 
     /**
      * Reverse the migrations.
@@ -30,8 +30,8 @@ class UpdateClassroomsRev3 extends Migration
     public function down()
     {
         Schema::table('classrooms', function (Blueprint $table) {
-            $table->dropColumn('class_type');               
+            $table->dropColumn('class_type');
         });
-        
+
     }
 }
