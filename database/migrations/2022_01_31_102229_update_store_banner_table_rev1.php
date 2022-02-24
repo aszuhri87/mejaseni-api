@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class UpdateImageGaleriesTable extends Migration
+class UpdateStoreBannerTableRev1 extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,9 @@ class UpdateImageGaleriesTable extends Migration
      */
     public function up()
     {
-        Schema::table('image_galeries', function (Blueprint $table) {
-            $table->string('link')->nullable();
+        Schema::table('store_banners', function (Blueprint $table) {
+            $table->string('url_link')->nullable();
+            $table->boolean('show')->default(false);
         });
     }
 
@@ -25,11 +26,9 @@ class UpdateImageGaleriesTable extends Migration
      */
     public function down()
     {
-
-        Schema::table('image_galeries', function (Blueprint $table) {
-            $table->dropColumn('link');
-
+        Schema::table('store_banners', function (Blueprint $table) {
+            $table->dropColumn('url_link');
+            $table->dropColumn('show');
         });
     }
-  
 }

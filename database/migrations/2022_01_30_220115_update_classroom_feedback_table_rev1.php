@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class UpdateImageGaleriesTable extends Migration
+
+class UpdateClassroomFeedbackTableRev1 extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +14,8 @@ class UpdateImageGaleriesTable extends Migration
      */
     public function up()
     {
-        Schema::table('image_galeries', function (Blueprint $table) {
-            $table->string('link')->nullable();
+        Schema::table('classroom_feedback', function (Blueprint $table) {
+            $table->float('star',1,1)->change();
         });
     }
 
@@ -25,11 +26,8 @@ class UpdateImageGaleriesTable extends Migration
      */
     public function down()
     {
-
-        Schema::table('image_galeries', function (Blueprint $table) {
-            $table->dropColumn('link');
-
+        Schema::table('classroom_feedback', function (Blueprint $table) {
+            $table->dropColumn('star');
         });
     }
-  
 }

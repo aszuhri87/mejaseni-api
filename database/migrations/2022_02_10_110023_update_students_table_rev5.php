@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class UpdateImageGaleriesTable extends Migration
+class UpdateStudentsTableRev5 extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class UpdateImageGaleriesTable extends Migration
      */
     public function up()
     {
-        Schema::table('image_galeries', function (Blueprint $table) {
-            $table->string('link')->nullable();
+        Schema::table('students', function (Blueprint $table) {
+            $table->timestamp('reset_token_expired')->nullable();
         });
     }
 
@@ -25,11 +25,8 @@ class UpdateImageGaleriesTable extends Migration
      */
     public function down()
     {
-
-        Schema::table('image_galeries', function (Blueprint $table) {
-            $table->dropColumn('link');
-
+        Schema::table('students', function (Blueprint $table) {
+            $table->dropColumn('reset_token_expired');
         });
     }
-  
 }
