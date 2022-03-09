@@ -7,77 +7,77 @@
         height: 300px;
     }
     .controls {
-            background-color: #fff;
-            border-radius: 2px;
-            border: 1px solid transparent;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-            box-sizing: border-box;
-            font-family: 'Roboto';
-            font-size: 15px;
-            font-weight: 300;
-            height: 29px;
-            margin-left: 17px;
-            margin-top: 10px;
-            outline: none;
-            padding: 0 11px 0 13px;
-            text-overflow: ellipsis;
-            width: 400px;
-        }
+        background-color: #fff;
+        border-radius: 2px;
+        border: 1px solid transparent;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        box-sizing: border-box;
+        font-family: 'Roboto';
+        font-size: 15px;
+        font-weight: 300;
+        height: 29px;
+        margin-left: 17px;
+        margin-top: 10px;
+        outline: none;
+        padding: 0 11px 0 13px;
+        text-overflow: ellipsis;
+        width: 400px;
+    }
 
-        .controls:focus {
-            border-color: #4d90fe;
-        }
+    .controls:focus {
+        border-color: #4d90fe;
+    }
 
-        .pac-card {
-            margin: 10px 10px 0 0;
-            border-radius: 2px 0 0 2px;
-            box-sizing: border-box;
-            -moz-box-sizing: border-box;
-            outline: none;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-            background-color: #fff;
-            font-family: 'Roboto';
-        }
+    .pac-card {
+        margin: 10px 10px 0 0;
+        border-radius: 2px 0 0 2px;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        outline: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        background-color: #fff;
+        font-family: 'Roboto';
+    }
 
-        #pac-container {
-            padding-bottom: 12px;
-            margin-right: 12px;
-        }
+    #pac-container {
+        padding-bottom: 12px;
+        margin-right: 12px;
+    }
 
-        .pac-controls {
-            display: inline-block;
-            padding: 5px 11px;
-        }
+    .pac-controls {
+        display: inline-block;
+        padding: 5px 11px;
+    }
 
-        .pac-controls label {
-            font-family: 'Roboto';
-            font-size: 13px;
-            font-weight: 300;
-        }
+    .pac-controls label {
+        font-family: 'Roboto';
+        font-size: 13px;
+        font-weight: 300;
+    }
 
+    #pac-input {
+        background-color: #fff;
+        font-family: 'Roboto';
+        font-size: 15px;
+        font-weight: 300;
+        margin-left: 12px;
+        padding: 0 11px 0 13px;
+        text-overflow: ellipsis;
+        width: 400px;
+    }
+
+    #pac-input:focus {
+        border-color: #4d90fe;
+    }
+
+    @media only screen and (max-width : 768px) {
         #pac-input {
-            background-color: #fff;
-            font-family: 'Roboto';
-            font-size: 15px;
-            font-weight: 300;
-            margin-left: 12px;
-            padding: 0 11px 0 13px;
-            text-overflow: ellipsis;
-            width: 400px;
+            position: absolute;
+            left: 0 !important;
+            top: 50px !important;
+            width: 50%;
         }
-
-        #pac-input:focus {
-            border-color: #4d90fe;
-        }
-
-        @media only screen and (max-width : 768px) {
-            #pac-input {
-                position: absolute;
-                left: 0 !important;
-                top: 50px !important;
-                width: 50%;
-            }
-        }
+    }
 </style>
 @endpush
 
