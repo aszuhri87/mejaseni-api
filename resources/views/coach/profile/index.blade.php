@@ -350,10 +350,10 @@
                                             <div class="form-group row">
                                                 <label class="col-form-label col-4 text-lg-right text-left">Radius (KM)</label>
                                                 <div class="col-8">
-                                                    <input type="text" name="coach_coordinate[radius]" id="coach_coordinate_radius" class="form-control form-control-lg mb-1" placeholder="Radius" value="{{ isset(Auth::guard('coach')->user()->coordinate) ? Auth::guard('coach')->user()->coordinate['radius'] : '' }}"/>
+                                                    <input type="text" name="coach_coordinate[radius]" id="coach_coordinate_radius" class="form-control form-control-lg mb-1" placeholder="Radius" value="{{ isset(Auth::guard('coach')->user()->radius) ? Auth::guard('coach')->user()->radius : '' }}"/>
                                                 </div>
-                                                <input type="hidden" name="coach_coordinate[lat]" id="coach_coordinate_lat" value="{{ isset(Auth::guard('coach')->user()->coordinate) ? Auth::guard('coach')->user()->coordinate['lat'] : '' }}">
-                                                <input type="hidden" name="coach_coordinate[lng]" id="coach_coordinate_lng" value="{{ isset(Auth::guard('coach')->user()->coordinate) ? Auth::guard('coach')->user()->coordinate['lng'] : '' }}">
+                                                <input type="hidden" name="coach_coordinate[lat]" id="coach_coordinate_lat" value="{{ isset(Auth::guard('coach')->user()->lat) ? Auth::guard('coach')->user()->lat : '' }}">
+                                                <input type="hidden" name="coach_coordinate[lng]" id="coach_coordinate_lng" value="{{ isset(Auth::guard('coach')->user()->lng) ? Auth::guard('coach')->user()->lng : '' }}">
                                             </div>
 
                                         </div>

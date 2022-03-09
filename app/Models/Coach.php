@@ -31,7 +31,9 @@ class Coach extends Authenticatable
         'image',
         'expertise_id',
         'suspend',
-        'coordinate',
+        'lat',
+        'lng',
+        'radius',
     ];
 
     public $cascadeDeletes = [
@@ -48,10 +50,6 @@ class Coach extends Authenticatable
     ];
 
     protected $dates = ['deleted_at'];
-
-    protected $casts = [
-        'coordinate' => 'array',
-    ];
 
     public function restore()
     {

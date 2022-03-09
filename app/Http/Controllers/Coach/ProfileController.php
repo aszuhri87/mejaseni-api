@@ -77,13 +77,13 @@ class ProfileController extends BaseMenu
                 }
 
                 if (!empty($request->coach_coordinate['radius'])) {
-                    $data['coordinate']['radius'] = $request->coach_coordinate['radius'];
+                    $data['radius'] = $request->coach_coordinate['radius'];
                 }
                 if (!empty($request->coach_coordinate['lat'])) {
-                    $data['coordinate']['lat'] = $request->coach_coordinate['lat'];
+                    $data['lat'] = $request->coach_coordinate['lat'];
                 }
                 if (!empty($request->coach_coordinate['lng'])) {
-                    $data['coordinate']['lng'] = $request->coach_coordinate['lng'];
+                    $data['lng'] = $request->coach_coordinate['lng'];
                 }
 
                 $update = Coach::find($id);

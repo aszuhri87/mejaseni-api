@@ -170,11 +170,10 @@
 
     function initMap() {
         @if (
-            isset(Auth::guard('coach')->user()->coordinate) && 
-            !empty(Auth::guard('coach')->user()->coordinate['lat']) &&
-            !empty(Auth::guard('coach')->user()->coordinate['lng'])
+            !empty(Auth::guard('coach')->user()->lat) &&
+            !empty(Auth::guard('coach')->user()->lng)
         )
-        const myLatLng = { lat: {{ Auth::guard('coach')->user()->coordinate['lat'] }}, lng: {{ Auth::guard('coach')->user()->coordinate['lng'] }} };
+        const myLatLng = { lat: {{ Auth::guard('coach')->user()->lat }}, lng: {{ Auth::guard('coach')->user()->lng}} };
         @else
         const myLatLng = { lat: -7.794915, lng: 110.36832 };    
         @endif
@@ -198,9 +197,8 @@
         const isNumberRadius = !isNaN(radius);
 
         @if (
-            isset(Auth::guard('coach')->user()->coordinate) && 
-            !empty(Auth::guard('coach')->user()->coordinate['lat']) &&
-            !empty(Auth::guard('coach')->user()->coordinate['lng'])
+            !empty(Auth::guard('coach')->user()->lat) &&
+            !empty(Auth::guard('coach')->user()->lng)
         )
         coachLocation = new google.maps.Marker({
             map: map,
