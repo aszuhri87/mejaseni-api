@@ -1,5 +1,8 @@
 
 <script type="text/javascript">
+    var map;
+    let studentLocation, newStudentLocation;
+
     var Page = function() {
         var _componentPage = function(){
 
@@ -139,5 +142,86 @@
         Page.init();
     });
 
-</script>
+    function initMap() {
+        @if (
+            !empty(Auth::guard('student')->user()->lat) &&
+            !empty(Auth::guard('student')->user()->lng)
+        )
+        const myLatLng = { lat: {{ Auth::guard('student')->user()->lat }}, lng: {{ Auth::guard('student')->user()->lng}} };
+        @else
+        const myLatLng = { lat: -7.794915, lng: 110.36832 };    
+        @endif
 
+        map = new google.maps.Map(document.getElementById('gmap-div'), {
+            zoom: 11,
+            center: myLatLng,
+        });
+
+        // search location
+        let input = document.getElementById('pac-input');
+        let searchBox = new google.maps.places.SearchBox(input);
+        map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+        // Bias the SearchBox results towards current map's viewport.
+        map.addListener('bounds_changed', function() {
+            searchBox.setBounds(map.getBounds());
+        });
+
+        @if (
+            !empty(Auth::guard('student')->user()->lat) &&
+            !empty(Auth::guard('student')->user()->lng)
+        )
+        studentLocation = new google.maps.Marker({
+            map: map,
+            title: 'Student Location',
+            position: myLatLng,
+        });
+        @endif
+        
+
+        // searched place 
+        searchBox.addListener('places_changed', function() {
+            let places = searchBox.getPlaces();
+
+            if (places.length == 0) {
+                return;
+            }
+
+            // For each place, get the icon, name and location.
+            let bounds = new google.maps.LatLngBounds();
+            places.forEach((place) => {
+                if (!place.geometry) {
+                    console.log("Returned place contains no geometry");
+                    return;
+                }
+
+                if (typeof newStudentLocation != 'undefined') {
+                    newStudentLocation.setMap(null);
+                }
+
+                // Create a marker for each place.
+                newStudentLocation = new google.maps.Marker({
+                    map: map,
+                    // icon: icon,
+                    title: place.name,
+                    position: place.geometry.location,
+                    draggable: true
+                });
+
+                // update student coordinate location 
+                $('#student_coordinate_lat').val(place.geometry.location.lat());
+                $('#student_coordinate_lng').val(place.geometry.location.lng());
+
+                if (place.geometry.viewport) {
+                    // Only geocodes have viewport.
+                    bounds.union(place.geometry.viewport);
+                } else {
+                    bounds.extend(place.geometry.location);
+                }
+            });
+            map.fitBounds(bounds);
+        });
+    }
+
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB85LW4GPO1MHcr0ovrpKW6gcxY_FmE3Bw&libraries=geometry,places&callback=initMap"></script>

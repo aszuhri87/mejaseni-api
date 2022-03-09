@@ -2,19 +2,19 @@
 
 namespace App\Models;
 
+use App\Traits\Uuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use App\Traits\SoftDeleteCascade;
-use App\Traits\RestoreSoftDeletes;
-
-use App\Traits\Uuid;
 use Storage;
 
 class Student extends Authenticatable
 {
-    use HasFactory, Notifiable, Uuid, SoftDeletes;
+    use HasFactory;
+    use Notifiable;
+    use Uuid;
+    use SoftDeletes;
 
     public $incrementing = false;
 
@@ -35,6 +35,8 @@ class Student extends Authenticatable
         'token_expired_at',
         'change_email',
         'pilot',
+        'lat',
+        'lng',
     ];
 
     public $cascadeDeletes = [
@@ -52,7 +54,8 @@ class Student extends Authenticatable
     public function getImageUrl()
     {
         $path = Storage::disk('s3')->url('/');
-        return $path . $this->image;
+
+        return $path.$this->image;
     }
 
     public function transactions()
