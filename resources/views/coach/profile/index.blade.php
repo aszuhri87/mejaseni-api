@@ -1,8 +1,89 @@
 @extends('layouts.app')
 
+@push('style')
+<style>
+    .gmap {
+        width: 100%;
+        height: 300px;
+    }
+    .controls {
+            background-color: #fff;
+            border-radius: 2px;
+            border: 1px solid transparent;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            box-sizing: border-box;
+            font-family: 'Roboto';
+            font-size: 15px;
+            font-weight: 300;
+            height: 29px;
+            margin-left: 17px;
+            margin-top: 10px;
+            outline: none;
+            padding: 0 11px 0 13px;
+            text-overflow: ellipsis;
+            width: 400px;
+        }
+
+        .controls:focus {
+            border-color: #4d90fe;
+        }
+
+        .pac-card {
+            margin: 10px 10px 0 0;
+            border-radius: 2px 0 0 2px;
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            outline: none;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            background-color: #fff;
+            font-family: 'Roboto';
+        }
+
+        #pac-container {
+            padding-bottom: 12px;
+            margin-right: 12px;
+        }
+
+        .pac-controls {
+            display: inline-block;
+            padding: 5px 11px;
+        }
+
+        .pac-controls label {
+            font-family: 'Roboto';
+            font-size: 13px;
+            font-weight: 300;
+        }
+
+        #pac-input {
+            background-color: #fff;
+            font-family: 'Roboto';
+            font-size: 15px;
+            font-weight: 300;
+            margin-left: 12px;
+            padding: 0 11px 0 13px;
+            text-overflow: ellipsis;
+            width: 400px;
+        }
+
+        #pac-input:focus {
+            border-color: #4d90fe;
+        }
+
+        @media only screen and (max-width : 768px) {
+            #pac-input {
+                position: absolute;
+                left: 0 !important;
+                top: 50px !important;
+                width: 50%;
+            }
+        }
+</style>
+@endpush
+
 @section('content')
     <div class="d-flex flex-column-fluid">
-        <div class=" container-fluid ">
+        <div class="container-fluid ">
             <div class="card card-custom">
                 <div class="card-header card-header-tabs-line nav-tabs-line-3x">
                     <div class="card-toolbar">
@@ -54,6 +135,24 @@
                                         </span>
                                     </span>
                                     <span class="nav-text font-size-lg">Change Password</span>
+                                </a>
+                            </li>
+                            {{-- end change password --}}
+
+                            {{-- change password --}}
+                            <li class="nav-item mr-3">
+                                <a class="nav-link" data-toggle="tab" href="#change-location-form" id="change-location">
+                                    <span class="nav-icon">
+                                        <span class="svg-icon">
+                                            <!--begin::Svg Icon | path:C:\wamp64\www\keenthemes\themes\metronic\theme\html\demo1\dist/../src/media/svg/icons\Map\Marker2.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                    <rect x="0" y="0" width="24" height="24"/>
+                                                    <path d="M9.82829464,16.6565893 C7.02541569,15.7427556 5,13.1079084 5,10 C5,6.13400675 8.13400675,3 12,3 C15.8659932,3 19,6.13400675 19,10 C19,13.1079084 16.9745843,15.7427556 14.1717054,16.6565893 L12,21 L9.82829464,16.6565893 Z M12,12 C13.1045695,12 14,11.1045695 14,10 C14,8.8954305 13.1045695,8 12,8 C10.8954305,8 10,8.8954305 10,10 C10,11.1045695 10.8954305,12 12,12 Z" fill="#000000"/>
+                                                </g>
+                                            </svg><!--end::Svg Icon-->
+                                        </span>
+                                    </span>
+                                    <span class="nav-text font-size-lg">Change Location</span>
                                 </a>
                             </li>
                             {{-- end change password --}}
@@ -234,6 +333,54 @@
                                 {{-- end submit --}}
                             </div>
                             {{-- end change password form --}}
+
+                            {{-- change location form --}}
+                            <div class="tab-pane px-7" id="change-location-form" role="tabpanel">
+                                <div class="card-body">
+
+                                    <div class="row">
+                                        <div class="col-12 mb-3">
+                                            <input id="pac-input" class="controls" type="text" placeholder="Search Your Location">
+                                            <div id="gmap-div" class="gmap"></div>
+                                        </div>
+                                        <div class="col-xl-2"></div>
+                                        <div class="col-xl-7">
+
+                                            {{-- radius --}}
+                                            <div class="form-group row">
+                                                <label class="col-form-label col-4 text-lg-right text-left">Radius (KM)</label>
+                                                <div class="col-8">
+                                                    <input type="text" name="coach_coordinate[radius]" id="coach_coordinate_radius" class="form-control form-control-lg mb-1" placeholder="Radius" value="{{ isset(Auth::guard('coach')->user()->coordinate) ? Auth::guard('coach')->user()->coordinate['radius'] : '' }}"/>
+                                                </div>
+                                                <input type="hidden" name="coach_coordinate[lat]" id="coach_coordinate_lat" value="{{ isset(Auth::guard('coach')->user()->coordinate) ? Auth::guard('coach')->user()->coordinate['lat'] : '' }}">
+                                                <input type="hidden" name="coach_coordinate[lng]" id="coach_coordinate_lng" value="{{ isset(Auth::guard('coach')->user()->coordinate) ? Auth::guard('coach')->user()->coordinate['lng'] : '' }}">
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- submit --}}
+                                <div class="card-footer pb-0">
+                                    <div class="row">
+                                        <div class="col-xl-2"></div>
+                                        <div class="col-xl-7">
+                                            <div class="row">
+                                                <div class="col-3"></div>
+                                                <div class="col-9">
+                                                    <div class="d-flex">
+                                                        <a href="javascript:void(0)" class="btn btn-clean font-weight-bold">Batal</a>
+                                                        <button type="submit" class="btn btn-primary btn-icon w-auto px-2 waves-effect width-md waves-light btn-loading-profile-coach ml-1">Simpan Perubahan</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{-- end submit --}}
+                            </div>
+                            {{-- end change location form --}}
+
                         </div>
                     </form>
                 </div>
