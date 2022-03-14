@@ -301,4 +301,4 @@
     }
 
 </script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB85LW4GPO1MHcr0ovrpKW6gcxY_FmE3Bw&libraries=geometry,places&callback=initMap"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_KEY') }}&libraries=geometry,places&callback=initMap"></script>
