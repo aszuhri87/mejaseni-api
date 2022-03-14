@@ -43,7 +43,7 @@
 <div class="card mt-5">
     <div class="card-body">
         <div class="row">
-            <div class="col-8">
+            <div class="col-md-8 col-sm-12">
                 <div class="row">
                     <div class="col-12">
                         <div class="card card-custom card-stretch gutter-b">
@@ -52,7 +52,7 @@
                             </div>
                             <div class="card-body d-flex flex-column">
                                 <div class="row">
-                                    <div class="col-5" style="border-right: 1px solid #a9a9a92c">
+                                    <div class="col-md-5 col-sm-12" style="border-right: 1px solid #a9a9a92c">
                                         <div class="d-flex align-items-center mb-5">
                                             <div class="symbol symbol-40 symbol-light-danger mr-5">
                                                 <span class="symbol-label">
@@ -141,7 +141,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-7">
+                                    <div class="col-md-7 col-sm-12">
                                         <div class="flex-grow-1" style="position: relative;">
                                             <div id="progress-class"></div>
                                         <div class="resize-triggers"><div class="expand-trigger"><div style="width: 321px; height: 252px;"></div></div><div class="contract-trigger"></div></div></div>
@@ -156,7 +156,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-4">
+            <div class="col-md-4 col-sm-12">
                 <div class="card card-custom card-stretch gutter-b">
                     <div class="card-header border-0 pt-5">
                         <h3 class="card-title font-weight-bolder">Upcomming Class</h3>
