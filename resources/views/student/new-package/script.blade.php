@@ -564,6 +564,53 @@
                     let id = $(this).data('id');
                     let type = $(this).data('type');
 
+                    // get detail classroom 
+                    $.ajax({
+                        url: `{{ url('student/new-package/classroom') }}/${id}`,
+                        type: `GET`,
+                    })
+                    .done((res, xhr, meta) => {
+                        const { data } = res;
+                        let homeCourses = [];
+
+                        const form = $('#form-new-package');
+
+                        form.find('#home-course-div').remove();
+
+                        if (data.coach_classrooms.length > 0) {
+                            data.coach_classrooms.forEach(coach_classroom => {
+                                // check if available home course 
+                                if (coach_classroom.coach.home_course_available==true) {
+                                    // push coach's home course data
+                                    homeCourses.push({
+                                        name : coach_classroom.coach.name,
+                                        lat : Number(coach_classroom.coach.lat),
+                                        lng : Number(coach_classroom.coach.lng),
+                                        radius : Number(coach_classroom.coach.radius)
+                                    });
+                                }
+                            });
+                        }
+
+                        if (homeCourses.length > 0) {
+                            let elementHomeCourse = `<div id="home-course-div"></div>`;
+                            let elementGmapDiv = `<div id="gmap-div" class="gmap"></div>`;
+                            let elementInputLatLng = `<input type="hidden" name="lat" id="cart_lat"><input type="hidden" name="lng" id="cart_lng">`;
+                            form.find('.modal-body').append(elementHomeCourse);
+                            form.find('#home-course-div').append(elementGmapDiv);
+                            form.find('#home-course-div').append(elementInputLatLng);
+                            initMap(homeCourses);
+                            console.log(homeCourses);
+                        }
+                    })
+                    .fail((res, error) => {
+                        toastr.error(res.responseJSON.message, 'Failed')
+                    })
+                    .always(() => {
+
+                    });
+
+
                     $('#id').val(id);
                     $('#type').val(type);
                     $('#classroom-name').html(`Kelas "${classroom_name}"`);
@@ -2429,6 +2476,160 @@
                 .always(function() {
 
                 });
+            },
+            initMap = (coachLocations) => {
+                @if (
+                    !empty(Auth::guard('student')->user()->lat) &&
+                    !empty(Auth::guard('student')->user()->lng)
+                )
+                const myLatLng = { lat: {{ Auth::guard('student')->user()->lat }}, lng: {{ Auth::guard('student')->user()->lng}} };
+                let myLocation = { lat: {{ Auth::guard('student')->user()->lat }}, lng: {{ Auth::guard('student')->user()->lng}} };
+                @else
+                const myLatLng = { lat: -7.794915, lng: 110.36832 };
+                let myLocation = false; 
+                @endif
+
+                let myLocationMarker;
+                let infoWindow = new google.maps.InfoWindow;
+
+                map = new google.maps.Map(document.getElementById('gmap-div'), {
+                    zoom: 11,
+                    center: myLatLng,
+                });
+
+                // init student location
+                if (myLocation!=false) {
+                    myLocationMarker = new google.maps.Marker({
+                        map: map,
+                        title: 'My Location',
+                        draggable: true,
+                        animation: google.maps.Animation.DROP,
+                        position: {
+                            lat: myLocation.lat,
+                            lng: myLocation.lng
+                        }
+                    });
+
+                    $('#cart_lat').val(myLocation.lat);
+                    $('#cart_lng').val(myLocation.lng);
+
+                    myLocationButton(map, myLocationMarker);
+                    // findMyLocation(map, myLocationMarker);
+                    myLocationMarker.addListener('click', function(event) {
+                        infoWindow.setContent('<b>My Location</b><br>'+event.latLng);
+                        infoWindow.open(map, myLocationMarker);
+                    });
+
+                    // listener draggable marker 
+                    myLocationMarker.addListener('dragend', (e) => {
+                        $('#cart_lat').val(e.latLng.lat());
+                        $('#cart_lng').val(e.latLng.lng());
+                    });
+                }
+
+                
+
+                if (coachLocations.length > 0) {
+                    coachLocations.forEach(coachLocation => {
+                        // init coach location 
+                        new google.maps.Marker({
+                            map: map,
+                            title: coachLocation.name,
+                            position: {
+                                lat: coachLocation.lat,
+                                lng: coachLocation.lng
+                            }
+                        });
+
+                        // init coach location radius 
+                        new google.maps.Circle({
+                            strokeColor: "#0000EE",
+                            strokeOpacity: 0.8,
+                            strokeWeight: 2,
+                            fillColor: "#0000EE",
+                            fillOpacity: 0.35,
+                            map,
+                            center: { 
+                                lat: coachLocation.lat,
+                                lng: coachLocation.lng
+                            },
+                            radius: coachLocation.radius * 1000,
+                        });
+                    });
+                }
+            },
+            myLocationButton = (map, marker) => {
+                var controlDiv = document.createElement('div');
+
+                var firstChild = document.createElement('button');
+                firstChild.setAttribute('id','btn_geo');
+                firstChild.setAttribute('type','button');
+                firstChild.style.backgroundColor = '#fff';
+                firstChild.style.border = 'none';
+                firstChild.style.outline = 'none';
+                firstChild.style.width = '28px';
+                firstChild.style.height = '28px';
+                firstChild.style.borderRadius = '2px';
+                firstChild.style.boxShadow = '0 1px 4px rgba(0,0,0,0.3)';
+                firstChild.style.cursor = 'pointer';
+                firstChild.style.marginRight = '10px';
+                firstChild.style.padding = '0px';
+                firstChild.title = 'My Location';
+                controlDiv.appendChild(firstChild);
+
+                var secondChild = document.createElement('div');
+                secondChild.style.margin = '5px';
+                secondChild.style.width = '18px';
+                secondChild.style.height = '18px';
+                secondChild.style.backgroundImage = 'url(https://maps.gstatic.com/tactile/mylocation/mylocation-sprite-1x.png)';
+                secondChild.style.backgroundSize = '180px 18px';
+                secondChild.style.backgroundPosition = '0px 0px';
+                secondChild.style.backgroundRepeat = 'no-repeat';
+                secondChild.id = 'you_location_img';
+                firstChild.appendChild(secondChild);
+
+                google.maps.event.addListener(map, 'dragend', () => {
+                    $('#you_location_img').css('background-position', '0px 0px');
+                });
+
+                firstChild.addEventListener('click', () => {
+                    var imgX = '0';
+                    var animationInterval = setInterval(() => {
+                        if(imgX == '-18') imgX = '0';
+                        else imgX = '-18';
+                        $('#you_location_img').css('background-position', imgX+'px 0px');
+                    }, 500);
+
+                    if(navigator.geolocation) {
+                        // navigator.geolocation.getCurrentPosition(function(position) {
+                            findMyLocation(map, marker);
+                            clearInterval(animationInterval);
+                            $('#you_location_img').css('background-position', '-144px 0px');
+                        // });
+                    } else {
+                        clearInterval(animationInterval);
+                        $('#you_location_img').css('background-position', '0px 0px');
+                    }
+                });
+
+                controlDiv.index = 1;
+                map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(controlDiv);
+
+            },
+            findMyLocation = (map, marker) => {
+				if(navigator.geolocation) {
+					navigator.geolocation.getCurrentPosition((position) => {
+						var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+						marker.setPosition(latlng);
+						map.setZoom(12);
+						map.setCenter(latlng);
+
+                        $('#cart_lat').val(position.coords.latitude);
+                        $('#cart_lng').val(position.coords.longitude);
+					});
+				} else{
+					console.log('Geolocation is not supported for this Browser/OS.');
+				}
             }
         };
 
@@ -2445,3 +2646,4 @@
     });
 
 </script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB85LW4GPO1MHcr0ovrpKW6gcxY_FmE3Bw&libraries=geometry,places"></script>

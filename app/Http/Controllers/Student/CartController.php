@@ -3,12 +3,10 @@
 namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cart;
+use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
-use App\Models\Cart;
-
-use Auth;
 use Storage;
 
 class CartController extends Controller
@@ -16,45 +14,52 @@ class CartController extends Controller
     public function store(Request $request)
     {
         try {
-            $result = DB::transaction(function () use($request){
-                
+            $result = DB::transaction(function () use ($request) {
                 $data = [];
-                if($request->type == 1){
+                if ($request->type == 1) {
                     $data = [
                         'student_id' => $request->student_id,
-                        'classroom_id' => $request->id
+                        'classroom_id' => $request->id,
                     ];
-                }elseif($request->type == 2){
+                } elseif ($request->type == 2) {
                     $data = [
                         'student_id' => $request->student_id,
-                        'master_lesson_id' => $request->id
+                        'master_lesson_id' => $request->id,
                     ];
-                }elseif($request->type == 3){
+                } elseif ($request->type == 3) {
                     $data = [
                         'student_id' => $request->student_id,
-                        'theory_id' => $request->id
+                        'theory_id' => $request->id,
                     ];
-                }
-                else{
+                } else {
                     $data = [
                         'student_id' => $request->student_id,
-                        'session_video_id' => $request->id
+                        'session_video_id' => $request->id,
                     ];
                 }
 
+                if ($request->has('lat')) {
+                    $data['lat'] = $request->lat;
+                }
+                if ($request->has('lng')) {
+                    $data['lng'] = $request->lng;
+                }
+
                 $cart = Cart::create($data);
+
                 return $cart;
             });
 
             return response([
-                "status"    => 200,
-                "data"      => $result,
-                "message"   => 'Successfully Add To Cart!'
+                'status' => 200,
+                'data' => $result,
+                'message' => 'Successfully Add To Cart!',
             ], 200);
         } catch (Exception $e) {
             throw new Exception($e);
+
             return response([
-                "message"=> $e->getMessage(),
+                'message' => $e->getMessage(),
             ]);
         }
     }
@@ -62,7 +67,7 @@ class CartController extends Controller
     public function get_cart($student_id)
     {
         try {
-            $result = DB::transaction(function () use($student_id){
+            $result = DB::transaction(function () use ($student_id) {
                 $path = Storage::disk('s3')->url('/');
                 $master_lesson = DB::table('master_lessons')
                     ->select([
@@ -116,41 +121,46 @@ class CartController extends Controller
                     ->leftJoinSub($theory, 'theories', function ($join) {
                         $join->on('carts.theory_id', '=', 'theories.id');
                     })
-                    ->where('carts.student_id',$student_id)
+                    ->where('carts.student_id', $student_id)
                     ->whereNull('carts.deleted_at')
                     ->get();
+
                 return $cart;
             });
 
             return response([
-                "status"    => 200,
-                "data"      => $result,
-                "message"   => 'OK!'
+                'status' => 200,
+                'data' => $result,
+                'message' => 'OK!',
             ], 200);
         } catch (Exception $e) {
             throw new Exception($e);
+
             return response([
-                "message"=> $e->getMessage(),
+                'message' => $e->getMessage(),
             ]);
         }
     }
+
     public function delete_cart($cart_id)
     {
         try {
-            $result = DB::transaction(function () use($cart_id){
+            $result = DB::transaction(function () use ($cart_id) {
                 $delete = Cart::find($cart_id)->delete();
+
                 return $delete;
             });
 
             return response([
-                "status"    => 200,
-                "data"      => $result,
-                "message"   => 'Successfully Delete Cart!'
+                'status' => 200,
+                'data' => $result,
+                'message' => 'Successfully Delete Cart!',
             ], 200);
         } catch (Exception $e) {
             throw new Exception($e);
+
             return response([
-                "message"=> $e->getMessage(),
+                'message' => $e->getMessage(),
             ]);
         }
     }
@@ -158,54 +168,55 @@ class CartController extends Controller
     public function event(Request $request, $event_id)
     {
         try {
-
-            $result = DB::transaction(function () use($request, $event_id){
+            $result = DB::transaction(function () use ($request, $event_id) {
                 $user = Auth::guard('student')->user();
 
                 $cart = Cart::create([
                     'event_id' => $event_id,
-                    'student_id' => $user->id
+                    'student_id' => $user->id,
                 ]);
+
                 return $cart;
             });
 
             return response([
-                "status"    => 200,
-                "data"      => $result,
-                "message"   => 'Successfully Add To Cart!'
+                'status' => 200,
+                'data' => $result,
+                'message' => 'Successfully Add To Cart!',
             ], 200);
         } catch (Exception $e) {
             throw new Exception($e);
+
             return response([
-                "message"=> $e->getMessage(),
+                'message' => $e->getMessage(),
             ]);
         }
     }
 
-
     public function video_course(Request $request, $video_course_id)
     {
         try {
-
-            $result = DB::transaction(function () use($request, $video_course_id){
+            $result = DB::transaction(function () use ($request, $video_course_id) {
                 $user = Auth::guard('student')->user();
 
                 $cart = Cart::create([
                     'session_video_id' => $video_course_id,
-                    'student_id' => $user->id
+                    'student_id' => $user->id,
                 ]);
+
                 return $cart;
             });
 
             return response([
-                "status"    => 200,
-                "data"      => $result,
-                "message"   => 'Successfully Add To Cart!'
+                'status' => 200,
+                'data' => $result,
+                'message' => 'Successfully Add To Cart!',
             ], 200);
         } catch (Exception $e) {
             throw new Exception($e);
+
             return response([
-                "message"=> $e->getMessage(),
+                'message' => $e->getMessage(),
             ]);
         }
     }

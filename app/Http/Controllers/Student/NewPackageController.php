@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\BaseMenu;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Http\Request;
-
-use Storage;
+use App\Models\Classroom;
 use Auth;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Storage;
+use Symfony\Component\HttpFoundation\Response;
 
-use App\Models\GuestStarMasterLesson;
 session_start();
 
 class NewPackageController extends BaseMenu
@@ -18,7 +19,7 @@ class NewPackageController extends BaseMenu
     {
         $navigation = [
             [
-                'title' => 'Data Buy New Package'
+                'title' => 'Data Buy New Package',
             ],
         ];
 
@@ -50,7 +51,7 @@ class NewPackageController extends BaseMenu
                     $join->on('carts.id', '=', 'transaction_details.cart_id');
                 })
                 ->where([
-                    'carts.student_id' => Auth::guard('student')->user()->id
+                    'carts.student_id' => Auth::guard('student')->user()->id,
                 ])
                 ->distinct('carts.classroom_id')
                 ->whereNull('carts.deleted_at');
@@ -66,44 +67,44 @@ class NewPackageController extends BaseMenu
                     'classrooms.session_total',
                     'classrooms.session_duration',
                     DB::raw("CONCAT('{$path}',classrooms.image) as image_url"),
-                    DB::raw("(
+                    DB::raw('(
                         CASE
                             WHEN carts.transaction_detail_id IS NOT NULL OR carts.classroom_id IS NOT NULL THEN
                                 1
                             ELSE
                                 0
                         END
-                    )AS is_buy")
+                    )AS is_buy'),
                 ])
                 ->leftJoinSub($cart, 'carts', function ($join) {
                     $join->on('classrooms.id', '=', 'carts.classroom_id');
                 })
                 ->where('classrooms.is_discount', false)
-                ->where(function($query) use($request){
-                    if($request->package_type){
-                        $query->where('classrooms.package_type',$request->package_type);
+                ->where(function ($query) use ($request) {
+                    if ($request->package_type) {
+                        $query->where('classrooms.package_type', $request->package_type);
                     }
 
-                    if($request->init_class_category){
-                        $query->where('classrooms.classroom_category_id',$request->init_class_category);
+                    if ($request->init_class_category) {
+                        $query->where('classrooms.classroom_category_id', $request->init_class_category);
                     }
 
-                    if($request->init_class_sub_category){
-                        $query->where('classrooms.sub_classroom_category_id',$request->init_class_sub_category);
+                    if ($request->init_class_sub_category) {
+                        $query->where('classrooms.sub_classroom_category_id', $request->init_class_sub_category);
                     }
                 })
                 ->whereNull('classrooms.deleted_at')
-                ->where('classrooms.hide','!=', true)
+                ->where('classrooms.hide', '!=', true)
                 ->orderBy('classrooms.sub_package_type', 'asc')
                 ->paginate(6);
 
             foreach ($result as $key => $value) {
                 $tools = DB::table('classroom_tools')
                     ->select([
-                        'tools.text as tool_name'
+                        'tools.text as tool_name',
                     ])
-                    ->where('classroom_id',$value->classroom_id)
-                    ->leftJoin('tools','classroom_tools.tool_id','=','tools.id')
+                    ->where('classroom_id', $value->classroom_id)
+                    ->leftJoin('tools', 'classroom_tools.tool_id', '=', 'tools.id')
                     ->get();
 
                 $coach = DB::table('coach_classrooms')
@@ -112,8 +113,8 @@ class NewPackageController extends BaseMenu
                         'coaches.id as coach_id',
                         DB::raw("CONCAT('{$path}',coaches.image) as coach_image_url"),
                     ])
-                    ->leftJoin('coaches','coach_classrooms.coach_id','=','coaches.id')
-                    ->where('classroom_id',$value->classroom_id)
+                    ->leftJoin('coaches', 'coach_classrooms.coach_id', '=', 'coaches.id')
+                    ->where('classroom_id', $value->classroom_id)
                     ->whereNull([
                         'coach_classrooms.deleted_at',
                         'coaches.deleted_at',
@@ -125,14 +126,15 @@ class NewPackageController extends BaseMenu
             }
 
             return response([
-                "status"    => 200,
-                "data"      => $result,
-                "message"   => 'Successfully saved!'
+                'status' => 200,
+                'data' => $result,
+                'message' => 'Successfully saved!',
             ], 200);
         } catch (Exception $e) {
             throw new Exception($e);
+
             return response([
-                "message"=> $e->getMessage(),
+                'message' => $e->getMessage(),
             ]);
         }
     }
@@ -149,26 +151,27 @@ class NewPackageController extends BaseMenu
                     'discounts.discount',
                     'classrooms.price',
                     DB::raw("CONCAT('{$path}',classrooms.image) as image_url"),
-                    DB::raw("(classrooms.price::integer - (classrooms.price::integer * discounts.discount::integer)/100) AS price_discount"),
+                    DB::raw('(classrooms.price::integer - (classrooms.price::integer * discounts.discount::integer)/100) AS price_discount'),
                 ])
-                ->leftJoin('classrooms','discounts.classroom_id','=','classrooms.id')
-                ->whereRaw("discounts.date_start::timestamp <= now()::timestamp")
-                ->whereRaw("discounts.date_end::timestamp >= now()::timestamp")
+                ->leftJoin('classrooms', 'discounts.classroom_id', '=', 'classrooms.id')
+                ->whereRaw('discounts.date_start::timestamp <= now()::timestamp')
+                ->whereRaw('discounts.date_end::timestamp >= now()::timestamp')
                 ->whereNull([
                     'discounts.deleted_at',
-                    'classrooms.deleted_at'
+                    'classrooms.deleted_at',
                 ])
                 ->get();
 
             return response([
-                "status"    => 200,
-                "data"      => $result,
-                "message"   => 'Successfully saved!'
+                'status' => 200,
+                'data' => $result,
+                'message' => 'Successfully saved!',
             ], 200);
         } catch (Exception $e) {
             throw new Exception($e);
+
             return response([
-                "message"=> $e->getMessage(),
+                'message' => $e->getMessage(),
             ]);
         }
     }
@@ -194,7 +197,7 @@ class NewPackageController extends BaseMenu
                     $join->on('carts.id', '=', 'transaction_details.cart_id');
                 })
                 ->where([
-                    'carts.student_id' => Auth::guard('student')->user()->id
+                    'carts.student_id' => Auth::guard('student')->user()->id,
                 ])
                 ->whereNull('carts.deleted_at');
 
@@ -209,20 +212,20 @@ class NewPackageController extends BaseMenu
                     'classrooms.session_total',
                     'classrooms.session_duration',
                     DB::raw("CONCAT('{$path}',classrooms.image) as image_url"),
-                    DB::raw("(
+                    DB::raw('(
                         CASE
                             WHEN carts.transaction_detail_id IS NOT NULL OR carts.classroom_id IS NOT NULL THEN
                                 1
                             ELSE
                                 0
                         END
-                    )AS is_buy")
+                    )AS is_buy'),
                 ])
                 ->leftJoinSub($cart, 'carts', function ($join) {
                     $join->on('classrooms.id', '=', 'carts.classroom_id');
                 })
                 ->whereNull('classrooms.deleted_at')
-                ->where('classrooms.hide','!=', true)
+                ->where('classrooms.hide', '!=', true)
                 ->distinct('classrooms.id');
 
             $result = DB::table('discounts')
@@ -239,22 +242,22 @@ class NewPackageController extends BaseMenu
                     'classrooms.session_duration',
                     'classrooms.image_url',
                     'classrooms.is_buy',
-                    DB::raw("(classrooms.price::integer - (classrooms.price::integer * discounts.discount::integer)/100) AS price_discount"),
+                    DB::raw('(classrooms.price::integer - (classrooms.price::integer * discounts.discount::integer)/100) AS price_discount'),
                 ])
                 ->leftJoinSub($classroom, 'classrooms', function ($join) {
                     $join->on('discounts.classroom_id', '=', 'classrooms.id');
                 })
                 ->where('discounts.id', $id)
-                ->where('classrooms.hide','!=', true)
+                ->where('classrooms.hide', '!=', true)
                 ->whereNull('discounts.deleted_at')
                 ->first();
 
             $tools = DB::table('classroom_tools')
                 ->select([
-                    'tools.text as tool_name'
+                    'tools.text as tool_name',
                 ])
-                ->where('classroom_id',$result->classroom_id)
-                ->leftJoin('tools','classroom_tools.tool_id','=','tools.id')
+                ->where('classroom_id', $result->classroom_id)
+                ->leftJoin('tools', 'classroom_tools.tool_id', '=', 'tools.id')
                 ->get();
 
             $coach = DB::table('coach_classrooms')
@@ -263,8 +266,8 @@ class NewPackageController extends BaseMenu
                     'coaches.id as coach_id',
                     DB::raw("CONCAT('{$path}',coaches.image) as coach_image_url"),
                 ])
-                ->leftJoin('coaches','coach_classrooms.coach_id','=','coaches.id')
-                ->where('classroom_id',$result->classroom_id)
+                ->leftJoin('coaches', 'coach_classrooms.coach_id', '=', 'coaches.id')
+                ->where('classroom_id', $result->classroom_id)
                 ->whereNull([
                     'coach_classrooms.deleted_at',
                     'coaches.deleted_at',
@@ -275,14 +278,15 @@ class NewPackageController extends BaseMenu
             $result->coach = $coach;
 
             return response([
-                "status"    => 200,
-                "data"      => $result,
-                "message"   => 'Successfully saved!'
+                'status' => 200,
+                'data' => $result,
+                'message' => 'Successfully saved!',
             ], 200);
         } catch (Exception $e) {
             throw new Exception($e);
+
             return response([
-                "message"=> $e->getMessage(),
+                'message' => $e->getMessage(),
             ]);
         }
     }
@@ -308,7 +312,7 @@ class NewPackageController extends BaseMenu
                     $join->on('carts.id', '=', 'transaction_details.cart_id');
                 })
                 ->where([
-                    'carts.student_id' => Auth::guard('student')->user()->id
+                    'carts.student_id' => Auth::guard('student')->user()->id,
                 ])
                 ->whereNull('carts.deleted_at');
 
@@ -324,46 +328,50 @@ class NewPackageController extends BaseMenu
                     'classrooms.session_total',
                     'classrooms.session_duration',
                     DB::raw("CONCAT('{$path}',classrooms.image) as image_url"),
-                    DB::raw("(
+                    DB::raw('(
                         CASE
                             WHEN carts.transaction_detail_id IS NOT NULL OR carts.classroom_id IS NOT NULL THEN
                                 1
                             ELSE
                                 0
                         END
-                    )AS is_buy")
+                    )AS is_buy'),
                 ])
                 ->leftJoinSub($cart, 'carts', function ($join) {
                     $join->on('classrooms.id', '=', 'carts.classroom_id');
                 })
                 ->where('classrooms.deleted_at')
-                ->where('classrooms.sub_classroom_category_id',$sub_classroom_category_id)
-                ->where(function($query) use($request) {
-                    if(!empty($request->type_classroom)){
-                        $query->where('classrooms.package_type',$request->type_classroom);
+                ->where('classrooms.sub_classroom_category_id', $sub_classroom_category_id)
+                ->where(function ($query) use ($request) {
+                    if (!empty($request->type_classroom)) {
+                        $query->where('classrooms.package_type', $request->type_classroom);
                     }
                 })
                 ->distinct('classrooms.id')
-                ->where('classrooms.hide','!=', true)
+                ->where('classrooms.hide', '!=', true)
                 ->paginate(6);
 
             foreach ($result as $key => $value) {
                 $tools = DB::table('classroom_tools')
                     ->select([
-                        'tools.text as tool_name'
+                        'tools.text as tool_name',
                     ])
-                    ->where('classroom_id',$value->classroom_id)
-                    ->leftJoin('tools','classroom_tools.tool_id','=','tools.id')
+                    ->where('classroom_id', $value->classroom_id)
+                    ->leftJoin('tools', 'classroom_tools.tool_id', '=', 'tools.id')
                     ->get();
 
                 $coach = DB::table('coach_classrooms')
                     ->select([
                         'coaches.name as coach_name',
                         'coaches.id as coach_id',
+                        'coaches.home_course_available',
+                        'coaches.lat',
+                        'coaches.lng',
+                        'coaches.radius',
                         DB::raw("CONCAT('{$path}',coaches.image) as coach_image_url"),
                     ])
-                    ->leftJoin('coaches','coach_classrooms.coach_id','=','coaches.id')
-                    ->where('classroom_id',$value->classroom_id)
+                    ->leftJoin('coaches', 'coach_classrooms.coach_id', '=', 'coaches.id')
+                    ->where('classroom_id', $value->classroom_id)
                     ->whereNull([
                         'coach_classrooms.deleted_at',
                         'coaches.deleted_at',
@@ -375,14 +383,15 @@ class NewPackageController extends BaseMenu
             }
 
             return response([
-                "status"    => 200,
-                "data"      => $result,
-                "message"   => 'OK!'
+                'status' => 200,
+                'data' => $result,
+                'message' => 'OK!',
             ], 200);
         } catch (Exception $e) {
             throw new Exception($e);
+
             return response([
-                "message"=> $e->getMessage(),
+                'message' => $e->getMessage(),
             ]);
         }
     }
@@ -390,9 +399,8 @@ class NewPackageController extends BaseMenu
     public function get_session_video(Request $request)
     {
         try {
-
-            if($request->sub_classroom_category_id){
-                $_SESSION["sub_classroom_category_id"] = $request->sub_classroom_category_id;
+            if ($request->sub_classroom_category_id) {
+                $_SESSION['sub_classroom_category_id'] = $request->sub_classroom_category_id;
             }
 
             $path = Storage::disk('s3')->url('/');
@@ -430,23 +438,24 @@ class NewPackageController extends BaseMenu
                 ->joinSub($expertise, 'expertises', function ($join) {
                     $join->on('session_videos.expertise_id', '=', 'expertises.id');
                 })
-                ->where(function($query) use($request){
-                    if(!empty($_SESSION["sub_classroom_category_id"])){
-                        $query->where('session_videos.sub_classroom_category_id',$_SESSION["sub_classroom_category_id"]);
+                ->where(function ($query) use ($request) {
+                    if (!empty($_SESSION['sub_classroom_category_id'])) {
+                        $query->where('session_videos.sub_classroom_category_id', $_SESSION['sub_classroom_category_id']);
                     }
                 })
                 ->whereNull('session_videos.deleted_at')
                 ->paginate(6);
 
             return response([
-                "status" => 200,
-                "data"      => $result,
-                "message"   => 'OK'
+                'status' => 200,
+                'data' => $result,
+                'message' => 'OK',
             ], 200);
         } catch (Exception $e) {
             throw new Exception($e);
+
             return response([
-                "message"=> $e->getMessage(),
+                'message' => $e->getMessage(),
             ]);
         }
     }
@@ -460,9 +469,9 @@ class NewPackageController extends BaseMenu
                     'name',
                     'number',
                 ])
-                ->where(function($query) use($request){
-                    if(!empty($request->classroom_category_id)){
-                        $query->where('classroom_category_id',$request->classroom_category_id);
+                ->where(function ($query) use ($request) {
+                    if (!empty($request->classroom_category_id)) {
+                        $query->where('classroom_category_id', $request->classroom_category_id);
                     }
                 })
                 ->whereNull('deleted_at')
@@ -471,14 +480,15 @@ class NewPackageController extends BaseMenu
                 ->get();
 
             return response([
-                "status" => 200,
-                "data"      => $result,
-                "message"   => 'OK'
+                'status' => 200,
+                'data' => $result,
+                'message' => 'OK',
             ], 200);
         } catch (Exception $e) {
             throw new Exception($e);
+
             return response([
-                "message"=> $e->getMessage(),
+                'message' => $e->getMessage(),
             ]);
         }
     }
@@ -503,7 +513,7 @@ class NewPackageController extends BaseMenu
                     $join->on('carts.id', '=', 'transaction_details.cart_id');
                 })
                 ->where([
-                    'carts.student_id' => Auth::guard('student')->user()->id
+                    'carts.student_id' => Auth::guard('student')->user()->id,
                 ])
                 ->whereNull('carts.deleted_at');
 
@@ -520,31 +530,31 @@ class NewPackageController extends BaseMenu
                     'classrooms.session_total',
                     'classrooms.session_duration',
                     DB::raw("CONCAT('{$path}',classrooms.image) as image_url"),
-                    DB::raw("(
+                    DB::raw('(
                         CASE
                             WHEN carts.transaction_detail_id IS NOT NULL OR carts.classroom_id IS NOT NULL THEN
                                 1
                             ELSE
                                 0
                         END
-                    )AS is_buy")
+                    )AS is_buy'),
                 ])
                 ->leftJoinSub($cart, 'carts', function ($join) {
                     $join->on('classrooms.id', '=', 'carts.classroom_id');
                 })
                 ->where('classrooms.deleted_at')
-                ->where('classrooms.classroom_category_id',$id)
-                ->where('classrooms.hide','!=', true)
+                ->where('classrooms.classroom_category_id', $id)
+                ->where('classrooms.hide', '!=', true)
                 ->distinct('classrooms.id')
                 ->paginate(6);
 
             foreach ($result as $key => $value) {
                 $tools = DB::table('classroom_tools')
                     ->select([
-                        'tools.text as tool_name'
+                        'tools.text as tool_name',
                     ])
-                    ->where('classroom_id',$value->classroom_id)
-                    ->leftJoin('tools','classroom_tools.tool_id','=','tools.id')
+                    ->where('classroom_id', $value->classroom_id)
+                    ->leftJoin('tools', 'classroom_tools.tool_id', '=', 'tools.id')
                     ->get();
 
                 $coach = DB::table('coach_classrooms')
@@ -553,8 +563,8 @@ class NewPackageController extends BaseMenu
                         'coaches.id as coach_id',
                         DB::raw("CONCAT('{$path}',coaches.image) as coach_image_url"),
                     ])
-                    ->leftJoin('coaches','coach_classrooms.coach_id','=','coaches.id')
-                    ->where('classroom_id',$value->classroom_id)
+                    ->leftJoin('coaches', 'coach_classrooms.coach_id', '=', 'coaches.id')
+                    ->where('classroom_id', $value->classroom_id)
                     ->whereNull([
                         'coach_classrooms.deleted_at',
                         'coaches.deleted_at',
@@ -566,14 +576,15 @@ class NewPackageController extends BaseMenu
             }
 
             return response([
-                "status"    => 200,
-                "data"      => $result,
-                "message"   => 'OK!'
+                'status' => 200,
+                'data' => $result,
+                'message' => 'OK!',
             ], 200);
         } catch (Exception $e) {
             throw new Exception($e);
+
             return response([
-                "message"=> $e->getMessage(),
+                'message' => $e->getMessage(),
             ]);
         }
     }
@@ -588,7 +599,7 @@ class NewPackageController extends BaseMenu
                     'transactions.id',
                     'transactions.status',
                 ])
-                ->where('transactions.status',2)
+                ->where('transactions.status', 2)
                 ->whereNull('transactions.deleted_at');
 
             $transaction_detail = DB::table('transaction_details')
@@ -606,7 +617,7 @@ class NewPackageController extends BaseMenu
                 ->select([
                     'carts.master_lesson_id',
                     'transaction_details.id as transaction_detail_id',
-                    'transaction_details.status'
+                    'transaction_details.status',
                 ])
                 ->joinSub($transaction_detail, 'transaction_details', function ($join) {
                     $join->on('carts.id', '=', 'transaction_details.cart_id');
@@ -620,7 +631,7 @@ class NewPackageController extends BaseMenu
             $sub_master_lesson = DB::table('master_lessons')
                 ->select([
                     'master_lessons.id',
-                    DB::raw("COUNT(carts.master_lesson_id) as total_booking")
+                    DB::raw('COUNT(carts.master_lesson_id) as total_booking'),
                 ])
                 ->leftJoinSub($cart, 'carts', function ($join) {
                     $join->on('master_lessons.id', '=', 'carts.master_lesson_id');
@@ -638,14 +649,14 @@ class NewPackageController extends BaseMenu
                     'master_lessons.datetime',
                     'master_lessons.description',
                     'sub_master_lesson.total_booking',
-                    DB::raw("(
+                    DB::raw('(
                         CASE
                             WHEN carts.status = 2 THEN
                                 1
                             ELSE
                                 0
                         END
-                    )AS is_buy")
+                    )AS is_buy'),
                 ])
                 ->leftJoinSub($sub_master_lesson, 'sub_master_lesson', function ($join) {
                     $join->on('master_lessons.id', '=', 'sub_master_lesson.id');
@@ -655,9 +666,9 @@ class NewPackageController extends BaseMenu
                 })
                 ->whereRaw('master_lessons.datetime::timestamp > now()::timestamp')
                 ->whereRaw('(master_lessons.slot::numeric - sub_master_lesson.total_booking::numeric) > 0')
-                ->where(function($query) use($request){
-                    if(!empty($request->sub_classroom_category)){
-                        $query->where('master_lessons.sub_classroom_category_id',$request->sub_classroom_category);
+                ->where(function ($query) use ($request) {
+                    if (!empty($request->sub_classroom_category)) {
+                        $query->where('master_lessons.sub_classroom_category_id', $request->sub_classroom_category);
                     }
                 })
                 ->where('master_lessons.hide', false)
@@ -672,7 +683,7 @@ class NewPackageController extends BaseMenu
                         'guest_stars.name',
                         'guest_stars.description',
                     ])
-                    ->leftJoin('guest_stars','guest_star_master_lessons.guest_star_id','=','guest_stars.id')
+                    ->leftJoin('guest_stars', 'guest_star_master_lessons.guest_star_id', '=', 'guest_stars.id')
                     ->where('master_lesson_id', $value->id)
                     ->whereNull([
                         'guest_star_master_lessons.deleted_at',
@@ -683,28 +694,61 @@ class NewPackageController extends BaseMenu
                 $check_cart = DB::table('carts')
                     ->where([
                         'student_id' => Auth::guard('student')->user()->id,
-                        'master_lesson_id' => $value->id
+                        'master_lesson_id' => $value->id,
                     ])
                     ->whereNull('carts.deleted_at')
                     ->count();
 
                 $value->guest_star = $guest_star;
-                if($check_cart>0){
+                if ($check_cart > 0) {
                     $value->is_exist_cart = true;
-                }else{
+                } else {
                     $value->is_exist_cart = false;
                 }
             }
 
             return response([
-                "status" => 200,
-                "data"      => $master_lesson,
-                "message"   => 'OK!'
+                'status' => 200,
+                'data' => $master_lesson,
+                'message' => 'OK!',
             ], 200);
         } catch (Exception $e) {
             throw new Exception($e);
+
             return response([
-                "message"=> $e->getMessage(),
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    /**
+     * Get Detail Classroom.
+     *
+     * @param string $id
+     */
+    public function detail_classroom($id)
+    {
+        try {
+            $data = Classroom::with([
+                    'coach_classrooms.coach',
+                ])
+                ->where('id', '=', $id)
+                ->first();
+
+            if (!$data) {
+                throw new Exception(__('Classroom not found'), Response::HTTP_NOT_FOUND);
+            }
+
+            return response([
+                'status' => 200,
+                'data' => $data,
+                'message' => 'OK!',
+            ], 200);
+        } catch (\Exception $e) {
+            // throw new Exception($e);
+
+            return response([
+                'message' => $e->getMessage(),
             ]);
         }
     }

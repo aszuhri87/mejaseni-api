@@ -1,28 +1,26 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Cms\ClassController as ClassController;
 /*
 |--------------------------------------------------------------------------
 | Student Controller
 |--------------------------------------------------------------------------
 */
+use App\Http\Controllers\Student\CartController as StudentCartController;
 use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
+use App\Http\Controllers\Student\ExerciseController as StudentExerciseController;
 use App\Http\Controllers\Student\InvoiceController as StudentInvoiceController;
-use App\Http\Controllers\Student\ScheduleController as StudentScheduleController;
 use App\Http\Controllers\Student\MyClassController as StudentMyClassController;
 use App\Http\Controllers\Student\NewPackageController as StudentNewPackageController;
+use App\Http\Controllers\Student\NotificationController as StudentNotificationController;
 use App\Http\Controllers\Student\PackageDetailController as StudentPackageDetailController;
+use App\Http\Controllers\Student\ProfileController as StudentProfileController;
+use App\Http\Controllers\Student\RequestScheduleController as StudentRequestScheduleController;
+use App\Http\Controllers\Student\ReviewController as StudentReviewController;
+use App\Http\Controllers\Student\ScheduleController as StudentScheduleController;
 use App\Http\Controllers\Student\TheoryController as StudentTheoryController;
 use App\Http\Controllers\Student\VideoController as StudentVideoController;
-use App\Http\Controllers\Student\ProfileController as StudentProfileController;
-use App\Http\Controllers\Student\CartController as StudentCartController;
-use App\Http\Controllers\Student\ExerciseController as StudentExerciseController;
-use App\Http\Controllers\Student\ReviewController as StudentReviewController;
-use App\Http\Controllers\Student\RequestScheduleController as StudentRequestScheduleController;
-use App\Http\Controllers\Student\NotificationController as StudentNotificationController;
-
-use App\Http\Controllers\Cms\ClassController as ClassController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,7 +29,6 @@ use App\Http\Controllers\Cms\ClassController as ClassController;
 */
 
 Route::group(['prefix' => 'student', 'middleware' => 'student-handling'], function () {
-
     Route::group(['prefix' => 'dashboard'], function () {
         Route::get('/', [StudentDashboardController::class, 'index']);
         Route::get('total-class', [StudentDashboardController::class, 'total_class']);
@@ -62,7 +59,7 @@ Route::group(['prefix' => 'student', 'middleware' => 'student-handling'], functi
         Route::group(['prefix' => 'regular-class'], function () {
             Route::get('/', [StudentScheduleController::class, 'regular_class']);
             Route::get('{coach_schedule_id}', [StudentScheduleController::class, 'coach_schedule']);
-            Route::post('list-reschedule',[StudentScheduleController::class, 'list_reschedule']);
+            Route::post('list-reschedule', [StudentScheduleController::class, 'list_reschedule']);
             Route::post('booking', [StudentScheduleController::class, 'booking']);
             Route::post('reschedule', [StudentScheduleController::class, 'reschedule']);
             Route::post('new-reschedule', [StudentScheduleController::class, 'new_reschedule']);
@@ -119,6 +116,7 @@ Route::group(['prefix' => 'student', 'middleware' => 'student-handling'], functi
         Route::get('get-session-video', [StudentNewPackageController::class, 'get_session_video']);
         Route::get('get-master-lesson', [StudentNewPackageController::class, 'get_master_lesson']);
         Route::get('classroom-category/{classroom_category_id}', [StudentNewPackageController::class, 'get_classroom_by_category_id']);
+        Route::get('classroom/{id}', [StudentNewPackageController::class, 'detail_classroom']);
     });
 
     Route::group(['prefix' => 'my-video'], function () {
@@ -167,17 +165,17 @@ Route::group(['prefix' => 'student', 'middleware' => 'student-handling'], functi
         Route::post('dt', [StudentNotificationController::class, 'dt']);
     });
 
-    Route::post('profile/{id}', [StudentProfileController::class,'update']);
-    Route::post('profile/change-password/{id}', [StudentProfileController::class,'change_password']);
-    Route::get('profile', [StudentProfileController::class,'index']);
+    Route::post('profile/{id}', [StudentProfileController::class, 'update']);
+    Route::post('profile/change-password/{id}', [StudentProfileController::class, 'change_password']);
+    Route::get('profile', [StudentProfileController::class, 'index']);
 
     Route::get('package-detail/{session_video_id}', [StudentPackageDetailController::class, 'index']);
 
-    Route::post('add-to-cart',[StudentCartController::class, 'store']);
-    Route::get('get-cart/{student_id}',[StudentCartController::class, 'get_cart']);
-    Route::delete('delete-cart/{cart_id}',[StudentCartController::class, 'delete_cart']);
+    Route::post('add-to-cart', [StudentCartController::class, 'store']);
+    Route::get('get-cart/{student_id}', [StudentCartController::class, 'get_cart']);
+    Route::delete('delete-cart/{cart_id}', [StudentCartController::class, 'delete_cart']);
 
-    Route::post('/event/{event_id}/add-to-cart',[StudentCartController::class, 'event']);
+    Route::post('/event/{event_id}/add-to-cart', [StudentCartController::class, 'event']);
     Route::post('/video-course/{video_course_id}/add-to-cart', [StudentCartController::class, 'video_course']);
     Route::get('/class/{classroom_id}/detail', [ClassController::class, 'detail']);
     Route::post('/class/add-to-cart', [ClassController::class, 'store']);
