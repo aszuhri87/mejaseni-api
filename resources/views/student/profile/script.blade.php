@@ -212,6 +212,12 @@
                 $('#student_coordinate_lat').val(place.geometry.location.lat());
                 $('#student_coordinate_lng').val(place.geometry.location.lng());
 
+                // listener draggable marker 
+                newStudentLocation.addListener('dragend', (e) => {
+                    $('#student_coordinate_lat').val(e.latLng.lat());
+                    $('#student_coordinate_lng').val(e.latLng.lng());
+                });
+
                 if (place.geometry.viewport) {
                     // Only geocodes have viewport.
                     bounds.union(place.geometry.viewport);

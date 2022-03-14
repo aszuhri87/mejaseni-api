@@ -255,6 +255,9 @@
 
                 // listener draggable marker 
                 newCoachLocation.addListener('dragend', (e) => {
+                    $('#coach_coordinate_lat').val(e.latLng.lat());
+                    $('#coach_coordinate_lng').val(e.latLng.lng());
+
                     if (isNumberRadius) {
                         initRadius(
                             e.latLng.lat(),
