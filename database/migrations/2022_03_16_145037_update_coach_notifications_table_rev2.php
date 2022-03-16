@@ -15,6 +15,7 @@ class UpdateCoachNotificationsTableRev2 extends Migration
     {
         Schema::table('coach_notifications', function (Blueprint $table) {
             $table->uuid('student_request_id')->nullable();
+
             $table->foreign('student_request_id')
             ->references('id')
             ->on('student_requests')
