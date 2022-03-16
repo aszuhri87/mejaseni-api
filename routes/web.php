@@ -1,44 +1,40 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Auth\LoginController;
 /*
 |--------------------------------------------------------------------------
 | Global Controller
 |--------------------------------------------------------------------------
 */
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ProviderController;
-use App\Http\Controllers\MediaController;
-use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\Transaction\DokuController;
-use App\Http\Controllers\Transaction\CartController;
-use App\Http\Controllers\Transaction\PaymentController;
-
-
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Cms\AboutController as AboutController;
+use App\Http\Controllers\Cms\CareerController as CareerController;
+use App\Http\Controllers\Cms\CareerDetailController as CareerDetailController;
+use App\Http\Controllers\Cms\ClassController as ClassController;
+use App\Http\Controllers\Cms\EventDetailController as EventDetailController;
 /*
 |--------------------------------------------------------------------------
 | CMS Controller
 |--------------------------------------------------------------------------
 */
-use App\Http\Controllers\Cms\HomePageController as HomePageController;
-use App\Http\Controllers\Cms\ClassController as ClassController;
-use App\Http\Controllers\Cms\StoreController as StoreController;
-use App\Http\Controllers\Cms\NewsEventController as NewsEventController;
-use App\Http\Controllers\Cms\AboutController as AboutController;
-use App\Http\Controllers\Cms\PrivacyPolicyController as PrivacyPolicyController;
-use App\Http\Controllers\Cms\TosController as TosController;
-use App\Http\Controllers\Cms\FaqController as FaqController;
-use App\Http\Controllers\Cms\CareerController as CareerController;
-use App\Http\Controllers\Cms\CareerDetailController as CareerDetailController;
-use App\Http\Controllers\Cms\StoreDetailController as StoreDetailController;
 use App\Http\Controllers\Cms\EventListController as EventListController;
-use App\Http\Controllers\Cms\EventDetailController as EventDetailController;
-use App\Http\Controllers\Cms\NewsListController as NewsListController;
-use App\Http\Controllers\Cms\NewsDetailController as NewsDetailController;
+use App\Http\Controllers\Cms\FaqController as FaqController;
 use App\Http\Controllers\Cms\GaleryController as GaleryDetailController;
+use App\Http\Controllers\Cms\HomePageController as HomePageController;
+use App\Http\Controllers\Cms\NewsDetailController as NewsDetailController;
+use App\Http\Controllers\Cms\NewsEventController as NewsEventController;
+use App\Http\Controllers\Cms\NewsListController as NewsListController;
+use App\Http\Controllers\Cms\PrivacyPolicyController as PrivacyPolicyController;
+use App\Http\Controllers\Cms\StoreController as StoreController;
+use App\Http\Controllers\Cms\StoreDetailController as StoreDetailController;
+use App\Http\Controllers\Cms\TosController as TosController;
 use App\Http\Controllers\Cms\VideoCourseController as VideoCourseController;
+use App\Http\Controllers\MediaController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\Transaction\CartController;
+use App\Http\Controllers\Transaction\PaymentController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,7 +46,6 @@ use App\Http\Controllers\Cms\VideoCourseController as VideoCourseController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 
 /*
 |--------------------------------------------------------------------------
@@ -70,7 +65,6 @@ Route::get('/class/{classroom_id}/description', [ClassController::class, 'get_de
 Route::get('/master-lesson/{master_lesson_id}/guest-star', [ClassController::class, 'get_guest_start']);
 Route::get('/master-lesson/{master_lesson_id}/detail', [ClassController::class, 'get_master_lesson']);
 
-
 Route::get('/video-course', [VideoCourseController::class, 'index']);
 Route::post('/video-course/search', [VideoCourseController::class, 'search']);
 Route::get('/video-course/{video_course_id}/detail', [StoreDetailController::class, 'index']);
@@ -84,32 +78,29 @@ Route::get('/news-event', [NewsEventController::class, 'index']);
 Route::get('/event-list', [EventListController::class, 'index']);
 Route::get('/event-list/paging', [EventListController::class, 'paging']);
 Route::get('/event/{event_id}/detail', [EventDetailController::class, 'index']);
-Route::get('/news-list',[NewsListController::class, 'index']);
-Route::get('/news/{news_id}/detail',[NewsDetailController::class, 'index']);
+Route::get('/news-list', [NewsListController::class, 'index']);
+Route::get('/news/{news_id}/detail', [NewsDetailController::class, 'index']);
 
-
-Route::get('/news-list',[NewsListController::class, 'index']);
+Route::get('/news-list', [NewsListController::class, 'index']);
 Route::post('/news-list/search', [NewsListController::class, 'search']);
-Route::get('/news/{news_id}/detail',[NewsDetailController::class, 'index']);
+Route::get('/news/{news_id}/detail', [NewsDetailController::class, 'index']);
 
 Route::get('/about', [AboutController::class, 'index']);
 Route::get('/privacy-policy', [PrivacyPolicyController::class, 'index']);
 Route::get('/tos', [TosController::class, 'index']);
 
-
 Route::get('/faq', [FaqController::class, 'index']);
-Route::post('/question',[QuestionController::class,'store']);
+Route::post('/question', [QuestionController::class, 'store']);
 
 Route::get('/career', [CareerController::class, 'index']);
 Route::post('/career', [CareerController::class, 'store']);
 Route::get('/career/{id}/detail', [CareerDetailController::class, 'index']);
 Route::post('/notifications/payments', [PaymentController::class, 'notification']);
 
-Route::get('/galery/{id}/detail',[GaleryDetailController::class, 'index']);
+Route::get('/galery/{id}/detail', [GaleryDetailController::class, 'index']);
 
 Route::group(['middleware' => ['guest-handling']], function () {
-
-    Route::get('email-verification/check/{token}',[RegisterController::class, 'email_verification']);
+    Route::get('email-verification/check/{token}', [RegisterController::class, 'email_verification']);
 
     Route::get('forgot-password', [RegisterController::class, 'index_forgot_password']);
     Route::post('forgot-password', [RegisterController::class, 'forgot_password']);
@@ -128,7 +119,6 @@ Route::group(['middleware' => ['guest-handling']], function () {
 });
 
 Route::group(['middleware' => ['auth-handling']], function () {
-
     Route::get('logout', [LoginController::class, 'logout']);
     Route::post('media/file', [MediaController::class, 'file_upload']);
     Route::delete('media/file/{id}', [MediaController::class, 'file_delete']);
@@ -161,7 +151,6 @@ Route::group(['middleware' => ['auth-handling']], function () {
     include base_path('routes/student.php');
 
     include base_path('routes/public.php');
-
 });
 
 Route::get('redirect-blank', function () {
