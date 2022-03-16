@@ -2,14 +2,16 @@
 
 namespace App\Models;
 
+use App\Traits\Uuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Traits\Uuid;
 
 class Cart extends Model
 {
-    use HasFactory, Uuid, SoftDeletes;
+    use HasFactory;
+    use Uuid;
+    use SoftDeletes;
 
     public $incrementing = false;
 
@@ -21,7 +23,10 @@ class Cart extends Model
         'classroom_id',
         'student_id',
         'theory_id',
-        'event_id'
+        'event_id',
+        'lat',
+        'lng',
+        'address',
     ];
 
     protected $dates = ['deleted_at'];
