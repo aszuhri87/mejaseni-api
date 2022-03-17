@@ -85,6 +85,7 @@ class ProfileController extends BaseMenu
                 if (!empty($request->coach_coordinate['lng'])) {
                     $data['lng'] = $request->coach_coordinate['lng'];
                 }
+                $data['home_course_available'] = $request->has('home_course_available');
 
                 $update = Coach::find($id);
                 $update->update($data);

@@ -250,6 +250,16 @@
                                                     </select>
                                                 </div>
                                             </div>
+                                            <div class="form-group row d-flex align-items-center">
+                                                <label class="col-form-label col-3 text-lg-right text-left">Home Course Available</label>
+                                                <span class="switch switch-outline switch-icon switch-success">
+                                                    <label>
+                                                        <input type="checkbox" id="home_course_available" name="home_course_available"/>
+                                                        <span></span>
+                                                    </label>
+                                                </span>
+                                                <span id="home_course_available-label">No</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
