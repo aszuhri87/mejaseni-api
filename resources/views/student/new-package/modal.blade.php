@@ -34,6 +34,16 @@
                         </label>
                         <h4 class="text-primary"><span id="total-price"></span></h4>
                     </div>
+                    <div class="form-group row align-items-center" id="home_course-div">
+                        <label class="col-form-label col-3 text-left">Home Course</label>
+                        <span class="switch switch-outline switch-icon switch-success">
+                            <label>
+                                <input type="checkbox" id="home_course" name="home_course"/>
+                                <span></span>
+                            </label>
+                        </span>
+                        <span id="home_course-label">No</span>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-outline-primary">
