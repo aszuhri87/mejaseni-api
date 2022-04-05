@@ -5,7 +5,7 @@
     var Page = function() {
         var _componentPage = function(){
             var init_select_expertise;
-            $(document).ready(function() {
+            $(document).ready(() => {
                 initAction();
                 formSubmit();
 
@@ -16,6 +16,9 @@
                 init_select_expertise = new SlimSelect({
                     select: '#expertise'
                 });
+
+                const homeCourseAvailable = `{{ Auth::guard('coach')->user()->home_course_available }}`;
+                $('#home_course_available').prop('checked', homeCourseAvailable).change();
             });
 
             const initAction = () => {
@@ -89,6 +92,15 @@
                                 radius
                             );
                         }
+                    }
+                })
+
+                $(document).on('change', '#home_course_available', (e) => {
+                    const isChecked = $('#home_course_available').is(':checked');
+                    if (isChecked) {
+                        $('#home_course_available-label').text('Yes');
+                    } else {
+                        $('#home_course_available-label').text('No');
                     }
                 })
             }

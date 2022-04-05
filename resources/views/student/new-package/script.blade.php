@@ -1,4 +1,5 @@
 <script type="text/javascript">
+    var detailCourse;
     var Page = function() {
         var _componentPage = function(){
             let check_init_filter = false;
@@ -556,6 +557,56 @@
                     });
                 })
 
+                $(document).on('change', '#home_course', (e) => {
+                    const form = $('#form-new-package');
+                    const isChecked = $('#home_course').is(':checked');
+
+                    let homeCourses = [];
+
+                    if (detailCourse.coach_classrooms.length > 0) {
+                        detailCourse.coach_classrooms.forEach(coach_classroom => {
+                            // check if available home course 
+                            if (coach_classroom.coach.home_course_available==true) {
+                                // push coach's home course data
+                                homeCourses.push({
+                                    name : coach_classroom.coach.name,
+                                    lat : Number(coach_classroom.coach.lat),
+                                    lng : Number(coach_classroom.coach.lng),
+                                    radius : Number(coach_classroom.coach.radius)
+                                });
+                            }
+                        });
+                    }
+                    
+                    if (isChecked==true) {
+                        $('#home_course-label').text('Yes');
+                        let elementGmapDiv = `<div id="gmap-div" class="gmap"></div>`;
+                        let elementInputLatLng = `<input type="hidden" name="lat" id="cart_lat"><input type="hidden" name="lng" id="cart_lng">`;
+                        let elementInputAddress = `<div class="form-group mt-3"><h3 class="control-label">Alamat</h3><textarea name="address" id="cart_address" rows="4" class="form-control"></textarea></div>`;
+
+                        $('#price').html(`Rp. ${numeral(detailCourse.price_home_course!=null ? detailCourse.price_home_course : detailCourse.price).format('0,0')}`);
+                        $('#total-price').html(`Rp. ${numeral(detailCourse.price_home_course!=null ? detailCourse.price_home_course : detailCourse.price).format('0,0')}`);
+
+                        form.find('#home-course-div').append(elementGmapDiv);
+                        form.find('#home-course-div').append(elementInputLatLng);
+                        form.find('#home-course-div').append(elementInputAddress);
+                        initMap(homeCourses);
+                    } else {
+                        $('#home_course-label').text('No');
+                        $('#gmap-div').remove();
+                        $('#cart_lat').remove();
+                        $('#cart_lng').remove();
+                        $('#cart_address').parent().remove();
+                        $('#price').html(`Rp. ${numeral(detailCourse.price).format('0,0')}`);
+                        $('#total-price').html(`Rp. ${numeral(detailCourse.price).format('0,0')}`);
+                    }
+                })
+
+                $('#modal-new-package').on('hide.bs.modal', (e) => {
+                    const form = $('#form-new-package');
+                    form.find('#home-course-div').remove();
+                })
+
                 $(document).on('click','.btn-registration',function(event){
                     event.preventDefault();
                     let classroom_id = $(this).data('classroom_id');
@@ -564,6 +615,14 @@
                     let id = $(this).data('id');
                     let type = $(this).data('type');
 
+                    $('#id').val(id);
+                    $('#type').val(type);
+                    $('#classroom-name').html(`Kelas "${classroom_name}"`);
+                    $('#price').html(`Rp. ${numeral(price).format('0,0')}`);
+                    $('#total-price').html(`Rp. ${numeral(price).format('0,0')}`);
+                    $('#form-new-package').attr('action',`{{url('student/add-to-cart')}}`);
+                    showModal('modal-new-package');
+
                     // get detail classroom 
                     $.ajax({
                         url: `{{ url('student/new-package/classroom') }}/${id}`,
@@ -571,11 +630,11 @@
                     })
                     .done((res, xhr, meta) => {
                         const { data } = res;
+                        const form = $('#form-new-package');
+                        detailCourse = data;
                         let homeCourses = [];
 
-                        const form = $('#form-new-package');
-
-                        form.find('#home-course-div').remove();
+                        $('#home_course').prop('checked', false).change();
 
                         if (data.coach_classrooms.length > 0) {
                             data.coach_classrooms.forEach(coach_classroom => {
@@ -592,15 +651,13 @@
                             });
                         }
 
-                        if (homeCourses.length > 0) {
+                        if (homeCourses.length > 0 || data.home_course_available==true) {
                             let elementHomeCourse = `<div id="home-course-div"></div>`;
-                            let elementGmapDiv = `<div id="gmap-div" class="gmap"></div>`;
-                            let elementInputLatLng = `<input type="hidden" name="lat" id="cart_lat"><input type="hidden" name="lng" id="cart_lng">`;
+                            
                             form.find('.modal-body').append(elementHomeCourse);
-                            form.find('#home-course-div').append(elementGmapDiv);
-                            form.find('#home-course-div').append(elementInputLatLng);
-                            initMap(homeCourses);
-                            console.log(homeCourses);
+                            $('#home_course-div').show();
+                        } else {
+                            $('#home_course-div').hide();
                         }
                     })
                     .fail((res, error) => {
@@ -610,14 +667,6 @@
 
                     });
 
-
-                    $('#id').val(id);
-                    $('#type').val(type);
-                    $('#classroom-name').html(`Kelas "${classroom_name}"`);
-                    $('#price').html(`Rp. ${numeral(price).format('0,0')}`);
-                    $('#total-price').html(`Rp. ${numeral(price).format('0,0')}`);
-                    $('#form-new-package').attr('action',`{{url('student/add-to-cart')}}`);
-                    showModal('modal-new-package');
                 });
 
                 $(document).on('click','.btn-registration-master-lesson',function(event){
@@ -2483,7 +2532,7 @@
                     !empty(Auth::guard('student')->user()->lng)
                 )
                 const myLatLng = { lat: {{ Auth::guard('student')->user()->lat }}, lng: {{ Auth::guard('student')->user()->lng}} };
-                let myLocation = { lat: {{ Auth::guard('student')->user()->lat }}, lng: {{ Auth::guard('student')->user()->lng}} };
+                let myLocation = { lat: {{ Auth::guard('student')->user()->lat }}, lng: {{ Auth::guard('student')->user()->lng}}, address: `{{ Auth::guard('student')->user()->address}}` };
                 @else
                 const myLatLng = { lat: -7.794915, lng: 110.36832 };
                 let myLocation = false; 
@@ -2512,6 +2561,7 @@
 
                     $('#cart_lat').val(myLocation.lat);
                     $('#cart_lng').val(myLocation.lng);
+                    $('#cart_address').text(myLocation.address);
 
                     myLocationButton(map, myLocationMarker);
                     // findMyLocation(map, myLocationMarker);
@@ -2526,8 +2576,6 @@
                         $('#cart_lng').val(e.latLng.lng());
                     });
                 }
-
-                
 
                 if (coachLocations.length > 0) {
                     coachLocations.forEach(coachLocation => {

@@ -37,6 +37,7 @@ class Student extends Authenticatable
         'pilot',
         'lat',
         'lng',
+        'address',
     ];
 
     public $cascadeDeletes = [

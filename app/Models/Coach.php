@@ -34,6 +34,7 @@ class Coach extends Authenticatable
         'lat',
         'lng',
         'radius',
+        'home_course_available',
     ];
 
     public $cascadeDeletes = [

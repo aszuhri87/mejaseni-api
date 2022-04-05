@@ -44,6 +44,9 @@ class CartController extends Controller
                 if ($request->has('lng')) {
                     $data['lng'] = $request->lng;
                 }
+                if ($request->has('address')) {
+                    $data['address'] = $request->address;
+                }
 
                 $cart = Cart::create($data);
 
