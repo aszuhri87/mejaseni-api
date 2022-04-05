@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddUrlBanner extends Migration
+class UpdateClassroomsRev3 extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,8 @@ class AddUrlBanner extends Migration
      */
     public function up()
     {
-        
-        Schema::table('banners', function (Blueprint $table) {
-            $table->string('url_link')->nullable();
-            $table->string('show')->nullable();
+        Schema::table('classrooms', function (Blueprint $table) {
+            // $table->dropColumn('class_type');
         });
     }
 
@@ -27,9 +25,8 @@ class AddUrlBanner extends Migration
      */
     public function down()
     {
-        Schema::table('banners', function (Blueprint $table) {
-            $table->string('url_link');
-            $table->string('show');
+        Schema::table('classrooms', function (Blueprint $table) {
+            // $table->dropColumn('class_type');
         });
     }
 }

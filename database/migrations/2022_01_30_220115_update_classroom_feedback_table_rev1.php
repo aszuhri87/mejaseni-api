@@ -4,7 +4,6 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-
 class UpdateClassroomFeedbackTableRev1 extends Migration
 {
     /**
@@ -15,7 +14,7 @@ class UpdateClassroomFeedbackTableRev1 extends Migration
     public function up()
     {
         Schema::table('classroom_feedback', function (Blueprint $table) {
-            $table->float('star',1,1)->change();
+            $table->float('star', 1, 1)->nullable();
         });
     }
 

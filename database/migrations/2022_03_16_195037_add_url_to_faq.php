@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddRatingToSessionVideos extends Migration
+class AddUrlToFaq extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class AddRatingToSessionVideos extends Migration
      */
     public function up()
     {
-        Schema::table('session_videos', function (Blueprint $table) {
-            $table->string('link')->nullable();
-            $table->integer('ratings')->nullable();
+        Schema::table('faqs', function (Blueprint $table) {
+            // $table->string('url_link')->nullable();
+            // $table->string('image_url')->nullable();
         });
     }
 
@@ -26,12 +26,9 @@ class AddRatingToSessionVideos extends Migration
      */
     public function down()
     {
-
-        Schema::table('session_videos', function (Blueprint $table) {
-            $table->dropColumn('ratings');
-
-            $table->dropColumn('link');
-
+        Schema::table('faq', function (Blueprint $table) {
+            // $table->dropColumn('url_link');
+            // $table->dropColumn('image_url');
         });
     }
 }

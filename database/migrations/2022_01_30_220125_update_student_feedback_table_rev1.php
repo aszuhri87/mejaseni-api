@@ -14,7 +14,7 @@ class UpdateStudentFeedbackTableRev1 extends Migration
     public function up()
     {
         Schema::table('student_feedback', function (Blueprint $table) {
-            $table->float('star',1,1)->change();
+            $table->float('star', 1, 1)->nullable();
         });
     }
 

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class UpdateStudentNotificationTableTableRev1 extends Migration
+class AddUrlBanner extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,9 @@ class UpdateStudentNotificationTableTableRev1 extends Migration
      */
     public function up()
     {
-        Schema::table('student_notification_table', function (Blueprint $table) {
-            //
+        Schema::table('banners', function (Blueprint $table) {
+            // $table->string('url_link')->nullable();
+            // $table->string('show')->nullable();
         });
     }
 
@@ -25,8 +26,9 @@ class UpdateStudentNotificationTableTableRev1 extends Migration
      */
     public function down()
     {
-        Schema::table('student_notification_table', function (Blueprint $table) {
-            //
+        Schema::table('banners', function (Blueprint $table) {
+            // $table->string('url_link');
+            // $table->string('show');
         });
     }
 }

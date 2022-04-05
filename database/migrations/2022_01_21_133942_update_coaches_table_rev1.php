@@ -34,7 +34,7 @@ class UpdateCoachesTableRev1 extends Migration
             $table->dropColumn('lng');
             $table->dropColumn('radius');
             $table->dropColumn('address');
-            $table->dropColumn('home_course');
+            $table->dropColumn('home_course_available');
         });
     }
 }

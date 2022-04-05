@@ -18,6 +18,7 @@ class CreateStudentRequests extends Migration
             $table->uuid('student_id')->nullable();
             $table->uuid('coach_id')->nullable();
             $table->uuid('schedule_request_id')->nullable();
+            $table->uuid('cart_id')->nullable();
             $table->boolean('coach_confirmed')->nullable();
             $table->timestamps();
             $table->softDeletes();
@@ -37,6 +38,12 @@ class CreateStudentRequests extends Migration
             $table->foreign('coach_id')
                 ->references('id')
                 ->on('coaches')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+
+            $table->foreign('cart_id')
+                ->references('id')
+                ->on('carts')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
         });
