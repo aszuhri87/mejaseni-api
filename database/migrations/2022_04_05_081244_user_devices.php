@@ -15,8 +15,8 @@ class UserDevices extends Migration
     {
         Schema::create('user_devices', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('student_id');
-            $table->uuid('coach_id');
+            $table->uuid('student_id')->nullable();
+            $table->uuid('coach_id')->nullable();
             $table->string('device_token');
             $table->string('manufacture')->nullable()->default(null);
             $table->string('system_version')->nullable()->default(null);
