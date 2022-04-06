@@ -14,16 +14,9 @@ class UpdateCoachNotificationsTableRev1 extends Migration
     public function up()
     {
         Schema::table('coach_notifications', function (Blueprint $table) {
-            $table->uuid('income_transaction_id')->nullable();
             $table->string('text_title')->nullable();
             $table->string('to_page')->nullable();
             $table->string('icon_url')->nullable();
-
-            $table->foreign('income_transaction_id')
-            ->references('id')
-            ->on('income_transactions')
-            ->onUpdate('cascade')
-            ->onDelete('cascade');
         });
     }
 
